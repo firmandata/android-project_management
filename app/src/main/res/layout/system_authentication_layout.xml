@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/contentHeader"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:paddingLeft="@dimen/horizontal_gap"
+        android:paddingRight="@dimen/horizontal_gap"
+        android:paddingTop="@dimen/vertical_gap"
+        android:paddingBottom="@dimen/vertical_gap">
+
+        <ImageView
+            android:id="@+id/imgLogo"
+            android:layout_width="wrap_content"
+            android:src="@mipmap/ic_launcher"
+            android:contentDescription="@string/system_authentication_layout_logo"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/contentHeaderShadow"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:layout_below="@+id/contentHeader"
+        android:src="@drawable/shadow_bottom"
+        android:contentDescription="@string/image_shadow_description"/>
+
+    <ScrollView
+        android:id="@+id/contentBody"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/contentHeader"
+        android:layout_above="@+id/contentFooter"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingLeft="@dimen/element_horizontal_gap"
+            android:paddingRight="@dimen/element_horizontal_gap"
+            android:paddingTop="@dimen/element_vertical_gap">
+
+            <include
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                layout="@layout/system_authentication_view"
+                android:id="@+id/authenticationView" />
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/btnLogin"
+                android:layout_height="wrap_content"
+                android:layout_width="150dp"
+                android:text="@string/system_authentication_layout_login"
+                android:layout_marginTop="@dimen/form_element_vertical_gap" />
+        </LinearLayout>
+    </ScrollView>
+
+    <ImageView
+        android:id="@+id/contentFooterShadow"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:layout_above="@+id/contentFooter"
+        android:src="@drawable/shadow_top"
+        android:contentDescription="@string/image_shadow_description" />
+
+    <LinearLayout
+        android:id="@+id/contentFooter"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:gravity="end"
+        android:paddingLeft="@dimen/horizontal_gap"
+        android:paddingRight="@dimen/horizontal_gap"
+        android:paddingTop="@dimen/vertical_gap"
+        android:paddingBottom="@dimen/vertical_gap">
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/btnSetting"
+            android:text="@string/system_authentication_layout_setting"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+</RelativeLayout>

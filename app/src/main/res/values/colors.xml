@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#274C6D</color>
+    <color name="colorPrimaryDark">#113453</color>
+
+    <color name="colorTextPrimary">#FFFFFF</color>
+    <color name="colorTextSecondary">#F3F3F3</color>
+    <color name="colorTextPrimaryDark">#000000</color>
+    <color name="colorTextSecondaryDark">#7E7E7E</color>
+
+    <color name="baseColor">#FFFFFF</color>
+    <color name="baseColorActive">#F7F7F7</color>
+    <color name="baseColorInActive">#E0E0E0</color>
+    <color name="baseColorPrimary">#337AB7</color>
+    <color name="baseColorInfo">#5BC0DE</color>
+    <color name="baseColorSuccess">#5CB85C</color>
+    <color name="baseColorWarning">#F0AD4E</color>
+    <color name="baseColorDanger">#D9534F</color>
+
+    <color name="baseColorBackground">@color/baseColor</color>
+    <color name="baseColorBackgroundActive">@color/baseColorActive</color>
+    <color name="baseColorBackgroundInactive">@color/baseColorInActive</color>
+    <color name="baseColorBackgroundPrimary">@color/baseColorPrimary</color>
+    <color name="baseColorBackgroundInfo">@color/baseColorInfo</color>
+    <color name="baseColorBackgroundSuccess">@color/baseColorSuccess</color>
+    <color name="baseColorBackgroundWarning">@color/baseColorWarning</color>
+    <color name="baseColorBackgroundDanger">@color/baseColorDanger</color>
+
+    <color name="baseColorText">@color/baseColor</color>
+    <color name="baseColorTextActive">@color/baseColorActive</color>
+    <color name="baseColorTextInactive">@color/baseColorInActive</color>
+    <color name="baseColorTextPrimary">@color/baseColorPrimary</color>
+    <color name="baseColorTextInfo">@color/baseColorInfo</color>
+    <color name="baseColorTextSuccess">@color/baseColorSuccess</color>
+    <color name="baseColorTextWarning">@color/baseColorWarning</color>
+    <color name="baseColorTextDanger">@color/baseColorDanger</color>
+
+    <color name="baseColorTextPrimaryBackground">@color/colorTextPrimaryDark</color>
+    <color name="baseColorTextPrimaryActiveBackground">@color/colorTextPrimaryDark</color>
+    <color name="baseColorTextPrimaryInactiveBackground">@color/colorTextPrimaryDark</color>
+    <color name="baseColorTextPrimaryPrimaryBackground">@color/colorTextPrimary</color>
+    <color name="baseColorTextPrimaryInfoBackground">@color/colorTextPrimary</color>
+    <color name="baseColorTextPrimarySuccessBackground">@color/colorTextPrimary</color>
+    <color name="baseColorTextPrimaryWarningBackground">@color/colorTextPrimary</color>
+    <color name="baseColorTextPrimaryDangerBackground">@color/colorTextPrimary</color>
+
+    <color name="baseColorTextSecondaryBackground">@color/colorTextSecondaryDark</color>
+    <color name="baseColorTextSecondaryActiveBackground">@color/colorTextSecondaryDark</color>
+    <color name="baseColorTextSecondaryInactiveBackground">@color/colorTextSecondaryDark</color>
+    <color name="baseColorTextSecondaryPrimaryBackground">@color/colorTextSecondary</color>
+    <color name="baseColorTextSecondaryInfoBackground">@color/colorTextSecondary</color>
+    <color name="baseColorTextSecondarySuccessBackground">@color/colorTextSecondary</color>
+    <color name="baseColorTextSecondaryWarningBackground">@color/colorTextSecondary</color>
+    <color name="baseColorTextSecondaryDangerBackground">@color/colorTextSecondary</color>
+
+    <color name="my_listview_itemSelected">#FF8000</color>
+
+    <color name="shadow_start">#00000000</color>
+    <color name="shadow_end">#60000000</color>
+</resources>

@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">Project Management</string>
+
+    <string name="error_message">Error Code : $s1\nMessage : $s2</string>
+
+    <string name="restful_user_config_not_set">User configuration not set.</string>
+    <string name="restful_server_url_config_not_set">Server URL configuration not set.</string>
+    <string name="restful_server_url_not_valid">URL \'$s1\' is not valid.</string>
+    <string name="restful_message_error_response_json">Unknown JSON response.</string>
+    <string name="restful_message_error_400">Server understood the request but request content was invalid.</string>
+    <string name="restful_message_error_401">Unauthorised access.</string>
+    <string name="restful_message_error_403">Forbidden resource can\'t be accessed.</string>
+    <string name="restful_message_error_404">Requested not found.</string>
+    <string name="restful_message_error_500">Internal server error.</string>
+    <string name="restful_message_error_503">Service unavailable.</string>
+    <string name="restful_message_error_code">Code : $s1</string>
+    <string name="restful_message_error_message">$s1</string>
+
+    <string name="date_picker_select_day">Day</string>
+    <string name="date_picker_select_month">Month</string>
+    <string name="date_picker_select_year">Year</string>
+    <string name="date_picker_button">&#8230;</string>
+    <string name="time_picker_button">&#8230;</string>
+
+    <string name="image_shadow_description">Shadow</string>
+
+    <string name="system_authentication_view_username">Username</string>
+    <string name="system_authentication_view_username_required">Username required.</string>
+    <string name="system_authentication_view_password">Password</string>
+    <string name="system_authentication_view_password_required">Password required.</string>
+
+    <string name="system_authentication_layout_logo">Application Logo</string>
+    <string name="system_authentication_layout_login">Login</string>
+    <string name="system_authentication_layout_setting">Setting</string>
+</resources>
