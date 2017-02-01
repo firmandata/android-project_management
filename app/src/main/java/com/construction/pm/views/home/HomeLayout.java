@@ -16,11 +16,15 @@ public class HomeLayout {
 
     protected Toolbar mToolbar;
 
-    public HomeLayout(final Context context, final ViewGroup root) {
+    protected HomeLayout(final Context context) {
         mContext = context;
+    }
+
+    public HomeLayout(final Context context, final ViewGroup viewGroup) {
+        this(context);
 
         LayoutInflater inflater = LayoutInflater.from(mContext);
-        mHomeLayout = (DrawerLayout) inflater.inflate(R.layout.home_layout, root);
+        mHomeLayout = (DrawerLayout) inflater.inflate(R.layout.home_layout, viewGroup);
         mToolbar = (Toolbar) mHomeLayout.findViewById(R.id.contentToolbar);
     }
 

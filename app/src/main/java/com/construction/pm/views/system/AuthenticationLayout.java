@@ -26,10 +26,10 @@ public class AuthenticationLayout {
         mContext = context;
     }
 
-    public AuthenticationLayout(final Context context, final RelativeLayout authenticationView) {
+    public AuthenticationLayout(final Context context, final RelativeLayout authenticationLayout) {
         this(context);
 
-        initializeView(authenticationView);
+        initializeView(authenticationLayout);
     }
 
     public static AuthenticationLayout buildAuthenticationLayout(final Context context, final int layoutId, final ViewGroup viewGroup) {
