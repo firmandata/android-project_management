@@ -7,24 +7,26 @@ import com.construction.pm.views.system.AuthenticationLayout;
 
 public class AuthenticationActivity extends Activity {
 
+    protected AuthenticationLayout mAuthenticationLayout;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        AuthenticationLayout authenticationLayout = AuthenticationLayout.buildAuthenticationLayout(this, null);
-        authenticationLayout.setLoginListener(new AuthenticationLayout.LoginListener() {
+        mAuthenticationLayout = AuthenticationLayout.buildAuthenticationLayout(this, null);
+        mAuthenticationLayout.setLoginListener(new AuthenticationLayout.LoginListener() {
             @Override
             public void onLoginRequest(String username, String password) {
 
             }
         });
-        authenticationLayout.setSettingListener(new AuthenticationLayout.SettingListener() {
+        mAuthenticationLayout.setSettingListener(new AuthenticationLayout.SettingListener() {
             @Override
             public void onSettingRequest() {
 
             }
         });
-        setContentView(authenticationLayout.getView());
+        mAuthenticationLayout.loadLayoutToActivity(this);
     }
 
 }

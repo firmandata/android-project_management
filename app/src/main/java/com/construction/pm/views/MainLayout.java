@@ -1,11 +1,14 @@
 package com.construction.pm.views;
 
-import android.app.Activity;
 import android.content.Context;
+import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -17,6 +20,7 @@ public class MainLayout {
 
     protected DrawerLayout mMainLayout;
     protected Toolbar mToolbar;
+    protected ActionBarDrawerToggle mActionBarDrawerToggle;
 
     protected MainLayout(final Context context) {
         mContext = context;
@@ -39,8 +43,26 @@ public class MainLayout {
     protected void initializeView(final DrawerLayout mainLayout) {
         mMainLayout = mainLayout;
         mToolbar = (Toolbar) mMainLayout.findViewById(R.id.contentToolbar);
+    }
 
-        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle((Activity) mContext, mMainLayout, mToolbar, R.string.main_drawer_open, R.string.main_drawer_close) {
+    public DrawerLayout getLayout() {
+        return mMainLayout;
+    }
+
+    public Toolbar getToolbar() {
+        return mToolbar;
+    }
+
+    public void loadLayoutToActivity(AppCompatActivity activity) {
+        activity.setContentView(mMainLayout);
+
+        activity.setSupportActionBar(mToolbar);
+        ActionBar actionBar = activity.getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle(R.string.app_name);
+        }
+
+        mActionBarDrawerToggle = new ActionBarDrawerToggle(activity, mMainLayout, mToolbar, R.string.main_drawer_open, R.string.main_drawer_close) {
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
@@ -51,16 +73,8 @@ public class MainLayout {
                 super.onDrawerOpened(drawerView);
             }
         };
-        mMainLayout.addDrawerListener(actionBarDrawerToggle);
+        mMainLayout.addDrawerListener(mActionBarDrawerToggle);
 
-        actionBarDrawerToggle.syncState();
-    }
-
-    public DrawerLayout getView() {
-        return mMainLayout;
-    }
-
-    public Toolbar getToolbar() {
-        return mToolbar;
+        mActionBarDrawerToggle.syncState();
     }
 }

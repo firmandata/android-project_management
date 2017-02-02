@@ -1,13 +1,11 @@
 package com.construction.pm.views.system;
 
+import android.app.Activity;
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.construction.pm.R;
@@ -72,7 +70,7 @@ public class AuthenticationLayout {
         return mAuthenticationView;
     }
 
-    public RelativeLayout getView() {
+    public RelativeLayout getLayout() {
         return mAuthenticationLayout;
     }
 
@@ -90,5 +88,9 @@ public class AuthenticationLayout {
 
     public interface SettingListener {
         void onSettingRequest();
+    }
+
+    public void loadLayoutToActivity(Activity activity) {
+        activity.setContentView(mAuthenticationLayout);
     }
 }
