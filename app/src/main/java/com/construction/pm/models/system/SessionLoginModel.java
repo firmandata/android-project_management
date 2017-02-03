@@ -1,5 +1,6 @@
 package com.construction.pm.models.system;
 
+import com.construction.pm.models.network.AccessTokenModel;
 import com.construction.pm.utils.DateTimeUtil;
 
 import org.json.JSONException;
@@ -7,20 +8,19 @@ import org.json.JSONException;
 import java.util.Calendar;
 
 public class SessionLoginModel {
-    protected String mToken;
+    protected AccessTokenModel mAccessTokenModel;
     protected UserModel mUserModel;
-    protected Calendar mExpiredTime;
 
     public SessionLoginModel() {
 
     }
 
-    public void setToken(final String token) {
-        mToken = token;
+    public void setAccessTokenModel(final AccessTokenModel accessTokenModel) {
+        mAccessTokenModel = accessTokenModel;
     }
 
-    public String getToken() {
-        return mToken;
+    public AccessTokenModel getAccessTokenModel() {
+        return mAccessTokenModel;
     }
 
     public void setUser(final UserModel userModel) {
@@ -31,23 +31,11 @@ public class SessionLoginModel {
         return mUserModel;
     }
 
-    public void setExpiredTime(final Calendar expiredTime) {
-        mExpiredTime = expiredTime;
-    }
-
-    public Calendar getExpiredTime() {
-        return mExpiredTime;
-    }
-
     public boolean isExpired() {
         boolean isExpired = true;
 
-        if (mExpiredTime != null) {
-            Calendar now = Calendar.getInstance();
-            if (mExpiredTime.getTimeInMillis() > now.getTimeInMillis())
-                isExpired = false;
-            else
-                isExpired = true;
+        if (mAccessTokenModel != null) {
+            isExpired = mAccessTokenModel.isExpired();
         }
 
         return isExpired;
@@ -56,10 +44,10 @@ public class SessionLoginModel {
     public static SessionLoginModel build(final org.json.JSONObject dataJson) throws JSONException {
         SessionLoginModel sessionLoginModel = new SessionLoginModel();
 
-        if (!dataJson.isNull("token"))
-            sessionLoginModel.setToken(dataJson.getString("token"));
-        if (!dataJson.isNull("expired_time"))
-            sessionLoginModel.setExpiredTime(DateTimeUtil.FromDateTimeString(dataJson.getString("expired_time")));
+        if (!dataJson.isNull("access_token")) {
+            org.json.JSONObject accessTokenJson = dataJson.getJSONObject("access_token");
+            sessionLoginModel.setAccessTokenModel(AccessTokenModel.build(accessTokenJson));
+        }
         if (!dataJson.isNull("user")) {
             org.json.JSONObject userJson = dataJson.getJSONObject("user");
             sessionLoginModel.setUser(UserModel.build(userJson));
@@ -71,8 +59,10 @@ public class SessionLoginModel {
     public org.json.JSONObject build() throws JSONException {
         org.json.JSONObject jsonObject = new org.json.JSONObject();
 
-        jsonObject.put("token", getToken());
-        jsonObject.put("expired_time", DateTimeUtil.ToDateTimeString(getExpiredTime()));
+        AccessTokenModel accessTokenModel = getAccessTokenModel();
+        if (accessTokenModel != null)
+            jsonObject.put("access_token", accessTokenModel.build());
+
         UserModel userModel = getUser();
         if (userModel != null)
             jsonObject.put("user", userModel.build());

@@ -22,6 +22,8 @@
     <string name="date_picker_button">&#8230;</string>
     <string name="time_picker_button">&#8230;</string>
 
+    <string name="network_unknown_response_expected">Unknown response expected.</string>
+
     <string name="main_drawer_open">open_drawer</string>
     <string name="main_drawer_close">close_drawer</string>
 

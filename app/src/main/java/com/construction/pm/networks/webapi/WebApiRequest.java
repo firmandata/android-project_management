@@ -33,7 +33,7 @@ import okio.ForwardingSource;
 import okio.Okio;
 import okio.Source;
 
-public class WebApiRequestAsync {
+public class WebApiRequest {
 
     protected Context mContext;
 
@@ -44,19 +44,146 @@ public class WebApiRequestAsync {
     protected SessionLoginModel mSessionLoginModel;
     protected SettingUserModel mSettingUserModel;
 
-    public WebApiRequestAsync(final Context context) {
+    public WebApiRequest(final Context context) {
         mContext = context;
     }
 
-    public void setSettingUser(final SettingUserModel settingUserModel) {
+    public void setSettingUserModel(final SettingUserModel settingUserModel) {
         mSettingUserModel = settingUserModel;
     }
 
-    public void setSession(final SessionLoginModel sessionLoginModel) {
+    public void setSessionLoginModel(final SessionLoginModel sessionLoginModel) {
         mSessionLoginModel = sessionLoginModel;
     }
 
+    public WebApiResponse get(final String api, final WebApiParam queryParam) {
+        return get(api, queryParam, (IWebApiProgress) null);
+    }
+
+    public WebApiResponse get(final String api, final WebApiParam queryParam, final IWebApiProgress webApiProgress) {
+        final WebApiResponse webApiResponse = new WebApiResponse(mContext);
+
+        webApiResponse.onStart();
+
+        if (mSettingUserModel == null) {
+            webApiResponse.onFailure(0, null, null, new Exception(ViewUtil.getResourceString(mContext, R.string.restful_user_config_not_set)));
+            webApiResponse.onFinish();
+            return webApiResponse;
+        }
+
+        if (mSettingUserModel.getServerUrl() == null) {
+            webApiResponse.onFailure(0, null, null, new Exception(ViewUtil.getResourceString(mContext, R.string.restful_server_url_config_not_set)));
+            webApiResponse.onFinish();
+            return webApiResponse;
+        }
+
+        // -- Initialize base parameters --
+        WebApiParam newWebApiParam = queryParam;
+        if (newWebApiParam == null)
+            newWebApiParam = new WebApiParam();
+
+        // -- Initialize http URL --
+        HttpUrl httpUrlApi = HttpUrl.parse(mSettingUserModel.getServerUrl() + api);
+        if (httpUrlApi == null) {
+            webApiResponse.onFailure(0, null, null, new Exception(ViewUtil.getResourceString(mContext, R.string.restful_server_url_not_valid, mSettingUserModel.getServerUrl() + api)));
+            webApiResponse.onFinish();
+            return webApiResponse;
+        }
+        HttpUrl.Builder httpUrlBuilder = httpUrlApi.newBuilder();
+        for (Map.Entry<String, String> apiParam : newWebApiParam.getParams().entrySet()) {
+            String apiParamKey = apiParam.getKey();
+            if (apiParamKey != null) {
+                String apiParamValue = apiParam.getValue();
+                if (apiParamValue != null)
+                    httpUrlBuilder.addQueryParameter(apiParamKey, apiParamValue);
+            }
+        }
+        HttpUrl httpUrl = httpUrlBuilder.build();
+
+        // -- Initialize requester --
+        Request.Builder requestBuilder = new Request.Builder();
+        requestBuilder.url(httpUrl);
+        Request request = requestBuilder.build();
+
+        // -- Initialize cookie --
+        ClearableCookieJar clearableCookieJar = new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(mContext));
+
+        // -- Initialize http client --
+        OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
+        okHttpClientBuilder.connectTimeout(CONNECT_TIMEOUT_SEC, TimeUnit.SECONDS);
+        okHttpClientBuilder.readTimeout(READ_TIMEOUT_SEC, TimeUnit.SECONDS);
+        okHttpClientBuilder.writeTimeout(WRITE_TIMEOUT_SEC, TimeUnit.SECONDS);
+        okHttpClientBuilder.cookieJar(clearableCookieJar);
+        okHttpClientBuilder.addNetworkInterceptor(new Interceptor() {
+            @Override
+            public Response intercept(Chain chain) throws IOException {
+                Response response = chain.proceed(chain.request());
+
+                Response.Builder responseBuilder = response.newBuilder();
+                responseBuilder.body(new ProgressResponseBody(response.body(), new ProgressListener() {
+                    @Override
+                    public void update(long bytesRead, long contentLength, boolean done) {
+                        if (webApiProgress != null)
+                            webApiProgress.onProgress(bytesRead, contentLength);
+                    }
+                }));
+
+                return responseBuilder.build();
+            }
+        });
+        OkHttpClient okHttpClient = okHttpClientBuilder.build();
+
+        // -- Call http --
+        try {
+            Call call = okHttpClient.newCall(request);
+            Response response = call.execute();
+
+            try {
+                ResponseBody responseBody = response.body();
+                String responseString = responseBody.string();
+
+                org.json.JSONTokener jsonTokener = new org.json.JSONTokener(responseString);
+                org.json.JSONObject jsonObject = null;
+                org.json.JSONArray jsonArray = null;
+
+                try {
+                    jsonObject = (org.json.JSONObject) jsonTokener.nextValue();
+                } catch (Exception ex) {
+                }
+
+                if (jsonObject == null) {
+                    try {
+                        jsonArray = (org.json.JSONArray) jsonTokener.nextValue();
+                    } catch (Exception ex) {
+                    }
+                }
+
+                if (jsonObject != null) {
+                    webApiResponse.onSuccess(response.code(), response.headers(), jsonObject);
+                } else if (jsonArray != null) {
+                    webApiResponse.onSuccess(response.code(), response.headers(), jsonArray);
+                } else {
+                    webApiResponse.onSuccess(response.code(), response.headers(), responseString);
+                }
+            } catch (IOException ex) {
+                webApiResponse.onFailure(response.code(), response.headers(), response.message(), ex);
+            } catch (Exception ex) {
+                webApiResponse.onFailure(response.code(), response.headers(), response.message(), ex);
+            }
+        } catch (Exception ex) {
+            webApiResponse.onFailure(0, null, null, ex);
+        }
+
+        webApiResponse.onFinish();
+
+        return webApiResponse;
+    }
+
     public void get(final String api, final WebApiParam queryParam, final WebApiResponse webApiResponse) {
+        get(api, queryParam, webApiResponse, null);
+    }
+
+    public void get(final String api, final WebApiParam queryParam, final WebApiResponse webApiResponse, final IWebApiProgress webApiProgress) {
         webApiResponse.onStart();
 
         if (mSettingUserModel == null) {
@@ -122,7 +249,8 @@ public class WebApiRequestAsync {
                         mHandler.post(new Runnable() {
                             @Override
                             public void run() {
-                                webApiResponse.onProgress(bytesRead, contentLength);
+                                if (webApiProgress != null)
+                                    webApiProgress.onProgress(bytesRead, contentLength);
                             }
                         });
                     }
@@ -230,7 +358,150 @@ public class WebApiRequestAsync {
         });
     }
 
+    public WebApiResponse post(final String api, final WebApiParam queryParam, final WebApiParam formData) {
+        return post(api, queryParam, formData, (IWebApiProgress) null);
+    }
+
+    public WebApiResponse post(final String api, final WebApiParam queryParam, final WebApiParam formData, final IWebApiProgress webApiProgress) {
+        final WebApiResponse webApiResponse = new WebApiResponse(mContext);
+
+        webApiResponse.onStart();
+
+        if (mSettingUserModel == null) {
+            webApiResponse.onFailure(0, null, null, new Exception(ViewUtil.getResourceString(mContext, R.string.restful_user_config_not_set)));
+            webApiResponse.onFinish();
+            return webApiResponse;
+        }
+
+        if (mSettingUserModel.getServerUrl() == null) {
+            webApiResponse.onFailure(0, null, null, new Exception(ViewUtil.getResourceString(mContext, R.string.restful_server_url_config_not_set)));
+            webApiResponse.onFinish();
+            return webApiResponse;
+        }
+
+        // -- Initialize base parameters --
+        WebApiParam newWebApiParam = queryParam;
+        if (newWebApiParam == null)
+            newWebApiParam = new WebApiParam();
+        WebApiParam newFormData = formData;
+        if (newFormData == null)
+            newFormData = new WebApiParam();
+
+        // -- Initialize http URL --
+        HttpUrl httpUrlApi = HttpUrl.parse(mSettingUserModel.getServerUrl() + api);
+        if (httpUrlApi == null) {
+            webApiResponse.onFailure(0, null, null, new Exception(ViewUtil.getResourceString(mContext, R.string.restful_server_url_not_valid, mSettingUserModel.getServerUrl() + api)));
+            webApiResponse.onFinish();
+            return webApiResponse;
+        }
+        HttpUrl.Builder httpUrlBuilder = httpUrlApi.newBuilder();
+        for (Map.Entry<String, String> apiParam : newWebApiParam.getParams().entrySet()) {
+            String apiParamKey = apiParam.getKey();
+            if (apiParamKey != null) {
+                String apiParamValue = apiParam.getValue();
+                if (apiParamValue != null)
+                    httpUrlBuilder.addQueryParameter(apiParamKey, apiParamValue);
+            }
+        }
+        HttpUrl httpUrl = httpUrlBuilder.build();
+
+        // -- Initialize post data --
+        FormBody.Builder formBodyBuilder = new FormBody.Builder();
+        for (Map.Entry<String, String> apiParam : newFormData.getParams().entrySet()) {
+            String apiParamKey = apiParam.getKey();
+            if (apiParamKey != null) {
+                String apiParamValue = apiParam.getValue();
+                if (apiParamValue != null)
+                    formBodyBuilder.add(apiParamKey, apiParamValue);
+            }
+        }
+        RequestBody requestBody = formBodyBuilder.build();
+
+        // -- Initialize requester --
+        Request.Builder requestBuilder = new Request.Builder();
+        requestBuilder.url(httpUrl);
+        requestBuilder.post(requestBody);
+        Request request = requestBuilder.build();
+
+        // -- Initialize cookie --
+        ClearableCookieJar clearableCookieJar = new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(mContext));
+
+        // -- Initialize http client --
+        OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
+        okHttpClientBuilder.connectTimeout(CONNECT_TIMEOUT_SEC, TimeUnit.SECONDS);
+        okHttpClientBuilder.readTimeout(READ_TIMEOUT_SEC, TimeUnit.SECONDS);
+        okHttpClientBuilder.writeTimeout(WRITE_TIMEOUT_SEC, TimeUnit.SECONDS);
+        okHttpClientBuilder.cookieJar(clearableCookieJar);
+        okHttpClientBuilder.addNetworkInterceptor(new Interceptor() {
+            @Override
+            public Response intercept(Chain chain) throws IOException {
+                Response response = chain.proceed(chain.request());
+
+                Response.Builder responseBuilder = response.newBuilder();
+                responseBuilder.body(new ProgressResponseBody(response.body(), new ProgressListener() {
+                    @Override
+                    public void update(long bytesRead, long contentLength, boolean done) {
+                        if (webApiProgress != null)
+                            webApiProgress.onProgress(bytesRead, contentLength);
+                    }
+                }));
+
+                return responseBuilder.build();
+            }
+        });
+        OkHttpClient okHttpClient = okHttpClientBuilder.build();
+
+        // -- Call http --
+        try {
+            Call call = okHttpClient.newCall(request);
+            Response response = call.execute();
+
+            try {
+                ResponseBody responseBody = response.body();
+                String responseString = responseBody.string();
+
+                org.json.JSONTokener jsonTokener = new org.json.JSONTokener(responseString);
+                org.json.JSONObject jsonObject = null;
+                org.json.JSONArray jsonArray = null;
+
+                try {
+                    jsonObject = (org.json.JSONObject) jsonTokener.nextValue();
+                } catch (Exception ex) {
+                }
+
+                if (jsonObject == null) {
+                    try {
+                        jsonArray = (org.json.JSONArray) jsonTokener.nextValue();
+                    } catch (Exception ex) {
+                    }
+                }
+
+                if (jsonObject != null) {
+                    webApiResponse.onSuccess(response.code(), response.headers(), jsonObject);
+                } else if (jsonArray != null) {
+                    webApiResponse.onSuccess(response.code(), response.headers(), jsonArray);
+                } else {
+                    webApiResponse.onSuccess(response.code(), response.headers(), responseString);
+                }
+            } catch (IOException ex) {
+                webApiResponse.onFailure(response.code(), response.headers(), response.message(), ex);
+            } catch (Exception ex) {
+                webApiResponse.onFailure(response.code(), response.headers(), response.message(), ex);
+            }
+        } catch (Exception ex) {
+            webApiResponse.onFailure(0, null, null, ex);
+        }
+
+        webApiResponse.onFinish();
+
+        return webApiResponse;
+    }
+
     public void post(final String api, final WebApiParam queryParam, final WebApiParam formData, final WebApiResponse webApiResponse) {
+        post(api, queryParam, formData, webApiResponse, (IWebApiProgress) null);
+    }
+
+    public void post(final String api, final WebApiParam queryParam, final WebApiParam formData, final WebApiResponse webApiResponse, final IWebApiProgress webApiProgress) {
         webApiResponse.onStart();
 
         if (mSettingUserModel == null) {
@@ -312,7 +583,8 @@ public class WebApiRequestAsync {
                         mHandler.post(new Runnable() {
                             @Override
                             public void run() {
-                                webApiResponse.onProgress(bytesRead, contentLength);
+                                if (webApiProgress != null)
+                                    webApiProgress.onProgress(bytesRead, contentLength);
                             }
                         });
                     }
@@ -420,7 +692,138 @@ public class WebApiRequestAsync {
         });
     }
 
+    public WebApiResponse post(final String api, final WebApiParam queryParam, final String jsonData) {
+        return post(api, queryParam, jsonData, (IWebApiProgress) null);
+    }
+
+    public WebApiResponse post(final String api, final WebApiParam queryParam, final String jsonData, final IWebApiProgress webApiProgress) {
+        final WebApiResponse webApiResponse = new WebApiResponse(mContext);
+
+        webApiResponse.onStart();
+
+        if (mSettingUserModel == null) {
+            webApiResponse.onFailure(0, null, null, new Exception(ViewUtil.getResourceString(mContext, R.string.restful_user_config_not_set)));
+            webApiResponse.onFinish();
+            return webApiResponse;
+        }
+
+        if (mSettingUserModel.getServerUrl() == null) {
+            webApiResponse.onFailure(0, null, null, new Exception(ViewUtil.getResourceString(mContext, R.string.restful_server_url_config_not_set)));
+            webApiResponse.onFinish();
+            return webApiResponse;
+        }
+
+        // -- Initialize base parameters --
+        WebApiParam newWebApiParam = queryParam;
+        if (newWebApiParam == null)
+            newWebApiParam = new WebApiParam();
+
+        // -- Initialize http URL --
+        HttpUrl httpUrlApi = HttpUrl.parse(mSettingUserModel.getServerUrl() + api);
+        if (httpUrlApi == null) {
+            webApiResponse.onFailure(0, null, null, new Exception(ViewUtil.getResourceString(mContext, R.string.restful_server_url_not_valid, mSettingUserModel.getServerUrl() + api)));
+            webApiResponse.onFinish();
+            return webApiResponse;
+        }
+        HttpUrl.Builder httpUrlBuilder = httpUrlApi.newBuilder();
+        for (Map.Entry<String, String> apiParam : newWebApiParam.getParams().entrySet()) {
+            String apiParamKey = apiParam.getKey();
+            if (apiParamKey != null) {
+                String apiParamValue = apiParam.getValue();
+                if (apiParamValue != null)
+                    httpUrlBuilder.addQueryParameter(apiParamKey, apiParamValue);
+            }
+        }
+        HttpUrl httpUrl = httpUrlBuilder.build();
+
+        // -- Initialize post data --
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonData);
+
+        // -- Initialize requester --
+        Request.Builder requestBuilder = new Request.Builder();
+        requestBuilder.url(httpUrl);
+        requestBuilder.post(requestBody);
+        Request request = requestBuilder.build();
+
+        // -- Initialize cookie --
+        ClearableCookieJar clearableCookieJar = new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(mContext));
+
+        // -- Initialize http client --
+        OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
+        okHttpClientBuilder.connectTimeout(CONNECT_TIMEOUT_SEC, TimeUnit.SECONDS);
+        okHttpClientBuilder.readTimeout(READ_TIMEOUT_SEC, TimeUnit.SECONDS);
+        okHttpClientBuilder.writeTimeout(WRITE_TIMEOUT_SEC, TimeUnit.SECONDS);
+        okHttpClientBuilder.cookieJar(clearableCookieJar);
+        okHttpClientBuilder.addNetworkInterceptor(new Interceptor() {
+            @Override
+            public Response intercept(Chain chain) throws IOException {
+                Response response = chain.proceed(chain.request());
+
+                Response.Builder responseBuilder = response.newBuilder();
+                responseBuilder.body(new ProgressResponseBody(response.body(), new ProgressListener() {
+                    @Override
+                    public void update(long bytesRead, long contentLength, boolean done) {
+                        if (webApiProgress != null)
+                            webApiProgress.onProgress(bytesRead, contentLength);
+                    }
+                }));
+
+                return responseBuilder.build();
+            }
+        });
+        OkHttpClient okHttpClient = okHttpClientBuilder.build();
+
+        // -- Call http --
+        try {
+            Call call = okHttpClient.newCall(request);
+            Response response = call.execute();
+
+            try {
+                ResponseBody responseBody = response.body();
+                String responseString = responseBody.string();
+
+                org.json.JSONTokener jsonTokener = new org.json.JSONTokener(responseString);
+                org.json.JSONObject jsonObject = null;
+                org.json.JSONArray jsonArray = null;
+
+                try {
+                    jsonObject = (org.json.JSONObject) jsonTokener.nextValue();
+                } catch (Exception ex) {
+                }
+
+                if (jsonObject == null) {
+                    try {
+                        jsonArray = (org.json.JSONArray) jsonTokener.nextValue();
+                    } catch (Exception ex) {
+                    }
+                }
+
+                if (jsonObject != null) {
+                    webApiResponse.onSuccess(response.code(), response.headers(), jsonObject);
+                } else if (jsonArray != null) {
+                    webApiResponse.onSuccess(response.code(), response.headers(), jsonArray);
+                } else {
+                    webApiResponse.onSuccess(response.code(), response.headers(), responseString);
+                }
+            } catch (IOException ex) {
+                webApiResponse.onFailure(response.code(), response.headers(), response.message(), ex);
+            } catch (Exception ex) {
+                webApiResponse.onFailure(response.code(), response.headers(), response.message(), ex);
+            }
+        } catch (Exception ex) {
+            webApiResponse.onFailure(0, null, null, ex);
+        }
+
+        webApiResponse.onFinish();
+
+        return webApiResponse;
+    }
+
     public void post(final String api, final WebApiParam queryParam, final String jsonData, final WebApiResponse webApiResponse) {
+        post(api, queryParam, jsonData, webApiResponse, (IWebApiProgress) null);
+    }
+
+    public void post(final String api, final WebApiParam queryParam, final String jsonData, final WebApiResponse webApiResponse, final IWebApiProgress webApiProgress) {
         webApiResponse.onStart();
 
         if (mSettingUserModel == null) {
@@ -490,7 +893,8 @@ public class WebApiRequestAsync {
                         mHandler.post(new Runnable() {
                             @Override
                             public void run() {
-                                webApiResponse.onProgress(bytesRead, contentLength);
+                                if (webApiProgress != null)
+                                    webApiProgress.onProgress(bytesRead, contentLength);
                             }
                         });
                     }

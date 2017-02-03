@@ -14,7 +14,12 @@ import java.util.List;
 import okhttp3.Headers;
 
 public class WebApiResponse {
-    private Context mContext;
+
+    protected Context mContext;
+
+    protected org.json.JSONObject mSuccessJSONObject;
+    protected org.json.JSONArray mSuccessJSONArray;
+    protected WebApiError mWebApiError;
 
     public WebApiResponse(Context context) {
         mContext = context;
@@ -25,11 +30,19 @@ public class WebApiResponse {
     }
 
     public void onSuccess(final org.json.JSONObject response) {
+        mSuccessJSONObject = response;
+    }
 
+    public org.json.JSONObject getSuccessJsonObject() {
+        return mSuccessJSONObject;
     }
 
     public void onSuccess(final org.json.JSONArray response) {
+        mSuccessJSONArray = response;
+    }
 
+    public org.json.JSONArray getSuccessJsonArray() {
+        return mSuccessJSONArray;
     }
 
     public void onSuccess(final int statusCode, final Headers headers, final org.json.JSONObject response) {
@@ -51,6 +64,10 @@ public class WebApiResponse {
 
     public void onFailure(final WebApiError webApiError) {
 
+    }
+
+    public WebApiError getWebApiError() {
+        return mWebApiError;
     }
 
     public void onFailure(final int statusCode, final Headers headers, final Throwable throwable, final org.json.JSONObject errorResponse) {
@@ -87,11 +104,10 @@ public class WebApiResponse {
         WebApiError webApiError = null;
         try {
             org.json.JSONObject errorResponse = new org.json.JSONObject();
-            errorResponse.put("status", "error");
-            errorResponse.put("code", statusCode);
+            errorResponse.put("responseCode", statusCode);
             if (responseString != null) {
                 if (!responseString.isEmpty())
-                    errorResponse.put("message", responseString);
+                    errorResponse.put("responseMessage", responseString);
             }
             webApiError = getRestfulError(statusCode, throwable, errorResponse);
         } catch (org.json.JSONException ex) {
@@ -124,17 +140,14 @@ public class WebApiResponse {
 
         try {
             if (errorResponse != null) {
-                if (!errorResponse.isNull("status") && errorResponse.getString("status").toLowerCase().trim().equals("error")) {
-                    if (!errorResponse.isNull("code") || !errorResponse.isNull("message")) {
-                        if (!errorResponse.isNull("code")) {
-                            int errorCode = errorResponse.getInt("code");
-                            if (errorCode > 0) {
-                                newErrorCode = errorResponse.getInt("code");
-                                messageList.add(ViewUtil.getResourceString(mContext, R.string.restful_message_error_code, String.valueOf(newErrorCode)));
-                            }
-                        }
-                        if (!errorResponse.isNull("message")) {
-                            String errorMessage = errorResponse.getString("message");
+                if (!errorResponse.isNull("responseCode")) {
+                    int errorCode = errorResponse.getInt("responseCode");
+                    if (errorCode >= 300) {
+                        newErrorCode = errorResponse.getInt("responseCode");
+                        messageList.add(ViewUtil.getResourceString(mContext, R.string.restful_message_error_code, String.valueOf(newErrorCode)));
+
+                        if (!errorResponse.isNull("responseMessage")) {
+                            String errorMessage = errorResponse.getString("responseMessage");
                             if (!errorMessage.isEmpty()) {
                                 messageList.add(ViewUtil.getResourceString(mContext, R.string.restful_message_error_message, errorMessage));
                             }
@@ -168,10 +181,6 @@ public class WebApiResponse {
         }
 
         return webApiError;
-    }
-
-    public void onProgress(final long bytesWritten, final long totalSize) {
-
     }
 
     public void onFinish() {
