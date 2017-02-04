@@ -56,11 +56,11 @@ public class WebApiRequest {
         mSessionLoginModel = sessionLoginModel;
     }
 
-    public WebApiResponse get(final String api, final WebApiParam queryParam) {
-        return get(api, queryParam, (IWebApiProgress) null);
+    public WebApiResponse get(final String api, final WebApiParam headerParam, final WebApiParam queryParam) {
+        return get(api, headerParam, queryParam, (IWebApiProgress) null);
     }
 
-    public WebApiResponse get(final String api, final WebApiParam queryParam, final IWebApiProgress webApiProgress) {
+    public WebApiResponse get(final String api, final WebApiParam headerParam, final WebApiParam queryParam, final IWebApiProgress webApiProgress) {
         final WebApiResponse webApiResponse = new WebApiResponse(mContext);
 
         webApiResponse.onStart();
@@ -81,6 +81,9 @@ public class WebApiRequest {
         WebApiParam newWebApiParam = queryParam;
         if (newWebApiParam == null)
             newWebApiParam = new WebApiParam();
+        WebApiParam newHeaderParam = headerParam;
+        if (newHeaderParam == null)
+            newHeaderParam = new WebApiParam();
 
         // -- Initialize http URL --
         HttpUrl httpUrlApi = HttpUrl.parse(mSettingUserModel.getServerUrl() + api);
@@ -103,6 +106,14 @@ public class WebApiRequest {
         // -- Initialize requester --
         Request.Builder requestBuilder = new Request.Builder();
         requestBuilder.url(httpUrl);
+        for (Map.Entry<String, String> apiParam : newHeaderParam.getParams().entrySet()) {
+            String apiParamKey = apiParam.getKey();
+            if (apiParamKey != null) {
+                String apiParamValue = apiParam.getValue();
+                if (apiParamValue != null)
+                    requestBuilder.addHeader(apiParamKey, apiParamValue);
+            }
+        }
         Request request = requestBuilder.build();
 
         // -- Initialize cookie --
@@ -179,11 +190,11 @@ public class WebApiRequest {
         return webApiResponse;
     }
 
-    public void get(final String api, final WebApiParam queryParam, final WebApiResponse webApiResponse) {
-        get(api, queryParam, webApiResponse, null);
+    public void get(final String api, final WebApiParam headerParam, final WebApiParam queryParam, final WebApiResponse webApiResponse) {
+        get(api, headerParam, queryParam, webApiResponse, null);
     }
 
-    public void get(final String api, final WebApiParam queryParam, final WebApiResponse webApiResponse, final IWebApiProgress webApiProgress) {
+    public void get(final String api, final WebApiParam headerParam, final WebApiParam queryParam, final WebApiResponse webApiResponse, final IWebApiProgress webApiProgress) {
         webApiResponse.onStart();
 
         if (mSettingUserModel == null) {
@@ -202,6 +213,9 @@ public class WebApiRequest {
         WebApiParam newWebApiParam = queryParam;
         if (newWebApiParam == null)
             newWebApiParam = new WebApiParam();
+        WebApiParam newHeaderParam = headerParam;
+        if (newHeaderParam == null)
+            newHeaderParam = new WebApiParam();
 
         // -- Initialize http URL --
         HttpUrl httpUrlApi = HttpUrl.parse(mSettingUserModel.getServerUrl() + api);
@@ -224,6 +238,14 @@ public class WebApiRequest {
         // -- Initialize requester --
         Request.Builder requestBuilder = new Request.Builder();
         requestBuilder.url(httpUrl);
+        for (Map.Entry<String, String> apiParam : newHeaderParam.getParams().entrySet()) {
+            String apiParamKey = apiParam.getKey();
+            if (apiParamKey != null) {
+                String apiParamValue = apiParam.getValue();
+                if (apiParamValue != null)
+                    requestBuilder.addHeader(apiParamKey, apiParamValue);
+            }
+        }
         Request request = requestBuilder.build();
 
         // -- Initialize cookie --
@@ -358,11 +380,11 @@ public class WebApiRequest {
         });
     }
 
-    public WebApiResponse post(final String api, final WebApiParam queryParam, final WebApiParam formData) {
-        return post(api, queryParam, formData, (IWebApiProgress) null);
+    public WebApiResponse post(final String api, final WebApiParam headerParam, final WebApiParam queryParam, final WebApiParam formData) {
+        return post(api, headerParam, queryParam, formData, (IWebApiProgress) null);
     }
 
-    public WebApiResponse post(final String api, final WebApiParam queryParam, final WebApiParam formData, final IWebApiProgress webApiProgress) {
+    public WebApiResponse post(final String api, final WebApiParam headerParam, final WebApiParam queryParam, final WebApiParam formData, final IWebApiProgress webApiProgress) {
         final WebApiResponse webApiResponse = new WebApiResponse(mContext);
 
         webApiResponse.onStart();
@@ -386,6 +408,9 @@ public class WebApiRequest {
         WebApiParam newFormData = formData;
         if (newFormData == null)
             newFormData = new WebApiParam();
+        WebApiParam newHeaderParam = headerParam;
+        if (newHeaderParam == null)
+            newHeaderParam = new WebApiParam();
 
         // -- Initialize http URL --
         HttpUrl httpUrlApi = HttpUrl.parse(mSettingUserModel.getServerUrl() + api);
@@ -420,6 +445,14 @@ public class WebApiRequest {
         // -- Initialize requester --
         Request.Builder requestBuilder = new Request.Builder();
         requestBuilder.url(httpUrl);
+        for (Map.Entry<String, String> apiParam : newHeaderParam.getParams().entrySet()) {
+            String apiParamKey = apiParam.getKey();
+            if (apiParamKey != null) {
+                String apiParamValue = apiParam.getValue();
+                if (apiParamValue != null)
+                    requestBuilder.addHeader(apiParamKey, apiParamValue);
+            }
+        }
         requestBuilder.post(requestBody);
         Request request = requestBuilder.build();
 
@@ -497,11 +530,11 @@ public class WebApiRequest {
         return webApiResponse;
     }
 
-    public void post(final String api, final WebApiParam queryParam, final WebApiParam formData, final WebApiResponse webApiResponse) {
-        post(api, queryParam, formData, webApiResponse, (IWebApiProgress) null);
+    public void post(final String api, final WebApiParam headerParam, final WebApiParam queryParam, final WebApiParam formData, final WebApiResponse webApiResponse) {
+        post(api, headerParam, queryParam, formData, webApiResponse, (IWebApiProgress) null);
     }
 
-    public void post(final String api, final WebApiParam queryParam, final WebApiParam formData, final WebApiResponse webApiResponse, final IWebApiProgress webApiProgress) {
+    public void post(final String api, final WebApiParam headerParam, final WebApiParam queryParam, final WebApiParam formData, final WebApiResponse webApiResponse, final IWebApiProgress webApiProgress) {
         webApiResponse.onStart();
 
         if (mSettingUserModel == null) {
@@ -523,6 +556,9 @@ public class WebApiRequest {
         WebApiParam newFormData = formData;
         if (newFormData == null)
             newFormData = new WebApiParam();
+        WebApiParam newHeaderParam = headerParam;
+        if (newHeaderParam == null)
+            newHeaderParam = new WebApiParam();
 
         // -- Initialize http URL --
         HttpUrl httpUrlApi = HttpUrl.parse(mSettingUserModel.getServerUrl() + api);
@@ -557,6 +593,14 @@ public class WebApiRequest {
         // -- Initialize requester --
         Request.Builder requestBuilder = new Request.Builder();
         requestBuilder.url(httpUrl);
+        for (Map.Entry<String, String> apiParam : newHeaderParam.getParams().entrySet()) {
+            String apiParamKey = apiParam.getKey();
+            if (apiParamKey != null) {
+                String apiParamValue = apiParam.getValue();
+                if (apiParamValue != null)
+                    requestBuilder.addHeader(apiParamKey, apiParamValue);
+            }
+        }
         requestBuilder.post(requestBody);
         Request request = requestBuilder.build();
 
@@ -692,11 +736,11 @@ public class WebApiRequest {
         });
     }
 
-    public WebApiResponse post(final String api, final WebApiParam queryParam, final String jsonData) {
-        return post(api, queryParam, jsonData, (IWebApiProgress) null);
+    public WebApiResponse post(final String api, final WebApiParam headerParam, final WebApiParam queryParam, final String jsonData) {
+        return post(api, headerParam, queryParam, jsonData, (IWebApiProgress) null);
     }
 
-    public WebApiResponse post(final String api, final WebApiParam queryParam, final String jsonData, final IWebApiProgress webApiProgress) {
+    public WebApiResponse post(final String api, final WebApiParam headerParam, final WebApiParam queryParam, final String jsonData, final IWebApiProgress webApiProgress) {
         final WebApiResponse webApiResponse = new WebApiResponse(mContext);
 
         webApiResponse.onStart();
@@ -717,6 +761,9 @@ public class WebApiRequest {
         WebApiParam newWebApiParam = queryParam;
         if (newWebApiParam == null)
             newWebApiParam = new WebApiParam();
+        WebApiParam newHeaderParam = headerParam;
+        if (newHeaderParam == null)
+            newHeaderParam = new WebApiParam();
 
         // -- Initialize http URL --
         HttpUrl httpUrlApi = HttpUrl.parse(mSettingUserModel.getServerUrl() + api);
@@ -742,6 +789,14 @@ public class WebApiRequest {
         // -- Initialize requester --
         Request.Builder requestBuilder = new Request.Builder();
         requestBuilder.url(httpUrl);
+        for (Map.Entry<String, String> apiParam : newHeaderParam.getParams().entrySet()) {
+            String apiParamKey = apiParam.getKey();
+            if (apiParamKey != null) {
+                String apiParamValue = apiParam.getValue();
+                if (apiParamValue != null)
+                    requestBuilder.addHeader(apiParamKey, apiParamValue);
+            }
+        }
         requestBuilder.post(requestBody);
         Request request = requestBuilder.build();
 
@@ -819,11 +874,11 @@ public class WebApiRequest {
         return webApiResponse;
     }
 
-    public void post(final String api, final WebApiParam queryParam, final String jsonData, final WebApiResponse webApiResponse) {
-        post(api, queryParam, jsonData, webApiResponse, (IWebApiProgress) null);
+    public void post(final String api, final WebApiParam headerParam, final WebApiParam queryParam, final String jsonData, final WebApiResponse webApiResponse) {
+        post(api, headerParam, queryParam, jsonData, webApiResponse, (IWebApiProgress) null);
     }
 
-    public void post(final String api, final WebApiParam queryParam, final String jsonData, final WebApiResponse webApiResponse, final IWebApiProgress webApiProgress) {
+    public void post(final String api, final WebApiParam headerParam, final WebApiParam queryParam, final String jsonData, final WebApiResponse webApiResponse, final IWebApiProgress webApiProgress) {
         webApiResponse.onStart();
 
         if (mSettingUserModel == null) {
@@ -842,6 +897,9 @@ public class WebApiRequest {
         WebApiParam newWebApiParam = queryParam;
         if (newWebApiParam == null)
             newWebApiParam = new WebApiParam();
+        WebApiParam newHeaderParam = headerParam;
+        if (newHeaderParam == null)
+            newHeaderParam = new WebApiParam();
 
         // -- Initialize http URL --
         HttpUrl httpUrlApi = HttpUrl.parse(mSettingUserModel.getServerUrl() + api);
@@ -867,6 +925,14 @@ public class WebApiRequest {
         // -- Initialize requester --
         Request.Builder requestBuilder = new Request.Builder();
         requestBuilder.url(httpUrl);
+        for (Map.Entry<String, String> apiParam : newHeaderParam.getParams().entrySet()) {
+            String apiParamKey = apiParam.getKey();
+            if (apiParamKey != null) {
+                String apiParamValue = apiParam.getValue();
+                if (apiParamValue != null)
+                    requestBuilder.addHeader(apiParamKey, apiParamValue);
+            }
+        }
         requestBuilder.post(requestBody);
         Request request = requestBuilder.build();
 

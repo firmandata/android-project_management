@@ -4,6 +4,8 @@ import android.app.Application;
 
 import com.construction.pm.models.system.SessionLoginModel;
 import com.construction.pm.models.system.SettingUserModel;
+import com.construction.pm.persistence.SessionPersistent;
+import com.construction.pm.persistence.SettingPersistent;
 
 public class MainApplication extends Application {
 
@@ -13,6 +15,14 @@ public class MainApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        // -- Get setting user model persistent --
+        SettingPersistent settingPersistent = new SettingPersistent(this);
+        setSettingUserModel(settingPersistent.getSettingUserModel());
+
+        // -- Get session login model persistent --
+        SessionPersistent sessionPersistent = new SessionPersistent(this);
+        setSessionLoginModel(sessionPersistent.getSessionLoginModel());
     }
 
     public void setSettingUserModel(final SettingUserModel settingUserModel) {

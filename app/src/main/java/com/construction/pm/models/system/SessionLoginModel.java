@@ -1,15 +1,14 @@
 package com.construction.pm.models.system;
 
+import com.construction.pm.models.ProjectMemberModel;
 import com.construction.pm.models.network.AccessTokenModel;
-import com.construction.pm.utils.DateTimeUtil;
+import com.construction.pm.models.network.UserProjectMemberModel;
 
 import org.json.JSONException;
 
-import java.util.Calendar;
-
 public class SessionLoginModel {
     protected AccessTokenModel mAccessTokenModel;
-    protected UserModel mUserModel;
+    protected UserProjectMemberModel mUserProjectMemberModel;
 
     public SessionLoginModel() {
 
@@ -23,15 +22,15 @@ public class SessionLoginModel {
         return mAccessTokenModel;
     }
 
-    public void setUser(final UserModel userModel) {
-        mUserModel = userModel;
+    public void setUserProjectMemberModel(final UserProjectMemberModel userProjectMemberModel) {
+        mUserProjectMemberModel = userProjectMemberModel;
     }
 
-    public UserModel getUser() {
-        return mUserModel;
+    public UserProjectMemberModel getUserProjectMemberModel() {
+        return mUserProjectMemberModel;
     }
 
-    public boolean isExpired() {
+    public boolean isAccessTokenExpired() {
         boolean isExpired = true;
 
         if (mAccessTokenModel != null) {
@@ -48,9 +47,9 @@ public class SessionLoginModel {
             org.json.JSONObject accessTokenJson = dataJson.getJSONObject("access_token");
             sessionLoginModel.setAccessTokenModel(AccessTokenModel.build(accessTokenJson));
         }
-        if (!dataJson.isNull("user")) {
-            org.json.JSONObject userJson = dataJson.getJSONObject("user");
-            sessionLoginModel.setUser(UserModel.build(userJson));
+        if (!dataJson.isNull("user_project_member")) {
+            org.json.JSONObject userProjectMemberJson = dataJson.getJSONObject("user_project_member");
+            sessionLoginModel.setUserProjectMemberModel(UserProjectMemberModel.build(userProjectMemberJson));
         }
 
         return sessionLoginModel;
@@ -63,9 +62,9 @@ public class SessionLoginModel {
         if (accessTokenModel != null)
             jsonObject.put("access_token", accessTokenModel.build());
 
-        UserModel userModel = getUser();
-        if (userModel != null)
-            jsonObject.put("user", userModel.build());
+        UserProjectMemberModel userProjectMemberModel = getUserProjectMemberModel();
+        if (userProjectMemberModel != null)
+            jsonObject.put("user_project_member", userProjectMemberModel.build());
 
         return jsonObject;
     }

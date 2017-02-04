@@ -4,12 +4,15 @@ import android.content.Context;
 
 import com.construction.pm.R;
 import com.construction.pm.models.network.AccessTokenModel;
+import com.construction.pm.models.network.UserProjectMemberModel;
 import com.construction.pm.models.system.SessionLoginModel;
 import com.construction.pm.models.system.SettingUserModel;
+import com.construction.pm.models.system.UserModel;
 import com.construction.pm.networks.webapi.WebApiError;
 import com.construction.pm.networks.webapi.WebApiParam;
 import com.construction.pm.networks.webapi.WebApiRequest;
 import com.construction.pm.networks.webapi.WebApiResponse;
+import com.construction.pm.utils.AppUtil;
 import com.construction.pm.utils.ViewUtil;
 
 import org.json.JSONException;
@@ -20,26 +23,16 @@ public class AuthenticationNetwork {
 
     protected Context mContext;
 
-    protected SessionLoginModel mSessionLoginModel;
-    protected SettingUserModel mSettingUserModel;
-
     protected WebApiRequest mWebApiRequest;
 
-    public AuthenticationNetwork(final Context context) {
+    public AuthenticationNetwork(final Context context, final SettingUserModel settingUserModel) {
         mContext = context;
 
         mWebApiRequest = new WebApiRequest(mContext);
+        mWebApiRequest.setSettingUserModel(settingUserModel);
     }
 
-    public void setSettingUserModel(final SettingUserModel settingUserModel) {
-        mSettingUserModel = settingUserModel;
-    }
-
-    public void setSessionLoginModel(final SessionLoginModel sessionLoginModel) {
-        mSessionLoginModel = sessionLoginModel;
-    }
-
-    public AccessTokenModel generateAccessToken(final String username, final String password) throws Exception {
+    public AccessTokenModel getAccessToken(final String username, final String password) throws Exception {
         WebApiParam formData = new WebApiParam();
         formData.add("grant_type", "password");
         formData.add("username", username);
@@ -48,7 +41,7 @@ public class AuthenticationNetwork {
         formData.add("client_secret", "mobile#123");
         formData.add("scope", "userinfo cloud file node");
 
-        WebApiResponse webApiResponse = mWebApiRequest.post("/oauth2/PasswordCredentials", null, formData);
+        WebApiResponse webApiResponse = mWebApiRequest.post("/oauth2/PasswordCredentials", null, null, formData);
 
         WebApiError webApiError = webApiResponse.getWebApiError();
         if (webApiError != null)
@@ -69,11 +62,15 @@ public class AuthenticationNetwork {
         return accessTokenModel;
     }
 
-    public SessionLoginModel doLogin(final String login, final String password) throws Exception {
+    public UserProjectMemberModel doLogin(final AccessTokenModel accessTokenModel, final String login, final String password) throws Exception {
         WebApiParam formData = new WebApiParam();
         formData.add("login", login);
         formData.add("password", password);
-        WebApiResponse webApiResponse = mWebApiRequest.post("/rest/user/mobileLogin", null, formData);
+
+        WebApiParam headerParam = new WebApiParam();
+        headerParam.add("Authorization", "Bearer " + accessTokenModel.getAccessToken());
+
+        WebApiResponse webApiResponse = mWebApiRequest.post("/rest/user/mobileLogin", headerParam, null, formData);
 
         WebApiError webApiError = webApiResponse.getWebApiError();
         if (webApiError != null)
@@ -83,19 +80,39 @@ public class AuthenticationNetwork {
         if (jsonObject == null)
             throw new Exception(ViewUtil.getResourceString(mContext, R.string.network_unknown_response_expected));
 
-        SessionLoginModel sessionLoginModel;
+        UserProjectMemberModel userProjectMemberModel = null;
         try {
-            sessionLoginModel = SessionLoginModel.build(jsonObject);
+            if (!jsonObject.isNull("result")) {
+                org.json.JSONObject jsonUserProjectMember = jsonObject.getJSONObject("result");
+                userProjectMemberModel = UserProjectMemberModel.build(jsonUserProjectMember);
+            }
         } catch (JSONException jsonException) {
             throw new Exception(jsonException.getMessage());
         }
 
-        return sessionLoginModel;
+        return userProjectMemberModel;
     }
 
-    public SessionLoginModel updateSession() throws Exception {
+    public UserProjectMemberModel getUserProjectMemberModel(final SessionLoginModel sessionLoginModel) throws Exception {
+        UserModel userModel = null;
+        if (sessionLoginModel.getUserProjectMemberModel() != null) {
+            userModel = sessionLoginModel.getUserProjectMemberModel().getUserModel();
+        }
+        AccessTokenModel accessTokenModel = sessionLoginModel.getAccessTokenModel();
+
         WebApiParam formData = new WebApiParam();
-        WebApiResponse webApiResponse = mWebApiRequest.post("/rest/user/mobileLoginWithTokenKey", null, formData);
+        if (userModel != null) {
+            formData.add("user_id", userModel.getUserId());
+            formData.add("mobile_token", userModel.getMobileToken());
+        }
+        formData.add("imei", AppUtil.getImei(mContext));
+
+        WebApiParam headerParam = new WebApiParam();
+        if (accessTokenModel != null) {
+            headerParam.add("Authorization", "Bearer " + accessTokenModel.getAccessToken());
+        }
+
+        WebApiResponse webApiResponse = mWebApiRequest.post("/rest/user/mobileLoginWithTokenKey", headerParam, null, formData);
 
         WebApiError webApiError = webApiResponse.getWebApiError();
         if (webApiError != null)
@@ -105,13 +122,16 @@ public class AuthenticationNetwork {
         if (jsonObject == null)
             throw new Exception(ViewUtil.getResourceString(mContext, R.string.network_unknown_response_expected));
 
-        SessionLoginModel sessionLoginModel;
+        UserProjectMemberModel userProjectMemberModel = null;
         try {
-            sessionLoginModel = SessionLoginModel.build(jsonObject);
+            if (!jsonObject.isNull("result")) {
+                org.json.JSONObject jsonUserProjectMember = jsonObject.getJSONObject("result");
+                userProjectMemberModel = UserProjectMemberModel.build(jsonUserProjectMember);
+            }
         } catch (JSONException jsonException) {
             throw new Exception(jsonException.getMessage());
         }
 
-        return sessionLoginModel;
+        return userProjectMemberModel;
     }
 }

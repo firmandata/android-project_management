@@ -27,14 +27,21 @@
     <string name="main_drawer_open">open_drawer</string>
     <string name="main_drawer_close">close_drawer</string>
 
+    <string name="session_handle_task_get_persistent">Getting session &#8230;</string>
+    <string name="session_handle_task_get_access_token">Getting access token &#8230;</string>
+    <string name="session_handle_task_get_user_project_member">Getting user info &#8230;</string>
+    <string name="session_handle_task_set_persistent">Setting session &#8230;</string>
+
     <string name="image_shadow_description">Shadow</string>
+    <string name="image_logo_description">Application Logo</string>
+
+    <string name="splash_layout_loading">Loading &#8230;</string>
 
     <string name="system_authentication_view_username">Username</string>
     <string name="system_authentication_view_username_required">Username required.</string>
     <string name="system_authentication_view_password">Password</string>
     <string name="system_authentication_view_password_required">Password required.</string>
 
-    <string name="system_authentication_layout_logo">Application Logo</string>
     <string name="system_authentication_layout_login">Login</string>
     <string name="system_authentication_layout_setting">Setting</string>
 </resources>

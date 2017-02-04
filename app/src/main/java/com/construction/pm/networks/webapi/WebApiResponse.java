@@ -63,7 +63,7 @@ public class WebApiResponse {
     }
 
     public void onFailure(final WebApiError webApiError) {
-
+        mWebApiError = webApiError;
     }
 
     public WebApiError getWebApiError() {

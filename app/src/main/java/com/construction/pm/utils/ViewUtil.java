@@ -1,19 +1,15 @@
 package com.construction.pm.utils;
 
 import android.content.Context;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
 
-import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ViewUtil {
@@ -105,21 +101,6 @@ public class ViewUtil {
         textView.setGravity(Gravity.CENTER);
     }
 
-    public static String getVersionName(final Context context) {
-        String versionName = null;
-
-        PackageManager manager = context.getPackageManager();
-
-        try {
-            PackageInfo info = info = manager.getPackageInfo(context.getPackageName(), 0);
-            versionName = info.versionName;
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        return versionName;
-    }
-
     public static String getBytesToHexLittleEndian(final byte[] bytes) {
         char[] HEX_CHARS = "0123456789ABCDEF".toCharArray();
         char[] hexChars = new char[bytes.length * 2];
@@ -160,17 +141,6 @@ public class ViewUtil {
             factor *= 256l;
         }
         return result;
-    }
-
-    public static String getUUID() {
-        UUID uuid = UUID.randomUUID();
-        String uuidString = String.valueOf(uuid);
-
-        return uuidString.replaceAll("-", "");
-    }
-
-    public static String getDeviceId(final Context context) {
-        return Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
     }
 
     public static String getResourceString(Context context, int id) {
