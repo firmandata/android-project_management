@@ -1,7 +1,10 @@
 package com.construction.pm.views.system;
 
-import android.app.Activity;
 import android.content.Context;
+import android.os.Handler;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,15 +12,20 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.construction.pm.R;
+import com.construction.pm.fragments.AuthenticationFirstFragment;
+import com.construction.pm.fragments.AuthenticationLoginFragment;
 
 public class AuthenticationLayout {
 
     protected Context mContext;
 
+    protected AppCompatActivity mActivity;
+    protected Handler mActivityHandler;
+    protected static final String FRAGMENT_LOGIN = "FRAGMENT_LOGIN";
+    protected static final String FRAGMENT_FIRST = "FRAGMENT_FIRST";
+
     protected RelativeLayout mAuthenticationLayout;
 
-    protected AuthenticationView mAuthenticationView;
-    protected LoginListener mLoginListener;
     protected SettingListener mSettingListener;
 
     protected AuthenticationLayout(final Context context) {
@@ -40,21 +48,6 @@ public class AuthenticationLayout {
 
     protected void initializeView(final RelativeLayout authenticationLayout) {
         mAuthenticationLayout = authenticationLayout;
-        mAuthenticationView = new AuthenticationView(mContext, (RelativeLayout) mAuthenticationLayout.findViewById(R.id.authenticationView));
-
-        AppCompatButton btnLogin = (AppCompatButton) mAuthenticationLayout.findViewById(R.id.btnLogin);
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    mAuthenticationView.validateLogin();
-                    if (mLoginListener != null)
-                        mLoginListener.onLoginRequest(mAuthenticationView.getUsername(), mAuthenticationView.getPassword());
-                } catch (Exception ex) {
-
-                }
-            }
-        });
 
         AppCompatButton btnSetting = (AppCompatButton) mAuthenticationLayout.findViewById(R.id.btnSetting);
         btnSetting.setOnClickListener(new View.OnClickListener() {
@@ -66,31 +59,56 @@ public class AuthenticationLayout {
         });
     }
 
-    public AuthenticationView getAuthenticationView() {
-        return mAuthenticationView;
-    }
-
     public RelativeLayout getLayout() {
         return mAuthenticationLayout;
-    }
-
-    public void setLoginListener(final LoginListener loginListener) {
-        mLoginListener = loginListener;
     }
 
     public void setSettingListener(final SettingListener settingListener) {
         mSettingListener = settingListener;
     }
 
-    public interface LoginListener {
-        void onLoginRequest(String username, String password);
-    }
-
     public interface SettingListener {
         void onSettingRequest();
     }
 
-    public void loadLayoutToActivity(Activity activity) {
-        activity.setContentView(mAuthenticationLayout);
+    public void loadLayoutToActivity(final AppCompatActivity activity) {
+        mActivity = activity;
+        mActivity.setContentView(mAuthenticationLayout);
+
+        mActivityHandler = new Handler();
+    }
+
+    protected void loadFragment(final Fragment fragment, final String tag) {
+        if (mActivityHandler == null)
+            return;
+
+        mActivityHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (mActivity == null)
+                    return;
+
+                FragmentTransaction fragmentTransaction = mActivity.getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+                fragmentTransaction.replace(R.id.contentBodyHolder, fragment, tag);
+                fragmentTransaction.commitAllowingStateLoss();
+            }
+        });
+    }
+
+    public AuthenticationLoginFragment showLogin() {
+        AuthenticationLoginFragment authenticationLoginFragment = AuthenticationLoginFragment.newInstance();
+
+        loadFragment(authenticationLoginFragment, FRAGMENT_LOGIN);
+
+        return authenticationLoginFragment;
+    }
+
+    public AuthenticationFirstFragment showFirstPassword() {
+        AuthenticationFirstFragment authenticationFirstFragment = AuthenticationFirstFragment.newInstance();
+
+        loadFragment(authenticationFirstFragment, FRAGMENT_FIRST);
+
+        return authenticationFirstFragment;
     }
 }

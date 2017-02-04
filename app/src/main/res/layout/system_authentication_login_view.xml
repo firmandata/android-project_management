@@ -13,10 +13,10 @@
         android:layout_marginBottom="@dimen/form_element_vertical_gap">
 
         <android.support.v7.widget.AppCompatEditText
-            android:id="@+id/userName"
+            android:id="@+id/login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/system_authentication_view_username"
+            android:hint="@string/system_authentication_login_view_username"
             android:maxLines="1"
             android:singleLine="true" />
     </android.support.design.widget.TextInputLayout>
@@ -27,16 +27,26 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/userNameLayout"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="@dimen/form_element_vertical_gap">
 
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
-            android:hint="@string/system_authentication_view_password"
+            android:hint="@string/system_authentication_login_view_password"
             android:maxLines="1"
             android:singleLine="true" />
     </android.support.design.widget.TextInputLayout>
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/loginButton"
+        android:layout_height="wrap_content"
+        android:layout_width="150dp"
+        android:layout_below="@+id/passwordLayout"
+        android:text="@string/system_authentication_login_view_ok"
+        android:layout_marginTop="@dimen/form_element_vertical_gap"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

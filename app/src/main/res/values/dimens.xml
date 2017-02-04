@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="horizontal_gap">8dp</dimen>
-    <dimen name="vertical_gap">8dp</dimen>
-    <dimen name="element_horizontal_gap">16dp</dimen>
-    <dimen name="element_vertical_gap">16dp</dimen>
+    <dimen name="gap">8dp</dimen>
+    <dimen name="horizontal_gap">@dimen/gap</dimen>
+    <dimen name="vertical_gap">@dimen/gap</dimen>
+
+    <dimen name="element_gap">16dp</dimen>
+    <dimen name="element_horizontal_gap">@dimen/element_gap</dimen>
+    <dimen name="element_vertical_gap">@dimen/element_gap</dimen>
+
     <dimen name="form_element_horizontal_gap">@dimen/element_horizontal_gap</dimen>
     <dimen name="form_element_vertical_gap">@dimen/element_vertical_gap</dimen>
 </resources>

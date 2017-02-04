@@ -42,28 +42,12 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
 
-        <LinearLayout
-            android:orientation="vertical"
+        <RelativeLayout
+            android:id="@+id/contentBodyHolder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:paddingLeft="@dimen/element_horizontal_gap"
-            android:paddingRight="@dimen/element_horizontal_gap"
-            android:paddingTop="@dimen/element_vertical_gap">
+            android:padding="@dimen/element_gap" />
 
-            <include
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                layout="@layout/system_authentication_view"
-                android:id="@+id/authenticationView" />
-
-            <android.support.v7.widget.AppCompatButton
-                android:id="@+id/btnLogin"
-                android:layout_height="wrap_content"
-                android:layout_width="150dp"
-                android:text="@string/system_authentication_layout_login"
-                android:layout_marginTop="@dimen/form_element_vertical_gap" />
-        </LinearLayout>
     </ScrollView>
 
     <ImageView

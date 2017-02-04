@@ -37,55 +37,60 @@ public class BootstrapActivity extends AppCompatActivity {
         SessionHandleTask sessionHandleTask = new SessionHandleTask() {
             @Override
             public void onPostExecute(SessionHandleTaskResult sessionHandleTaskResult) {
-                if (sessionHandleTaskResult != null) {
-                    mSplashLayout.hideProgressBar();
-
-                    // -- Show result message --
-                    if (sessionHandleTaskResult.getMessage() != null)
-                        mSplashLayout.setDescription(sessionHandleTaskResult.getMessage());
-
-                    // -- Set session login model to main application as references --
-                    if (    sessionHandleTaskResult.getSessionHandleTaskResultState() == SessionHandleTaskResultState.ACCESS_TOKEN_CREATED
-                        ||  sessionHandleTaskResult.getSessionHandleTaskResultState() == SessionHandleTaskResultState.USER_PROJECT_MEMBER_LOGGED_IN_UPDATED) {
-                        if (mMainApplication != null && sessionHandleTaskResult.getSessionLoginModel() != null)
-                            mMainApplication.setSessionLoginModel(sessionHandleTaskResult.getSessionLoginModel());
-                    }
-
-                    if (    sessionHandleTaskResult.getSessionHandleTaskResultState() == SessionHandleTaskResultState.ACCESS_TOKEN_CREATED
-                        ||  sessionHandleTaskResult.getSessionHandleTaskResultState() == SessionHandleTaskResultState.USER_PROJECT_MEMBER_NOT_LOGIN) {
-                        // -- Redirect to AuthenticationActivity --
-                        redirectToAuthenticationActivity();
-                    } else if (     sessionHandleTaskResult.getSessionHandleTaskResultState() == SessionHandleTaskResultState.USER_PROJECT_MEMBER_LOGGED_IN_UPDATED
-                                ||  sessionHandleTaskResult.getSessionHandleTaskResultState() == SessionHandleTaskResultState.USER_PROJECT_MEMBER_LOGGED_IN_UPDATE_ERROR) {
-                        // -- Redirect to MainActivity --
-                        redirectToMainActivity();
-                    }
-                }
+                if (sessionHandleTaskResult != null)
+                    onSessionHandleFinish(sessionHandleTaskResult);
             }
 
             @Override
             protected void onProgressUpdate(String... messages) {
-                // -- Show progress message --
                 if (messages != null) {
                     if (messages.length > 0) {
-                        mSplashLayout.setDescription(messages[0]);
+                        onSessionHandleProgress(messages[0]);
                     }
                 }
             }
         };
-        sessionHandleTask.execute(new SessionHandleTaskParam(this, mMainApplication.getSettingUserModel()));
+        if (mMainApplication != null) {
+            sessionHandleTask.execute(new SessionHandleTaskParam(this, mMainApplication.getSettingUserModel()));
+        }
     }
 
-    protected void redirectToMainActivity() {
-        Intent intent = new Intent(this, MainActivity.class);;
-        startActivity(intent);
-        finish();
+    protected void onSessionHandleFinish(final SessionHandleTaskResult sessionHandleTaskResult) {
+        mSplashLayout.hideProgressBar();
+
+        // -- Show result message --
+        if (sessionHandleTaskResult.getMessage() != null)
+            mSplashLayout.setDescription(sessionHandleTaskResult.getMessage());
+
+        // -- Set session login model to main application as references --
+        if (    sessionHandleTaskResult.getSessionHandleTaskResultState() == SessionHandleTaskResultState.ACCESS_TOKEN_CREATED
+            ||  sessionHandleTaskResult.getSessionHandleTaskResultState() == SessionHandleTaskResultState.USER_PROJECT_MEMBER_LOGGED_IN_UPDATED) {
+            if (mMainApplication != null && sessionHandleTaskResult.getSessionLoginModel() != null)
+                mMainApplication.setSessionLoginModel(sessionHandleTaskResult.getSessionLoginModel());
+        }
+
+        if (    sessionHandleTaskResult.getSessionHandleTaskResultState() == SessionHandleTaskResultState.ACCESS_TOKEN_CREATED
+            ||  sessionHandleTaskResult.getSessionHandleTaskResultState() == SessionHandleTaskResultState.USER_PROJECT_MEMBER_NOT_LOGIN) {
+
+            // -- Redirect to AuthenticationActivity --
+            Intent intent = new Intent(this, AuthenticationActivity.class);;
+            startActivity(intent);
+            finish();
+
+        } else if (     sessionHandleTaskResult.getSessionHandleTaskResultState() == SessionHandleTaskResultState.USER_PROJECT_MEMBER_LOGGED_IN_UPDATED
+                    ||  sessionHandleTaskResult.getSessionHandleTaskResultState() == SessionHandleTaskResultState.USER_PROJECT_MEMBER_LOGGED_IN_UPDATE_ERROR) {
+
+            // -- Redirect to MainActivity --
+            Intent intent = new Intent(this, MainActivity.class);;
+            startActivity(intent);
+            finish();
+
+        }
     }
 
-    protected void redirectToAuthenticationActivity() {
-        Intent intent = new Intent(this, AuthenticationActivity.class);;
-        startActivity(intent);
-        finish();
+    protected void onSessionHandleProgress(final String message) {
+        // -- Show progress message --
+        mSplashLayout.setDescription(message);
     }
 
     protected class SessionHandleTaskParam {
@@ -155,8 +160,8 @@ public class BootstrapActivity extends AppCompatActivity {
 
         protected static final int WAIT_FOR_USER_READ_ERROR_MESSAGE = 200;
 
-        protected Context mContext;
         protected SessionHandleTaskParam mSessionHandleTaskParam;
+        protected Context mContext;
 
         @Override
         protected SessionHandleTaskResult doInBackground(SessionHandleTaskParam... sessionHandleTaskParams) {
