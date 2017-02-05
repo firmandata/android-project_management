@@ -18,13 +18,13 @@ import com.construction.pm.utils.ViewUtil;
 public class AuthenticationLoginFirstView {
     protected Context mContext;
 
-    protected RelativeLayout mAuthenticationChangeView;
+    protected RelativeLayout mAuthenticationLoginFirstView;
     protected ProgressDialog mProgressDialog;
 
     protected AppCompatEditText mEtPasswordNew;
     protected AppCompatEditText mEtPasswordNewConfirm;
 
-    protected FirstPasswordListener mFirstPasswordListener;
+    protected AuthenticationLoginFirstListener mAuthenticationLoginFirstListener;
 
     protected AuthenticationLoginFirstView(final Context context) {
         mContext = context;
@@ -44,20 +44,20 @@ public class AuthenticationLoginFirstView {
         return AuthenticationLoginFirstView.buildAuthenticationLoginFirstView(context, R.layout.system_authentication_login_first_view, viewGroup);
     }
 
-    protected void initializeView(final RelativeLayout authenticationFirstView) {
-        mAuthenticationChangeView = authenticationFirstView;
+    protected void initializeView(final RelativeLayout authenticationLoginFirstView) {
+        mAuthenticationLoginFirstView = authenticationLoginFirstView;
 
-        mEtPasswordNew = (AppCompatEditText) mAuthenticationChangeView.findViewById(R.id.passwordNew);
-        mEtPasswordNewConfirm = (AppCompatEditText) mAuthenticationChangeView.findViewById(R.id.passwordNewConfirm);
+        mEtPasswordNew = (AppCompatEditText) mAuthenticationLoginFirstView.findViewById(R.id.passwordNew);
+        mEtPasswordNewConfirm = (AppCompatEditText) mAuthenticationLoginFirstView.findViewById(R.id.passwordNewConfirm);
 
-        AppCompatButton btnFirstPassword = (AppCompatButton) mAuthenticationChangeView.findViewById(R.id.newPasswordButton);
+        AppCompatButton btnFirstPassword = (AppCompatButton) mAuthenticationLoginFirstView.findViewById(R.id.newPasswordButton);
         btnFirstPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
-                    validateFirstPassword();
-                    if (mFirstPasswordListener != null)
-                        mFirstPasswordListener.onFirstPasswordRequest(getPasswordNew());
+                    validateAuthenticationLoginFirst();
+                    if (mAuthenticationLoginFirstListener != null)
+                        mAuthenticationLoginFirstListener.onLoginFirstRequest(getPasswordNew());
                 } catch (Exception ex) {
                 }
             }
@@ -84,7 +84,7 @@ public class AuthenticationLoginFirstView {
         return mEtPasswordNewConfirm.getText().toString();
     }
 
-    public void validateFirstPassword() throws Exception {
+    public void validateAuthenticationLoginFirst() throws Exception {
         mEtPasswordNew.setError(null);
         mEtPasswordNewConfirm.setError(null);
 
@@ -120,7 +120,7 @@ public class AuthenticationLoginFirstView {
     }
 
     public RelativeLayout getView() {
-        return mAuthenticationChangeView;
+        return mAuthenticationLoginFirstView;
     }
 
     public void progressDialogShow(final String progressMessage) {
@@ -152,11 +152,11 @@ public class AuthenticationLoginFirstView {
         alertDialogShow(ViewUtil.getResourceString(mContext, R.string.system_authentication_login_first_view_alert_title_success), successMessage, R.drawable.checked_user_24, null);
     }
 
-    public void setFirstPasswordListener(final FirstPasswordListener firstPasswordListener) {
-        mFirstPasswordListener = firstPasswordListener;
+    public void setAuthenticationLoginFirstListener(final AuthenticationLoginFirstListener authenticationLoginFirstListener) {
+        mAuthenticationLoginFirstListener = authenticationLoginFirstListener;
     }
 
-    public interface FirstPasswordListener {
-        void onFirstPasswordRequest(String passwordNew);
+    public interface AuthenticationLoginFirstListener {
+        void onLoginFirstRequest(String passwordNew);
     }
 }

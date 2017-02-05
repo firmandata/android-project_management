@@ -17,7 +17,7 @@ import com.construction.pm.persistence.SettingPersistent;
 import com.construction.pm.utils.ViewUtil;
 import com.construction.pm.views.system.AuthenticationLoginFirstView;
 
-public class AuthenticationLoginFirstFragment extends Fragment implements AuthenticationLoginFirstView.FirstPasswordListener {
+public class AuthenticationLoginFirstFragment extends Fragment implements AuthenticationLoginFirstView.AuthenticationLoginFirstListener {
 
     protected AuthenticationLoginFirstView mAuthenticationLoginFirstView;
 
@@ -33,7 +33,7 @@ public class AuthenticationLoginFirstFragment extends Fragment implements Authen
 
         // -- Prepare AuthenticationLoginFirstView --
         mAuthenticationLoginFirstView = AuthenticationLoginFirstView.buildAuthenticationLoginFirstView(getContext(), null);
-        mAuthenticationLoginFirstView.setFirstPasswordListener(this);
+        mAuthenticationLoginFirstView.setAuthenticationLoginFirstListener(this);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class AuthenticationLoginFirstFragment extends Fragment implements Authen
     }
 
     @Override
-    public void onFirstPasswordRequest(String passwordNew) {
+    public void onLoginFirstRequest(String passwordNew) {
         // -- Prepare SettingPersistent --
         SettingPersistent settingPersistent = new SettingPersistent(getContext());
 

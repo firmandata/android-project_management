@@ -18,14 +18,14 @@ import com.construction.pm.utils.ViewUtil;
 public class UserChangePasswordView {
     protected Context mContext;
 
-    protected RelativeLayout mAuthenticationChangeView;
+    protected RelativeLayout mUserChangePasswordView;
     protected ProgressDialog mProgressDialog;
 
     protected AppCompatEditText mEtPasswordOld;
     protected AppCompatEditText mEtPasswordNew;
     protected AppCompatEditText mEtPasswordNewConfirm;
 
-    protected ChangePasswordListener mChangePasswordListener;
+    protected UserChangePasswordListener mUserUserChangePasswordListener;
 
     protected UserChangePasswordView(final Context context) {
         mContext = context;
@@ -37,29 +37,29 @@ public class UserChangePasswordView {
         initializeView(authenticationChangeView);
     }
 
-    public static UserChangePasswordView buildAuthenticationChangeView(final Context context, final int layoutId, final ViewGroup viewGroup) {
+    public static UserChangePasswordView buildAuthenticationChangePasswordView(final Context context, final int layoutId, final ViewGroup viewGroup) {
         return new UserChangePasswordView(context, (RelativeLayout) LayoutInflater.from(context).inflate(layoutId, viewGroup));
     }
 
-    public static UserChangePasswordView buildAuthenticationChangeView(final Context context, final ViewGroup viewGroup) {
-        return UserChangePasswordView.buildAuthenticationChangeView(context, R.layout.user_change_password_view, viewGroup);
+    public static UserChangePasswordView buildAuthenticationChangePasswordView(final Context context, final ViewGroup viewGroup) {
+        return UserChangePasswordView.buildAuthenticationChangePasswordView(context, R.layout.user_change_password_view, viewGroup);
     }
 
-    protected void initializeView(final RelativeLayout authenticationChangeView) {
-        mAuthenticationChangeView = authenticationChangeView;
+    protected void initializeView(final RelativeLayout userChangePasswordView) {
+        mUserChangePasswordView = userChangePasswordView;
 
-        mEtPasswordOld = (AppCompatEditText) mAuthenticationChangeView.findViewById(R.id.passwordOld);
-        mEtPasswordNew = (AppCompatEditText) mAuthenticationChangeView.findViewById(R.id.passwordNew);
-        mEtPasswordNewConfirm = (AppCompatEditText) mAuthenticationChangeView.findViewById(R.id.passwordNewConfirm);
+        mEtPasswordOld = (AppCompatEditText) mUserChangePasswordView.findViewById(R.id.passwordOld);
+        mEtPasswordNew = (AppCompatEditText) mUserChangePasswordView.findViewById(R.id.passwordNew);
+        mEtPasswordNewConfirm = (AppCompatEditText) mUserChangePasswordView.findViewById(R.id.passwordNewConfirm);
 
-        AppCompatButton btnChangePassword = (AppCompatButton) mAuthenticationChangeView.findViewById(R.id.changePasswordButton);
+        AppCompatButton btnChangePassword = (AppCompatButton) mUserChangePasswordView.findViewById(R.id.changePasswordButton);
         btnChangePassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
-                    validateChangePassword();
-                    if (mChangePasswordListener != null)
-                        mChangePasswordListener.onChangePasswordRequest(getPasswordOld(), getPasswordNew());
+                    validateUserChangePassword();
+                    if (mUserUserChangePasswordListener != null)
+                        mUserUserChangePasswordListener.onUserChangePasswordRequest(getPasswordOld(), getPasswordNew());
                 } catch (Exception ex) {
                 }
             }
@@ -94,7 +94,7 @@ public class UserChangePasswordView {
         return mEtPasswordNewConfirm.getText().toString();
     }
 
-    public void validateChangePassword() throws Exception {
+    public void validateUserChangePassword() throws Exception {
         mEtPasswordOld.setError(null);
         mEtPasswordNew.setError(null);
         mEtPasswordNewConfirm.setError(null);
@@ -141,7 +141,7 @@ public class UserChangePasswordView {
     }
 
     public RelativeLayout getView() {
-        return mAuthenticationChangeView;
+        return mUserChangePasswordView;
     }
 
     public void progressDialogShow(final String progressMessage) {
@@ -173,11 +173,11 @@ public class UserChangePasswordView {
         alertDialogShow(ViewUtil.getResourceString(mContext, R.string.user_change_password_view_alert_title_success), successMessage, R.drawable.checked_user_24, null);
     }
 
-    public void setChangePasswordListener(final ChangePasswordListener changePasswordListener) {
-        mChangePasswordListener = changePasswordListener;
+    public void setUserChangePasswordListener(final UserChangePasswordListener userChangePasswordListener) {
+        mUserUserChangePasswordListener = userChangePasswordListener;
     }
 
-    public interface ChangePasswordListener {
-        void onChangePasswordRequest(String passwordOld, String passwordNew);
+    public interface UserChangePasswordListener {
+        void onUserChangePasswordRequest(String passwordOld, String passwordNew);
     }
 }

@@ -17,7 +17,7 @@ import com.construction.pm.persistence.SettingPersistent;
 import com.construction.pm.utils.ViewUtil;
 import com.construction.pm.views.user.UserChangePasswordView;
 
-public class UserChangePasswordFragment extends Fragment implements UserChangePasswordView.ChangePasswordListener {
+public class UserChangePasswordFragment extends Fragment implements UserChangePasswordView.UserChangePasswordListener {
 
     protected UserChangePasswordView mUserChangePasswordView;
 
@@ -32,8 +32,8 @@ public class UserChangePasswordFragment extends Fragment implements UserChangePa
         super.onCreate(savedInstanceState);
 
         // -- Prepare UserChangePasswordView --
-        mUserChangePasswordView = UserChangePasswordView.buildAuthenticationChangeView(getContext(), null);
-        mUserChangePasswordView.setChangePasswordListener(this);
+        mUserChangePasswordView = UserChangePasswordView.buildAuthenticationChangePasswordView(getContext(), null);
+        mUserChangePasswordView.setUserChangePasswordListener(this);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class UserChangePasswordFragment extends Fragment implements UserChangePa
     }
 
     @Override
-    public void onChangePasswordRequest(String passwordOld, String passwordNew) {
+    public void onUserChangePasswordRequest(String passwordOld, String passwordNew) {
         // -- Prepare SettingPersistent --
         SettingPersistent settingPersistent = new SettingPersistent(getContext());
 

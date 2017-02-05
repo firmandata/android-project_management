@@ -19,7 +19,8 @@
             android:inputType="textPassword"
             android:hint="@string/system_authentication_login_first_view_password_new"
             android:maxLines="1"
-            android:singleLine="true" />
+            android:singleLine="true"
+            android:password="true" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
@@ -38,7 +39,8 @@
             android:inputType="textPassword"
             android:hint="@string/system_authentication_login_first_view_password_new_confirm"
             android:maxLines="1"
-            android:singleLine="true" />
+            android:singleLine="true"
+            android:password="true" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.v7.widget.AppCompatButton

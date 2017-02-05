@@ -40,6 +40,9 @@
     <string name="user_change_password_handle_task_begin">Password changing &#8230;</string>
     <string name="user_change_password_handle_task_success">Password changed.</string>
 
+    <string name="user_change_profile_handle_task_begin">Profile changing &#8230;</string>
+    <string name="user_change_profile_handle_task_success">Profile changed.</string>
+
     <string name="image_shadow_description">Shadow</string>
     <string name="image_logo_description">Application Logo</string>
 
@@ -76,4 +79,15 @@
     <string name="user_change_password_view_alert_button">OK</string>
     <string name="user_change_password_view_alert_title_error">Change Password Failed</string>
     <string name="user_change_password_view_alert_title_success">Change Password Success</string>
+
+    <string name="user_change_profile_view_email">Email</string>
+    <string name="user_change_profile_view_name">Name</string>
+    <string name="user_change_profile_view_name_required">Name is required.</string>
+    <string name="user_change_profile_view_phone_number">Phone Number</string>
+    <string name="user_change_profile_view_phone_number_required">Phone Number is required.</string>
+    <string name="user_change_profile_view_description">Description</string>
+    <string name="user_change_profile_view_ok">Update Now</string>
+    <string name="user_change_profile_view_alert_button">OK</string>
+    <string name="user_change_profile_view_alert_title_error">Update Profile Failed</string>
+    <string name="user_change_profile_view_alert_title_success">Update Profile Success</string>
 </resources>
