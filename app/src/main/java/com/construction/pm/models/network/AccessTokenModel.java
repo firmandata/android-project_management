@@ -75,7 +75,7 @@ public class AccessTokenModel {
 
         Calendar expiredAt = Calendar.getInstance();
         expiredAt.setTimeInMillis(mTokenGenerateTime.getTimeInMillis());
-        expiredAt.add(Calendar.DATE, mExpiresIn);
+        expiredAt.add(Calendar.SECOND, mExpiresIn);
 
         return (now.getTimeInMillis() > expiredAt.getTimeInMillis());
     }

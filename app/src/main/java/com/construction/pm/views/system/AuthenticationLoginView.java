@@ -1,6 +1,9 @@
 package com.construction.pm.views.system;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.TextUtils;
@@ -17,6 +20,7 @@ public class AuthenticationLoginView {
     protected Context mContext;
 
     protected RelativeLayout mAuthenticationLoginView;
+    protected ProgressDialog mProgressDialog;
 
     protected AppCompatEditText mEtLogin;
     protected AppCompatEditText mEtPassword;
@@ -60,6 +64,9 @@ public class AuthenticationLoginView {
             }
         });
 
+        mProgressDialog = new ProgressDialog(mContext);
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.setCanceledOnTouchOutside(false);
     }
 
     public void setLogin(final String login) {
@@ -106,6 +113,35 @@ public class AuthenticationLoginView {
 
     public RelativeLayout getView() {
         return mAuthenticationLoginView;
+    }
+
+    public void progressDialogShow(final String progressMessage) {
+        mProgressDialog.setMessage(progressMessage);
+        if (!mProgressDialog.isShowing())
+            mProgressDialog.show();
+    }
+
+    public void progressDialogDismiss() {
+        mProgressDialog.setMessage(null);
+        if (mProgressDialog.isShowing())
+            mProgressDialog.dismiss();
+    }
+
+    public void alertDialogShow(final String alertTitle, final String alertMessage, final int iconId, final DialogInterface.OnClickListener onClickListener) {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
+        alertDialog.setIcon(iconId);
+        alertDialog.setTitle(alertTitle);
+        alertDialog.setMessage(alertMessage);
+        alertDialog.setPositiveButton(ViewUtil.getResourceString(mContext, R.string.system_authentication_login_view_alert_button), onClickListener);
+        alertDialog.show();
+    }
+
+    public void alertDialogErrorShow(final String errorMessage) {
+        alertDialogShow(ViewUtil.getResourceString(mContext, R.string.system_authentication_login_view_alert_title_error), errorMessage, R.drawable.cancel_2_24, null);
+    }
+
+    public void alertDialogFirstLoginShow() {
+        alertDialogShow(ViewUtil.getResourceString(mContext, R.string.system_authentication_login_view_alert_first_login_title), ViewUtil.getResourceString(mContext, R.string.system_authentication_login_view_alert_first_login_message), R.drawable.checked_user_24, null);
     }
 
     public void setLoginListener(final LoginListener loginListener) {

@@ -30,6 +30,27 @@ public class SessionLoginModel {
         return mUserProjectMemberModel;
     }
 
+    public UserModel getUserModel() {
+        UserProjectMemberModel userProjectMemberModel = getUserProjectMemberModel();
+        if (userProjectMemberModel != null)
+            return userProjectMemberModel.getUserModel();
+        return null;
+    }
+
+    public ProjectMemberModel getProjectMemberModel() {
+        if (mUserProjectMemberModel != null)
+            return mUserProjectMemberModel.getProjectMemberModel();
+        return null;
+    }
+
+    public boolean isFirstLogin() {
+        UserModel userModel = getUserModel();
+        if (userModel != null)
+            return userModel.getFirstLogin();
+
+        return false;
+    }
+
     public boolean isAccessTokenExpired() {
         boolean isExpired = true;
 

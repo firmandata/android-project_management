@@ -26,8 +26,6 @@ public class AuthenticationLayout {
 
     protected RelativeLayout mAuthenticationLayout;
 
-    protected SettingListener mSettingListener;
-
     protected AuthenticationLayout(final Context context) {
         mContext = context;
     }
@@ -48,27 +46,10 @@ public class AuthenticationLayout {
 
     protected void initializeView(final RelativeLayout authenticationLayout) {
         mAuthenticationLayout = authenticationLayout;
-
-        AppCompatButton btnSetting = (AppCompatButton) mAuthenticationLayout.findViewById(R.id.btnSetting);
-        btnSetting.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mSettingListener != null)
-                    mSettingListener.onSettingRequest();
-            }
-        });
     }
 
     public RelativeLayout getLayout() {
         return mAuthenticationLayout;
-    }
-
-    public void setSettingListener(final SettingListener settingListener) {
-        mSettingListener = settingListener;
-    }
-
-    public interface SettingListener {
-        void onSettingRequest();
     }
 
     public void loadLayoutToActivity(final AppCompatActivity activity) {

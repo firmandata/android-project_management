@@ -27,10 +27,15 @@
     <string name="main_drawer_open">open_drawer</string>
     <string name="main_drawer_close">close_drawer</string>
 
-    <string name="session_handle_task_get_persistent">Getting session &#8230;</string>
-    <string name="session_handle_task_get_access_token">Getting access token &#8230;</string>
-    <string name="session_handle_task_get_user_project_member">Getting user info &#8230;</string>
-    <string name="session_handle_task_set_persistent">Setting session &#8230;</string>
+    <string name="session_handle_task_handle_access_token">Access token handle &#8230;</string>
+    <string name="session_handle_task_handle_user_project_member">User info handle &#8230;</string>
+    <string name="session_handle_task_finish">Session handle finish.</string>
+
+    <string name="login_handle_task_begin">Signing in &#8230;</string>
+    <string name="login_handle_task_success">Signed in</string>
+
+    <string name="first_login_handle_task_begin">Password changing &#8230;</string>
+    <string name="first_login_handle_task_success">Password changed.</string>
 
     <string name="image_shadow_description">Shadow</string>
     <string name="image_logo_description">Application Logo</string>
@@ -42,9 +47,10 @@
     <string name="system_authentication_login_view_password">Password</string>
     <string name="system_authentication_login_view_password_required">Password is required.</string>
     <string name="system_authentication_login_view_ok">Login</string>
-
-    <string name="login_handle_task_begin">Signing in &#8230;</string>
-    <string name="login_handle_task_success">Signed in</string>
+    <string name="system_authentication_login_view_alert_button">OK</string>
+    <string name="system_authentication_login_view_alert_title_error">Login Failed</string>
+    <string name="system_authentication_login_view_alert_first_login_title">Login Success</string>
+    <string name="system_authentication_login_view_alert_first_login_message">Please change your password first.</string>
 
     <string name="system_authentication_first_view_password_new">New Password</string>
     <string name="system_authentication_first_view_password_new_required">New Password is required.</string>
@@ -52,6 +58,9 @@
     <string name="system_authentication_first_view_password_new_confirm_required">Confirm New Password is required.</string>
     <string name="system_authentication_first_view_password_new_confirm_not_match">Confirm New Password is not match.</string>
     <string name="system_authentication_first_view_ok">Set Now</string>
+    <string name="system_authentication_first_view_alert_button">OK</string>
+    <string name="system_authentication_first_view_alert_title_error">Change Password Failed</string>
+    <string name="system_authentication_first_view_alert_title_success">Change Password Success</string>
 
     <string name="system_authentication_change_view_password_old">Old Password</string>
     <string name="system_authentication_change_view_password_old_required">Old Password is required.</string>

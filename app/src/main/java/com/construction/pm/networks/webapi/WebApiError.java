@@ -1,6 +1,6 @@
 package com.construction.pm.networks.webapi;
 
-public class WebApiError {
+public class WebApiError extends Throwable {
 
     protected int mCode;
     protected String mMessage;
@@ -9,6 +9,11 @@ public class WebApiError {
     public WebApiError(final int code, final String message) {
         setCode(code);
         setMessage(message);
+    }
+
+    public WebApiError(final int code, final String message, final Throwable cause) {
+        this(code, message);
+        setCause(cause);
     }
 
     public void setCode(final int code) {
@@ -27,11 +32,11 @@ public class WebApiError {
         return mMessage;
     }
 
-    public void setThrowable(Throwable throwable) {
-        mThrowable = throwable;
+    public void setCause(Throwable cause) {
+        mThrowable = cause;
     }
 
-    public Throwable getThrowable() {
+    public Throwable getCause() {
         return mThrowable;
     }
 }

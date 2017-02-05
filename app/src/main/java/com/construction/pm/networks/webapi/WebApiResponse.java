@@ -142,7 +142,7 @@ public class WebApiResponse {
             if (errorResponse != null) {
                 if (!errorResponse.isNull("responseCode")) {
                     int errorCode = errorResponse.getInt("responseCode");
-                    if (errorCode >= 300) {
+                    if (errorCode >= 400) {
                         newErrorCode = errorResponse.getInt("responseCode");
                         messageList.add(ViewUtil.getResourceString(mContext, R.string.restful_message_error_code, String.valueOf(newErrorCode)));
 
@@ -177,7 +177,7 @@ public class WebApiResponse {
         if (errorMessage != null) {
             webApiError = new WebApiError(newErrorCode, errorMessage);
             if (throwable != null)
-                webApiError.setThrowable(throwable);
+                webApiError.setCause(throwable);
         }
 
         return webApiError;

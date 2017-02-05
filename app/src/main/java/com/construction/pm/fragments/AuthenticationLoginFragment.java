@@ -8,20 +8,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.construction.pm.MainApplication;
 import com.construction.pm.R;
-import com.construction.pm.models.network.AccessTokenModel;
-import com.construction.pm.models.network.UserProjectMemberModel;
 import com.construction.pm.models.system.SessionLoginModel;
 import com.construction.pm.models.system.SettingUserModel;
 import com.construction.pm.networks.AuthenticationNetwork;
+import com.construction.pm.networks.UserNetwork;
+import com.construction.pm.networks.webapi.WebApiError;
+import com.construction.pm.persistence.SettingPersistent;
 import com.construction.pm.utils.ViewUtil;
 import com.construction.pm.views.system.AuthenticationLoginView;
 
 public class AuthenticationLoginFragment extends Fragment implements AuthenticationLoginView.LoginListener {
-
-    protected SettingUserModel mSettingUserModel;
-    protected SessionLoginModel mSessionLoginModel;
 
     protected AuthenticationLoginView mAuthenticationLoginView;
 
@@ -35,18 +32,14 @@ public class AuthenticationLoginFragment extends Fragment implements Authenticat
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        MainApplication mainApplication = (MainApplication) getContext().getApplicationContext();
-        if (mainApplication != null) {
-            mSettingUserModel = mainApplication.getSettingUserModel();
-            mSessionLoginModel = mainApplication.getSessionLoginModel();
-        }
-
+        // -- Prepare AuthenticationLoginView --
         mAuthenticationLoginView = AuthenticationLoginView.buildAuthenticationLoginView(getContext(), null);
         mAuthenticationLoginView.setLoginListener(this);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // -- Load AuthenticationLayout to fragment --
         return mAuthenticationLoginView.getView();
     }
 
@@ -57,12 +50,19 @@ public class AuthenticationLoginFragment extends Fragment implements Authenticat
 
     @Override
     public void onLoginRequest(String login, String password) {
+        // -- Prepare SettingPersistent --
+        SettingPersistent settingPersistent = new SettingPersistent(getContext());
+
+        // -- Get SettingUserModel from SettingPersistent --
+        SettingUserModel settingUserModel = settingPersistent.getSettingUserModel();
+
+        // -- Prepare LoginHandleTask --
         LoginHandleTask loginHandleTask = new LoginHandleTask() {
             @Override
             public void onPostExecute(LoginHandleTaskResult loginHandleTaskResult) {
                 if (loginHandleTaskResult != null) {
-                    if (loginHandleTaskResult.getUserProjectMemberModel() != null) {
-                        onLoginRequestSuccess(loginHandleTaskResult.getUserProjectMemberModel());
+                    if (loginHandleTaskResult.getSessionLoginModel() != null) {
+                        onLoginRequestSuccess(loginHandleTaskResult.getSessionLoginModel());
                     } else {
                         onLoginRequestFailed(loginHandleTaskResult.getMessage());
                     }
@@ -73,38 +73,52 @@ public class AuthenticationLoginFragment extends Fragment implements Authenticat
             protected void onProgressUpdate(String... messages) {
                 if (messages != null) {
                     if (messages.length > 0) {
-
+                        onLoginRequestProgress(messages[0]);
                     }
                 }
             }
         };
-        if (mSettingUserModel != null && mSessionLoginModel != null) {
-            loginHandleTask.execute(new LoginHandleTaskParam(getContext(), mSettingUserModel, mSessionLoginModel.getAccessTokenModel(), login, password));
-        }
+
+        // -- Do LoginHandleTask --
+        loginHandleTask.execute(new LoginHandleTaskParam(getContext(), settingUserModel, login, password));
     }
 
-    protected void onLoginRequestSuccess(final UserProjectMemberModel userProjectMemberModel) {
+    protected void onLoginRequestProgress(final String progressMessage) {
+        // -- Show progress dialog --
+        mAuthenticationLoginView.progressDialogShow(progressMessage);
+    }
 
+    protected void onLoginRequestSuccess(final SessionLoginModel sessionLoginModel) {
+        // -- Hide progress dialog --
+        mAuthenticationLoginView.progressDialogDismiss();
+
+        // -- Show first login dialog info --
+        if (sessionLoginModel.isFirstLogin())
+            mAuthenticationLoginView.alertDialogFirstLoginShow();
+
+        // -- Callback to AuthenticationLoginFragmentListener --
         if (mAuthenticationLoginFragmentListener != null)
-            mAuthenticationLoginFragmentListener.onLoggedIn(userProjectMemberModel);
+            mAuthenticationLoginFragmentListener.onLoggedIn(sessionLoginModel);
     }
 
     protected void onLoginRequestFailed(final String errorMessage) {
+        // -- Hide progress dialog --
+        mAuthenticationLoginView.progressDialogDismiss();
 
+        // -- Show error dialog --
+        mAuthenticationLoginView.alertDialogErrorShow(errorMessage);
     }
 
     protected class LoginHandleTaskParam {
 
         protected Context mContext;
         protected SettingUserModel mSettingUserModel;
-        protected AccessTokenModel mAccessTokenModel;
         protected String mLogin;
         protected String mPassword;
 
-        public LoginHandleTaskParam(final Context context, final SettingUserModel settingUserModel, final AccessTokenModel accessTokenModel, final String login, final String password) {
+        public LoginHandleTaskParam(final Context context, final SettingUserModel settingUserModel, final String login, final String password) {
             mContext = context;
             mSettingUserModel = settingUserModel;
-            mAccessTokenModel = accessTokenModel;
             mLogin = login;
             mPassword = password;
         }
@@ -115,10 +129,6 @@ public class AuthenticationLoginFragment extends Fragment implements Authenticat
 
         public SettingUserModel getSettingUserModel() {
             return mSettingUserModel;
-        }
-
-        public AccessTokenModel getAccessTokenModel() {
-            return mAccessTokenModel;
         }
 
         public String getLogin() {
@@ -132,19 +142,19 @@ public class AuthenticationLoginFragment extends Fragment implements Authenticat
 
     protected class LoginHandleTaskResult {
 
-        protected UserProjectMemberModel mUserProjectMemberModel;
+        protected SessionLoginModel mSessionLoginModel;
         protected String mMessage;
 
         public LoginHandleTaskResult() {
 
         }
 
-        public void setUserProjectMemberModel(final UserProjectMemberModel userProjectMemberModel) {
-            mUserProjectMemberModel = userProjectMemberModel;
+        public void setSessionLoginModel(final SessionLoginModel sessionLoginModel) {
+            mSessionLoginModel = sessionLoginModel;
         }
 
-        public UserProjectMemberModel getUserProjectMemberModel() {
-            return mUserProjectMemberModel;
+        public SessionLoginModel getSessionLoginModel() {
+            return mSessionLoginModel;
         }
 
         public void setMessage(final String message) {
@@ -166,27 +176,27 @@ public class AuthenticationLoginFragment extends Fragment implements Authenticat
             mLoginHandleTaskParam = loginHandleTaskParams[0];
             mContext = mLoginHandleTaskParam.getContext();
 
-            // Initialize LoginHandleTaskResult
+            // -- Prepare LoginHandleTaskResult --
             LoginHandleTaskResult loginHandleTaskResult = new LoginHandleTaskResult();
 
             // -- Login to server begin progress --
             publishProgress(ViewUtil.getResourceString(mContext, R.string.login_handle_task_begin));
 
-            // -- Authentication network --
-            AuthenticationNetwork authenticationNetwork = new AuthenticationNetwork(mContext, mLoginHandleTaskParam.getSettingUserModel());
+            // -- Prepare UserNetwork --
+            UserNetwork userNetwork = new UserNetwork(mContext, mLoginHandleTaskParam.getSettingUserModel());
 
             // -- Login to server --
-            UserProjectMemberModel userProjectMemberModel = null;
+            SessionLoginModel sessionLoginModel = null;
             try {
-                userProjectMemberModel = authenticationNetwork.doLogin(mLoginHandleTaskParam.getAccessTokenModel(), mLoginHandleTaskParam.getLogin(), mLoginHandleTaskParam.getPassword());
-            } catch (Exception e) {
-                loginHandleTaskResult.setMessage(e.getMessage());
-                publishProgress(e.getMessage());
+                sessionLoginModel = userNetwork.generateLogin(mLoginHandleTaskParam.getLogin(), mLoginHandleTaskParam.getPassword());
+            } catch (WebApiError webApiError) {
+                loginHandleTaskResult.setMessage(webApiError.getMessage());
+                publishProgress(webApiError.getMessage());
             }
 
-            if (userProjectMemberModel != null) {
+            if (sessionLoginModel != null) {
                 // -- Login to server successfully --
-                loginHandleTaskResult.setUserProjectMemberModel(userProjectMemberModel);
+                loginHandleTaskResult.setSessionLoginModel(sessionLoginModel);
                 loginHandleTaskResult.setMessage(ViewUtil.getResourceString(mContext, R.string.login_handle_task_success));
 
                 // -- Login to server successfully progress --
@@ -207,6 +217,6 @@ public class AuthenticationLoginFragment extends Fragment implements Authenticat
     }
 
     public interface AuthenticationLoginFragmentListener {
-        void onLoggedIn(UserProjectMemberModel userProjectMemberModel);
+        void onLoggedIn(SessionLoginModel sessionLoginModel);
     }
 }
