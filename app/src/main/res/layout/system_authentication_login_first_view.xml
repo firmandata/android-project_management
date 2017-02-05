@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
-            android:hint="@string/system_authentication_first_view_password_new"
+            android:hint="@string/system_authentication_login_first_view_password_new"
             android:maxLines="1"
             android:singleLine="true" />
     </android.support.design.widget.TextInputLayout>
@@ -36,7 +36,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
-            android:hint="@string/system_authentication_first_view_password_new_confirm"
+            android:hint="@string/system_authentication_login_first_view_password_new_confirm"
             android:maxLines="1"
             android:singleLine="true" />
     </android.support.design.widget.TextInputLayout>
@@ -46,7 +46,7 @@
         android:layout_height="wrap_content"
         android:layout_width="150dp"
         android:layout_below="@+id/passwordNewConfirmLayout"
-        android:text="@string/system_authentication_first_view_ok"
+        android:text="@string/system_authentication_login_first_view_ok"
         android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

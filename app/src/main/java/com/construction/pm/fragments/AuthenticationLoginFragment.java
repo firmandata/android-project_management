@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import com.construction.pm.R;
 import com.construction.pm.models.system.SessionLoginModel;
 import com.construction.pm.models.system.SettingUserModel;
-import com.construction.pm.networks.AuthenticationNetwork;
 import com.construction.pm.networks.UserNetwork;
 import com.construction.pm.networks.webapi.WebApiError;
 import com.construction.pm.persistence.SettingPersistent;
@@ -98,7 +97,7 @@ public class AuthenticationLoginFragment extends Fragment implements Authenticat
 
         // -- Callback to AuthenticationLoginFragmentListener --
         if (mAuthenticationLoginFragmentListener != null)
-            mAuthenticationLoginFragmentListener.onLoggedIn(sessionLoginModel);
+            mAuthenticationLoginFragmentListener.onLoginSuccess(sessionLoginModel);
     }
 
     protected void onLoginRequestFailed(final String errorMessage) {
@@ -217,6 +216,6 @@ public class AuthenticationLoginFragment extends Fragment implements Authenticat
     }
 
     public interface AuthenticationLoginFragmentListener {
-        void onLoggedIn(SessionLoginModel sessionLoginModel);
+        void onLoginSuccess(SessionLoginModel sessionLoginModel);
     }
 }

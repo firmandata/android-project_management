@@ -15,7 +15,7 @@ import android.widget.RelativeLayout;
 import com.construction.pm.R;
 import com.construction.pm.utils.ViewUtil;
 
-public class AuthenticationFirstView {
+public class AuthenticationLoginFirstView {
     protected Context mContext;
 
     protected RelativeLayout mAuthenticationChangeView;
@@ -26,22 +26,22 @@ public class AuthenticationFirstView {
 
     protected FirstPasswordListener mFirstPasswordListener;
 
-    protected AuthenticationFirstView(final Context context) {
+    protected AuthenticationLoginFirstView(final Context context) {
         mContext = context;
     }
 
-    public AuthenticationFirstView(final Context context, final RelativeLayout authenticationFirstView) {
+    public AuthenticationLoginFirstView(final Context context, final RelativeLayout authenticationFirstView) {
         this(context);
 
         initializeView(authenticationFirstView);
     }
 
-    public static AuthenticationFirstView buildAuthenticationFirstView(final Context context, final int layoutId, final ViewGroup viewGroup) {
-        return new AuthenticationFirstView(context, (RelativeLayout) LayoutInflater.from(context).inflate(layoutId, viewGroup));
+    public static AuthenticationLoginFirstView buildAuthenticationLoginFirstView(final Context context, final int layoutId, final ViewGroup viewGroup) {
+        return new AuthenticationLoginFirstView(context, (RelativeLayout) LayoutInflater.from(context).inflate(layoutId, viewGroup));
     }
 
-    public static AuthenticationFirstView buildAuthenticationFirstView(final Context context, final ViewGroup viewGroup) {
-        return AuthenticationFirstView.buildAuthenticationFirstView(context, R.layout.system_authentication_first_view, viewGroup);
+    public static AuthenticationLoginFirstView buildAuthenticationLoginFirstView(final Context context, final ViewGroup viewGroup) {
+        return AuthenticationLoginFirstView.buildAuthenticationLoginFirstView(context, R.layout.system_authentication_login_first_view, viewGroup);
     }
 
     protected void initializeView(final RelativeLayout authenticationFirstView) {
@@ -92,7 +92,7 @@ public class AuthenticationFirstView {
         String passwordNewConfirm = getPasswordNewConfirm();
 
         if (TextUtils.isEmpty(passwordNew)) {
-            String invalidError = ViewUtil.getResourceString(mContext, R.string.system_authentication_first_view_password_new_required);
+            String invalidError = ViewUtil.getResourceString(mContext, R.string.system_authentication_login_first_view_password_new_required);
 
             mEtPasswordNew.setError(invalidError);
             mEtPasswordNew.requestFocus();
@@ -101,7 +101,7 @@ public class AuthenticationFirstView {
         }
 
         if (TextUtils.isEmpty(passwordNewConfirm)) {
-            String invalidError = ViewUtil.getResourceString(mContext, R.string.system_authentication_first_view_password_new_required);
+            String invalidError = ViewUtil.getResourceString(mContext, R.string.system_authentication_login_first_view_password_new_required);
 
             mEtPasswordNewConfirm.setError(invalidError);
             mEtPasswordNewConfirm.requestFocus();
@@ -110,7 +110,7 @@ public class AuthenticationFirstView {
         }
 
         if (!passwordNew.equals(passwordNewConfirm)) {
-            String invalidError = ViewUtil.getResourceString(mContext, R.string.system_authentication_first_view_password_new_confirm_not_match);
+            String invalidError = ViewUtil.getResourceString(mContext, R.string.system_authentication_login_first_view_password_new_confirm_not_match);
 
             mEtPasswordNewConfirm.setError(invalidError);
             mEtPasswordNewConfirm.requestFocus();
@@ -140,16 +140,16 @@ public class AuthenticationFirstView {
         alertDialog.setIcon(iconId);
         alertDialog.setTitle(alertTitle);
         alertDialog.setMessage(alertMessage);
-        alertDialog.setPositiveButton(ViewUtil.getResourceString(mContext, R.string.system_authentication_first_view_alert_button), onClickListener);
+        alertDialog.setPositiveButton(ViewUtil.getResourceString(mContext, R.string.system_authentication_login_first_view_alert_button), onClickListener);
         alertDialog.show();
     }
 
     public void alertDialogErrorShow(final String errorMessage) {
-        alertDialogShow(ViewUtil.getResourceString(mContext, R.string.system_authentication_first_view_alert_title_error), errorMessage, R.drawable.cancel_2_24, null);
+        alertDialogShow(ViewUtil.getResourceString(mContext, R.string.system_authentication_login_first_view_alert_title_error), errorMessage, R.drawable.cancel_2_24, null);
     }
 
     public void alertDialogFirstSuccess(final String successMessage) {
-        alertDialogShow(ViewUtil.getResourceString(mContext, R.string.system_authentication_first_view_alert_title_success), successMessage, R.drawable.checked_user_24, null);
+        alertDialogShow(ViewUtil.getResourceString(mContext, R.string.system_authentication_login_first_view_alert_title_success), successMessage, R.drawable.checked_user_24, null);
     }
 
     public void setFirstPasswordListener(final FirstPasswordListener firstPasswordListener) {

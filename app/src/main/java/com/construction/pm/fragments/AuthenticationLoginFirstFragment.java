@@ -15,31 +15,31 @@ import com.construction.pm.networks.UserNetwork;
 import com.construction.pm.networks.webapi.WebApiError;
 import com.construction.pm.persistence.SettingPersistent;
 import com.construction.pm.utils.ViewUtil;
-import com.construction.pm.views.system.AuthenticationFirstView;
+import com.construction.pm.views.system.AuthenticationLoginFirstView;
 
-public class AuthenticationFirstFragment extends Fragment implements AuthenticationFirstView.FirstPasswordListener {
+public class AuthenticationLoginFirstFragment extends Fragment implements AuthenticationLoginFirstView.FirstPasswordListener {
 
-    protected AuthenticationFirstView mAuthenticationFirstView;
+    protected AuthenticationLoginFirstView mAuthenticationLoginFirstView;
 
-    protected AuthenticationFirstFragmentListener mAuthenticationFirstFragmentListener;
+    protected AuthenticationLoginFirstFragmentListener mAuthenticationLoginFirstFragmentListener;
 
-    public static AuthenticationFirstFragment newInstance() {
-        return new AuthenticationFirstFragment();
+    public static AuthenticationLoginFirstFragment newInstance() {
+        return new AuthenticationLoginFirstFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // -- Prepare AuthenticationFirstView --
-        mAuthenticationFirstView = AuthenticationFirstView.buildAuthenticationFirstView(getContext(), null);
-        mAuthenticationFirstView.setFirstPasswordListener(this);
+        // -- Prepare AuthenticationLoginFirstView --
+        mAuthenticationLoginFirstView = AuthenticationLoginFirstView.buildAuthenticationLoginFirstView(getContext(), null);
+        mAuthenticationLoginFirstView.setFirstPasswordListener(this);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // -- Load AuthenticationFirstView to fragment --
-        return mAuthenticationFirstView.getView();
+        // -- Load AuthenticationLoginFirstView to fragment --
+        return mAuthenticationLoginFirstView.getView();
     }
 
     @Override
@@ -77,33 +77,33 @@ public class AuthenticationFirstFragment extends Fragment implements Authenticat
             }
         };
 
-        // -- Do LoginHandleTask --
+        // -- Do FirstLoginHandleTask --
         firstLoginHandleTask.execute(new FirstLoginHandleTaskParam(getContext(), settingUserModel, passwordNew));
     }
 
     protected void onFirstPasswordRequestProgress(final String progressMessage) {
         // -- Show progress dialog --
-        mAuthenticationFirstView.progressDialogShow(progressMessage);
+        mAuthenticationLoginFirstView.progressDialogShow(progressMessage);
     }
 
     protected void onFirstPasswordRequestSuccess(final SimpleResponseModel simpleResponseModel) {
         // -- Hide progress dialog --
-        mAuthenticationFirstView.progressDialogDismiss();
+        mAuthenticationLoginFirstView.progressDialogDismiss();
 
         // -- Show success dialog --
-        mAuthenticationFirstView.alertDialogFirstSuccess(simpleResponseModel.getMessage());
+        mAuthenticationLoginFirstView.alertDialogFirstSuccess(simpleResponseModel.getMessage());
 
-        // -- Callback to AuthenticationFirstFragmentListener --
-        if (mAuthenticationFirstFragmentListener != null)
-            mAuthenticationFirstFragmentListener.onFirstPasswordFinish(simpleResponseModel);
+        // -- Callback to AuthenticationLoginFirstFragmentListener --
+        if (mAuthenticationLoginFirstFragmentListener != null)
+            mAuthenticationLoginFirstFragmentListener.onLoginFirstSuccess(simpleResponseModel);
     }
 
     protected void onFirstPasswordRequestFailed(final String errorMessage) {
         // -- Hide progress dialog --
-        mAuthenticationFirstView.progressDialogDismiss();
+        mAuthenticationLoginFirstView.progressDialogDismiss();
 
         // -- Show error dialog --
-        mAuthenticationFirstView.alertDialogErrorShow(errorMessage);
+        mAuthenticationLoginFirstView.alertDialogErrorShow(errorMessage);
     }
 
     @Override
@@ -131,7 +131,7 @@ public class AuthenticationFirstFragment extends Fragment implements Authenticat
             return mSettingUserModel;
         }
 
-        public String getPassword() {
+        public String getPasswordNew() {
             return mPasswordNew;
         }
     }
@@ -175,28 +175,28 @@ public class AuthenticationFirstFragment extends Fragment implements Authenticat
             // -- Prepare FirstLoginHandleTaskResult --
             FirstLoginHandleTaskResult firstLoginHandleTaskResult = new FirstLoginHandleTaskResult();
 
-            // -- Login to server begin progress --
-            publishProgress(ViewUtil.getResourceString(mContext, R.string.first_login_handle_task_begin));
+            // -- Login first change password to server begin progress --
+            publishProgress(ViewUtil.getResourceString(mContext, R.string.login_first_handle_task_begin));
 
             // -- Prepare UserNetwork --
             UserNetwork userNetwork = new UserNetwork(mContext, mFirstLoginHandleTaskParam.getSettingUserModel());
 
-            // -- First Login to server --
+            // -- Login first change password to server --
             SimpleResponseModel simpleResponseModel = null;
             try {
-                simpleResponseModel = userNetwork.changePasswordFirst(mFirstLoginHandleTaskParam.getPassword());
+                simpleResponseModel = userNetwork.changePasswordFirst(mFirstLoginHandleTaskParam.getPasswordNew());
             } catch (WebApiError webApiError) {
                 firstLoginHandleTaskResult.setMessage(webApiError.getMessage());
                 publishProgress(webApiError.getMessage());
             }
 
             if (simpleResponseModel != null) {
-                // -- First Login to server successfully --
+                // -- Login first change password to server successfully --
                 firstLoginHandleTaskResult.setSimpleResponseModel(simpleResponseModel);
-                firstLoginHandleTaskResult.setMessage(ViewUtil.getResourceString(mContext, R.string.first_login_handle_task_success));
+                firstLoginHandleTaskResult.setMessage(ViewUtil.getResourceString(mContext, R.string.login_first_handle_task_success));
 
-                // -- First Login to server successfully progress --
-                publishProgress(ViewUtil.getResourceString(mContext, R.string.first_login_handle_task_success));
+                // -- Login first change password to server successfully progress --
+                publishProgress(ViewUtil.getResourceString(mContext, R.string.login_first_handle_task_success));
             }
 
             return firstLoginHandleTaskResult;
@@ -208,11 +208,11 @@ public class AuthenticationFirstFragment extends Fragment implements Authenticat
         super.onDetach();
     }
 
-    public void setAuthenticationFirstFragmentListener(final AuthenticationFirstFragmentListener authenticationFirstFragmentListener) {
-        mAuthenticationFirstFragmentListener = authenticationFirstFragmentListener;
+    public void setAuthenticationLoginFirstFragmentListener(final AuthenticationLoginFirstFragmentListener authenticationLoginFirstFragmentListener) {
+        mAuthenticationLoginFirstFragmentListener = authenticationLoginFirstFragmentListener;
     }
 
-    public interface AuthenticationFirstFragmentListener {
-        void onFirstPasswordFinish(SimpleResponseModel simpleResponseModel);
+    public interface AuthenticationLoginFirstFragmentListener {
+        void onLoginFirstSuccess(SimpleResponseModel simpleResponseModel);
     }
 }

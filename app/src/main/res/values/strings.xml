@@ -34,8 +34,11 @@
     <string name="login_handle_task_begin">Signing in &#8230;</string>
     <string name="login_handle_task_success">Signed in</string>
 
-    <string name="first_login_handle_task_begin">Password changing &#8230;</string>
-    <string name="first_login_handle_task_success">Password changed.</string>
+    <string name="login_first_handle_task_begin">Password changing &#8230;</string>
+    <string name="login_first_handle_task_success">Password changed.</string>
+
+    <string name="user_change_password_handle_task_begin">Password changing &#8230;</string>
+    <string name="user_change_password_handle_task_success">Password changed.</string>
 
     <string name="image_shadow_description">Shadow</string>
     <string name="image_logo_description">Application Logo</string>
@@ -52,24 +55,25 @@
     <string name="system_authentication_login_view_alert_first_login_title">Login Success</string>
     <string name="system_authentication_login_view_alert_first_login_message">Please change your password first.</string>
 
-    <string name="system_authentication_first_view_password_new">New Password</string>
-    <string name="system_authentication_first_view_password_new_required">New Password is required.</string>
-    <string name="system_authentication_first_view_password_new_confirm">Confirm New Password</string>
-    <string name="system_authentication_first_view_password_new_confirm_required">Confirm New Password is required.</string>
-    <string name="system_authentication_first_view_password_new_confirm_not_match">Confirm New Password is not match.</string>
-    <string name="system_authentication_first_view_ok">Set Now</string>
-    <string name="system_authentication_first_view_alert_button">OK</string>
-    <string name="system_authentication_first_view_alert_title_error">Change Password Failed</string>
-    <string name="system_authentication_first_view_alert_title_success">Change Password Success</string>
+    <string name="system_authentication_login_first_view_password_new">New Password</string>
+    <string name="system_authentication_login_first_view_password_new_required">New Password is required.</string>
+    <string name="system_authentication_login_first_view_password_new_confirm">Confirm New Password</string>
+    <string name="system_authentication_login_first_view_password_new_confirm_required">Confirm New Password is required.</string>
+    <string name="system_authentication_login_first_view_password_new_confirm_not_match">Confirm New Password is not match.</string>
+    <string name="system_authentication_login_first_view_ok">Set Now</string>
+    <string name="system_authentication_login_first_view_alert_button">OK</string>
+    <string name="system_authentication_login_first_view_alert_title_error">Change Password Failed</string>
+    <string name="system_authentication_login_first_view_alert_title_success">Change Password Success</string>
 
-    <string name="system_authentication_change_view_password_old">Old Password</string>
-    <string name="system_authentication_change_view_password_old_required">Old Password is required.</string>
-    <string name="system_authentication_change_view_password_new">New Password</string>
-    <string name="system_authentication_change_view_password_new_required">New Password is required.</string>
-    <string name="system_authentication_change_view_password_new_confirm">Confirm New Password</string>
-    <string name="system_authentication_change_view_password_new_confirm_required">Confirm New Password is required.</string>
-    <string name="system_authentication_change_view_password_new_confirm_not_match">Confirm New Password is not match.</string>
-    <string name="system_authentication_change_view_ok">Change Now</string>
-
-    <string name="system_authentication_layout_setting">Setting</string>
+    <string name="user_change_password_view_password_old">Old Password</string>
+    <string name="user_change_password_view_password_old_required">Old Password is required.</string>
+    <string name="user_change_password_view_password_new">New Password</string>
+    <string name="user_change_password_view_password_new_required">New Password is required.</string>
+    <string name="user_change_password_view_password_new_confirm">Confirm New Password</string>
+    <string name="user_change_password_view_password_new_confirm_required">Confirm New Password is required.</string>
+    <string name="user_change_password_view_password_new_confirm_not_match">Confirm New Password is not match.</string>
+    <string name="user_change_password_view_ok">Change Now</string>
+    <string name="user_change_password_view_alert_button">OK</string>
+    <string name="user_change_password_view_alert_title_error">Change Password Failed</string>
+    <string name="user_change_password_view_alert_title_success">Change Password Success</string>
 </resources>

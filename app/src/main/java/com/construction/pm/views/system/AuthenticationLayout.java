@@ -5,14 +5,12 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatButton;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.construction.pm.R;
-import com.construction.pm.fragments.AuthenticationFirstFragment;
+import com.construction.pm.fragments.AuthenticationLoginFirstFragment;
 import com.construction.pm.fragments.AuthenticationLoginFragment;
 
 public class AuthenticationLayout {
@@ -22,7 +20,7 @@ public class AuthenticationLayout {
     protected AppCompatActivity mActivity;
     protected Handler mActivityHandler;
     protected static final String FRAGMENT_LOGIN = "FRAGMENT_LOGIN";
-    protected static final String FRAGMENT_FIRST = "FRAGMENT_FIRST";
+    protected static final String FRAGMENT_LOGIN_FIRST = "FRAGMENT_LOGIN_FIRST";
 
     protected RelativeLayout mAuthenticationLayout;
 
@@ -85,11 +83,11 @@ public class AuthenticationLayout {
         return authenticationLoginFragment;
     }
 
-    public AuthenticationFirstFragment showFirstPassword() {
-        AuthenticationFirstFragment authenticationFirstFragment = AuthenticationFirstFragment.newInstance();
+    public AuthenticationLoginFirstFragment showLoginFirst() {
+        AuthenticationLoginFirstFragment authenticationLoginFirstFragment = AuthenticationLoginFirstFragment.newInstance();
 
-        loadFragment(authenticationFirstFragment, FRAGMENT_FIRST);
+        loadFragment(authenticationLoginFirstFragment, FRAGMENT_LOGIN_FIRST);
 
-        return authenticationFirstFragment;
+        return authenticationLoginFirstFragment;
     }
 }
