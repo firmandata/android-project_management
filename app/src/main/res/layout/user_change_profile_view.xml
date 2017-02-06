@@ -79,8 +79,7 @@
             android:hint="@string/user_change_profile_view_description"
             android:maxLines="3"
             android:singleLine="false"
-            android:inputType="textMultiLine"
-            android:lines="3" />
+            android:inputType="textMultiLine" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.v7.widget.AppCompatButton

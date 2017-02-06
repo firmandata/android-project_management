@@ -2,37 +2,42 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_home"
+            android:id="@+id/navigator_menu_inbox"
             android:icon="@drawable/home_24"
-            android:title="@string/app_name" />
+            android:title="@string/menu_inbox_title" />
         <item
-            android:id="@+id/nav_photos"
+            android:id="@+id/navigator_menu_project_task"
             android:icon="@drawable/home_24"
-            android:title="@string/app_name" />
+            android:title="@string/menu_project_task_title" />
         <item
-            android:id="@+id/nav_movies"
+            android:id="@+id/navigator_menu_monitoring"
             android:icon="@drawable/home_24"
-            android:title="@string/app_name" />
+            android:title="@string/menu_monitoring_title" />
+        <item
+            android:id="@+id/navigator_menu_update_task_progress"
+            android:icon="@drawable/home_24"
+            android:title="@string/menu_update_task_progress_title" />
 
         <item
-            android:id="@+id/nav_notifications"
+            android:id="@+id/navigator_menu_request_report"
             android:icon="@drawable/home_24"
-            android:title="@string/app_name" />
-
-        <item
-            android:id="@+id/nav_settings"
-            android:icon="@drawable/home_24"
-            android:title="@string/app_name" />
+            android:title="@string/menu_request_report_title" />
     </group>
 
-    <item android:title="Other">
+    <item android:title="@string/menu_user_title">
         <menu>
             <item
-                android:id="@+id/nav_about_us"
-                android:title="@string/app_name" />
+                android:id="@+id/navigator_menu_profile"
+                android:icon="@drawable/home_24"
+                android:title="@string/menu_profile_title" />
             <item
-                android:id="@+id/nav_privacy_policy"
-                android:title="@string/app_name" />
+                android:id="@+id/navigator_menu_change_password"
+                android:icon="@drawable/home_24"
+                android:title="@string/menu_change_password_title" />
+            <item
+                android:id="@+id/navigator_menu_logout"
+                android:icon="@drawable/home_24"
+                android:title="@string/menu_logout_title" />
         </menu>
     </item>
 </menu>
