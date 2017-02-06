@@ -108,7 +108,7 @@ public class BootstrapActivity extends AppCompatActivity {
 
     protected class SessionHandleTask extends AsyncTask<SessionHandleTaskParam, String, SessionLoginModel> {
 
-        protected static final int WAIT_FOR_USER_READ_ERROR_MESSAGE = 200;
+        protected static final int WAIT_FOR_USER_READ_ERROR_MESSAGE = 2000;
 
         protected SessionHandleTaskParam mSessionHandleTaskParam;
         protected Context mContext;
