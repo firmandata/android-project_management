@@ -7,16 +7,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.construction.pm.views.home.HomeView;
+
 public class HomeFragment extends Fragment {
+
+    protected HomeView mHomeView;
+
+    public static HomeFragment newInstance() {
+        return new HomeFragment();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // -- Prepare HomeView --
+        mHomeView = HomeView.buildHomeView(getContext(), null);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return null;
+        // -- Load HomeView to fragment --
+        return mHomeView.getView();
     }
 
     @Override

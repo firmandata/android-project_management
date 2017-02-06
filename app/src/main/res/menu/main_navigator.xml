@@ -2,6 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
         <item
+            android:id="@+id/navigator_menu_home"
+            android:icon="@drawable/home_24"
+            android:title="@string/menu_home_title" />
+        <item
             android:id="@+id/navigator_menu_inbox"
             android:icon="@drawable/home_24"
             android:title="@string/menu_inbox_title" />
@@ -26,18 +30,20 @@
 
     <item android:title="@string/menu_user_title">
         <menu>
-            <item
-                android:id="@+id/navigator_menu_profile"
-                android:icon="@drawable/home_24"
-                android:title="@string/menu_profile_title" />
-            <item
-                android:id="@+id/navigator_menu_change_password"
-                android:icon="@drawable/home_24"
-                android:title="@string/menu_change_password_title" />
-            <item
-                android:id="@+id/navigator_menu_logout"
-                android:icon="@drawable/home_24"
-                android:title="@string/menu_logout_title" />
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/navigator_menu_profile"
+                    android:icon="@drawable/home_24"
+                    android:title="@string/menu_profile_title" />
+                <item
+                    android:id="@+id/navigator_menu_change_password"
+                    android:icon="@drawable/home_24"
+                    android:title="@string/menu_change_password_title" />
+                <item
+                    android:id="@+id/navigator_menu_logout"
+                    android:icon="@drawable/home_24"
+                    android:title="@string/menu_logout_title" />
+            </group>
         </menu>
     </item>
 </menu>

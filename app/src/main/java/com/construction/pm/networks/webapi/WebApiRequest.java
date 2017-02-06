@@ -12,6 +12,8 @@ import com.construction.pm.networks.webapi.persistentcookiejar.persistence.Share
 import com.construction.pm.models.system.SessionLoginModel;
 import com.construction.pm.models.system.SettingUserModel;
 
+import org.json.JSONException;
+
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -159,12 +161,14 @@ public class WebApiRequest {
 
                 try {
                     jsonObject = (org.json.JSONObject) jsonTokener.nextValue();
+                } catch (JSONException ex) {
                 } catch (Exception ex) {
                 }
 
                 if (jsonObject == null) {
                     try {
                         jsonArray = (org.json.JSONArray) jsonTokener.nextValue();
+                    } catch (JSONException ex) {
                     } catch (Exception ex) {
                     }
                 }
@@ -312,12 +316,14 @@ public class WebApiRequest {
 
                         try {
                             jsonObject = (org.json.JSONObject) jsonTokener.nextValue();
+                        } catch (JSONException ex) {
                         } catch (Exception ex) {
                         }
 
                         if (jsonObject == null) {
                             try {
                                 jsonArray = (org.json.JSONArray) jsonTokener.nextValue();
+                            } catch (JSONException ex) {
                             } catch (Exception ex) {
                             }
                         }
@@ -499,12 +505,14 @@ public class WebApiRequest {
 
                 try {
                     jsonObject = (org.json.JSONObject) jsonTokener.nextValue();
+                } catch (JSONException ex) {
                 } catch (Exception ex) {
                 }
 
                 if (jsonObject == null) {
                     try {
                         jsonArray = (org.json.JSONArray) jsonTokener.nextValue();
+                    } catch (JSONException ex) {
                     } catch (Exception ex) {
                     }
                 }
@@ -668,12 +676,14 @@ public class WebApiRequest {
 
                         try {
                             jsonObject = (org.json.JSONObject) jsonTokener.nextValue();
+                        } catch (JSONException ex) {
                         } catch (Exception ex) {
                         }
 
                         if (jsonObject == null) {
                             try {
                                 jsonArray = (org.json.JSONArray) jsonTokener.nextValue();
+                            } catch (JSONException ex) {
                             } catch (Exception ex) {
                             }
                         }
@@ -843,12 +853,14 @@ public class WebApiRequest {
 
                 try {
                     jsonObject = (org.json.JSONObject) jsonTokener.nextValue();
+                } catch (JSONException ex) {
                 } catch (Exception ex) {
                 }
 
                 if (jsonObject == null) {
                     try {
                         jsonArray = (org.json.JSONArray) jsonTokener.nextValue();
+                    } catch (JSONException ex) {
                     } catch (Exception ex) {
                     }
                 }
@@ -1000,12 +1012,14 @@ public class WebApiRequest {
 
                         try {
                             jsonObject = (org.json.JSONObject) jsonTokener.nextValue();
+                        } catch (JSONException ex) {
                         } catch (Exception ex) {
                         }
 
                         if (jsonObject == null) {
                             try {
                                 jsonArray = (org.json.JSONArray) jsonTokener.nextValue();
+                            } catch (JSONException ex) {
                             } catch (Exception ex) {
                             }
                         }

@@ -187,9 +187,12 @@ public class UserChangePasswordFragment extends Fragment implements UserChangePa
             // -- Prepare UserNetwork --
             UserNetwork userNetwork = new UserNetwork(mContext, mUserChangePasswordHandleTaskParam.getSettingUserModel());
 
-            // -- Change password to server --
             SimpleResponseModel simpleResponseModel = null;
             try {
+                // -- Invalidate Access Token --
+                userNetwork.invalidateAccessToken();
+
+                // -- Change password to server --
                 simpleResponseModel = userNetwork.changePassword(mUserChangePasswordHandleTaskParam.getPasswordOld(), mUserChangePasswordHandleTaskParam.getPasswordNew());
             } catch (WebApiError webApiError) {
                 userChangePasswordHandleTaskResult.setMessage(webApiError.getMessage());

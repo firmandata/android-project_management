@@ -22,6 +22,7 @@
     <string name="date_picker_button">&#8230;</string>
     <string name="time_picker_button">&#8230;</string>
 
+    <string name="menu_home_title">Home</string>
     <string name="menu_inbox_title">Inbox</string>
     <string name="menu_project_task_title">Project Task</string>
     <string name="menu_monitoring_title">Monitoring</string>
@@ -46,6 +47,9 @@
 
     <string name="login_first_handle_task_begin">Password changing &#8230;</string>
     <string name="login_first_handle_task_success">Password changed.</string>
+
+    <string name="logout_handle_task_begin">Signing out &#8230;</string>
+    <string name="logout_handle_task_success">Signed out</string>
 
     <string name="user_change_password_handle_task_begin">Password changing &#8230;</string>
     <string name="user_change_password_handle_task_success">Password changed.</string>

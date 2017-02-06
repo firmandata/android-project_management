@@ -1,17 +1,28 @@
 package com.construction.pm.activities;
 
+import android.content.Context;
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.construction.pm.R;
+import com.construction.pm.fragments.UserChangePasswordFragment;
+import com.construction.pm.fragments.UserChangeProfileFragment;
+import com.construction.pm.models.network.SimpleResponseModel;
+import com.construction.pm.models.system.SettingUserModel;
+import com.construction.pm.networks.UserNetwork;
+import com.construction.pm.persistence.SettingPersistent;
+import com.construction.pm.utils.ViewUtil;
 import com.construction.pm.views.MainLayout;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements
+        MainLayout.MainLayoutListener,
+        UserChangeProfileFragment.UserChangeProfileFragmentListener,
+        UserChangePasswordFragment.UserChangePasswordFragmentListener {
 
     protected MainLayout mMainLayout;
 
@@ -21,43 +32,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // -- Prepare MainLayout --
         mMainLayout = MainLayout.buildMainLayout(this, null);
-        mMainLayout.getNavigationView().setNavigationItemSelectedListener(this);
+        mMainLayout.setMainLayoutListener(this);
 
         // -- Load MainLayout to activity --
         mMainLayout.loadLayoutToActivity(this);
-    }
 
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-        switch (menuItem.getItemId()) {
-            case R.id.navigator_menu_inbox:
-                break;
-            case R.id.navigator_menu_project_task:
-                break;
-            case R.id.navigator_menu_monitoring:
-                break;
-            case R.id.navigator_menu_update_task_progress:
-                break;
-            case R.id.navigator_menu_request_report:
-                break;
-            case R.id.navigator_menu_profile:
-                mMainLayout.showUserChangeProfile();
-                break;
-            case R.id.navigator_menu_change_password:
-                mMainLayout.showUserChangePassword();
-                break;
-            case R.id.navigator_menu_logout:
-                break;
-        }
-
-        if (menuItem.isCheckable()) {
-            if (!menuItem.isChecked())
-                menuItem.setChecked(true);
-        }
-
-        mMainLayout.getLayout().closeDrawers();
-
-        return true;
+        // -- Load HomeFragment --
+        mMainLayout.showHomeFragment();
     }
 
     @Override
@@ -77,6 +58,135 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return;
         }
 
+        if (!mMainLayout.isHomeFragmentShow()) {
+            mMainLayout.showHomeFragment();
+            return;
+        }
+
         super.onBackPressed();
+    }
+
+    @Override
+    public void onMenuHomeSelected() {
+        mMainLayout.showHomeFragment();
+    }
+
+    @Override
+    public void onMenuUserChangeProfileClick() {
+        mMainLayout.showUserChangeProfile(this);
+    }
+
+    @Override
+    public void onMenuUserChangePasswordClick() {
+        mMainLayout.showUserChangePassword(this);
+    }
+
+    @Override
+    public void onMenuLogoutClick() {
+        doLogout();
+    }
+
+    @Override
+    public void onUserChangeProfileSuccess(SimpleResponseModel simpleResponseModel) {
+
+    }
+
+    @Override
+    public void onUserChangePasswordSuccess(SimpleResponseModel simpleResponseModel) {
+        // -- Show home --
+        mMainLayout.showHomeFragment();
+    }
+
+    protected void doLogout() {
+        // -- Prepare SettingPersistent --
+        SettingPersistent settingPersistent = new SettingPersistent(this);
+
+        // -- Get SettingUserModel from SettingPersistent --
+        SettingUserModel settingUserModel = settingPersistent.getSettingUserModel();
+
+        // -- Prepare LogoutHandleTask --
+        LogoutHandleTask logoutHandleTask = new LogoutHandleTask() {
+            @Override
+            public void onPostExecute(Boolean isLoggedOut) {
+                onLogoutHandleFinish(isLoggedOut != null ? isLoggedOut : false);
+            }
+
+            @Override
+            protected void onProgressUpdate(String... messages) {
+                if (messages != null) {
+                    if (messages.length > 0) {
+                        onLogoutHandleProgress(messages[0]);
+                    }
+                }
+            }
+        };
+
+        // -- Do SessionHandleTask --
+        logoutHandleTask.execute(new LogoutHandleTaskParam(this, settingUserModel));
+    }
+
+    protected void onLogoutHandleFinish(final boolean isLoggedOut) {
+        // -- Close progress dialog --
+        mMainLayout.progressDialogDismiss();
+
+        if (isLoggedOut) {
+            // -- Redirect to AuthenticationActivity --
+            Intent intent = new Intent(this, AuthenticationActivity.class);
+            startActivity(intent);
+
+            // -- Close activity --
+            finish();
+        }
+    }
+
+    protected void onLogoutHandleProgress(final String progressMessage) {
+        // -- Show progress dialog --
+        mMainLayout.progressDialogShow(progressMessage);
+    }
+
+    protected class LogoutHandleTaskParam {
+
+        protected Context mContext;
+        protected SettingUserModel mSettingUserModel;
+
+        public LogoutHandleTaskParam(final Context context, final SettingUserModel settingUserModel) {
+            mContext = context;
+            mSettingUserModel = settingUserModel;
+        }
+
+        public Context getContext() {
+            return mContext;
+        }
+
+        public SettingUserModel getSettingUserModel() {
+            return mSettingUserModel;
+        }
+    }
+
+    protected class LogoutHandleTask extends AsyncTask<LogoutHandleTaskParam, String, Boolean> {
+
+        protected LogoutHandleTaskParam mLogoutHandleTaskParam;
+        protected Context mContext;
+
+        @Override
+        protected Boolean doInBackground(LogoutHandleTaskParam... logoutHandleTaskParams) {
+            // -- Get SessionHandleTaskParam --
+            mLogoutHandleTaskParam = logoutHandleTaskParams[0];
+            mContext = mLogoutHandleTaskParam.getContext();
+
+            // -- Prepare UserNetwork --
+            UserNetwork userNetwork = new UserNetwork(mContext, mLogoutHandleTaskParam.getSettingUserModel());
+
+            // -- Set publishProgress AccessTokenModel handle --
+            publishProgress(ViewUtil.getResourceString(mContext, R.string.logout_handle_task_begin));
+
+            // -- Do logout handle --
+            userNetwork.doLogout();
+
+            // -- Set publishProgress as finish --
+            publishProgress(ViewUtil.getResourceString(mContext, R.string.logout_handle_task_success));
+
+            return true;
+        }
     }
 }

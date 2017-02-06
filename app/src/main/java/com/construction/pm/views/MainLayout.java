@@ -1,7 +1,9 @@
 package com.construction.pm.views;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -11,28 +13,38 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.construction.pm.R;
+import com.construction.pm.fragments.HomeFragment;
 import com.construction.pm.fragments.UserChangePasswordFragment;
 import com.construction.pm.fragments.UserChangeProfileFragment;
 
-public class MainLayout {
+public class MainLayout implements NavigationView.OnNavigationItemSelectedListener {
 
     protected Context mContext;
 
     protected AppCompatActivity mActivity;
     protected Handler mActivityHandler;
-    protected static final String FRAGMENT_USER_CHANGE_PROFILE = "FRAGMENT_USER_CHANGE_PROFILE";
-    protected static final String FRAGMENT_USER_CHANGE_PASSWORD = "FRAGMENT_USER_CHANGE_PASSWORD";
+    protected String mFragmentTagSelected;
+    protected static final String FRAGMENT_TAG_HOME = "FRAGMENT_HOME";
+    protected static final String FRAGMENT_TAG_INBOX = "FRAGMENT_INBOX";
+    protected static final String FRAGMENT_TAG_PROJECT_TASK = "PROJECT_TASK";
+    protected static final String FRAGMENT_TAG_MONITORING = "FRAGMENT_MONITORING";
+    protected static final String FRAGMENT_TAG_UPDATE_TASK_PROGRESS = "FRAGMENT_UPDATE_TASK_PROGRESS";
+    protected static final String FRAGMENT_TAG_REQUEST_REPORT = "FRAGMENT_REQUES_REPORT";
+    protected static final String FRAGMENT_TAG_USER_CHANGE_PROFILE = "FRAGMENT_USER_CHANGE_PROFILE";
+    protected static final String FRAGMENT_TAG_USER_CHANGE_PASSWORD = "FRAGMENT_USER_CHANGE_PASSWORD";
 
     protected DrawerLayout mMainLayout;
+    protected ProgressDialog mProgressDialog;
     protected NavigationView mNavigationView;
     protected Toolbar mToolbar;
     protected ActionBarDrawerToggle mActionBarDrawerToggle;
+
+    protected MainLayoutListener mMainLayoutListener;
 
     protected MainLayout(final Context context) {
         mContext = context;
@@ -56,18 +68,31 @@ public class MainLayout {
         mMainLayout = mainLayout;
         mToolbar = (Toolbar) mMainLayout.findViewById(R.id.contentToolbar);
         mNavigationView = (NavigationView) mMainLayout.findViewById(R.id.navigator);
+        mNavigationView.setNavigationItemSelectedListener(this);
+
+        mProgressDialog = new ProgressDialog(mContext);
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.setCanceledOnTouchOutside(false);
     }
 
     public DrawerLayout getLayout() {
         return mMainLayout;
     }
 
-    public Toolbar getToolbar() {
-        return mToolbar;
+    public void progressDialogShow(final String progressMessage) {
+        mProgressDialog.setMessage(progressMessage);
+        if (!mProgressDialog.isShowing())
+            mProgressDialog.show();
     }
 
-    public NavigationView getNavigationView() {
-        return mNavigationView;
+    public void progressDialogDismiss() {
+        mProgressDialog.setMessage(null);
+        if (mProgressDialog.isShowing())
+            mProgressDialog.dismiss();
+    }
+
+    public Toolbar getToolbar() {
+        return mToolbar;
     }
 
     public void loadLayoutToActivity(AppCompatActivity activity) {
@@ -99,9 +124,90 @@ public class MainLayout {
         mActivityHandler = new Handler();
     }
 
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case R.id.navigator_menu_home:
+                if (mMainLayoutListener != null)
+                    mMainLayoutListener.onMenuHomeSelected();
+                break;
+            case R.id.navigator_menu_inbox:
+                break;
+            case R.id.navigator_menu_project_task:
+                break;
+            case R.id.navigator_menu_monitoring:
+                break;
+            case R.id.navigator_menu_update_task_progress:
+                break;
+            case R.id.navigator_menu_request_report:
+                break;
+            case R.id.navigator_menu_profile:
+                if (mMainLayoutListener != null)
+                    mMainLayoutListener.onMenuUserChangeProfileClick();
+                break;
+            case R.id.navigator_menu_change_password:
+                if (mMainLayoutListener != null)
+                    mMainLayoutListener.onMenuUserChangePasswordClick();
+                break;
+            case R.id.navigator_menu_logout:
+                if (mMainLayoutListener != null)
+                    mMainLayoutListener.onMenuLogoutClick();
+                break;
+        }
+
+        mMainLayout.closeDrawers();
+
+        return true;
+    }
+
+    protected void invalidateNavigationViewMenu() {
+        if (mActivity == null)
+            return;
+        if (mFragmentTagSelected == null)
+            return;
+
+        for (int menuIdx = 0; menuIdx < mNavigationView.getMenu().size(); menuIdx++) {
+            MenuItem menuItem = mNavigationView.getMenu().getItem(menuIdx);
+
+            if (menuItem.isCheckable()) {
+                boolean isChecked = false;
+                if (mFragmentTagSelected.equals(FRAGMENT_TAG_HOME) && menuItem.getItemId() == R.id.navigator_menu_home)
+                    isChecked = true;
+                if (mFragmentTagSelected.equals(FRAGMENT_TAG_INBOX) && menuItem.getItemId() == R.id.navigator_menu_inbox)
+                    isChecked = true;
+                if (mFragmentTagSelected.equals(FRAGMENT_TAG_PROJECT_TASK) && menuItem.getItemId() == R.id.navigator_menu_project_task)
+                    isChecked = true;
+                if (mFragmentTagSelected.equals(FRAGMENT_TAG_MONITORING) && menuItem.getItemId() == R.id.navigator_menu_monitoring)
+                    isChecked = true;
+                if (mFragmentTagSelected.equals(FRAGMENT_TAG_UPDATE_TASK_PROGRESS) && menuItem.getItemId() == R.id.navigator_menu_update_task_progress)
+                    isChecked = true;
+                if (mFragmentTagSelected.equals(FRAGMENT_TAG_REQUEST_REPORT) && menuItem.getItemId() == R.id.navigator_menu_request_report)
+                    isChecked = true;
+                if (mFragmentTagSelected.equals(FRAGMENT_TAG_USER_CHANGE_PROFILE) && menuItem.getItemId() == R.id.navigator_menu_profile)
+                    isChecked = true;
+                if (mFragmentTagSelected.equals(FRAGMENT_TAG_USER_CHANGE_PASSWORD) && menuItem.getItemId() == R.id.navigator_menu_change_password)
+                    isChecked = true;
+                if (isChecked && !menuItem.isChecked())
+                    menuItem.setChecked(true);
+                else if (!isChecked && menuItem.isChecked())
+                    menuItem.setChecked(false);
+            }
+        }
+    }
+
+    public boolean isHomeFragmentShow() {
+        return mFragmentTagSelected.equals(FRAGMENT_TAG_HOME);
+    }
+
     protected void loadFragment(final Fragment fragment, final String tag) {
         if (mActivityHandler == null)
             return;
+        if (mFragmentTagSelected != null) {
+            if (mFragmentTagSelected.equals(tag))
+                return;
+        }
+
+        mFragmentTagSelected = tag;
 
         mActivityHandler.post(new Runnable() {
             @Override
@@ -115,21 +221,44 @@ public class MainLayout {
                 fragmentTransaction.commitAllowingStateLoss();
             }
         });
+
+        invalidateNavigationViewMenu();
     }
 
-    public UserChangeProfileFragment showUserChangeProfile() {
-        UserChangeProfileFragment userChangeProfileFragment = UserChangeProfileFragment.newInstance();
+    public HomeFragment showHomeFragment() {
+        HomeFragment homeFragment = HomeFragment.newInstance();
 
-        loadFragment(userChangeProfileFragment, FRAGMENT_USER_CHANGE_PROFILE);
+        loadFragment(homeFragment, FRAGMENT_TAG_HOME);
+
+        return homeFragment;
+    }
+
+    public UserChangeProfileFragment showUserChangeProfile(final UserChangeProfileFragment.UserChangeProfileFragmentListener userChangeProfileFragmentListener) {
+        UserChangeProfileFragment userChangeProfileFragment = UserChangeProfileFragment.newInstance();
+        userChangeProfileFragment.setUserChangeProfileFragmentListener(userChangeProfileFragmentListener);
+
+        loadFragment(userChangeProfileFragment, FRAGMENT_TAG_USER_CHANGE_PROFILE);
 
         return userChangeProfileFragment;
     }
 
-    public UserChangePasswordFragment showUserChangePassword() {
+    public UserChangePasswordFragment showUserChangePassword(final UserChangePasswordFragment.UserChangePasswordFragmentListener userChangePasswordFragmentListener) {
         UserChangePasswordFragment userChangePasswordFragment = UserChangePasswordFragment.newInstance();
+        userChangePasswordFragment.setUserChangePasswordFragmentListener(userChangePasswordFragmentListener);
 
-        loadFragment(userChangePasswordFragment, FRAGMENT_USER_CHANGE_PASSWORD);
+        loadFragment(userChangePasswordFragment, FRAGMENT_TAG_USER_CHANGE_PASSWORD);
 
         return userChangePasswordFragment;
+    }
+
+    public void setMainLayoutListener(final MainLayoutListener mainLayoutListener) {
+        mMainLayoutListener = mainLayoutListener;
+    }
+
+    public interface MainLayoutListener {
+        void onMenuHomeSelected();
+        void onMenuUserChangeProfileClick();
+        void onMenuUserChangePasswordClick();
+        void onMenuLogoutClick();
     }
 }

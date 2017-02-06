@@ -199,10 +199,16 @@ public class UserChangeProfileFragment extends Fragment implements UserChangePro
             // -- Prepare UserNetwork --
             UserNetwork userNetwork = new UserNetwork(mContext, mUserChangeProfileHandleTaskParam.getSettingUserModel());
 
-            // -- Change Profile to server --
             SimpleResponseModel simpleResponseModel = null;
             try {
+                // -- Invalidate Access Token --
+                userNetwork.invalidateAccessToken();
+
+                // -- Change Profile to server --
                 simpleResponseModel = userNetwork.updateProfile(mUserChangeProfileHandleTaskParam.getProjectMemberModel());
+
+                // -- Invalidate Login --
+                userNetwork.invalidateLogin();
             } catch (WebApiError webApiError) {
                 userChangeProfileHandleTaskResult.setMessage(webApiError.getMessage());
                 publishProgress(webApiError.getMessage());
