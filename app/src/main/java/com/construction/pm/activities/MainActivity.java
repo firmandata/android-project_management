@@ -77,24 +77,24 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onMenuUserChangePasswordClick() {
-        mMainLayout.showUserChangePassword(this);
-    }
-
-    @Override
-    public void onMenuLogoutClick() {
-        doLogout();
-    }
-
-    @Override
     public void onUserChangeProfileSuccess(SimpleResponseModel simpleResponseModel) {
 
+    }
+
+    @Override
+    public void onMenuUserChangePasswordClick() {
+        mMainLayout.showUserChangePassword(this);
     }
 
     @Override
     public void onUserChangePasswordSuccess(SimpleResponseModel simpleResponseModel) {
         // -- Show home --
         mMainLayout.showHomeFragment();
+    }
+
+    @Override
+    public void onMenuLogoutClick() {
+        doLogout();
     }
 
     protected void doLogout() {
