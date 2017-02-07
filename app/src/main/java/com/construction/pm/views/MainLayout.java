@@ -18,9 +18,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.construction.pm.R;
-import com.construction.pm.fragments.HomeFragment;
-import com.construction.pm.fragments.UserChangePasswordFragment;
-import com.construction.pm.fragments.UserChangeProfileFragment;
+import com.construction.pm.activities.fragments.HomeFragment;
+import com.construction.pm.activities.fragments.UserChangePasswordFragment;
+import com.construction.pm.activities.fragments.UserChangeProfileFragment;
 
 public class MainLayout implements NavigationView.OnNavigationItemSelectedListener {
 

@@ -1,7 +1,4 @@
-package com.construction.pm.models.network;
-
-import com.construction.pm.models.ProjectMemberModel;
-import com.construction.pm.models.system.UserModel;
+package com.construction.pm.models;
 
 import org.json.JSONException;
 

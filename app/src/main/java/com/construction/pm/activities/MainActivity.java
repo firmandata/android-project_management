@@ -10,8 +10,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.construction.pm.R;
-import com.construction.pm.fragments.UserChangePasswordFragment;
-import com.construction.pm.fragments.UserChangeProfileFragment;
+import com.construction.pm.activities.fragments.UserChangePasswordFragment;
+import com.construction.pm.activities.fragments.UserChangeProfileFragment;
 import com.construction.pm.models.network.SimpleResponseModel;
 import com.construction.pm.models.system.SettingUserModel;
 import com.construction.pm.networks.UserNetwork;

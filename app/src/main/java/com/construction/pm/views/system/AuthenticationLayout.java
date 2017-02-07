@@ -10,8 +10,8 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.construction.pm.R;
-import com.construction.pm.fragments.AuthenticationLoginFirstFragment;
-import com.construction.pm.fragments.AuthenticationLoginFragment;
+import com.construction.pm.activities.fragments.AuthenticationLoginFirstFragment;
+import com.construction.pm.activities.fragments.AuthenticationLoginFragment;
 
 public class AuthenticationLayout {
 

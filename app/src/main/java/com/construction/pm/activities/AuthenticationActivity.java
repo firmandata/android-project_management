@@ -4,8 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import com.construction.pm.fragments.AuthenticationLoginFirstFragment;
-import com.construction.pm.fragments.AuthenticationLoginFragment;
+import com.construction.pm.activities.fragments.AuthenticationLoginFirstFragment;
+import com.construction.pm.activities.fragments.AuthenticationLoginFragment;
 import com.construction.pm.models.network.SimpleResponseModel;
 import com.construction.pm.models.system.SessionLoginModel;
 import com.construction.pm.persistence.SessionPersistent;

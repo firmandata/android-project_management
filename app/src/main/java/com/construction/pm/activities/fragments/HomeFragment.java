@@ -1,4 +1,4 @@
-package com.construction.pm.fragments;
+package com.construction.pm.activities.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.construction.pm.views.home.HomeView;
+import com.construction.pm.views.HomeView;
 
 public class HomeFragment extends Fragment {
 

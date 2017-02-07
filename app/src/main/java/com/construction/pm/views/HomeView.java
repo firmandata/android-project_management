@@ -1,4 +1,4 @@
-package com.construction.pm.views.home;
+package com.construction.pm.views;
 
 import android.content.Context;
 import android.view.LayoutInflater;
