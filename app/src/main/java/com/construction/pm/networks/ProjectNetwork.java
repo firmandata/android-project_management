@@ -7,7 +7,7 @@ import com.construction.pm.models.ContractModel;
 import com.construction.pm.models.ProjectModel;
 import com.construction.pm.models.ProjectPlanModel;
 import com.construction.pm.models.ProjectStageModel;
-import com.construction.pm.models.network.AccessTokenModel;
+import com.construction.pm.models.AccessTokenModel;
 import com.construction.pm.models.network.ProjectResponseModel;
 import com.construction.pm.models.system.SessionLoginModel;
 import com.construction.pm.models.system.SettingUserModel;

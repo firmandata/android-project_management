@@ -1,4 +1,4 @@
-package com.construction.pm.models.network;
+package com.construction.pm.models;
 
 import com.construction.pm.utils.DateTimeUtil;
 

@@ -3,7 +3,7 @@ package com.construction.pm.networks;
 import android.content.Context;
 
 import com.construction.pm.R;
-import com.construction.pm.models.network.AccessTokenModel;
+import com.construction.pm.models.AccessTokenModel;
 import com.construction.pm.models.system.SessionLoginModel;
 import com.construction.pm.models.system.SettingUserModel;
 import com.construction.pm.networks.webapi.WebApiError;

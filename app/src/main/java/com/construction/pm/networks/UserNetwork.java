@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.construction.pm.R;
 import com.construction.pm.models.ProjectMemberModel;
-import com.construction.pm.models.network.AccessTokenModel;
+import com.construction.pm.models.AccessTokenModel;
 import com.construction.pm.models.network.SimpleResponseModel;
 import com.construction.pm.models.UserProjectMemberModel;
 import com.construction.pm.models.system.SessionLoginModel;

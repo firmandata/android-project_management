@@ -4,8 +4,7 @@ import android.content.Context;
 
 import com.construction.pm.R;
 import com.construction.pm.models.NotificationModel;
-import com.construction.pm.models.ProjectMemberModel;
-import com.construction.pm.models.network.AccessTokenModel;
+import com.construction.pm.models.AccessTokenModel;
 import com.construction.pm.models.system.SessionLoginModel;
 import com.construction.pm.models.system.SettingUserModel;
 import com.construction.pm.networks.webapi.WebApiError;

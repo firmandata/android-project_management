@@ -2,7 +2,7 @@ package com.construction.pm.models.system;
 
 import com.construction.pm.models.ProjectMemberModel;
 import com.construction.pm.models.UserModel;
-import com.construction.pm.models.network.AccessTokenModel;
+import com.construction.pm.models.AccessTokenModel;
 import com.construction.pm.models.UserProjectMemberModel;
 
 import org.json.JSONException;
