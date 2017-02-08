@@ -1,6 +1,7 @@
 package com.construction.pm.activities.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.construction.pm.R;
+import com.construction.pm.activities.ProjectActivity;
 import com.construction.pm.models.ProjectMemberModel;
 import com.construction.pm.models.ProjectModel;
 import com.construction.pm.models.system.SessionLoginModel;
@@ -85,6 +87,23 @@ public class ProjectListFragment extends Fragment implements ProjectListView.Pro
 
         // -- Do ProjectListHandleTask --
         projectListHandleTask.execute(new ProjectListHandleTaskParam(getContext(), settingUserModel, sessionLoginModel.getProjectMemberModel()));
+    }
+
+    @Override
+    public void onProjectItemClick(ProjectModel projectModel) {
+        // -- Redirect to ProjectActivity --
+        Intent intent = new Intent(this.getContext(), ProjectActivity.class);
+
+        try {
+            org.json.JSONObject projectModelJsonObject = projectModel.build();
+            String projectModelJson = projectModelJsonObject.toString(0);
+
+            intent.putExtra(ProjectActivity.PARAM_PROJECT_MODEL, projectModelJson);
+        } catch (org.json.JSONException ex) {
+
+        }
+
+        startActivity(intent);
     }
 
     protected void onProjectListRequestProgress(final String progressMessage) {

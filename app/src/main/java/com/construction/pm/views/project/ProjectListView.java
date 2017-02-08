@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.construction.pm.R;
+import com.construction.pm.libraries.widgets.RecyclerItemTouchListener;
 import com.construction.pm.models.ProjectModel;
 
 public class ProjectListView {
@@ -57,9 +59,27 @@ public class ProjectListView {
 
         mRvProjectList = (RecyclerView) mProjectListView.findViewById(R.id.projectList);
         mRvProjectList.setItemAnimator(new DefaultItemAnimator());
+        mRvProjectList.addOnItemTouchListener(new RecyclerItemTouchListener(mContext, mRvProjectList, new RecyclerItemTouchListener.ItemClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                ProjectModel projectModel = mProjectListAdapter.getItem(position);
+                if (projectModel != null) {
+                    if (mProjectListListener != null)
+                        mProjectListListener.onProjectItemClick(projectModel);
+                }
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
+        }));
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(mContext);
         mRvProjectList.setLayoutManager(layoutManager);
+
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL);
+        mRvProjectList.addItemDecoration(dividerItemDecoration);
 
         mProjectListAdapter = new ProjectListAdapter();
         mRvProjectList.setAdapter(mProjectListAdapter);
@@ -95,6 +115,7 @@ public class ProjectListView {
 
     public interface ProjectListListener {
         void onProjectListRequest();
+        void onProjectItemClick(ProjectModel projectModel);
     }
 
     protected class ProjectListAdapter extends RecyclerView.Adapter<ProjectListViewHolder> {
@@ -114,6 +135,15 @@ public class ProjectListView {
             mProjectModels = projectModels;
 
             notifyDataSetChanged();
+        }
+
+        public ProjectModel getItem(final int position) {
+            if (mProjectModels == null)
+                return null;
+            if ((position + 1) > mProjectModels.length)
+                return null;
+
+            return mProjectModels[position];
         }
 
         @Override

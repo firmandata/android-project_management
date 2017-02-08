@@ -22,6 +22,7 @@ import com.construction.pm.activities.fragments.HomeFragment;
 import com.construction.pm.activities.fragments.ProjectListFragment;
 import com.construction.pm.activities.fragments.UserChangePasswordFragment;
 import com.construction.pm.activities.fragments.UserChangeProfileFragment;
+import com.construction.pm.utils.ViewUtil;
 
 public class MainLayout implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -40,10 +41,11 @@ public class MainLayout implements NavigationView.OnNavigationItemSelectedListen
     protected static final String FRAGMENT_TAG_USER_CHANGE_PASSWORD = "FRAGMENT_USER_CHANGE_PASSWORD";
 
     protected DrawerLayout mMainLayout;
-    protected ProgressDialog mProgressDialog;
+    protected ActionBar mActionBar;
     protected NavigationView mNavigationView;
     protected Toolbar mToolbar;
     protected ActionBarDrawerToggle mActionBarDrawerToggle;
+    protected ProgressDialog mProgressDialog;
 
     protected MainLayoutListener mMainLayoutListener;
 
@@ -98,9 +100,9 @@ public class MainLayout implements NavigationView.OnNavigationItemSelectedListen
         mActivity.setContentView(mMainLayout);
 
         mActivity.setSupportActionBar(mToolbar);
-        ActionBar actionBar = mActivity.getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setTitle(R.string.app_name);
+        mActionBar = mActivity.getSupportActionBar();
+        if (mActionBar != null) {
+            mActionBar.setTitle(R.string.app_name);
         }
 
         mActionBarDrawerToggle = new ActionBarDrawerToggle(mActivity, mMainLayout, mToolbar, R.string.main_drawer_open, R.string.main_drawer_close) {
@@ -198,7 +200,7 @@ public class MainLayout implements NavigationView.OnNavigationItemSelectedListen
         return mFragmentTagSelected.equals(FRAGMENT_TAG_HOME);
     }
 
-    protected void loadFragment(final Fragment fragment, final String tag) {
+    protected void loadFragment(final Fragment fragment, final String title, final String tag) {
         if (mActivityHandler == null)
             return;
         if (mFragmentTagSelected != null) {
@@ -207,6 +209,10 @@ public class MainLayout implements NavigationView.OnNavigationItemSelectedListen
         }
 
         mFragmentTagSelected = tag;
+
+        if (mActionBar != null) {
+            mActionBar.setTitle(title);
+        }
 
         mActivityHandler.post(new Runnable() {
             @Override
@@ -227,7 +233,7 @@ public class MainLayout implements NavigationView.OnNavigationItemSelectedListen
     public HomeFragment showHomeFragment() {
         HomeFragment homeFragment = HomeFragment.newInstance();
 
-        loadFragment(homeFragment, FRAGMENT_TAG_HOME);
+        loadFragment(homeFragment, ViewUtil.getResourceString(mContext, R.string.menu_home_title), FRAGMENT_TAG_HOME);
 
         return homeFragment;
     }
@@ -235,7 +241,7 @@ public class MainLayout implements NavigationView.OnNavigationItemSelectedListen
     public ProjectListFragment showProjectList() {
         ProjectListFragment projectListFragment = ProjectListFragment.newInstance();
 
-        loadFragment(projectListFragment, FRAGMENT_TAG_PROJECT_LIST);
+        loadFragment(projectListFragment, ViewUtil.getResourceString(mContext, R.string.menu_project_title), FRAGMENT_TAG_PROJECT_LIST);
 
         return projectListFragment;
     }
@@ -244,7 +250,7 @@ public class MainLayout implements NavigationView.OnNavigationItemSelectedListen
         UserChangeProfileFragment userChangeProfileFragment = UserChangeProfileFragment.newInstance();
         userChangeProfileFragment.setUserChangeProfileFragmentListener(userChangeProfileFragmentListener);
 
-        loadFragment(userChangeProfileFragment, FRAGMENT_TAG_USER_CHANGE_PROFILE);
+        loadFragment(userChangeProfileFragment, ViewUtil.getResourceString(mContext, R.string.menu_profile_title), FRAGMENT_TAG_USER_CHANGE_PROFILE);
 
         return userChangeProfileFragment;
     }
@@ -253,7 +259,7 @@ public class MainLayout implements NavigationView.OnNavigationItemSelectedListen
         UserChangePasswordFragment userChangePasswordFragment = UserChangePasswordFragment.newInstance();
         userChangePasswordFragment.setUserChangePasswordFragmentListener(userChangePasswordFragmentListener);
 
-        loadFragment(userChangePasswordFragment, FRAGMENT_TAG_USER_CHANGE_PASSWORD);
+        loadFragment(userChangePasswordFragment, ViewUtil.getResourceString(mContext, R.string.menu_change_password_title), FRAGMENT_TAG_USER_CHANGE_PASSWORD);
 
         return userChangePasswordFragment;
     }

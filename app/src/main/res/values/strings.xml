@@ -24,7 +24,7 @@
 
     <string name="menu_home_title">Home</string>
     <string name="menu_inbox_title">Inbox</string>
-    <string name="menu_project_task_title">Project Task</string>
+    <string name="menu_project_title">Projects</string>
     <string name="menu_monitoring_title">Monitoring</string>
     <string name="menu_update_task_progress_title">Update Task Progress</string>
     <string name="menu_request_report_title">Request Report</string>

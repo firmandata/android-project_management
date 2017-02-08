@@ -142,6 +142,9 @@ public class BootstrapActivity extends AppCompatActivity {
                 // -- Set publishProgress as finish --
                 publishProgress(ViewUtil.getResourceString(mContext, R.string.session_handle_task_finish));
             } catch (WebApiError webApiError) {
+                // -- Set new SessionLoginModel --
+                sessionLoginModel = userNetwork.getSessionLoginModel();
+
                 // -- Set publishProgress --
                 publishProgress(webApiError.getMessage());
 
