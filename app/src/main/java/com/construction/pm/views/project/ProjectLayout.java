@@ -14,52 +14,52 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.construction.pm.R;
-import com.construction.pm.activities.fragments.ProjectDetailContractFragment;
-import com.construction.pm.activities.fragments.ProjectDetailProjectFragment;
-import com.construction.pm.activities.fragments.ProjectDetailPlanListFragment;
-import com.construction.pm.activities.fragments.ProjectDetailStageListFragment;
+import com.construction.pm.activities.fragments.ContractDetailFragment;
+import com.construction.pm.activities.fragments.ProjectDetailFragment;
+import com.construction.pm.activities.fragments.ProjectPlanListFragment;
+import com.construction.pm.activities.fragments.ProjectStageListFragment;
 import com.construction.pm.models.ProjectModel;
 import com.construction.pm.utils.ViewUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProjectDetailLayout {
+public class ProjectLayout {
 
     protected Context mContext;
 
     protected AppCompatActivity mActivity;
 
-    protected CoordinatorLayout mProjectDetailLayout;
+    protected CoordinatorLayout mProjectLayout;
     protected Toolbar mToolbar;
     protected TabLayout mTabLayout;
     protected ViewPager mViewPager;
 
     protected ProjectModel mProjectModel;
 
-    protected ProjectDetailLayout(final Context context) {
+    protected ProjectLayout(final Context context) {
         mContext = context;
     }
 
-    public ProjectDetailLayout(final Context context, final CoordinatorLayout projectDetailLayout) {
+    public ProjectLayout(final Context context, final CoordinatorLayout projectLayout) {
         this(context);
 
-        initializeView(projectDetailLayout);
+        initializeView(projectLayout);
     }
 
-    public static ProjectDetailLayout buildProjectDetailLayout(final Context context, final int layoutId, final ViewGroup viewGroup) {
-        return new ProjectDetailLayout(context, (CoordinatorLayout) LayoutInflater.from(context).inflate(layoutId, viewGroup));
+    public static ProjectLayout buildProjectDetailLayout(final Context context, final int layoutId, final ViewGroup viewGroup) {
+        return new ProjectLayout(context, (CoordinatorLayout) LayoutInflater.from(context).inflate(layoutId, viewGroup));
     }
 
-    public static ProjectDetailLayout buildProjectDetailLayout(final Context context, final ViewGroup viewGroup) {
-        return buildProjectDetailLayout(context, R.layout.project_detail_layout, viewGroup);
+    public static ProjectLayout buildProjectDetailLayout(final Context context, final ViewGroup viewGroup) {
+        return buildProjectDetailLayout(context, R.layout.project_layout, viewGroup);
     }
 
-    protected void initializeView(final CoordinatorLayout projectDetailLayout) {
-        mProjectDetailLayout = projectDetailLayout;
-        mToolbar = (Toolbar) mProjectDetailLayout.findViewById(R.id.contentToolbar);
-        mTabLayout = (TabLayout) mProjectDetailLayout.findViewById(R.id.contentTab);
-        mViewPager = (ViewPager) mProjectDetailLayout.findViewById(R.id.contentBody);
+    protected void initializeView(final CoordinatorLayout projectLayout) {
+        mProjectLayout = projectLayout;
+        mToolbar = (Toolbar) mProjectLayout.findViewById(R.id.contentToolbar);
+        mTabLayout = (TabLayout) mProjectLayout.findViewById(R.id.contentTab);
+        mViewPager = (ViewPager) mProjectLayout.findViewById(R.id.contentBody);
     }
 
     public void setProjectModel(final ProjectModel projectModel) {
@@ -67,13 +67,13 @@ public class ProjectDetailLayout {
     }
 
     public CoordinatorLayout getLayout() {
-        return mProjectDetailLayout;
+        return mProjectLayout;
     }
 
     public void loadLayoutToActivity(AppCompatActivity activity) {
         mActivity = activity;
 
-        mActivity.setContentView(mProjectDetailLayout);
+        mActivity.setContentView(mProjectLayout);
 
         mActivity.setSupportActionBar(mToolbar);
         ActionBar actionBar = mActivity.getSupportActionBar();
@@ -87,10 +87,10 @@ public class ProjectDetailLayout {
         }
 
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(mActivity.getSupportFragmentManager());
-        viewPagerAdapter.addFragment(ProjectDetailProjectFragment.newInstance(), ViewUtil.getResourceString(mContext, R.string.project_detail_view_tab_project));
-        viewPagerAdapter.addFragment(ProjectDetailContractFragment.newInstance(), ViewUtil.getResourceString(mContext, R.string.project_detail_view_tab_contract));
-        viewPagerAdapter.addFragment(ProjectDetailStageListFragment.newInstance(), ViewUtil.getResourceString(mContext, R.string.project_detail_view_tab_stage));
-        viewPagerAdapter.addFragment(ProjectDetailPlanListFragment.newInstance(), ViewUtil.getResourceString(mContext, R.string.project_detail_view_tab_plan_realization));
+        viewPagerAdapter.addFragment(ProjectDetailFragment.newInstance(), ViewUtil.getResourceString(mContext, R.string.project_detail_view_tab_project));
+        viewPagerAdapter.addFragment(ContractDetailFragment.newInstance(), ViewUtil.getResourceString(mContext, R.string.project_detail_view_tab_contract));
+        viewPagerAdapter.addFragment(ProjectStageListFragment.newInstance(), ViewUtil.getResourceString(mContext, R.string.project_detail_view_tab_stage));
+        viewPagerAdapter.addFragment(ProjectPlanListFragment.newInstance(), ViewUtil.getResourceString(mContext, R.string.project_detail_view_tab_plan_realization));
         mViewPager.setAdapter(viewPagerAdapter);
 
         mTabLayout.setupWithViewPager(mViewPager);

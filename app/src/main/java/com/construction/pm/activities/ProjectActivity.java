@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.construction.pm.models.ProjectModel;
-import com.construction.pm.views.project.ProjectDetailLayout;
+import com.construction.pm.views.project.ProjectLayout;
 
 public class ProjectActivity extends AppCompatActivity {
 
@@ -12,7 +12,7 @@ public class ProjectActivity extends AppCompatActivity {
 
     protected ProjectModel mProjectModel;
 
-    protected ProjectDetailLayout mProjectDetailLayout;
+    protected ProjectLayout mProjectLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -29,11 +29,11 @@ public class ProjectActivity extends AppCompatActivity {
             }
         }
 
-        // -- Prepare ProjectDetailLayout --
-        mProjectDetailLayout = ProjectDetailLayout.buildProjectDetailLayout(this, null);
-        mProjectDetailLayout.setProjectModel(mProjectModel);
+        // -- Prepare ProjectLayout --
+        mProjectLayout = ProjectLayout.buildProjectDetailLayout(this, null);
+        mProjectLayout.setProjectModel(mProjectModel);
 
         // -- Load to Activity --
-        mProjectDetailLayout.loadLayoutToActivity(this);
+        mProjectLayout.loadLayoutToActivity(this);
     }
 }

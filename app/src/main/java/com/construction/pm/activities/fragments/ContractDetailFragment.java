@@ -7,27 +7,27 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.construction.pm.views.project.ProjectDetailPlanListView;
+import com.construction.pm.views.project.ContractDetailView;
 
-public class ProjectDetailPlanListFragment extends Fragment {
-    protected ProjectDetailPlanListView mProjectDetailPlanListView;
+public class ContractDetailFragment extends Fragment {
+    protected ContractDetailView mContractDetailView;
 
-    public static ProjectDetailPlanListFragment newInstance() {
-        return new ProjectDetailPlanListFragment();
+    public static ContractDetailFragment newInstance() {
+        return new ContractDetailFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // -- Prepare ProjectDetailPlanListView --
-        mProjectDetailPlanListView = ProjectDetailPlanListView.buildProjectDetailPlanListView(getContext(), null);
+        // -- Prepare ContractDetailView --
+        mContractDetailView = ContractDetailView.buildContractDetailView(getContext(), null);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // -- Load ProjectDetailPlanListView to fragment --
-        return mProjectDetailPlanListView.getView();
+        // -- Load ContractDetailView to fragment --
+        return mContractDetailView.getView();
     }
 
     @Override

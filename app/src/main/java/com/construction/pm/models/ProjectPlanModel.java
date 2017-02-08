@@ -21,7 +21,6 @@ public class ProjectPlanModel {
     protected String mRealizationStatus;
     protected Integer mProjectAddendumId;
     protected Double mPercentComplete;
-
     protected Integer mCreatorId;
     protected Calendar mCreateDate;
     protected Integer mLastUserId;

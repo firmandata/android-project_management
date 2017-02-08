@@ -18,7 +18,6 @@ public class ProjectStageModel {
     protected String mStageNextSubject;
     protected String mStageNextLocation;
     protected String mStageNextMessage;
-
     protected Integer mCreatorId;
     protected Calendar mCreateDate;
     protected Integer mLastUserId;

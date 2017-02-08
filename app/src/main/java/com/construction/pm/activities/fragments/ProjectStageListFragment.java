@@ -7,27 +7,27 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.construction.pm.views.project.ProjectDetailStageListView;
+import com.construction.pm.views.project.ProjectStageListView;
 
-public class ProjectDetailStageListFragment extends Fragment {
-    protected ProjectDetailStageListView mProjectDetailStageListView;
+public class ProjectStageListFragment extends Fragment {
+    protected ProjectStageListView mProjectStageListView;
 
-    public static ProjectDetailStageListFragment newInstance() {
-        return new ProjectDetailStageListFragment();
+    public static ProjectStageListFragment newInstance() {
+        return new ProjectStageListFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // -- Prepare ProjectDetailStageListView --
-        mProjectDetailStageListView = ProjectDetailStageListView.buildProjectDetailStageListView(getContext(), null);
+        // -- Prepare ProjectStageListView --
+        mProjectStageListView = ProjectStageListView.buildProjectStageListView(getContext(), null);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // -- Load ProjectDetailStageListView to fragment --
-        return mProjectDetailStageListView.getView();
+        // -- Load ProjectStageListView to fragment --
+        return mProjectStageListView.getView();
     }
 
     @Override
