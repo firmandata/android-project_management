@@ -72,7 +72,12 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onMenuUserChangeProfileClick() {
+    public void onMenuProjectListSelected() {
+        mMainLayout.showProjectList();
+    }
+
+    @Override
+    public void onMenuUserChangeProfileSelected() {
         mMainLayout.showUserChangeProfile(this);
     }
 
@@ -82,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onMenuUserChangePasswordClick() {
+    public void onMenuUserChangePasswordSelected() {
         mMainLayout.showUserChangePassword(this);
     }
 

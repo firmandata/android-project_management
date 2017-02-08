@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 
 import com.construction.pm.R;
 import com.construction.pm.activities.fragments.HomeFragment;
+import com.construction.pm.activities.fragments.ProjectListFragment;
 import com.construction.pm.activities.fragments.UserChangePasswordFragment;
 import com.construction.pm.activities.fragments.UserChangeProfileFragment;
 
@@ -31,7 +32,7 @@ public class MainLayout implements NavigationView.OnNavigationItemSelectedListen
     protected String mFragmentTagSelected;
     protected static final String FRAGMENT_TAG_HOME = "FRAGMENT_HOME";
     protected static final String FRAGMENT_TAG_INBOX = "FRAGMENT_INBOX";
-    protected static final String FRAGMENT_TAG_PROJECT_TASK = "PROJECT_TASK";
+    protected static final String FRAGMENT_TAG_PROJECT_LIST = "FRAGMENT_PROJECT_LIST";
     protected static final String FRAGMENT_TAG_MONITORING = "FRAGMENT_MONITORING";
     protected static final String FRAGMENT_TAG_UPDATE_TASK_PROGRESS = "FRAGMENT_UPDATE_TASK_PROGRESS";
     protected static final String FRAGMENT_TAG_REQUEST_REPORT = "FRAGMENT_REQUES_REPORT";
@@ -91,10 +92,6 @@ public class MainLayout implements NavigationView.OnNavigationItemSelectedListen
             mProgressDialog.dismiss();
     }
 
-    public Toolbar getToolbar() {
-        return mToolbar;
-    }
-
     public void loadLayoutToActivity(AppCompatActivity activity) {
         mActivity = activity;
 
@@ -133,7 +130,9 @@ public class MainLayout implements NavigationView.OnNavigationItemSelectedListen
                 break;
             case R.id.navigator_menu_inbox:
                 break;
-            case R.id.navigator_menu_project_task:
+            case R.id.navigator_menu_project_list:
+                if (mMainLayoutListener != null)
+                    mMainLayoutListener.onMenuProjectListSelected();
                 break;
             case R.id.navigator_menu_monitoring:
                 break;
@@ -143,11 +142,11 @@ public class MainLayout implements NavigationView.OnNavigationItemSelectedListen
                 break;
             case R.id.navigator_menu_profile:
                 if (mMainLayoutListener != null)
-                    mMainLayoutListener.onMenuUserChangeProfileClick();
+                    mMainLayoutListener.onMenuUserChangeProfileSelected();
                 break;
             case R.id.navigator_menu_change_password:
                 if (mMainLayoutListener != null)
-                    mMainLayoutListener.onMenuUserChangePasswordClick();
+                    mMainLayoutListener.onMenuUserChangePasswordSelected();
                 break;
             case R.id.navigator_menu_logout:
                 if (mMainLayoutListener != null)
@@ -175,7 +174,7 @@ public class MainLayout implements NavigationView.OnNavigationItemSelectedListen
                     isChecked = true;
                 if (mFragmentTagSelected.equals(FRAGMENT_TAG_INBOX) && menuItem.getItemId() == R.id.navigator_menu_inbox)
                     isChecked = true;
-                if (mFragmentTagSelected.equals(FRAGMENT_TAG_PROJECT_TASK) && menuItem.getItemId() == R.id.navigator_menu_project_task)
+                if (mFragmentTagSelected.equals(FRAGMENT_TAG_PROJECT_LIST) && menuItem.getItemId() == R.id.navigator_menu_project_list)
                     isChecked = true;
                 if (mFragmentTagSelected.equals(FRAGMENT_TAG_MONITORING) && menuItem.getItemId() == R.id.navigator_menu_monitoring)
                     isChecked = true;
@@ -217,7 +216,7 @@ public class MainLayout implements NavigationView.OnNavigationItemSelectedListen
 
                 FragmentTransaction fragmentTransaction = mActivity.getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
-                fragmentTransaction.replace(R.id.contentBodyHolder, fragment, tag);
+                fragmentTransaction.replace(R.id.contentBody, fragment, tag);
                 fragmentTransaction.commitAllowingStateLoss();
             }
         });
@@ -231,6 +230,14 @@ public class MainLayout implements NavigationView.OnNavigationItemSelectedListen
         loadFragment(homeFragment, FRAGMENT_TAG_HOME);
 
         return homeFragment;
+    }
+
+    public ProjectListFragment showProjectList() {
+        ProjectListFragment projectListFragment = ProjectListFragment.newInstance();
+
+        loadFragment(projectListFragment, FRAGMENT_TAG_PROJECT_LIST);
+
+        return projectListFragment;
     }
 
     public UserChangeProfileFragment showUserChangeProfile(final UserChangeProfileFragment.UserChangeProfileFragmentListener userChangeProfileFragmentListener) {
@@ -257,8 +264,9 @@ public class MainLayout implements NavigationView.OnNavigationItemSelectedListen
 
     public interface MainLayoutListener {
         void onMenuHomeSelected();
-        void onMenuUserChangeProfileClick();
-        void onMenuUserChangePasswordClick();
+        void onMenuProjectListSelected();
+        void onMenuUserChangeProfileSelected();
+        void onMenuUserChangePasswordSelected();
         void onMenuLogoutClick();
     }
 }

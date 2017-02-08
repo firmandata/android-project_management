@@ -10,7 +10,7 @@
             android:icon="@drawable/home_24"
             android:title="@string/menu_inbox_title" />
         <item
-            android:id="@+id/navigator_menu_project_task"
+            android:id="@+id/navigator_menu_project_list"
             android:icon="@drawable/home_24"
             android:title="@string/menu_project_task_title" />
         <item

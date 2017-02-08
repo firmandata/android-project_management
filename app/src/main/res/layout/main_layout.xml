@@ -29,20 +29,12 @@
 
         </android.support.design.widget.AppBarLayout>
 
-        <ScrollView
+        <FrameLayout
             android:id="@+id/contentBody"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-            <FrameLayout
-                android:id="@+id/contentBodyHolder"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/element_gap"
-                android:background="@color/baseColorBackgroundActive" />
-
-        </ScrollView>
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:background="@color/baseColorBackgroundActive" />
 
     </android.support.design.widget.CoordinatorLayout>
 

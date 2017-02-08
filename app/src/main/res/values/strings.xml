@@ -57,6 +57,9 @@
     <string name="user_change_profile_handle_task_begin">Profile changing &#8230;</string>
     <string name="user_change_profile_handle_task_success">Profile changed.</string>
 
+    <string name="project_list_handle_task_begin">Getting projects &#8230;</string>
+    <string name="project_list_handle_task_success">Getting projects finished.</string>
+
     <string name="image_shadow_description">Shadow</string>
     <string name="image_logo_description">Application Logo</string>
 
@@ -104,4 +107,9 @@
     <string name="user_change_profile_view_alert_button">OK</string>
     <string name="user_change_profile_view_alert_title_error">Update Profile Failed</string>
     <string name="user_change_profile_view_alert_title_success">Update Profile Success</string>
+
+    <string name="project_detail_view_tab_project">Project</string>
+    <string name="project_detail_view_tab_contract">Contract</string>
+    <string name="project_detail_view_tab_stage">Stage</string>
+    <string name="project_detail_view_tab_plan_realization">Plan &amp; Realization</string>
 </resources>
