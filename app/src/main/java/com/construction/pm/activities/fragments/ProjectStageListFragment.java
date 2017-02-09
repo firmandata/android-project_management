@@ -19,8 +19,6 @@ public class ProjectStageListFragment extends Fragment {
 
     protected ProjectStageListView mProjectStageListView;
 
-    protected ProjectStageModel[] mProjectStageModels;
-
     public static ProjectStageListFragment newInstance() {
         return newInstance(null);
     }
@@ -50,8 +48,7 @@ public class ProjectStageListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // -- Prepare ProjectStageListView --
-        mProjectStageListView = ProjectStageListView.buildProjectStageListView(getContext(), null);
+        ProjectStageModel[] projectStageModels = null;
 
         // -- Get parameters --
         Bundle bundle = getArguments();
@@ -67,13 +64,18 @@ public class ProjectStageListFragment extends Fragment {
                         projectStageModelList.add(projectStageModel);
                     }
                     if (projectStageModelList.size() > 0) {
-                        mProjectStageModels = new ProjectStageModel[projectStageModelList.size()];
-                        projectStageModelList.toArray(mProjectStageModels);
+                        projectStageModels = new ProjectStageModel[projectStageModelList.size()];
+                        projectStageModelList.toArray(projectStageModels);
                     }
                 } catch (org.json.JSONException ex) {
                 }
             }
         }
+
+        // -- Prepare ProjectStageListView --
+        mProjectStageListView = ProjectStageListView.buildProjectStageListView(getContext(), null);
+        if (projectStageModels != null)
+            mProjectStageListView.setProjectStageModels(projectStageModels);
     }
 
     @Override
@@ -88,7 +90,8 @@ public class ProjectStageListFragment extends Fragment {
     }
 
     public void setProjectStageModels(final ProjectStageModel[] projectStageModels) {
-        mProjectStageModels = projectStageModels;
+        if (mProjectStageListView != null)
+            mProjectStageListView.setProjectStageModels(projectStageModels);
     }
 
     @Override

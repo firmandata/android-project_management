@@ -19,8 +19,6 @@ public class ProjectPlanListFragment extends Fragment {
 
     protected ProjectPlanListView mProjectPlanListView;
 
-    protected ProjectPlanModel[] mProjectPlanModels;
-
     public static ProjectPlanListFragment newInstance() {
         return newInstance(null);
     }
@@ -50,8 +48,7 @@ public class ProjectPlanListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // -- Prepare ProjectPlanListView --
-        mProjectPlanListView = ProjectPlanListView.buildProjectPlanListView(getContext(), null);
+        ProjectPlanModel[] projectPlanModels = null;
 
         // -- Get parameters --
         Bundle bundle = getArguments();
@@ -67,13 +64,18 @@ public class ProjectPlanListFragment extends Fragment {
                         projectPlanModelList.add(projectPlanModel);
                     }
                     if (projectPlanModelList.size() > 0) {
-                        mProjectPlanModels = new ProjectPlanModel[projectPlanModelList.size()];
-                        projectPlanModelList.toArray(mProjectPlanModels);
+                        projectPlanModels = new ProjectPlanModel[projectPlanModelList.size()];
+                        projectPlanModelList.toArray(projectPlanModels);
                     }
                 } catch (org.json.JSONException ex) {
                 }
             }
         }
+
+        // -- Prepare ProjectPlanListView --
+        mProjectPlanListView = ProjectPlanListView.buildProjectPlanListView(getContext(), null);
+        if (projectPlanModels != null)
+            mProjectPlanListView.setProjectPlanModels(projectPlanModels);
     }
 
     @Override
@@ -88,7 +90,8 @@ public class ProjectPlanListFragment extends Fragment {
     }
 
     public void setProjectPlanModels(final ProjectPlanModel[] projectPlanModels) {
-        mProjectPlanModels = projectPlanModels;
+        if (mProjectPlanListView != null)
+            mProjectPlanListView.setProjectPlanModels(projectPlanModels);
     }
 
     @Override

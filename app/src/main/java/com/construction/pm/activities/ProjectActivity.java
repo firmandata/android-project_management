@@ -53,13 +53,12 @@ public class ProjectActivity extends AppCompatActivity implements ProjectLayout.
 
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
         return super.onOptionsItemSelected(menuItem);
-    }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
     }
 
     @Override
@@ -73,14 +72,7 @@ public class ProjectActivity extends AppCompatActivity implements ProjectLayout.
             @Override
             public void onPostExecute(ProjectHandleTaskResult projectHandleTaskResult) {
                 if (projectHandleTaskResult != null) {
-                    if (projectHandleTaskResult.getContractModel() != null)
-                        onProjectRequestContract(projectHandleTaskResult.getContractModel());
-                    if (projectHandleTaskResult.getProjectModel() != null)
-                        onProjectRequestProject(projectHandleTaskResult.getProjectModel());
-                    if (projectHandleTaskResult.getProjectStageModels() != null)
-                        onProjectRequestProjectStages(projectHandleTaskResult.getProjectStageModels());
-                    if (projectHandleTaskResult.getProjectPlanModels() != null)
-                        onProjectRequestProjectPlans(projectHandleTaskResult.getProjectPlanModels());
+                    onProjectRequestSuccess(projectHandleTaskResult.getContractModel(), projectHandleTaskResult.getProjectModel(), projectHandleTaskResult.getProjectStageModels(), projectHandleTaskResult.getProjectPlanModels());
                     if (projectHandleTaskResult.getMessage() != null)
                         onProjectRequestMessage(projectHandleTaskResult.getMessage());
                 }
@@ -104,20 +96,8 @@ public class ProjectActivity extends AppCompatActivity implements ProjectLayout.
 
     }
 
-    protected void onProjectRequestContract(final ContractModel contractModel) {
-        mProjectLayout.setContract(contractModel);
-    }
-
-    protected void onProjectRequestProject(final ProjectModel projectModel) {
-        mProjectLayout.setProject(projectModel);
-    }
-
-    protected void onProjectRequestProjectStages(final ProjectStageModel[] projectStageModels) {
-        mProjectLayout.setProjectStages(projectStageModels);
-    }
-
-    protected void onProjectRequestProjectPlans(final ProjectPlanModel[] projectPlanModels) {
-        mProjectLayout.setProjectPlans(projectPlanModels);
+    protected void onProjectRequestSuccess(final ContractModel contractModel, final ProjectModel projectModel, final ProjectStageModel[] projectStageModels, final ProjectPlanModel[] projectPlanModels) {
+        mProjectLayout.setLayoutData(contractModel, projectModel, projectStageModels, projectPlanModels);
     }
 
     protected void onProjectRequestMessage(final String message) {

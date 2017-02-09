@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.construction.pm.R;
+import com.construction.pm.models.ProjectModel;
 
 public class ProjectDetailView {
     protected Context mContext;
@@ -36,5 +37,9 @@ public class ProjectDetailView {
 
     public RelativeLayout getView() {
         return mProjectDetailView;
+    }
+
+    public void setProjectModel(final ProjectModel projectModel) {
+
     }
 }

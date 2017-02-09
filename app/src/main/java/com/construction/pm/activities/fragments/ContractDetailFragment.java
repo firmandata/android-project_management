@@ -16,8 +16,6 @@ public class ContractDetailFragment extends Fragment {
 
     protected ContractDetailView mContractDetailView;
 
-    protected ContractModel mContractModel;
-
     public static ContractDetailFragment newInstance() {
         return newInstance(null);
     }
@@ -44,8 +42,7 @@ public class ContractDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // -- Prepare ContractDetailView --
-        mContractDetailView = ContractDetailView.buildContractDetailView(getContext(), null);
+        ContractModel contractModel = null;
 
         // -- Get parameters --
         Bundle bundle = getArguments();
@@ -55,11 +52,16 @@ public class ContractDetailFragment extends Fragment {
             if (contractModelJson != null) {
                 try {
                     org.json.JSONObject jsonObject = new org.json.JSONObject(contractModelJson);
-                    setContractModel(ContractModel.build(jsonObject));
+                    contractModel = ContractModel.build(jsonObject);
                 } catch (org.json.JSONException ex) {
                 }
             }
         }
+
+        // -- Prepare ContractDetailView --
+        mContractDetailView = ContractDetailView.buildContractDetailView(getContext(), null);
+        if (contractModel != null)
+            mContractDetailView.setContractModel(contractModel);
     }
 
     @Override
@@ -74,7 +76,8 @@ public class ContractDetailFragment extends Fragment {
     }
 
     public void setContractModel(final ContractModel contractModel) {
-        mContractModel = contractModel;
+        if (mContractDetailView != null)
+            mContractDetailView.setContractModel(contractModel);
     }
 
     @Override

@@ -38,10 +38,6 @@ public class ProjectLayout {
     protected TabLayout mTabLayout;
     protected ViewPager mViewPager;
     protected ViewPagerAdapter mViewPagerAdapter;
-    protected ContractDetailFragment mContractDetailFragment;
-    protected ProjectDetailFragment mProjectDetailFragment;
-    protected ProjectStageListFragment mProjectStageListFragment;
-    protected ProjectPlanListFragment mProjectPlanListFragment;
 
     protected ProjectModel mProjectModel;
 
@@ -101,39 +97,19 @@ public class ProjectLayout {
         if (mProjectLayoutListener != null)
             mProjectLayoutListener.onProjectRequest(mProjectModel);
 
-        mProjectDetailFragment = ProjectDetailFragment.newInstance();
-        mContractDetailFragment = ContractDetailFragment.newInstance();
-        mProjectStageListFragment = ProjectStageListFragment.newInstance();
-        mProjectPlanListFragment = ProjectPlanListFragment.newInstance();
-
         mViewPagerAdapter = new ViewPagerAdapter(mActivity.getSupportFragmentManager());
-        mViewPagerAdapter.addFragment(mProjectDetailFragment, ViewUtil.getResourceString(mContext, R.string.project_detail_view_tab_project));
-        mViewPagerAdapter.addFragment(mContractDetailFragment, ViewUtil.getResourceString(mContext, R.string.project_detail_view_tab_contract));
-        mViewPagerAdapter.addFragment(mProjectStageListFragment, ViewUtil.getResourceString(mContext, R.string.project_detail_view_tab_stage));
-        mViewPagerAdapter.addFragment(mProjectPlanListFragment, ViewUtil.getResourceString(mContext, R.string.project_detail_view_tab_plan_realization));
         mViewPager.setAdapter(mViewPagerAdapter);
 
         mTabLayout.setupWithViewPager(mViewPager);
     }
 
-    public void setContract(final ContractModel contractModel) {
-        if (mContractDetailFragment != null)
-            mContractDetailFragment.setContractModel(contractModel);
-    }
-
-    public void setProject(final ProjectModel projectModel) {
-        if (mProjectDetailFragment != null)
-            mProjectDetailFragment.setProjectModel(projectModel);
-    }
-
-    public void setProjectStages(final ProjectStageModel[] projectStageModels) {
-        if (mProjectStageListFragment != null)
-            mProjectStageListFragment.setProjectStageModels(projectStageModels);
-    }
-
-    public void setProjectPlans(final ProjectPlanModel[] projectPlanModels) {
-        if (mProjectPlanListFragment != null)
-            mProjectPlanListFragment.setProjectPlanModels(projectPlanModels);
+    public void setLayoutData(final ContractModel contractModel, final ProjectModel projectModel, final ProjectStageModel[] projectStageModels, final ProjectPlanModel[] projectPlanModels) {
+        mViewPagerAdapter.clearFragments();
+        mViewPagerAdapter.addFragment(ProjectDetailFragment.newInstance(projectModel), ViewUtil.getResourceString(mContext, R.string.project_detail_view_tab_project));
+        mViewPagerAdapter.addFragment(ContractDetailFragment.newInstance(contractModel), ViewUtil.getResourceString(mContext, R.string.project_detail_view_tab_contract));
+        mViewPagerAdapter.addFragment(ProjectStageListFragment.newInstance(projectStageModels), ViewUtil.getResourceString(mContext, R.string.project_detail_view_tab_stage));
+        mViewPagerAdapter.addFragment(ProjectPlanListFragment.newInstance(projectPlanModels), ViewUtil.getResourceString(mContext, R.string.project_detail_view_tab_plan_realization));
+        mViewPagerAdapter.notifyDataSetChanged();
     }
 
     protected class ViewPagerAdapter extends FragmentPagerAdapter {
@@ -161,6 +137,11 @@ public class ProjectLayout {
         public void removeFragment(final int position) {
             mFragmentList.remove(position);
             mTitleList.remove(position);
+        }
+
+        public void clearFragments() {
+            mFragmentList.clear();
+            mTitleList.clear();
         }
 
         @Override

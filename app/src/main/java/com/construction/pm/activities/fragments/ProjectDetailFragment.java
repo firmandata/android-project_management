@@ -17,8 +17,6 @@ public class ProjectDetailFragment extends Fragment {
 
     protected ProjectDetailView mProjectDetailView;
 
-    protected ProjectModel mProjectModel;
-
     public static ProjectDetailFragment newInstance() {
         return newInstance(null);
     }
@@ -45,8 +43,7 @@ public class ProjectDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // -- Prepare ProjectDetailView --
-        mProjectDetailView = ProjectDetailView.buildProjectDetailView(getContext(), null);
+        ProjectModel projectModel = null;
 
         // -- Get parameters --
         Bundle bundle = getArguments();
@@ -56,11 +53,16 @@ public class ProjectDetailFragment extends Fragment {
             if (projectModelJson != null) {
                 try {
                     org.json.JSONObject jsonObject = new org.json.JSONObject(projectModelJson);
-                    setProjectModel(ProjectModel.build(jsonObject));
+                    projectModel = ProjectModel.build(jsonObject);
                 } catch (org.json.JSONException ex) {
                 }
             }
         }
+
+        // -- Prepare ProjectDetailView --
+        mProjectDetailView = ProjectDetailView.buildProjectDetailView(getContext(), null);
+        if (projectModel != null)
+            mProjectDetailView.setProjectModel(projectModel);
     }
 
     @Override
@@ -75,7 +77,8 @@ public class ProjectDetailFragment extends Fragment {
     }
 
     public void setProjectModel(final ProjectModel projectModel) {
-        mProjectModel = projectModel;
+        if (mProjectDetailView != null)
+            mProjectDetailView.setProjectModel(projectModel);
     }
 
     @Override

@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.construction.pm.R;
+import com.construction.pm.models.ProjectStageModel;
 
 public class ProjectStageListView {
     protected Context mContext;
@@ -36,5 +37,9 @@ public class ProjectStageListView {
 
     public RelativeLayout getView() {
         return mProjectStageListView;
+    }
+
+    public void setProjectStageModels(final ProjectStageModel[] projectStageModels) {
+
     }
 }
