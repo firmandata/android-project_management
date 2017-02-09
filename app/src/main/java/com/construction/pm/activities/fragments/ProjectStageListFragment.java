@@ -7,13 +7,43 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.construction.pm.models.ProjectStageModel;
 import com.construction.pm.views.project.ProjectStageListView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ProjectStageListFragment extends Fragment {
+
+    public static final String PARAM_PROJECT_STAGE_MODELS = "ProjectStageModels";
+
     protected ProjectStageListView mProjectStageListView;
 
+    protected ProjectStageModel[] mProjectStageModels;
+
     public static ProjectStageListFragment newInstance() {
-        return new ProjectStageListFragment();
+        return newInstance(null);
+    }
+
+    public static ProjectStageListFragment newInstance(final ProjectStageModel[] projectStageModels) {
+        // -- Set parameters --
+        Bundle bundle = new Bundle();
+        if (projectStageModels != null) {
+            try {
+                org.json.JSONArray projectStageModelsJsonArray = new org.json.JSONArray();
+                for (ProjectStageModel projectStageModel : projectStageModels) {
+                    projectStageModelsJsonArray.put(projectStageModel.build());
+                }
+                String projectStageModelsJson = projectStageModelsJsonArray.toString(0);
+                bundle.putString(PARAM_PROJECT_STAGE_MODELS, projectStageModelsJson);
+            } catch (org.json.JSONException ex) {
+            }
+        }
+
+        // -- Create ProjectStageListFragment --
+        ProjectStageListFragment projectStageListFragment = new ProjectStageListFragment();
+        projectStageListFragment.setArguments(bundle);
+        return projectStageListFragment;
     }
 
     @Override
@@ -22,6 +52,28 @@ public class ProjectStageListFragment extends Fragment {
 
         // -- Prepare ProjectStageListView --
         mProjectStageListView = ProjectStageListView.buildProjectStageListView(getContext(), null);
+
+        // -- Get parameters --
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            // -- Get ProjectStageModels parameter --
+            String projectStageModelsJson = bundle.getString(PARAM_PROJECT_STAGE_MODELS);
+            if (projectStageModelsJson != null) {
+                try {
+                    List<ProjectStageModel> projectStageModelList = new ArrayList<ProjectStageModel>();
+                    org.json.JSONArray jsonArray = new org.json.JSONArray(projectStageModelsJson);
+                    for (int jsonArrayIndex = 0; jsonArrayIndex < jsonArray.length(); jsonArrayIndex++) {
+                        ProjectStageModel projectStageModel = ProjectStageModel.build(jsonArray.getJSONObject(jsonArrayIndex));
+                        projectStageModelList.add(projectStageModel);
+                    }
+                    if (projectStageModelList.size() > 0) {
+                        mProjectStageModels = new ProjectStageModel[projectStageModelList.size()];
+                        projectStageModelList.toArray(mProjectStageModels);
+                    }
+                } catch (org.json.JSONException ex) {
+                }
+            }
+        }
     }
 
     @Override
@@ -33,6 +85,10 @@ public class ProjectStageListFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+    }
+
+    public void setProjectStageModels(final ProjectStageModel[] projectStageModels) {
+        mProjectStageModels = projectStageModels;
     }
 
     @Override

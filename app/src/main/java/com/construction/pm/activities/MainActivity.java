@@ -47,8 +47,8 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        return super.onOptionsItemSelected(menuItem);
     }
 
     @Override

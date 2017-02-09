@@ -7,13 +7,38 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.construction.pm.activities.ProjectActivity;
+import com.construction.pm.models.ProjectModel;
 import com.construction.pm.views.project.ProjectDetailView;
 
 public class ProjectDetailFragment extends Fragment {
+
+    public static final String PARAM_PROJECT_MODEL = "ProjectModel";
+
     protected ProjectDetailView mProjectDetailView;
 
+    protected ProjectModel mProjectModel;
+
     public static ProjectDetailFragment newInstance() {
-        return new ProjectDetailFragment();
+        return newInstance(null);
+    }
+
+    public static ProjectDetailFragment newInstance(final ProjectModel projectModel) {
+        // -- Set parameters --
+        Bundle bundle = new Bundle();
+        if (projectModel != null) {
+            try {
+                org.json.JSONObject projectModelJsonObject = projectModel.build();
+                String projectModelJson = projectModelJsonObject.toString(0);
+                bundle.putString(PARAM_PROJECT_MODEL, projectModelJson);
+            } catch (org.json.JSONException ex) {
+            }
+        }
+
+        // -- Create ProjectDetailFragment --
+        ProjectDetailFragment projectDetailFragment = new ProjectDetailFragment();
+        projectDetailFragment.setArguments(bundle);
+        return projectDetailFragment;
     }
 
     @Override
@@ -22,6 +47,20 @@ public class ProjectDetailFragment extends Fragment {
 
         // -- Prepare ProjectDetailView --
         mProjectDetailView = ProjectDetailView.buildProjectDetailView(getContext(), null);
+
+        // -- Get parameters --
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            // -- Get ProjectModel parameter --
+            String projectModelJson = bundle.getString(PARAM_PROJECT_MODEL);
+            if (projectModelJson != null) {
+                try {
+                    org.json.JSONObject jsonObject = new org.json.JSONObject(projectModelJson);
+                    setProjectModel(ProjectModel.build(jsonObject));
+                } catch (org.json.JSONException ex) {
+                }
+            }
+        }
     }
 
     @Override
@@ -33,6 +72,10 @@ public class ProjectDetailFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+    }
+
+    public void setProjectModel(final ProjectModel projectModel) {
+        mProjectModel = projectModel;
     }
 
     @Override

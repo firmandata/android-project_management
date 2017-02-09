@@ -60,6 +60,9 @@
     <string name="project_list_handle_task_begin">Getting projects &#8230;</string>
     <string name="project_list_handle_task_success">Getting projects finished.</string>
 
+    <string name="project_handle_task_begin">Getting project &#8230;</string>
+    <string name="project_handle_task_success">Getting project finished.</string>
+
     <string name="image_shadow_description">Shadow</string>
     <string name="image_logo_description">Application Logo</string>
 
