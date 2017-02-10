@@ -105,10 +105,10 @@ public class ProjectLayout {
 
     public void setLayoutData(final ContractModel contractModel, final ProjectModel projectModel, final ProjectStageModel[] projectStageModels, final ProjectPlanModel[] projectPlanModels) {
         mViewPagerAdapter.clearFragments();
-        mViewPagerAdapter.addFragment(ProjectDetailFragment.newInstance(projectModel), ViewUtil.getResourceString(mContext, R.string.project_detail_view_tab_project));
-        mViewPagerAdapter.addFragment(ContractDetailFragment.newInstance(contractModel), ViewUtil.getResourceString(mContext, R.string.project_detail_view_tab_contract));
-        mViewPagerAdapter.addFragment(ProjectStageListFragment.newInstance(projectStageModels), ViewUtil.getResourceString(mContext, R.string.project_detail_view_tab_stage));
-        mViewPagerAdapter.addFragment(ProjectPlanListFragment.newInstance(projectPlanModels), ViewUtil.getResourceString(mContext, R.string.project_detail_view_tab_plan_realization));
+        mViewPagerAdapter.addFragment(ProjectDetailFragment.newInstance(projectModel), ViewUtil.getResourceString(mContext, R.string.project_layout_tab_project));
+        mViewPagerAdapter.addFragment(ContractDetailFragment.newInstance(contractModel), ViewUtil.getResourceString(mContext, R.string.project_layout_tab_contract));
+        mViewPagerAdapter.addFragment(ProjectStageListFragment.newInstance(projectStageModels), ViewUtil.getResourceString(mContext, R.string.project_layout_tab_stage));
+        mViewPagerAdapter.addFragment(ProjectPlanListFragment.newInstance(projectPlanModels), ViewUtil.getResourceString(mContext, R.string.project_layout_tab_plan));
         mViewPagerAdapter.notifyDataSetChanged();
     }
 

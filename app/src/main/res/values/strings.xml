@@ -111,8 +111,56 @@
     <string name="user_change_profile_view_alert_title_error">Update Profile Failed</string>
     <string name="user_change_profile_view_alert_title_success">Update Profile Success</string>
 
-    <string name="project_detail_view_tab_project">Project</string>
-    <string name="project_detail_view_tab_contract">Contract</string>
-    <string name="project_detail_view_tab_stage">Stage</string>
-    <string name="project_detail_view_tab_plan_realization">Plan &amp; Realization</string>
+    <string name="project_layout_tab_project">Project</string>
+    <string name="project_layout_tab_contract">Contract</string>
+    <string name="project_layout_tab_stage">Stage</string>
+    <string name="project_layout_tab_plan">Plan &amp; Realization</string>
+
+    <string name="project_detail_contract_no">Contract No</string>
+    <string name="project_detail_project_name">Project Name</string>
+    <string name="project_detail_project_start_date">Start Date</string>
+    <string name="project_detail_project_start_date_to_end_date">To</string>
+    <string name="project_detail_project_end_date">End Date</string>
+    <string name="project_detail_project_description">Project Description</string>
+    <string name="project_detail_project_location">Project Location</string>
+    <string name="project_detail_stage_code">Stage Code</string>
+    <string name="project_detail_project_status">Project Status</string>
+
+    <string name="contract_detail_contract_no">Contract No</string>
+    <string name="contract_detail_contract_no_parent">Parent Contract No</string>
+    <string name="contract_detail_contract_name">Contract Name</string>
+    <string name="contract_detail_contract_amount">Contract Amount</string>
+    <string name="contract_detail_program_no">Program No</string>
+    <string name="contract_detail_program_name">Program Name</string>
+    <string name="contract_detail_program_amount">Program Amount</string>
+    <string name="contract_detail_budget_no">Budget No</string>
+    <string name="contract_detail_budget_name">Budget Name</string>
+    <string name="contract_detail_vendor_no">Vendor No</string>
+    <string name="contract_detail_vendor_name">Vendor Name</string>
+    <string name="contract_detail_contract_date">Contract Date</string>
+    <string name="contract_detail_contract_start_date">Contract Start Date</string>
+    <string name="contract_detail_contract_start_date_to_end_date">To</string>
+    <string name="contract_detail_contract_end_date">Contract End Date</string>
+    <string name="contract_detail_contract_status">Contract Status</string>
+
+    <string name="project_stage_detail_stage_date">Stage Date</string>
+    <string name="project_stage_detail_stage_code">Stage Code</string>
+    <string name="project_stage_detail_stage_code_from">From Stage Code</string>
+    <string name="project_stage_detail_stage_next_code">Next Stage Code</string>
+    <string name="project_stage_detail_stage_next_plan_date">Stage Next Plan Date</string>
+    <string name="project_stage_detail_stage_next_subject">Stage Next Subject</string>
+    <string name="project_stage_detail_stage_next_location">Stage Next Location</string>
+    <string name="project_stage_detail_stage_next_message">Stage Next Message</string>
+
+    <string name="project_plan_detail_sequence_no">Sequence No</string>
+    <string name="project_plan_detail_task_name">Task Name</string>
+    <string name="project_plan_detail_task_weight_percentage">Task Weight Percentage</string>
+    <string name="project_plan_detail_plan_start_date">Plan Start Date</string>
+    <string name="project_plan_detail_plan_start_date_to_end_date">To</string>
+    <string name="project_plan_detail_plan_end_date">Plan End Date</string>
+    <string name="project_plan_detail_realization_start_date">Realization Start Date</string>
+    <string name="project_plan_detail_realization_start_date_to_end_date">To</string>
+    <string name="project_plan_detail_realization_end_date">Realization End Date</string>
+    <string name="project_plan_detail_realization_status">Realization Status</string>
+    <string name="project_plan_detail_percent_complete">Percent Complete</string>
 </resources>

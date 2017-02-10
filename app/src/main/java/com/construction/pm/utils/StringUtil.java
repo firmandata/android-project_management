@@ -97,8 +97,20 @@ public class StringUtil {
         return getDecimalFormat().format(value);
     }
 
+    public static String numberFormat(final Double value) {
+        if (value != null)
+            return getDecimalFormat().format(value);
+        return null;
+    }
+
     public static String numberFormat(final int value) {
         return getDecimalFormat().format(value);
+    }
+
+    public static String numberFormat(final Integer value) {
+        if (value != null)
+            return getDecimalFormat().format(value);
+        return null;
     }
 
     public static double numberFormat(final String value) {
@@ -109,6 +121,26 @@ public class StringUtil {
             resultValue = number.doubleValue();
         } catch (ParseException ex) {
             resultValue = 0;
+        }
+
+        return resultValue;
+    }
+
+    public static Double numberFormat(final String value, final boolean canNull) {
+        if (!canNull)
+            return numberFormat(value);
+        if (value == null)
+            return null;
+        if (value.equals(""))
+            return null;
+
+        Double resultValue;
+
+        try {
+            Number number = getDecimalFormat().parse(value);
+            resultValue = number.doubleValue();
+        } catch (ParseException ex) {
+            resultValue = null;
         }
 
         return resultValue;
