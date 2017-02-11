@@ -1,5 +1,8 @@
 package com.construction.pm.networks.webapi;
 
+import java.io.IOException;
+import java.net.ConnectException;
+
 public class WebApiError extends Throwable {
 
     protected int mCode;
@@ -38,5 +41,19 @@ public class WebApiError extends Throwable {
 
     public Throwable getCause() {
         return mThrowable;
+    }
+
+    public boolean isErrorConnection() {
+        return isErrorConnection(getCause());
+    }
+
+    public boolean isErrorConnection(Throwable throwable) {
+        if (throwable == null)
+            return false;
+
+        if ((throwable instanceof ConnectException) || (throwable instanceof IOException))
+            return true;
+
+        return isErrorConnection(throwable.getCause());
     }
 }

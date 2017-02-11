@@ -106,26 +106,7 @@ public class ProjectNetwork extends AuthenticationNetwork {
         ProjectResponseModel projectResponseModel = null;
         try {
             if (!jsonObject.isNull("result")) {
-                projectResponseModel = new ProjectResponseModel();
-                org.json.JSONObject jsonResult = jsonObject.getJSONObject("result");
-                if (!jsonResult.isNull("project"))
-                    projectResponseModel.setProjectModel(ProjectModel.build(jsonResult.getJSONObject("project")));
-                if (!jsonResult.isNull("contract"))
-                    projectResponseModel.setContractModel(ContractModel.build(jsonResult.getJSONObject("contract")));
-                if (!jsonResult.isNull("projectStage")) {
-                    org.json.JSONArray jsonResultProjectStages = jsonResult.getJSONArray("projectStage");
-                    for (int resultProjectStageIdx = 0; resultProjectStageIdx < jsonResultProjectStages.length(); resultProjectStageIdx++) {
-                        org.json.JSONObject jsonResultProjectStage = jsonResultProjectStages.getJSONObject(resultProjectStageIdx);
-                        projectResponseModel.addProjectStageModel(ProjectStageModel.build(jsonResultProjectStage));
-                    }
-                }
-                if (!jsonResult.isNull("projectPlan")) {
-                    org.json.JSONArray jsonResultProjectPlans = jsonResult.getJSONArray("projectPlan");
-                    for (int resultProjectPlanIdx = 0; resultProjectPlanIdx < jsonResultProjectPlans.length(); resultProjectPlanIdx++) {
-                        org.json.JSONObject jsonResultProjectPlan = jsonResultProjectPlans.getJSONObject(resultProjectPlanIdx);
-                        projectResponseModel.addProjectPlanModel(ProjectPlanModel.build(jsonResultProjectPlan));
-                    }
-                }
+                projectResponseModel = ProjectResponseModel.build(jsonObject.getJSONObject("result"));
             }
         } catch (JSONException jsonException) {
             throw new WebApiError(0, jsonException.getMessage(), jsonException);

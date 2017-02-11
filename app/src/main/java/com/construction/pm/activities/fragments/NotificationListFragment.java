@@ -17,6 +17,8 @@ import com.construction.pm.models.system.SessionLoginModel;
 import com.construction.pm.models.system.SettingUserModel;
 import com.construction.pm.networks.NotificationNetwork;
 import com.construction.pm.networks.webapi.WebApiError;
+import com.construction.pm.persistence.NotificationPersistent;
+import com.construction.pm.persistence.PersistenceError;
 import com.construction.pm.persistence.SessionPersistent;
 import com.construction.pm.persistence.SettingPersistent;
 import com.construction.pm.utils.ViewUtil;
@@ -186,21 +188,42 @@ public class NotificationListFragment extends Fragment implements NotificationLi
             // -- Get NotificationModels progress --
             publishProgress(ViewUtil.getResourceString(mContext, R.string.notification_list_handle_task_begin));
 
+            // -- Prepare NotificationPersistent --
+            NotificationPersistent notificationPersistent = new NotificationPersistent(mContext);
+
             // -- Prepare NotificationNetwork --
             NotificationNetwork notificationNetwork = new NotificationNetwork(mContext, mNotificationListHandleTaskParam.getSettingUserModel());
 
             NotificationModel[] notificationModels = null;
             try {
-                // -- Invalidate Access Token --
-                notificationNetwork.invalidateAccessToken();
+                ProjectMemberModel projectMemberModel = mNotificationListHandleTaskParam.getProjectMemberModel();
+                if (projectMemberModel != null) {
+                    try {
+                        // -- Invalidate Access Token --
+                        notificationNetwork.invalidateAccessToken();
 
-                // -- Invalidate Login --
-                notificationNetwork.invalidateLogin();
+                        // -- Invalidate Login --
+                        notificationNetwork.invalidateLogin();
 
-                // -- Get notifications from server --
-                ProjectMemberModel notificationMemberModel = mNotificationListHandleTaskParam.getProjectMemberModel();
-                if (notificationMemberModel != null)
-                    notificationModels = notificationNetwork.getNotifications(notificationMemberModel.getProjectMemberId(), 0);
+                        // -- Get notifications from server --
+                        notificationModels = notificationNetwork.getNotifications(projectMemberModel.getProjectMemberId(), 0);
+
+                        // -- Save to NotificationPersistent --
+                        try {
+                            notificationPersistent.saveNotificationModels(notificationModels, projectMemberModel.getProjectMemberId());
+                        } catch (PersistenceError ex) {
+                        }
+                    } catch (WebApiError webApiError) {
+                        if (webApiError.isErrorConnection()) {
+                            // -- Get NotificationModels from NotificationPersistent --
+                            try {
+                                notificationModels = notificationPersistent.getNotificationModels(projectMemberModel.getProjectMemberId());
+                            } catch (PersistenceError ex) {
+                            }
+                        } else
+                            throw webApiError;
+                    }
+                }
             } catch (WebApiError webApiError) {
                 notificationListHandleTaskResult.setMessage(webApiError.getMessage());
                 publishProgress(webApiError.getMessage());

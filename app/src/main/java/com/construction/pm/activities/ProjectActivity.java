@@ -8,13 +8,18 @@ import android.view.MenuItem;
 
 import com.construction.pm.R;
 import com.construction.pm.models.ContractModel;
+import com.construction.pm.models.ProjectMemberModel;
 import com.construction.pm.models.ProjectModel;
 import com.construction.pm.models.ProjectPlanModel;
 import com.construction.pm.models.ProjectStageModel;
 import com.construction.pm.models.network.ProjectResponseModel;
+import com.construction.pm.models.system.SessionLoginModel;
 import com.construction.pm.models.system.SettingUserModel;
 import com.construction.pm.networks.ProjectNetwork;
 import com.construction.pm.networks.webapi.WebApiError;
+import com.construction.pm.persistence.PersistenceError;
+import com.construction.pm.persistence.ProjectPersistent;
+import com.construction.pm.persistence.SessionPersistent;
 import com.construction.pm.persistence.SettingPersistent;
 import com.construction.pm.utils.ViewUtil;
 import com.construction.pm.views.project.ProjectLayout;
@@ -67,6 +72,10 @@ public class ProjectActivity extends AppCompatActivity implements ProjectLayout.
         SettingPersistent settingPersistent = new SettingPersistent(this);
         SettingUserModel settingUserModel = settingPersistent.getSettingUserModel();
 
+        // -- Get SessionLoginModel from SessionPersistent --
+        SessionPersistent sessionPersistent = new SessionPersistent(this);
+        SessionLoginModel sessionLoginModel = sessionPersistent.getSessionLoginModel();
+
         // -- Prepare ProjectHandleTask --
         ProjectHandleTask projectHandleTask = new ProjectHandleTask() {
             @Override
@@ -89,7 +98,7 @@ public class ProjectActivity extends AppCompatActivity implements ProjectLayout.
         };
 
         // -- Do ProjectHandleTask --
-        projectHandleTask.execute(new ProjectHandleTaskParam(this, settingUserModel, projectModel));
+        projectHandleTask.execute(new ProjectHandleTaskParam(this, settingUserModel, projectModel, sessionLoginModel.getProjectMemberModel()));
     }
 
     protected void onProjectRequestProgress(final String progressMessage) {
@@ -109,11 +118,13 @@ public class ProjectActivity extends AppCompatActivity implements ProjectLayout.
         protected Context mContext;
         protected SettingUserModel mSettingUserModel;
         protected ProjectModel mProjectModel;
+        protected ProjectMemberModel mProjectMemberModel;
 
-        public ProjectHandleTaskParam(final Context context, final SettingUserModel settingUserModel, final ProjectModel projectModel) {
+        public ProjectHandleTaskParam(final Context context, final SettingUserModel settingUserModel, final ProjectModel projectModel, final ProjectMemberModel projectMemberModel) {
             mContext = context;
             mSettingUserModel = settingUserModel;
             mProjectModel = projectModel;
+            mProjectMemberModel = projectMemberModel;
         }
 
         public Context getContext() {
@@ -126,6 +137,10 @@ public class ProjectActivity extends AppCompatActivity implements ProjectLayout.
 
         public ProjectModel getProjectModel() {
             return mProjectModel;
+        }
+
+        public ProjectMemberModel getProjectMemberModel() {
+            return mProjectMemberModel;
         }
     }
 
@@ -198,21 +213,42 @@ public class ProjectActivity extends AppCompatActivity implements ProjectLayout.
             // -- Get ProjectModels progress --
             publishProgress(ViewUtil.getResourceString(mContext, R.string.project_handle_task_begin));
 
+            // -- Prepare ProjectPersistent --
+            ProjectPersistent projectPersistent = new ProjectPersistent(mContext);
+
             // -- Prepare ProjectNetwork --
             ProjectNetwork projectNetwork = new ProjectNetwork(mContext, mProjectHandleTaskParam.getSettingUserModel());
 
             ProjectResponseModel projectResponseModel = null;
             try {
-                // -- Invalidate Access Token --
-                projectNetwork.invalidateAccessToken();
-
-                // -- Invalidate Login --
-                projectNetwork.invalidateLogin();
-
-                // -- Get project from server --
                 ProjectModel projectModel = mProjectHandleTaskParam.getProjectModel();
-                if (projectModel != null) {
-                    projectResponseModel = projectNetwork.getProject(projectModel.getProjectId());
+                ProjectMemberModel projectMemberModel = mProjectHandleTaskParam.getProjectMemberModel();
+                if (projectModel != null && projectMemberModel != null) {
+                    try {
+                        // -- Invalidate Access Token --
+                        projectNetwork.invalidateAccessToken();
+
+                        // -- Invalidate Login --
+                        projectNetwork.invalidateLogin();
+
+                        // -- Get project from server --
+                        projectResponseModel = projectNetwork.getProject(projectModel.getProjectId());
+
+                        // -- Save to ProjectPersistent --
+                        try {
+                            projectPersistent.setProjectResponseModel(projectResponseModel, projectMemberModel.getProjectMemberId());
+                        } catch (PersistenceError ex) {
+                        }
+                    } catch (WebApiError webApiError) {
+                        if (webApiError.isErrorConnection()) {
+                            // -- Get ProjectResponseModel from ProjectPersistent --
+                            try {
+                                projectResponseModel = projectPersistent.getProjectResponseModel(projectModel.getProjectId(), projectMemberModel.getProjectMemberId());
+                            } catch (PersistenceError ex) {
+                            }
+                        } else
+                            throw webApiError;
+                    }
                 }
             } catch (WebApiError webApiError) {
                 projectHandleTaskResult.setMessage(webApiError.getMessage());

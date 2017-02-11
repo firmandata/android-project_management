@@ -22,6 +22,8 @@ public class NotificationModel {
     protected Integer mLastUserId;
     protected Calendar mLastUpdate;
 
+    protected boolean mRead;
+
     public NotificationModel() {
 
     }
@@ -120,6 +122,14 @@ public class NotificationModel {
 
     public Calendar getLastUpdate() {
         return mLastUpdate;
+    }
+
+    public void setRead(Boolean read) {
+        mRead = read;
+    }
+
+    public Boolean isRead() {
+        return mRead;
     }
 
     public static NotificationModel build(final org.json.JSONObject jsonObject) throws JSONException {

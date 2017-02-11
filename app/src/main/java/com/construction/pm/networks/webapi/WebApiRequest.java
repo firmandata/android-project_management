@@ -15,6 +15,7 @@ import com.construction.pm.models.system.SettingUserModel;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -185,6 +186,8 @@ public class WebApiRequest {
             } catch (Exception ex) {
                 webApiResponse.onFailure(response.code(), response.headers(), response.message(), ex);
             }
+        } catch (ConnectException ex) {
+            webApiResponse.onFailure(0, null, null, ex);
         } catch (Exception ex) {
             webApiResponse.onFailure(0, null, null, ex);
         }
@@ -529,6 +532,8 @@ public class WebApiRequest {
             } catch (Exception ex) {
                 webApiResponse.onFailure(response.code(), response.headers(), response.message(), ex);
             }
+        } catch (ConnectException ex) {
+            webApiResponse.onFailure(0, null, null, ex);
         } catch (Exception ex) {
             webApiResponse.onFailure(0, null, null, ex);
         }
@@ -877,6 +882,8 @@ public class WebApiRequest {
             } catch (Exception ex) {
                 webApiResponse.onFailure(response.code(), response.headers(), response.message(), ex);
             }
+        } catch (ConnectException ex) {
+            webApiResponse.onFailure(0, null, null, ex);
         } catch (Exception ex) {
             webApiResponse.onFailure(0, null, null, ex);
         }
