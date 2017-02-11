@@ -13,7 +13,7 @@ import com.construction.pm.views.project.ProjectStageListView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProjectStageListFragment extends Fragment {
+public class ProjectStageListFragment extends Fragment implements ProjectStageListView.ProjectStageListListener {
 
     public static final String PARAM_PROJECT_STAGE_MODELS = "ProjectStageModels";
 
@@ -74,6 +74,7 @@ public class ProjectStageListFragment extends Fragment {
 
         // -- Prepare ProjectStageListView --
         mProjectStageListView = ProjectStageListView.buildProjectStageListView(getContext(), null);
+        mProjectStageListView.setProjectStageListListener(this);
         if (projectStageModels != null)
             mProjectStageListView.setProjectStageModels(projectStageModels);
     }
@@ -87,6 +88,16 @@ public class ProjectStageListFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+    }
+
+    @Override
+    public void onProjectStageListRequest() {
+        mProjectStageListView.stopRefreshAnimation();
+    }
+
+    @Override
+    public void onProjectStageItemClick(ProjectStageModel projectStageModel) {
+
     }
 
     public void setProjectStageModels(final ProjectStageModel[] projectStageModels) {

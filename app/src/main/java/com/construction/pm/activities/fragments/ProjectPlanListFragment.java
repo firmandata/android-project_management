@@ -13,7 +13,7 @@ import com.construction.pm.views.project.ProjectPlanListView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProjectPlanListFragment extends Fragment {
+public class ProjectPlanListFragment extends Fragment implements ProjectPlanListView.ProjectPlanListListener {
 
     public static final String PARAM_PROJECT_PLAN_MODELS = "ProjectPlanModels";
 
@@ -74,6 +74,7 @@ public class ProjectPlanListFragment extends Fragment {
 
         // -- Prepare ProjectPlanListView --
         mProjectPlanListView = ProjectPlanListView.buildProjectPlanListView(getContext(), null);
+        mProjectPlanListView.setProjectPlanListListener(this);
         if (projectPlanModels != null)
             mProjectPlanListView.setProjectPlanModels(projectPlanModels);
     }
@@ -87,6 +88,16 @@ public class ProjectPlanListFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+    }
+
+    @Override
+    public void onProjectPlanListRequest() {
+        mProjectPlanListView.stopRefreshAnimation();
+    }
+
+    @Override
+    public void onProjectPlanItemClick(ProjectPlanModel projectPlanModel) {
+
     }
 
     public void setProjectPlanModels(final ProjectPlanModel[] projectPlanModels) {

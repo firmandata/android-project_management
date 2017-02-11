@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" >
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/stageDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:text="Stage Date" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/stageCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/stageDate"
+                android:text="Code" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2" >
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/tvStageNow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:text="Next" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/stageNextCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/tvStageNow"
+                android:text="Next Code" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/stageNextPlanDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/stageNextCode"
+                android:text="Next Date" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/stageNextLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/stageNextPlanDate"
+                android:text="Location" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/stageNextSubject"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/stageNextLocation"
+                android:text="Subject" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/stageNextMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/stageNextSubject"
+                android:text="Message" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+</RelativeLayout>

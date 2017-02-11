@@ -48,7 +48,7 @@ public class ProjectListView {
     protected void initializeView(final RelativeLayout projectListView) {
         mProjectListView = projectListView;
 
-        mSrlProjectList = (SwipeRefreshLayout) mProjectListView.findViewById(R.id.projectListSwipeRefreshLayout);
+        mSrlProjectList = (SwipeRefreshLayout) mProjectListView.findViewById(R.id.projectListSwipeRefresh);
         mSrlProjectList.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
