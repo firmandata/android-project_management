@@ -2,6 +2,7 @@ package com.construction.pm.views.project;
 
 import android.content.Context;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,6 +15,8 @@ import android.widget.RelativeLayout;
 import com.construction.pm.R;
 import com.construction.pm.libraries.widgets.RecyclerItemTouchListener;
 import com.construction.pm.models.ProjectPlanModel;
+import com.construction.pm.utils.DateTimeUtil;
+import com.construction.pm.utils.StringUtil;
 
 public class ProjectPlanListView {
     protected Context mContext;
@@ -173,12 +176,37 @@ public class ProjectPlanListView {
 
     protected class ProjectPlanListViewHolder extends RecyclerView.ViewHolder {
 
+        protected AppCompatTextView mEtTaskName;
+        protected AppCompatTextView mEtPlanStartDate;
+        protected AppCompatTextView mEtPlanEndDate;
+        protected AppCompatTextView mEtTaskWeightPercentage;
+        protected AppCompatTextView mEtRealizationStartDate;
+        protected AppCompatTextView mEtRealizationEndDate;
+        protected AppCompatTextView mEtRealizationStatus;
+        protected AppCompatTextView mEtPercentComplete;
+
         public ProjectPlanListViewHolder(View itemView) {
             super(itemView);
+
+            mEtTaskName = (AppCompatTextView) itemView.findViewById(R.id.taskName);
+            mEtPlanStartDate = (AppCompatTextView) itemView.findViewById(R.id.planStartDate);
+            mEtPlanEndDate = (AppCompatTextView) itemView.findViewById(R.id.planEndDate);
+            mEtTaskWeightPercentage = (AppCompatTextView) itemView.findViewById(R.id.taskWeightPercentage);
+            mEtRealizationStartDate = (AppCompatTextView) itemView.findViewById(R.id.realizationStartDate);
+            mEtRealizationEndDate = (AppCompatTextView) itemView.findViewById(R.id.realizationEndDate);
+            mEtRealizationStatus = (AppCompatTextView) itemView.findViewById(R.id.realizationStatus);
+            mEtPercentComplete = (AppCompatTextView) itemView.findViewById(R.id.percentComplete);
         }
 
         public void setProjectPlanModel(final ProjectPlanModel projectPlanModel) {
-
+            mEtTaskName.setText(projectPlanModel.getTaskName());
+            mEtPlanStartDate.setText(DateTimeUtil.ToDateDisplayString(projectPlanModel.getPlanStartDate()));
+            mEtPlanEndDate.setText(DateTimeUtil.ToDateDisplayString(projectPlanModel.getPlanEndDate()));
+            mEtTaskWeightPercentage.setText(StringUtil.numberFormat(projectPlanModel.getTaskWeightPercentage()));
+            mEtRealizationStartDate.setText(DateTimeUtil.ToDateDisplayString(projectPlanModel.getRealizationStartDate()));
+            mEtRealizationEndDate.setText(DateTimeUtil.ToDateDisplayString(projectPlanModel.getRealizationEndDate()));
+            mEtRealizationStatus.setText(projectPlanModel.getRealizationStatus());
+            mEtPercentComplete.setText(StringUtil.numberFormat(projectPlanModel.getPercentComplete()));
         }
     }
 }

@@ -3,4 +3,102 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" >
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/taskName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:text="Task Name" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/planStartDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/taskName"
+                android:text="Plan Start Date" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/planEndDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/planStartDate"
+                android:layout_alignBottom="@+id/planStartDate"
+                android:layout_toRightOf="@+id/planStartDate"
+                android:layout_toEndOf="@+id/planStartDate"
+                android:text="Plan End Date" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/taskWeightPercentage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/planStartDate"
+                android:text="Task Weight Percentage" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" >
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/realizationStartDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:text="Realization Start Date" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/realizationEndDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Realization End Date"
+                android:layout_alignBaseline="@+id/realizationStartDate"
+                android:layout_alignBottom="@+id/realizationStartDate"
+                android:layout_toRightOf="@+id/realizationStartDate"
+                android:layout_toEndOf="@+id/realizationStartDate" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/realizationStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/realizationStartDate"
+                android:text="Realization Status" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/percentComplete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/realizationStatus"
+                android:layout_alignBottom="@+id/realizationStatus"
+                android:layout_alignParentRight="true"
+                android:text="Percent Complete" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
 </RelativeLayout>
