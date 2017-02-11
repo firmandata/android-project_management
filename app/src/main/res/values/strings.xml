@@ -63,6 +63,9 @@
     <string name="project_handle_task_begin">Getting project &#8230;</string>
     <string name="project_handle_task_success">Getting project finished.</string>
 
+    <string name="notification_list_handle_task_begin">Getting notification &#8230;</string>
+    <string name="notification_list_handle_task_success">Getting notification finished.</string>
+
     <string name="image_shadow_description">Shadow</string>
     <string name="image_logo_description">Application Logo</string>
 
@@ -111,21 +114,6 @@
     <string name="user_change_profile_view_alert_title_error">Update Profile Failed</string>
     <string name="user_change_profile_view_alert_title_success">Update Profile Success</string>
 
-    <string name="project_layout_tab_project">Project</string>
-    <string name="project_layout_tab_contract">Contract</string>
-    <string name="project_layout_tab_stage">Stage</string>
-    <string name="project_layout_tab_plan">Plan &amp; Realization</string>
-
-    <string name="project_detail_contract_no">Contract No</string>
-    <string name="project_detail_project_name">Project Name</string>
-    <string name="project_detail_project_start_date">Start Date</string>
-    <string name="project_detail_project_start_date_to_end_date">To</string>
-    <string name="project_detail_project_end_date">End Date</string>
-    <string name="project_detail_project_description">Project Description</string>
-    <string name="project_detail_project_location">Project Location</string>
-    <string name="project_detail_stage_code">Stage Code</string>
-    <string name="project_detail_project_status">Project Status</string>
-
     <string name="contract_detail_contract_no">Contract No</string>
     <string name="contract_detail_contract_no_parent">Parent Contract No</string>
     <string name="contract_detail_contract_name">Contract Name</string>
@@ -142,6 +130,21 @@
     <string name="contract_detail_contract_start_date_to_end_date">To</string>
     <string name="contract_detail_contract_end_date">Contract End Date</string>
     <string name="contract_detail_contract_status">Contract Status</string>
+
+    <string name="project_layout_tab_project">Project</string>
+    <string name="project_layout_tab_contract">Contract</string>
+    <string name="project_layout_tab_stage">Stage</string>
+    <string name="project_layout_tab_plan">Plan &amp; Realization</string>
+
+    <string name="project_detail_contract_no">Contract No</string>
+    <string name="project_detail_project_name">Project Name</string>
+    <string name="project_detail_project_start_date">Start Date</string>
+    <string name="project_detail_project_start_date_to_end_date">To</string>
+    <string name="project_detail_project_end_date">End Date</string>
+    <string name="project_detail_project_description">Project Description</string>
+    <string name="project_detail_project_location">Project Location</string>
+    <string name="project_detail_stage_code">Stage Code</string>
+    <string name="project_detail_project_status">Project Status</string>
 
     <string name="project_stage_detail_stage_date">Stage Date</string>
     <string name="project_stage_detail_stage_code">Stage Code</string>
@@ -163,4 +166,7 @@
     <string name="project_plan_detail_realization_end_date">Realization End Date</string>
     <string name="project_plan_detail_realization_status">Realization Status</string>
     <string name="project_plan_detail_percent_complete">Percent Complete</string>
+
+    <string name="notification_layout_title">Notification</string>
+    <string name="notification_detail_title">Notification</string>
 </resources>

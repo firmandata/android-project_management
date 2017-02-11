@@ -1,4 +1,4 @@
-package com.construction.pm.views.project;
+package com.construction.pm.views.contract;
 
 import android.content.Context;
 import android.support.v7.widget.AppCompatTextView;

@@ -183,16 +183,16 @@ public class ProjectStageListView {
         protected AppCompatTextView mEtStageNextSubject;
         protected AppCompatTextView mEtStageNextMessage;
 
-        public ProjectStageListViewHolder(View itemView) {
-            super(itemView);
+        public ProjectStageListViewHolder(View view) {
+            super(view);
 
-            mEtStageDate = (AppCompatTextView) itemView.findViewById(R.id.stageDate);
-            mEtStageCode = (AppCompatTextView) itemView.findViewById(R.id.stageCode);
-            mEtStageNextCode = (AppCompatTextView) itemView.findViewById(R.id.stageNextCode);
-            mEtStageNextPlanDate = (AppCompatTextView) itemView.findViewById(R.id.stageNextPlanDate);
-            mEtStageNextLocation = (AppCompatTextView) itemView.findViewById(R.id.stageNextLocation);
-            mEtStageNextSubject = (AppCompatTextView) itemView.findViewById(R.id.stageNextSubject);
-            mEtStageNextMessage = (AppCompatTextView) itemView.findViewById(R.id.stageNextMessage);
+            mEtStageDate = (AppCompatTextView) view.findViewById(R.id.stageDate);
+            mEtStageCode = (AppCompatTextView) view.findViewById(R.id.stageCode);
+            mEtStageNextCode = (AppCompatTextView) view.findViewById(R.id.stageNextCode);
+            mEtStageNextPlanDate = (AppCompatTextView) view.findViewById(R.id.stageNextPlanDate);
+            mEtStageNextLocation = (AppCompatTextView) view.findViewById(R.id.stageNextLocation);
+            mEtStageNextSubject = (AppCompatTextView) view.findViewById(R.id.stageNextSubject);
+            mEtStageNextMessage = (AppCompatTextView) view.findViewById(R.id.stageNextMessage);
         }
 
         public void setProjectStageModel(final ProjectStageModel projectStageModel) {

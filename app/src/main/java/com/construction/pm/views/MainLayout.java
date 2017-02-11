@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 
 import com.construction.pm.R;
 import com.construction.pm.activities.fragments.HomeFragment;
+import com.construction.pm.activities.fragments.NotificationListFragment;
 import com.construction.pm.activities.fragments.ProjectListFragment;
 import com.construction.pm.activities.fragments.UserChangePasswordFragment;
 import com.construction.pm.activities.fragments.UserChangeProfileFragment;
@@ -131,6 +132,8 @@ public class MainLayout implements NavigationView.OnNavigationItemSelectedListen
                     mMainLayoutListener.onMenuHomeSelected();
                 break;
             case R.id.navigator_menu_inbox:
+                if (mMainLayoutListener != null)
+                    mMainLayoutListener.onMenuNotificationListSelected();
                 break;
             case R.id.navigator_menu_project_list:
                 if (mMainLayoutListener != null)
@@ -246,6 +249,14 @@ public class MainLayout implements NavigationView.OnNavigationItemSelectedListen
         return projectListFragment;
     }
 
+    public NotificationListFragment showNotificationList() {
+        NotificationListFragment notificationListFragment = NotificationListFragment.newInstance();
+
+        loadFragment(notificationListFragment, ViewUtil.getResourceString(mContext, R.string.menu_inbox_title), FRAGMENT_TAG_INBOX);
+
+        return notificationListFragment;
+    }
+
     public UserChangeProfileFragment showUserChangeProfile(final UserChangeProfileFragment.UserChangeProfileFragmentListener userChangeProfileFragmentListener) {
         UserChangeProfileFragment userChangeProfileFragment = UserChangeProfileFragment.newInstance();
         userChangeProfileFragment.setUserChangeProfileFragmentListener(userChangeProfileFragmentListener);
@@ -271,6 +282,7 @@ public class MainLayout implements NavigationView.OnNavigationItemSelectedListen
     public interface MainLayoutListener {
         void onMenuHomeSelected();
         void onMenuProjectListSelected();
+        void onMenuNotificationListSelected();
         void onMenuUserChangeProfileSelected();
         void onMenuUserChangePasswordSelected();
         void onMenuLogoutClick();

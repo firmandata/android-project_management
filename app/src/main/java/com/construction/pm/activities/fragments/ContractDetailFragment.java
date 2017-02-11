@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.construction.pm.models.ContractModel;
-import com.construction.pm.views.project.ContractDetailView;
+import com.construction.pm.views.contract.ContractDetailView;
 
 public class ContractDetailFragment extends Fragment {
 

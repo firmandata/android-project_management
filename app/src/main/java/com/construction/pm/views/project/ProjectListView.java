@@ -178,12 +178,12 @@ public class ProjectListView {
         protected AppCompatTextView mEtProjectName;
         protected AppCompatTextView mEtStageCode;
 
-        public ProjectListViewHolder(View itemView) {
-            super(itemView);
+        public ProjectListViewHolder(View view) {
+            super(view);
 
-            mEtContractNo = (AppCompatTextView) itemView.findViewById(R.id.contractNo);
-            mEtProjectName = (AppCompatTextView) itemView.findViewById(R.id.projectName);
-            mEtStageCode = (AppCompatTextView) itemView.findViewById(R.id.stageCode);
+            mEtContractNo = (AppCompatTextView) view.findViewById(R.id.contractNo);
+            mEtProjectName = (AppCompatTextView) view.findViewById(R.id.projectName);
+            mEtStageCode = (AppCompatTextView) view.findViewById(R.id.stageCode);
         }
 
         public void setProjectModel(final ProjectModel projectModel) {

@@ -185,17 +185,17 @@ public class ProjectPlanListView {
         protected AppCompatTextView mEtRealizationStatus;
         protected AppCompatTextView mEtPercentComplete;
 
-        public ProjectPlanListViewHolder(View itemView) {
-            super(itemView);
+        public ProjectPlanListViewHolder(View view) {
+            super(view);
 
-            mEtTaskName = (AppCompatTextView) itemView.findViewById(R.id.taskName);
-            mEtPlanStartDate = (AppCompatTextView) itemView.findViewById(R.id.planStartDate);
-            mEtPlanEndDate = (AppCompatTextView) itemView.findViewById(R.id.planEndDate);
-            mEtTaskWeightPercentage = (AppCompatTextView) itemView.findViewById(R.id.taskWeightPercentage);
-            mEtRealizationStartDate = (AppCompatTextView) itemView.findViewById(R.id.realizationStartDate);
-            mEtRealizationEndDate = (AppCompatTextView) itemView.findViewById(R.id.realizationEndDate);
-            mEtRealizationStatus = (AppCompatTextView) itemView.findViewById(R.id.realizationStatus);
-            mEtPercentComplete = (AppCompatTextView) itemView.findViewById(R.id.percentComplete);
+            mEtTaskName = (AppCompatTextView) view.findViewById(R.id.taskName);
+            mEtPlanStartDate = (AppCompatTextView) view.findViewById(R.id.planStartDate);
+            mEtPlanEndDate = (AppCompatTextView) view.findViewById(R.id.planEndDate);
+            mEtTaskWeightPercentage = (AppCompatTextView) view.findViewById(R.id.taskWeightPercentage);
+            mEtRealizationStartDate = (AppCompatTextView) view.findViewById(R.id.realizationStartDate);
+            mEtRealizationEndDate = (AppCompatTextView) view.findViewById(R.id.realizationEndDate);
+            mEtRealizationStatus = (AppCompatTextView) view.findViewById(R.id.realizationStatus);
+            mEtPercentComplete = (AppCompatTextView) view.findViewById(R.id.percentComplete);
         }
 
         public void setProjectPlanModel(final ProjectPlanModel projectPlanModel) {

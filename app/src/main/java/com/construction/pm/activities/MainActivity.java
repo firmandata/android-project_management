@@ -77,6 +77,11 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void onMenuNotificationListSelected() {
+        mMainLayout.showNotificationList();
+    }
+
+    @Override
     public void onMenuUserChangeProfileSelected() {
         mMainLayout.showUserChangeProfile(this);
     }
