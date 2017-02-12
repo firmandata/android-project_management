@@ -28,7 +28,7 @@ public class NotificationService extends Service implements NotificationRoutine.
     protected NotificationRoutine mNotificationRoutine;
 
     protected Messenger mMessengerClient;
-    protected MessageClientHandler mMessageClientHandler;
+    protected NotificationMessageHandler mNotificationMessageHandler;
 
     @Override
     public void onCreate() {
@@ -40,8 +40,8 @@ public class NotificationService extends Service implements NotificationRoutine.
         mNotificationRoutine.setNotificationHandlerListener(this);
         mNotificationRoutine.setDaemon(true);
 
-        mMessageClientHandler = new MessageClientHandler(this);
-        mMessengerClient = new Messenger(mMessageClientHandler);
+        mNotificationMessageHandler = new NotificationMessageHandler(this);
+        mMessengerClient = new Messenger(mNotificationMessageHandler);
     }
 
     @Override
@@ -68,6 +68,17 @@ public class NotificationService extends Service implements NotificationRoutine.
 
     @Override
     public void onNotificationRoutineGetNew(NotificationModel[] notificationModels) {
+        // -- Prepare NotificationManager --
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        // -- Broadcast NotificationModels message --
+        int sentCount = mNotificationMessageHandler.sendNotificationModels(notificationModels);
+        if (sentCount > 0) {
+            // -- Clear current notification --
+            notificationManager.cancel(ConstantUtil.NOTIFICATION_ID_NOTIFICATION);
+            return;
+        }
+
         // -- Get notification ringtone --
         Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
@@ -126,12 +137,16 @@ public class NotificationService extends Service implements NotificationRoutine.
         }
 
         // -- Add as notification --
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(ConstantUtil.NOTIFICATION_ID_NOTIFICATION, notificationBuilder.build());
     }
 
     @Override
     public void onNotificationRoutineRequestLogin(SessionLoginModel sessionLoginModel) {
+        // -- Broadcast SessionLoginModel for RequestLogin message --
+        int sentCount = mNotificationMessageHandler.sendRequestLogin(sessionLoginModel);
+        if (sentCount > 0)
+            return;
+
         // -- Get notification ringtone --
         Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
@@ -156,6 +171,9 @@ public class NotificationService extends Service implements NotificationRoutine.
 
     @Override
     public void onNotificationRoutineStop() {
+        // -- Broadcast Stop message --
+        mNotificationMessageHandler.sendStop();
+
         stopSelf();
     }
 

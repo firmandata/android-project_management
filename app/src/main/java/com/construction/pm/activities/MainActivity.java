@@ -18,10 +18,13 @@ import android.view.MenuItem;
 import com.construction.pm.R;
 import com.construction.pm.activities.fragments.UserChangePasswordFragment;
 import com.construction.pm.activities.fragments.UserChangeProfileFragment;
+import com.construction.pm.models.NotificationModel;
 import com.construction.pm.models.network.SimpleResponseModel;
+import com.construction.pm.models.system.SessionLoginModel;
 import com.construction.pm.models.system.SettingUserModel;
 import com.construction.pm.networks.UserNetwork;
 import com.construction.pm.persistence.SettingPersistent;
+import com.construction.pm.services.NotificationMessageHandler;
 import com.construction.pm.services.NotificationService;
 import com.construction.pm.utils.ViewUtil;
 import com.construction.pm.views.MainLayout;
@@ -29,7 +32,8 @@ import com.construction.pm.views.MainLayout;
 public class MainActivity extends AppCompatActivity implements
         MainLayout.MainLayoutListener,
         UserChangeProfileFragment.UserChangeProfileFragmentListener,
-        UserChangePasswordFragment.UserChangePasswordFragmentListener {
+        UserChangePasswordFragment.UserChangePasswordFragmentListener,
+        NotificationMessageHandler.NotificationMessageHandlerListener {
 
     public static final String INTENT_PARAM_SHOW_DEFAULT_FRAGMENT = "SHOW_FRAGMENT_DEFAULT";
     public static final String INTENT_PARAM_SHOW_FRAGMENT_HOME = "SHOW_FRAGMENT_HOME";
@@ -120,12 +124,12 @@ public class MainActivity extends AppCompatActivity implements
     protected void onResume() {
         super.onResume();
 
-//        bindNotificationService();
+        bindNotificationService();
     }
 
     @Override
     protected void onPause() {
-//        unbindNotificationService();
+        unbindNotificationService();
 
         super.onPause();
     }
@@ -196,38 +200,50 @@ public class MainActivity extends AppCompatActivity implements
     protected Messenger mNotificationServiceMessengerReceiver;
 
     protected void bindNotificationService() {
+        // -- Prepare message receiver --
+        NotificationMessageHandler notificationMessageHandler = new NotificationMessageHandler(this);
+        notificationMessageHandler.setNotificationMessageHandlerListener(this);
+        mNotificationServiceMessengerReceiver = new Messenger(notificationMessageHandler);
+
+        // -- Prepare NotificationServiceConnection --
         mNotificationServiceConnection = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
                 mNotificationServiceMessengerSender = new Messenger(iBinder);
-
-//                try {
-//                    Message message;
-//
-//                    // -- Send register command --
-//                    message = Message.obtain(null, PaymentService.PaymentServiceHandler.MSG_REGISTER_CLIENT);
-//                    message.replyTo = mPaymentMessenger;
-//                    mPaymentMessengerCommunicator.send(message);
-//
-//                    // -- Send state command --
-//                    message = Message.obtain(null, PaymentService.PaymentServiceHandler.MSG_STATE_SERVICE);
-//                    mPaymentMessengerCommunicator.send(message);
-//                } catch (RemoteException e) {
-//
-//                }
+                NotificationMessageHandler.sendRegister(mNotificationServiceMessengerSender, mNotificationServiceMessengerReceiver);
             }
 
             @Override
             public void onServiceDisconnected(ComponentName componentName) {
-
+                mNotificationServiceMessengerSender = null;
             }
         };
+
+        // -- Bind NotificationService --
         Intent intent = new Intent(this, NotificationService.class);
         bindService(intent, mNotificationServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
+    @Override
+    public void onNotificationReceives(NotificationModel[] notificationModels) {
+        
+    }
+
+    @Override
+    public void onNotificationRequestLogin(SessionLoginModel sessionLoginModel) {
+
+    }
+
+    @Override
+    public void onNotificationServiceStop() {
+        unbindNotificationService();
+    }
+
     protected void unbindNotificationService() {
-        unbindService(mNotificationServiceConnection);
+        if (mNotificationServiceMessengerSender != null)
+            NotificationMessageHandler.sendUnregister(mNotificationServiceMessengerSender, mNotificationServiceMessengerReceiver);
+        if (mNotificationServiceConnection != null)
+            unbindService(mNotificationServiceConnection);
     }
 
 
