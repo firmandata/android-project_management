@@ -15,8 +15,6 @@ import com.construction.pm.models.NotificationModel;
 import com.construction.pm.models.ProjectMemberModel;
 import com.construction.pm.models.system.SessionLoginModel;
 import com.construction.pm.models.system.SettingUserModel;
-import com.construction.pm.networks.NotificationNetwork;
-import com.construction.pm.networks.webapi.WebApiError;
 import com.construction.pm.persistence.NotificationPersistent;
 import com.construction.pm.persistence.PersistenceError;
 import com.construction.pm.persistence.SessionPersistent;
@@ -92,7 +90,7 @@ public class NotificationListFragment extends Fragment implements NotificationLi
     }
 
     @Override
-    public void onNotificationItemClick(NotificationModel notificationModel) {
+    public void onNotificationItemClick(NotificationModel notificationModel, int position) {
         // -- Redirect to NotificationActivity --
         Intent intent = new Intent(this.getContext(), NotificationActivity.class);
 
@@ -100,12 +98,15 @@ public class NotificationListFragment extends Fragment implements NotificationLi
             org.json.JSONObject notificationModelJsonObject = notificationModel.build();
             String notificationModelJson = notificationModelJsonObject.toString(0);
 
-            intent.putExtra(NotificationActivity.PARAM_NOTIFICATION_MODEL, notificationModelJson);
+            intent.putExtra(NotificationActivity.INTENT_PARAM_NOTIFICATION_MODEL, notificationModelJson);
         } catch (org.json.JSONException ex) {
 
         }
 
         startActivity(intent);
+
+        // -- Mark NotificationModel view as read --
+        mNotificationListView.setNotificationModelRead(notificationModel);
     }
 
     protected void onNotificationListRequestProgress(final String progressMessage) {
@@ -181,6 +182,7 @@ public class NotificationListFragment extends Fragment implements NotificationLi
             // Get NotificationListHandleTaskParam
             mNotificationListHandleTaskParam = notificationListHandleTaskParams[0];
             mContext = mNotificationListHandleTaskParam.getContext();
+            ProjectMemberModel projectMemberModel = mNotificationListHandleTaskParam.getProjectMemberModel();
 
             // -- Prepare NotificationListHandleTaskResult --
             NotificationListHandleTaskResult notificationListHandleTaskResult = new NotificationListHandleTaskResult();
@@ -191,42 +193,13 @@ public class NotificationListFragment extends Fragment implements NotificationLi
             // -- Prepare NotificationPersistent --
             NotificationPersistent notificationPersistent = new NotificationPersistent(mContext);
 
-            // -- Prepare NotificationNetwork --
-            NotificationNetwork notificationNetwork = new NotificationNetwork(mContext, mNotificationListHandleTaskParam.getSettingUserModel());
-
+            // -- Get NotificationModels from NotificationPersistent --
             NotificationModel[] notificationModels = null;
             try {
-                ProjectMemberModel projectMemberModel = mNotificationListHandleTaskParam.getProjectMemberModel();
-                if (projectMemberModel != null) {
-                    try {
-                        // -- Invalidate Access Token --
-                        notificationNetwork.invalidateAccessToken();
-
-                        // -- Invalidate Login --
-                        notificationNetwork.invalidateLogin();
-
-                        // -- Get notifications from server --
-                        notificationModels = notificationNetwork.getNotifications(projectMemberModel.getProjectMemberId(), 0);
-
-                        // -- Save to NotificationPersistent --
-                        try {
-                            notificationPersistent.saveNotificationModels(notificationModels, projectMemberModel.getProjectMemberId());
-                        } catch (PersistenceError ex) {
-                        }
-                    } catch (WebApiError webApiError) {
-                        if (webApiError.isErrorConnection()) {
-                            // -- Get NotificationModels from NotificationPersistent --
-                            try {
-                                notificationModels = notificationPersistent.getNotificationModels(projectMemberModel.getProjectMemberId());
-                            } catch (PersistenceError ex) {
-                            }
-                        } else
-                            throw webApiError;
-                    }
-                }
-            } catch (WebApiError webApiError) {
-                notificationListHandleTaskResult.setMessage(webApiError.getMessage());
-                publishProgress(webApiError.getMessage());
+                notificationModels = notificationPersistent.getNotificationModels(projectMemberModel.getProjectMemberId());
+            } catch (PersistenceError ex) {
+                notificationListHandleTaskResult.setMessage(ex.getMessage());
+                publishProgress(ex.getMessage());
             }
 
             if (notificationModels != null) {

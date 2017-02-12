@@ -169,4 +169,8 @@
 
     <string name="notification_layout_title">Notification</string>
     <string name="notification_detail_title">Notification</string>
+
+    <string name="service_notification_title">Project Management</string>
+    <string name="service_notification_subtitle">$s1 new notifications</string>
+    <string name="service_notification_need_login">Session expired! Need login first</string>
 </resources>

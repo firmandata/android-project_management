@@ -1,5 +1,7 @@
 package com.construction.pm.models.system;
 
+import com.construction.pm.utils.ConstantUtil;
+
 import org.json.JSONException;
 
 public class SettingUserModel {
@@ -19,7 +21,7 @@ public class SettingUserModel {
 
     public static SettingUserModel buildDefault() {
         SettingUserModel settingUserModel = new SettingUserModel();
-        settingUserModel.setServerUrl("http://sim-konstruksi.rafazsa.com");
+        settingUserModel.setServerUrl(ConstantUtil.SETTING_USER_SERVER_URL);
         return settingUserModel;
     }
 

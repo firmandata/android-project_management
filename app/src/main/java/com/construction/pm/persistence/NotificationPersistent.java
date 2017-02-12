@@ -151,6 +151,61 @@ public class NotificationPersistent extends SQLitePersistent {
             }
             cursor.close();
 
+            // -- Close database --
+            sqLiteDatabase.close();
+        } catch (SQLException ex) {
+            // -- Close database --
+            if (sqLiteDatabase != null && sqLiteDatabase.isOpen())
+                sqLiteDatabase.close();
+            throw new PersistenceError(0, ex.getMessage(), ex);
+        } catch (Exception ex) {
+            // -- Close database --
+            if (sqLiteDatabase != null && sqLiteDatabase.isOpen())
+                sqLiteDatabase.close();
+            throw new PersistenceError(0, ex.getMessage(), ex);
+        }
+
+        NotificationModel[] notificationModels = new NotificationModel[notificationModelList.size()];
+        notificationModelList.toArray(notificationModels);
+        return notificationModels;
+    }
+
+    public NotificationModel[] getUnreadNotificationModels(final Integer projectMemberId) throws PersistenceError {
+        List<NotificationModel> notificationModelList = new ArrayList<NotificationModel>();
+
+        SQLiteDatabase sqLiteDatabase = null;
+        try {
+            sqLiteDatabase = getReadableDatabase();
+
+            Cursor cursor = sqLiteDatabase.rawQuery(
+                "SELECT content " +
+                "  FROM network_notification " +
+                " WHERE project_member_id = ?" +
+                "   AND is_read = 0" +
+                " ORDER BY project_notification_id DESC",
+                new String[] {
+                    String.valueOf(projectMemberId)
+                }
+            );
+            if (cursor.moveToFirst()) {
+                do {
+                    String content = cursor.getString(cursor.getColumnIndex("content"));
+                    if (content != null) {
+                        try {
+                            org.json.JSONObject jsonObject = new org.json.JSONObject(content);
+                            NotificationModel notificationModel = NotificationModel.build(jsonObject);
+                            notificationModel.setRead(false);
+                            notificationModelList.add(notificationModel);
+                        } catch (org.json.JSONException ex) {
+                        } catch (Exception ex) {
+                        }
+                    }
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+
+            // -- Close database --
+            sqLiteDatabase.close();
         } catch (SQLException ex) {
             // -- Close database --
             if (sqLiteDatabase != null && sqLiteDatabase.isOpen())
@@ -184,6 +239,9 @@ public class NotificationPersistent extends SQLitePersistent {
                     String.valueOf(projectMemberId)
                 }
             );
+
+            // -- Close database --
+            sqLiteDatabase.close();
         } catch (SQLException ex) {
             // -- Close database --
             if (sqLiteDatabase != null && sqLiteDatabase.isOpen())
@@ -209,7 +267,9 @@ public class NotificationPersistent extends SQLitePersistent {
             Cursor cursor = sqLiteDatabase.rawQuery(
                 "SELECT content, is_read " +
                 "  FROM network_notification " +
-                " WHERE project_member_id = ?",
+                " WHERE project_member_id = ? " +
+                " ORDER BY project_notification_id DESC " +
+                " LIMIT 1",
                 new String[] {
                     String.valueOf(projectMemberId)
                 }
@@ -229,6 +289,8 @@ public class NotificationPersistent extends SQLitePersistent {
             }
             cursor.close();
 
+            // -- Close database --
+            sqLiteDatabase.close();
         } catch (SQLException ex) {
             // -- Close database --
             if (sqLiteDatabase != null && sqLiteDatabase.isOpen())

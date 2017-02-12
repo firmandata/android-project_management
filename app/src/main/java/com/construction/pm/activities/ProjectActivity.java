@@ -26,7 +26,7 @@ import com.construction.pm.views.project.ProjectLayout;
 
 public class ProjectActivity extends AppCompatActivity implements ProjectLayout.ProjectLayoutListener {
 
-    public static final String PARAM_PROJECT_MODEL = "ProjectModel";
+    public static final String INTENT_PARAM_PROJECT_MODEL = "PROJECT_MODEL";
 
     protected ProjectModel mProjectModel;
 
@@ -41,7 +41,7 @@ public class ProjectActivity extends AppCompatActivity implements ProjectLayout.
         if (bundle != null) {
             // -- Get ProjectModel parameter --
             try {
-                org.json.JSONObject jsonObject = new org.json.JSONObject(bundle.getString(PARAM_PROJECT_MODEL));
+                org.json.JSONObject jsonObject = new org.json.JSONObject(bundle.getString(INTENT_PARAM_PROJECT_MODEL));
                 mProjectModel = ProjectModel.build(jsonObject);
             } catch (org.json.JSONException ex) {
             }

@@ -9,7 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import com.construction.pm.R;
 import com.construction.pm.models.system.SessionLoginModel;
 import com.construction.pm.models.system.SettingUserModel;
-import com.construction.pm.networks.AuthenticationNetwork;
 import com.construction.pm.networks.UserNetwork;
 import com.construction.pm.networks.webapi.WebApiError;
 import com.construction.pm.persistence.SettingPersistent;

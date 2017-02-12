@@ -1,6 +1,7 @@
 package com.construction.pm.views.notification;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -66,7 +67,7 @@ public class NotificationListView {
                 NotificationModel notificationModel = mNotificationListAdapter.getItem(position);
                 if (notificationModel != null) {
                     if (mNotificationListListener != null)
-                        mNotificationListListener.onNotificationItemClick(notificationModel);
+                        mNotificationListListener.onNotificationItemClick(notificationModel, position);
                 }
             }
 
@@ -106,6 +107,14 @@ public class NotificationListView {
             mSrlNotificationList.setRefreshing(false);
     }
 
+    public void setNotificationModelRead(final NotificationModel notificationModel) {
+        notificationModel.setRead(true);
+
+        int position = mNotificationListAdapter.getItemPosition(notificationModel);
+        if (position >= 0)
+            mNotificationListAdapter.notifyItemChanged(position);
+    }
+
     public RelativeLayout getView() {
         return mNotificationListView;
     }
@@ -116,7 +125,7 @@ public class NotificationListView {
 
     public interface NotificationListListener {
         void onNotificationListRequest();
-        void onNotificationItemClick(NotificationModel notificationModel);
+        void onNotificationItemClick(NotificationModel notificationModel, int position);
     }
 
     protected class NotificationListAdapter extends RecyclerView.Adapter<NotificationListViewHolder> {
@@ -145,6 +154,26 @@ public class NotificationListView {
                 return null;
 
             return mNotificationModels[position];
+        }
+
+        public int getItemPosition(final NotificationModel notificationModel) {
+            if (mNotificationModels == null)
+                return -1;
+
+            boolean isPositionFound = false;
+            int position = 0;
+            for (NotificationModel notificationModelExist : mNotificationModels) {
+                if (notificationModelExist.equals(notificationModel)) {
+                    isPositionFound = true;
+                    break;
+                }
+                position++;
+            }
+
+            if (isPositionFound)
+                return position;
+
+            return -1;
         }
 
         @Override
@@ -188,6 +217,20 @@ public class NotificationListView {
         public void setNotificationModel(final NotificationModel notificationModel) {
             mEtNotificationDate.setText(DateTimeUtil.ToDateTimeDisplayString(notificationModel.getNotificationDate()));
             mEtNotificationMessage.setText(notificationModel.getNotificationMessage());
+            if (notificationModel.isRead())
+                setNotificationRead();
+            else
+                setNotificationUnRead();
+        }
+
+        public void setNotificationRead() {
+            mEtNotificationDate.setTypeface(null, Typeface.NORMAL);
+            mEtNotificationMessage.setTypeface(null, Typeface.NORMAL);
+        }
+
+        public void setNotificationUnRead() {
+            mEtNotificationDate.setTypeface(null, Typeface.BOLD);
+            mEtNotificationMessage.setTypeface(null, Typeface.BOLD);
         }
     }
 }

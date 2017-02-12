@@ -100,7 +100,7 @@ public class ProjectListFragment extends Fragment implements ProjectListView.Pro
             org.json.JSONObject projectModelJsonObject = projectModel.build();
             String projectModelJson = projectModelJsonObject.toString(0);
 
-            intent.putExtra(ProjectActivity.PARAM_PROJECT_MODEL, projectModelJson);
+            intent.putExtra(ProjectActivity.INTENT_PARAM_PROJECT_MODEL, projectModelJson);
         } catch (org.json.JSONException ex) {
 
         }

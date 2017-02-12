@@ -55,7 +55,7 @@ public class AuthenticationActivity extends AppCompatActivity implements
             authenticationLoginFirstFragment.setAuthenticationLoginFirstFragmentListener(this);
         } else {
             // -- Redirect to MainActivity --
-            Intent intent = new Intent(this, MainActivity.class);;
+            Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
 
             // -- Close activity --
@@ -66,7 +66,7 @@ public class AuthenticationActivity extends AppCompatActivity implements
     @Override
     public void onLoginFirstSuccess(SimpleResponseModel simpleResponseModel) {
         // -- Redirect to MainActivity --
-        Intent intent = new Intent(this, MainActivity.class);;
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
 
         // -- Close activity --

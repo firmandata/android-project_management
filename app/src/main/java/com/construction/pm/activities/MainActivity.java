@@ -1,9 +1,15 @@
 package com.construction.pm.activities;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.os.Message;
+import android.os.Messenger;
+import android.os.RemoteException;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -16,6 +22,7 @@ import com.construction.pm.models.network.SimpleResponseModel;
 import com.construction.pm.models.system.SettingUserModel;
 import com.construction.pm.networks.UserNetwork;
 import com.construction.pm.persistence.SettingPersistent;
+import com.construction.pm.services.NotificationService;
 import com.construction.pm.utils.ViewUtil;
 import com.construction.pm.views.MainLayout;
 
@@ -24,11 +31,18 @@ public class MainActivity extends AppCompatActivity implements
         UserChangeProfileFragment.UserChangeProfileFragmentListener,
         UserChangePasswordFragment.UserChangePasswordFragmentListener {
 
+    public static final String INTENT_PARAM_SHOW_DEFAULT_FRAGMENT = "SHOW_FRAGMENT_DEFAULT";
+    public static final String INTENT_PARAM_SHOW_FRAGMENT_HOME = "SHOW_FRAGMENT_HOME";
+    public static final String INTENT_PARAM_SHOW_FRAGMENT_NOTIFICATION = "SHOW_FRAGMENT_NOTIFICATION";
+
     protected MainLayout mMainLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // -- Handle intent request parameters --
+        newIntentHandle(getIntent().getExtras());
 
         // -- Prepare MainLayout --
         mMainLayout = MainLayout.buildMainLayout(this, null);
@@ -37,8 +51,59 @@ public class MainActivity extends AppCompatActivity implements
         // -- Load MainLayout to activity --
         mMainLayout.loadLayoutToActivity(this);
 
-        // -- Load HomeFragment --
-        mMainLayout.showHomeFragment();
+        // -- Handle page request by parameters --
+        requestPageHandle(getIntent().getExtras());
+    }
+
+    @Override
+    public void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        // -- Handle intent request parameters --
+        newIntentHandle(intent.getExtras());
+
+        // -- Handle page request by parameters --
+        requestPageHandle(intent.getExtras());
+    }
+
+    protected void newIntentHandle(final Bundle bundle) {
+        // -- Start NotificationService --
+        Intent notificationServiceStart = new Intent(this, NotificationService.class);
+        startService(notificationServiceStart);
+
+        if (bundle != null) {
+
+        }
+    }
+
+    protected void requestPageHandle(final Bundle bundle) {
+        boolean isDefaultFragmentShowed = false;
+
+        if (bundle != null) {
+            // -- Get intent request default fragment --
+            if (bundle.containsKey(INTENT_PARAM_SHOW_DEFAULT_FRAGMENT)) {
+                String showFragment = bundle.getString(INTENT_PARAM_SHOW_DEFAULT_FRAGMENT);
+                if (showFragment != null) {
+                    if (showFragment.equals(INTENT_PARAM_SHOW_FRAGMENT_HOME)) {
+                        // -- Show HomeFragment --
+                        mMainLayout.showHomeFragment();
+
+                        isDefaultFragmentShowed = true;
+                    } else if (showFragment.equals(INTENT_PARAM_SHOW_FRAGMENT_NOTIFICATION)) {
+                        // -- Show NotificationListFragment --
+                        mMainLayout.showNotificationListFragment();
+
+                        isDefaultFragmentShowed = true;
+                    }
+                }
+            }
+        }
+
+        // -- Set default fragment
+        if (!isDefaultFragmentShowed) {
+            // -- Show HomeFragment --
+            mMainLayout.showHomeFragment();
+        }
     }
 
     @Override
@@ -49,6 +114,20 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         return super.onOptionsItemSelected(menuItem);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+//        bindNotificationService();
+    }
+
+    @Override
+    protected void onPause() {
+//        unbindNotificationService();
+
+        super.onPause();
     }
 
     @Override
@@ -73,17 +152,17 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onMenuProjectListSelected() {
-        mMainLayout.showProjectList();
+        mMainLayout.showProjectListFragment();
     }
 
     @Override
     public void onMenuNotificationListSelected() {
-        mMainLayout.showNotificationList();
+        mMainLayout.showNotificationListFragment();
     }
 
     @Override
     public void onMenuUserChangeProfileSelected() {
-        mMainLayout.showUserChangeProfile(this);
+        mMainLayout.showUserChangeProfileFragment(this);
     }
 
     @Override
@@ -93,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onMenuUserChangePasswordSelected() {
-        mMainLayout.showUserChangePassword(this);
+        mMainLayout.showUserChangePasswordFragment(this);
     }
 
     @Override
@@ -106,6 +185,55 @@ public class MainActivity extends AppCompatActivity implements
     public void onMenuLogoutClick() {
         doLogout();
     }
+
+
+    // ----------------------------------
+    // -- Notification Service Handler --
+    // ----------------------------------
+
+    protected ServiceConnection mNotificationServiceConnection;
+    protected Messenger mNotificationServiceMessengerSender;
+    protected Messenger mNotificationServiceMessengerReceiver;
+
+    protected void bindNotificationService() {
+        mNotificationServiceConnection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+                mNotificationServiceMessengerSender = new Messenger(iBinder);
+
+//                try {
+//                    Message message;
+//
+//                    // -- Send register command --
+//                    message = Message.obtain(null, PaymentService.PaymentServiceHandler.MSG_REGISTER_CLIENT);
+//                    message.replyTo = mPaymentMessenger;
+//                    mPaymentMessengerCommunicator.send(message);
+//
+//                    // -- Send state command --
+//                    message = Message.obtain(null, PaymentService.PaymentServiceHandler.MSG_STATE_SERVICE);
+//                    mPaymentMessengerCommunicator.send(message);
+//                } catch (RemoteException e) {
+//
+//                }
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName componentName) {
+
+            }
+        };
+        Intent intent = new Intent(this, NotificationService.class);
+        bindService(intent, mNotificationServiceConnection, Context.BIND_AUTO_CREATE);
+    }
+
+    protected void unbindNotificationService() {
+        unbindService(mNotificationServiceConnection);
+    }
+
+
+    // --------------------
+    // -- Logout Handler --
+    // --------------------
 
     protected void doLogout() {
         // -- Prepare SettingPersistent --

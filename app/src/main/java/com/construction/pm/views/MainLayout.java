@@ -200,7 +200,9 @@ public class MainLayout implements NavigationView.OnNavigationItemSelectedListen
     }
 
     public boolean isHomeFragmentShow() {
-        return mFragmentTagSelected.equals(FRAGMENT_TAG_HOME);
+        if (mFragmentTagSelected != null)
+            return mFragmentTagSelected.equals(FRAGMENT_TAG_HOME);
+        return false;
     }
 
     protected void loadFragment(final Fragment fragment, final String title, final String tag) {
@@ -241,7 +243,7 @@ public class MainLayout implements NavigationView.OnNavigationItemSelectedListen
         return homeFragment;
     }
 
-    public ProjectListFragment showProjectList() {
+    public ProjectListFragment showProjectListFragment() {
         ProjectListFragment projectListFragment = ProjectListFragment.newInstance();
 
         loadFragment(projectListFragment, ViewUtil.getResourceString(mContext, R.string.menu_project_title), FRAGMENT_TAG_PROJECT_LIST);
@@ -249,7 +251,7 @@ public class MainLayout implements NavigationView.OnNavigationItemSelectedListen
         return projectListFragment;
     }
 
-    public NotificationListFragment showNotificationList() {
+    public NotificationListFragment showNotificationListFragment() {
         NotificationListFragment notificationListFragment = NotificationListFragment.newInstance();
 
         loadFragment(notificationListFragment, ViewUtil.getResourceString(mContext, R.string.menu_inbox_title), FRAGMENT_TAG_INBOX);
@@ -257,7 +259,7 @@ public class MainLayout implements NavigationView.OnNavigationItemSelectedListen
         return notificationListFragment;
     }
 
-    public UserChangeProfileFragment showUserChangeProfile(final UserChangeProfileFragment.UserChangeProfileFragmentListener userChangeProfileFragmentListener) {
+    public UserChangeProfileFragment showUserChangeProfileFragment(final UserChangeProfileFragment.UserChangeProfileFragmentListener userChangeProfileFragmentListener) {
         UserChangeProfileFragment userChangeProfileFragment = UserChangeProfileFragment.newInstance();
         userChangeProfileFragment.setUserChangeProfileFragmentListener(userChangeProfileFragmentListener);
 
@@ -266,7 +268,7 @@ public class MainLayout implements NavigationView.OnNavigationItemSelectedListen
         return userChangeProfileFragment;
     }
 
-    public UserChangePasswordFragment showUserChangePassword(final UserChangePasswordFragment.UserChangePasswordFragmentListener userChangePasswordFragmentListener) {
+    public UserChangePasswordFragment showUserChangePasswordFragment(final UserChangePasswordFragment.UserChangePasswordFragmentListener userChangePasswordFragmentListener) {
         UserChangePasswordFragment userChangePasswordFragment = UserChangePasswordFragment.newInstance();
         userChangePasswordFragment.setUserChangePasswordFragmentListener(userChangePasswordFragmentListener);
 
