@@ -7,25 +7,29 @@ import android.content.ServiceConnection;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.os.Message;
 import android.os.Messenger;
-import android.os.RemoteException;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.construction.pm.R;
+import com.construction.pm.activities.fragments.NotificationListFragment;
 import com.construction.pm.activities.fragments.UserChangePasswordFragment;
 import com.construction.pm.activities.fragments.UserChangeProfileFragment;
 import com.construction.pm.models.NotificationModel;
+import com.construction.pm.models.ProjectMemberModel;
 import com.construction.pm.models.network.SimpleResponseModel;
 import com.construction.pm.models.system.SessionLoginModel;
 import com.construction.pm.models.system.SettingUserModel;
 import com.construction.pm.networks.UserNetwork;
+import com.construction.pm.persistence.NotificationPersistent;
+import com.construction.pm.persistence.PersistenceError;
+import com.construction.pm.persistence.SessionPersistent;
 import com.construction.pm.persistence.SettingPersistent;
 import com.construction.pm.services.NotificationMessageHandler;
 import com.construction.pm.services.NotificationService;
+import com.construction.pm.utils.ConstantUtil;
 import com.construction.pm.utils.ViewUtil;
 import com.construction.pm.views.MainLayout;
 
@@ -33,7 +37,8 @@ public class MainActivity extends AppCompatActivity implements
         MainLayout.MainLayoutListener,
         UserChangeProfileFragment.UserChangeProfileFragmentListener,
         UserChangePasswordFragment.UserChangePasswordFragmentListener,
-        NotificationMessageHandler.NotificationMessageHandlerListener {
+        NotificationMessageHandler.NotificationMessageHandlerListener,
+        NotificationListFragment.NotificationListFragmentListener {
 
     public static final String INTENT_PARAM_SHOW_DEFAULT_FRAGMENT = "SHOW_FRAGMENT_DEFAULT";
     public static final String INTENT_PARAM_SHOW_FRAGMENT_HOME = "SHOW_FRAGMENT_HOME";
@@ -95,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements
                         isDefaultFragmentShowed = true;
                     } else if (showFragment.equals(INTENT_PARAM_SHOW_FRAGMENT_NOTIFICATION)) {
                         // -- Show NotificationListFragment --
-                        mMainLayout.showNotificationListFragment();
+                        mMainLayout.showNotificationListFragment(this);
 
                         isDefaultFragmentShowed = true;
                     }
@@ -108,6 +113,9 @@ public class MainActivity extends AppCompatActivity implements
             // -- Show HomeFragment --
             mMainLayout.showHomeFragment();
         }
+
+        // -- Calculate notification unread quantity --
+        invalidateNotificationUnreadQuantity();
     }
 
     @Override
@@ -135,6 +143,11 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
     public void onBackPressed() {
         if (mMainLayout.getLayout().isDrawerOpen(GravityCompat.START)) {
             mMainLayout.getLayout().closeDrawers();
@@ -149,6 +162,11 @@ public class MainActivity extends AppCompatActivity implements
         super.onBackPressed();
     }
 
+
+    // -----------------
+    // -- Menu Select --
+    // -----------------
+
     @Override
     public void onMenuHomeSelected() {
         mMainLayout.showHomeFragment();
@@ -161,7 +179,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onMenuNotificationListSelected() {
-        mMainLayout.showNotificationListFragment();
+        mMainLayout.showNotificationListFragment(this);
     }
 
     @Override
@@ -188,6 +206,17 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onMenuLogoutClick() {
         doLogout();
+    }
+
+
+    // ---------------------------------------
+    // -- NotificationListFragment Listener --
+    // ---------------------------------------
+
+    @Override
+    public void onNotificationListRead(NotificationModel notificationModel) {
+        // -- Recalculate notification unread quantity --
+        invalidateNotificationUnreadQuantity();
     }
 
 
@@ -226,7 +255,13 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onNotificationReceives(NotificationModel[] notificationModels) {
-        
+        if (mMainLayout.isNotificationListFragmentShow()) {
+            // -- Attach to NotificationListFragment --
+            mMainLayout.addNotificationModelsToNotificationListFragment(notificationModels);
+        } else {
+            // -- Recalculate notification unread quantity --
+            invalidateNotificationUnreadQuantity();
+        }
     }
 
     @Override
@@ -342,5 +377,37 @@ public class MainActivity extends AppCompatActivity implements
 
             return true;
         }
+    }
+
+
+    // -------------
+    // -- Helpers --
+    // -------------
+
+    protected void invalidateNotificationUnreadQuantity() {
+        // -- Get SessionLoginModel from SessionPersistent --
+        SessionPersistent sessionPersistent = new SessionPersistent(this);
+        SessionLoginModel sessionLoginModel = sessionPersistent.getSessionLoginModel();
+
+        // -- Get ProjectMemberModel --
+        ProjectMemberModel projectMemberModel = null;
+        if (sessionLoginModel != null)
+            projectMemberModel = sessionLoginModel.getProjectMemberModel();
+
+        // -- Get unread NotificationModels from NotificationPersistent --
+        NotificationModel[] unreadNotificationModels = null;
+        if (projectMemberModel != null) {
+            NotificationPersistent notificationPersistent = new NotificationPersistent(this);
+            try {
+                unreadNotificationModels = notificationPersistent.getUnreadNotificationModels(projectMemberModel.getProjectMemberId());
+            } catch (PersistenceError ex) {
+            }
+        }
+
+        // -- Show notification unread quantity to notification menu item --
+        if (unreadNotificationModels != null)
+            mMainLayout.setNotificationUnreadQuantity(unreadNotificationModels.length);
+        else
+            mMainLayout.setNotificationUnreadQuantity(0);
     }
 }

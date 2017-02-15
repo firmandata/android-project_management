@@ -19,11 +19,17 @@ import com.construction.pm.persistence.NotificationPersistent;
 import com.construction.pm.persistence.PersistenceError;
 import com.construction.pm.persistence.SessionPersistent;
 import com.construction.pm.persistence.SettingPersistent;
+import com.construction.pm.utils.ConstantUtil;
 import com.construction.pm.utils.ViewUtil;
 import com.construction.pm.views.notification.NotificationListView;
 
+import static android.app.Activity.RESULT_OK;
+
 public class NotificationListFragment extends Fragment implements NotificationListView.NotificationListListener {
+
     protected NotificationListView mNotificationListView;
+
+    protected NotificationListFragmentListener mNotificationListFragmentListener;
 
     public static NotificationListFragment newInstance() {
         return new NotificationListFragment();
@@ -90,6 +96,40 @@ public class NotificationListFragment extends Fragment implements NotificationLi
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == ConstantUtil.INTENT_REQUEST_NOTIFICATION_ACTIVITY) {
+            if (resultCode == RESULT_OK) {
+                // -- Get NotificationModel --
+                NotificationModel notificationModel = null;
+                Bundle bundle = data.getExtras();
+                if (bundle != null) {
+                    if (bundle.containsKey(ConstantUtil.INTENT_RESULT_NOTIFICATION_MODEL)) {
+                        String notificationModelJson = bundle.getString(ConstantUtil.INTENT_RESULT_NOTIFICATION_MODEL);
+                        if (notificationModelJson != null) {
+                            try {
+                                org.json.JSONObject jsonObject = new org.json.JSONObject(notificationModelJson);
+                                notificationModel = NotificationModel.build(jsonObject);
+                            } catch (org.json.JSONException ex) {
+
+                            }
+                        }
+                    }
+                }
+
+                if (notificationModel != null) {
+                    // -- Mark NotificationModel view as read --
+                    mNotificationListView.updateNotificationModel(notificationModel);
+
+                    if (mNotificationListFragmentListener != null)
+                        mNotificationListFragmentListener.onNotificationListRead(notificationModel);
+                }
+            }
+        }
+    }
+
+    @Override
     public void onNotificationItemClick(NotificationModel notificationModel, int position) {
         // -- Redirect to NotificationActivity --
         Intent intent = new Intent(this.getContext(), NotificationActivity.class);
@@ -103,10 +143,7 @@ public class NotificationListFragment extends Fragment implements NotificationLi
 
         }
 
-        startActivity(intent);
-
-        // -- Mark NotificationModel view as read --
-        mNotificationListView.setNotificationModelRead(notificationModel);
+        startActivityForResult(intent, ConstantUtil.INTENT_REQUEST_NOTIFICATION_ACTIVITY);
     }
 
     protected void onNotificationListRequestProgress(final String progressMessage) {
@@ -214,8 +251,21 @@ public class NotificationListFragment extends Fragment implements NotificationLi
         }
     }
 
+    public void addNotificationModels(final NotificationModel[] notificationModels) {
+        if (mNotificationListView != null)
+            mNotificationListView.addNotificationModels(notificationModels);
+    }
+
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+
+    public void setNotificationListFragmentListener(final NotificationListFragmentListener notificationListFragmentListener) {
+        mNotificationListFragmentListener = notificationListFragmentListener;
+    }
+
+    public interface NotificationListFragmentListener {
+        void onNotificationListRead(NotificationModel notificationModel);
     }
 }

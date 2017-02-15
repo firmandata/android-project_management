@@ -11,12 +11,16 @@ import com.construction.pm.models.system.SessionLoginModel;
 import com.construction.pm.persistence.NotificationPersistent;
 import com.construction.pm.persistence.PersistenceError;
 import com.construction.pm.persistence.SessionPersistent;
+import com.construction.pm.utils.ConstantUtil;
 import com.construction.pm.views.notification.NotificationLayout;
+
+import java.util.Calendar;
 
 public class NotificationActivity extends AppCompatActivity implements NotificationLayout.NotificationLayoutListener {
 
     public static final String INTENT_PARAM_NOTIFICATION_MODEL = "NOTIFICATION_MODEL";
     public static final String INTENT_PARAM_NOTIFICATION_FROM_NOTIFICATION_SERVICE = "NOTIFICATION_FROM_NOTIFICATION_SERVICE";
+
     protected boolean mIsFromNotificationService;
 
     protected NotificationModel mNotificationModel;
@@ -29,24 +33,6 @@ public class NotificationActivity extends AppCompatActivity implements Notificat
 
         // -- Handle intent request parameters --
         newIntentHandle(getIntent().getExtras());
-
-        // -- Get SessionLoginModel from SessionPersistent --
-        SessionPersistent sessionPersistent = new SessionPersistent(this);
-        SessionLoginModel sessionLoginModel = sessionPersistent.getSessionLoginModel();
-
-        // -- Prepare NotificationPersistent --
-        NotificationPersistent notificationPersistent = new NotificationPersistent(this);
-
-        // -- Mark NotificationModel as read --
-        if (mNotificationModel != null) {
-            ProjectMemberModel projectMemberModel = sessionLoginModel.getProjectMemberModel();
-            if (projectMemberModel != null) {
-                try {
-                    notificationPersistent.setNotificationRead(mNotificationModel, projectMemberModel.getProjectMemberId());
-                } catch (PersistenceError persistenceError) {
-                }
-            }
-        }
 
         // -- Prepare NotificationLayout --
         mNotificationLayout = NotificationLayout.buildNotificationLayout(this, null);
@@ -91,6 +77,29 @@ public class NotificationActivity extends AppCompatActivity implements Notificat
                 }
             }
         }
+
+        if (mNotificationModel != null) {
+            // -- Get SessionLoginModel from SessionPersistent --
+            SessionPersistent sessionPersistent = new SessionPersistent(this);
+            SessionLoginModel sessionLoginModel = sessionPersistent.getSessionLoginModel();
+
+            // -- Prepare NotificationPersistent --
+            NotificationPersistent notificationPersistent = new NotificationPersistent(this);
+
+            // -- Get ProjectMemberModel --
+            ProjectMemberModel projectMemberModel = sessionLoginModel.getProjectMemberModel();
+            if (projectMemberModel != null) {
+                try {
+                    // -- Mark NotificationModel object as read --
+                    mNotificationModel.setRead(true);
+                    mNotificationModel.setLastUpdate(Calendar.getInstance());
+
+                    // -- Save NotificationModel to NotificationPersistent --
+                    notificationPersistent.saveNotificationRead(mNotificationModel, projectMemberModel.getProjectMemberId());
+                } catch (PersistenceError persistenceError) {
+                }
+            }
+        }
     }
 
     protected void requestPageHandle(final Bundle bundle) {
@@ -132,11 +141,26 @@ public class NotificationActivity extends AppCompatActivity implements Notificat
     }
 
     protected void handleFinish() {
+        String notificationModelJson = null;
+        if (mNotificationModel != null) {
+            try {
+                org.json.JSONObject jsonObject = mNotificationModel.build();
+                notificationModelJson = jsonObject.toString(0);
+            } catch (org.json.JSONException e) {
+            }
+        }
+
         if (mIsFromNotificationService) {
             // -- Start MainActivity --
             Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra(MainActivity.INTENT_PARAM_SHOW_DEFAULT_FRAGMENT, MainActivity.INTENT_PARAM_SHOW_FRAGMENT_NOTIFICATION);
+            intent.putExtra(ConstantUtil.INTENT_RESULT_NOTIFICATION_MODEL, notificationModelJson);
             startActivity(intent);
+        } else {
+            // -- Set result callback --
+            Intent intent = new Intent();
+            intent.putExtra(ConstantUtil.INTENT_RESULT_NOTIFICATION_MODEL, notificationModelJson);
+            setResult(RESULT_OK, intent);
         }
     }
 }

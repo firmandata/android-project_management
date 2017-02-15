@@ -18,6 +18,10 @@ import com.construction.pm.libraries.widgets.RecyclerItemTouchListener;
 import com.construction.pm.models.NotificationModel;
 import com.construction.pm.utils.DateTimeUtil;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class NotificationListView {
     protected Context mContext;
 
@@ -64,7 +68,7 @@ public class NotificationListView {
         mRvNotificationList.addOnItemTouchListener(new RecyclerItemTouchListener(mContext, mRvNotificationList, new RecyclerItemTouchListener.ItemClickListener() {
             @Override
             public void onClick(View view, int position) {
-                NotificationModel notificationModel = mNotificationListAdapter.getItem(position);
+                NotificationModel notificationModel = mNotificationListAdapter.getNotificationModel(position);
                 if (notificationModel != null) {
                     if (mNotificationListListener != null)
                         mNotificationListListener.onNotificationItemClick(notificationModel, position);
@@ -107,12 +111,15 @@ public class NotificationListView {
             mSrlNotificationList.setRefreshing(false);
     }
 
-    public void setNotificationModelRead(final NotificationModel notificationModel) {
-        notificationModel.setRead(true);
+    public void addNotificationModels(final NotificationModel[] notificationModels) {
+        mNotificationListAdapter.addNotificationModels(notificationModels);
+    }
 
-        int position = mNotificationListAdapter.getItemPosition(notificationModel);
-        if (position >= 0)
-            mNotificationListAdapter.notifyItemChanged(position);
+    public void updateNotificationModel(final NotificationModel notificationModel) {
+        int position = mNotificationListAdapter.getPosition(notificationModel);
+        if (position >= 0) {
+            mNotificationListAdapter.setNotificationModel(position, notificationModel);
+        }
     }
 
     public RelativeLayout getView() {
@@ -130,42 +137,90 @@ public class NotificationListView {
 
     protected class NotificationListAdapter extends RecyclerView.Adapter<NotificationListViewHolder> {
 
-        protected NotificationModel[] mNotificationModels;
+        protected List<NotificationModel> mNotificationModelList;
 
         public NotificationListAdapter() {
-
+            mNotificationModelList = new ArrayList<NotificationModel>();
         }
 
         public NotificationListAdapter(final NotificationModel[] notificationModels) {
             this();
-            mNotificationModels = notificationModels;
+            mNotificationModelList = new ArrayList<NotificationModel>(Arrays.asList(notificationModels));
         }
 
         public void setNotificationModels(final NotificationModel[] notificationModels) {
-            mNotificationModels = notificationModels;
-
+            mNotificationModelList = new ArrayList<NotificationModel>(Arrays.asList(notificationModels));
             notifyDataSetChanged();
         }
 
-        public NotificationModel getItem(final int position) {
-            if (mNotificationModels == null)
-                return null;
-            if ((position + 1) > mNotificationModels.length)
-                return null;
-
-            return mNotificationModels[position];
+        public void addNotificationModels(final NotificationModel[] notificationModels) {
+            List<NotificationModel> newNotificationModelList = new ArrayList<NotificationModel>();
+            for (NotificationModel newNotificationModel : notificationModels) {
+                int position = getPosition(newNotificationModel);
+                if (position >= 0) {
+                    // -- replace item --
+                    setNotificationModel(position, newNotificationModel);
+                } else {
+                    // -- new items --
+                    newNotificationModelList.add(newNotificationModel);
+                }
+            }
+            if (newNotificationModelList.size() > 0) {
+                mNotificationModelList.addAll(0, newNotificationModelList);
+                notifyItemRangeInserted(0, newNotificationModelList.size());
+            }
         }
 
-        public int getItemPosition(final NotificationModel notificationModel) {
-            if (mNotificationModels == null)
+        public void setNotificationModel(final int position, final NotificationModel notificationModel) {
+            if ((position + 1) > mNotificationModelList.size())
+                return;
+
+            mNotificationModelList.set(position, notificationModel);
+            notifyItemChanged(position);
+        }
+
+        public NotificationModel getNotificationModel(final int position) {
+            if ((position + 1) > mNotificationModelList.size())
+                return null;
+
+            return mNotificationModelList.get(position);
+        }
+
+        public int getPosition(final NotificationModel notificationModel) {
+            if (notificationModel == null)
                 return -1;
 
-            boolean isPositionFound = false;
-            int position = 0;
-            for (NotificationModel notificationModelExist : mNotificationModels) {
+            boolean isPositionFound;
+            int position;
+
+            // -- Search by object --
+            isPositionFound = false;
+            position = 0;
+            for (NotificationModel notificationModelExist : mNotificationModelList) {
                 if (notificationModelExist.equals(notificationModel)) {
                     isPositionFound = true;
                     break;
+                }
+                position++;
+            }
+
+            if (isPositionFound)
+                return position;
+
+            // -- Search by id --
+            Integer searchProjectNotificationId = notificationModel.getProjectNotificationId();
+            if (searchProjectNotificationId == null)
+                return -1;
+
+            isPositionFound = false;
+            position = 0;
+            for (NotificationModel notificationModelExist : mNotificationModelList) {
+                Integer existProjectNotificationId = notificationModelExist.getProjectNotificationId();
+                if (existProjectNotificationId != null) {
+                    if (existProjectNotificationId.equals(searchProjectNotificationId)) {
+                        isPositionFound = true;
+                        break;
+                    }
                 }
                 position++;
             }
@@ -184,21 +239,16 @@ public class NotificationListView {
 
         @Override
         public void onBindViewHolder(NotificationListViewHolder holder, int position) {
-            if (mNotificationModels == null)
-                return;
-            if ((position + 1) > mNotificationModels.length)
+            if ((position + 1) > mNotificationModelList.size())
                 return;
 
-            NotificationModel notificationModel = mNotificationModels[position];
+            NotificationModel notificationModel = mNotificationModelList.get(position);
             holder.setNotificationModel(notificationModel);
         }
 
         @Override
         public int getItemCount() {
-            if (mNotificationModels == null)
-                return 0;
-
-            return mNotificationModels.length;
+            return mNotificationModelList.size();
         }
     }
 

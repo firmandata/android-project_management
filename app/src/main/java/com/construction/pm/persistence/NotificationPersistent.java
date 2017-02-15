@@ -223,16 +223,17 @@ public class NotificationPersistent extends SQLitePersistent {
         return notificationModels;
     }
 
-    public boolean setNotificationRead(final NotificationModel notificationModel, final Integer projectMemberId) throws PersistenceError {
+    public boolean saveNotificationRead(final NotificationModel notificationModel, final Integer projectMemberId) throws PersistenceError {
         int affectedRow = 0;
 
         SQLiteDatabase sqLiteDatabase = null;
         try {
             sqLiteDatabase = getWritableDatabase();
 
+            // -- Update table record --
             ContentValues contentValues = new ContentValues();
-            contentValues.put("is_read", 1);
-            contentValues.put("updated_date", DateTimeUtil.ToDateTimeString(Calendar.getInstance()));
+            contentValues.put("is_read", notificationModel.isRead() ? 1 : 0);
+            contentValues.put("updated_date", DateTimeUtil.ToDateTimeString(notificationModel.getLastUpdate()));
             affectedRow = sqLiteDatabase.update("network_notification", contentValues, "project_notification_id = ? AND project_member_id = ?",
                 new String[] {
                     String.valueOf(notificationModel.getProjectNotificationId()),

@@ -2,6 +2,7 @@ package com.construction.pm.views;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -11,6 +12,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -23,6 +25,8 @@ import com.construction.pm.activities.fragments.NotificationListFragment;
 import com.construction.pm.activities.fragments.ProjectListFragment;
 import com.construction.pm.activities.fragments.UserChangePasswordFragment;
 import com.construction.pm.activities.fragments.UserChangeProfileFragment;
+import com.construction.pm.models.NotificationModel;
+import com.construction.pm.utils.StringUtil;
 import com.construction.pm.utils.ViewUtil;
 
 public class MainLayout implements NavigationView.OnNavigationItemSelectedListener {
@@ -33,13 +37,14 @@ public class MainLayout implements NavigationView.OnNavigationItemSelectedListen
     protected Handler mActivityHandler;
     protected String mFragmentTagSelected;
     protected static final String FRAGMENT_TAG_HOME = "FRAGMENT_HOME";
-    protected static final String FRAGMENT_TAG_INBOX = "FRAGMENT_INBOX";
+    protected static final String FRAGMENT_TAG_NOTIFICATION_LIST = "FRAGMENT_NOTIFICATION_LIST";
     protected static final String FRAGMENT_TAG_PROJECT_LIST = "FRAGMENT_PROJECT_LIST";
     protected static final String FRAGMENT_TAG_MONITORING = "FRAGMENT_MONITORING";
     protected static final String FRAGMENT_TAG_UPDATE_TASK_PROGRESS = "FRAGMENT_UPDATE_TASK_PROGRESS";
-    protected static final String FRAGMENT_TAG_REQUEST_REPORT = "FRAGMENT_REQUES_REPORT";
+    protected static final String FRAGMENT_TAG_REQUEST_REPORT = "FRAGMENT_REQUEST_REPORT";
     protected static final String FRAGMENT_TAG_USER_CHANGE_PROFILE = "FRAGMENT_USER_CHANGE_PROFILE";
     protected static final String FRAGMENT_TAG_USER_CHANGE_PASSWORD = "FRAGMENT_USER_CHANGE_PASSWORD";
+    protected NotificationListFragment mNotificationListFragment;
 
     protected DrawerLayout mMainLayout;
     protected ActionBar mActionBar;
@@ -74,9 +79,39 @@ public class MainLayout implements NavigationView.OnNavigationItemSelectedListen
         mNavigationView = (NavigationView) mMainLayout.findViewById(R.id.navigator);
         mNavigationView.setNavigationItemSelectedListener(this);
 
+        // -- Set notification unread quantity view --
+        MenuItem menuItemNotification = getMenuItemById(R.id.navigator_menu_inbox);
+        if (menuItemNotification != null) {
+            if (Build.VERSION.SDK_INT >= 11)
+                menuItemNotification.setActionView(R.layout.main_menu_notification_quantity_view);
+        }
+
         mProgressDialog = new ProgressDialog(mContext);
         mProgressDialog.setCancelable(false);
         mProgressDialog.setCanceledOnTouchOutside(false);
+    }
+
+    public void setNotificationUnreadQuantity(final int notificationUnreadQuantity) {
+        MenuItem menuItem = getMenuItemById(R.id.navigator_menu_inbox);
+        if (menuItem != null) {
+            if (Build.VERSION.SDK_INT >= 11) {
+                AppCompatTextView textView = (AppCompatTextView) menuItem.getActionView().findViewById(R.id.unreadNotificationQuantity);
+                if (notificationUnreadQuantity > 0)
+                    textView.setText(StringUtil.numberFormat(notificationUnreadQuantity));
+                else
+                    textView.setText(null);
+            }
+        }
+    }
+
+    protected MenuItem getMenuItemById(final int id) {
+        for (int menuItemIdx = 0; menuItemIdx < mNavigationView.getMenu().size(); menuItemIdx++) {
+            MenuItem menuItem = mNavigationView.getMenu().getItem(menuItemIdx);
+            if (menuItem.getItemId() == id) {
+                return menuItem;
+            }
+        }
+        return null;
     }
 
     public DrawerLayout getLayout() {
@@ -177,7 +212,7 @@ public class MainLayout implements NavigationView.OnNavigationItemSelectedListen
                 boolean isChecked = false;
                 if (mFragmentTagSelected.equals(FRAGMENT_TAG_HOME) && menuItem.getItemId() == R.id.navigator_menu_home)
                     isChecked = true;
-                if (mFragmentTagSelected.equals(FRAGMENT_TAG_INBOX) && menuItem.getItemId() == R.id.navigator_menu_inbox)
+                if (mFragmentTagSelected.equals(FRAGMENT_TAG_NOTIFICATION_LIST) && menuItem.getItemId() == R.id.navigator_menu_inbox)
                     isChecked = true;
                 if (mFragmentTagSelected.equals(FRAGMENT_TAG_PROJECT_LIST) && menuItem.getItemId() == R.id.navigator_menu_project_list)
                     isChecked = true;
@@ -205,12 +240,25 @@ public class MainLayout implements NavigationView.OnNavigationItemSelectedListen
         return false;
     }
 
+    public boolean isNotificationListFragmentShow() {
+        if (mFragmentTagSelected != null)
+            return mFragmentTagSelected.equals(FRAGMENT_TAG_NOTIFICATION_LIST);
+        return false;
+    }
+
+    public void addNotificationModelsToNotificationListFragment(final NotificationModel[] notificationModels) {
+        if (mNotificationListFragment != null)
+            mNotificationListFragment.addNotificationModels(notificationModels);
+    }
+
     protected void loadFragment(final Fragment fragment, final String title, final String tag) {
         if (mActivityHandler == null)
             return;
         if (mFragmentTagSelected != null) {
             if (mFragmentTagSelected.equals(tag))
                 return;
+            if (mFragmentTagSelected.equals(FRAGMENT_TAG_NOTIFICATION_LIST))
+                mNotificationListFragment = null;
         }
 
         mFragmentTagSelected = tag;
@@ -251,10 +299,13 @@ public class MainLayout implements NavigationView.OnNavigationItemSelectedListen
         return projectListFragment;
     }
 
-    public NotificationListFragment showNotificationListFragment() {
+    public NotificationListFragment showNotificationListFragment(final NotificationListFragment.NotificationListFragmentListener notificationListFragmentListener) {
         NotificationListFragment notificationListFragment = NotificationListFragment.newInstance();
+        notificationListFragment.setNotificationListFragmentListener(notificationListFragmentListener);
 
-        loadFragment(notificationListFragment, ViewUtil.getResourceString(mContext, R.string.menu_inbox_title), FRAGMENT_TAG_INBOX);
+        loadFragment(notificationListFragment, ViewUtil.getResourceString(mContext, R.string.menu_inbox_title), FRAGMENT_TAG_NOTIFICATION_LIST);
+
+        mNotificationListFragment = notificationListFragment;
 
         return notificationListFragment;
     }

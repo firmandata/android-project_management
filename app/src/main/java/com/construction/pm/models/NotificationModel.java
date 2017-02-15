@@ -160,6 +160,9 @@ public class NotificationModel {
         if (!jsonObject.isNull("last_update"))
             notificationModel.setLastUpdate(DateTimeUtil.FromDateTimeString(jsonObject.getString("last_update")));
 
+        if (!jsonObject.isNull("is_read"))
+            notificationModel.setRead(jsonObject.getInt("is_read") > 0);
+
         return notificationModel;
     }
 
@@ -190,6 +193,8 @@ public class NotificationModel {
             jsonObject.put("last_user_id", getLastUserId());
         if (getLastUpdate() != null)
             jsonObject.put("last_update", DateTimeUtil.ToDateTimeString(getLastUpdate()));
+
+        jsonObject.put("is_read", isRead() ? 1 : 0);
 
         return jsonObject;
     }
