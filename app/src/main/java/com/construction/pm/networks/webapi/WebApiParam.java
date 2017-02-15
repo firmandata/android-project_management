@@ -1,12 +1,15 @@
 package com.construction.pm.networks.webapi;
 
+import java.io.File;
 import java.util.HashMap;
 
 public class WebApiParam {
     protected HashMap<String, String> mHashMap;
+    protected HashMap<String, WebApiParamFile> mHashMapFile;
 
     public WebApiParam() {
         mHashMap = new HashMap<String, String>();
+        mHashMapFile = new HashMap<String, WebApiParamFile>();
     }
 
     public void put(final String key, final String value) {
@@ -46,6 +49,10 @@ public class WebApiParam {
             mHashMap.put(key, null);
     }
 
+    public void put(final String key, final WebApiParamFile webApiParamFile) {
+        mHashMapFile.put(key, webApiParamFile);
+    }
+
     public void add(final String key, final String value) {
         put(key, value);
     }
@@ -74,19 +81,48 @@ public class WebApiParam {
         put(key, value);
     }
 
+    public void add(final String key, final WebApiParamFile webApiParamFile) {
+        put(key, webApiParamFile);
+    }
+
     public HashMap<String, String> getParams() {
         return mHashMap;
     }
 
+    public HashMap<String, WebApiParamFile> getFileParams() {
+        return mHashMapFile;
+    }
+
     public boolean has(final String key) {
-        return mHashMap.containsKey(key);
+        return (mHashMap.containsKey(key) || mHashMapFile.containsKey(key));
     }
 
     public void remove(final String key) {
         mHashMap.remove(key);
+        mHashMapFile.remove(key);
     }
 
     public void clear() {
         mHashMap.clear();
+        mHashMapFile.clear();
+    }
+
+    public class WebApiParamFile {
+
+        protected String mMimeType;
+        protected File mFile;
+
+        public WebApiParamFile(final String mimeType, final File file) {
+            mMimeType = mimeType;
+            mFile = file;
+        }
+
+        public String getMimeType() {
+            return mMimeType;
+        }
+
+        public File getFile() {
+            return mFile;
+        }
     }
 }

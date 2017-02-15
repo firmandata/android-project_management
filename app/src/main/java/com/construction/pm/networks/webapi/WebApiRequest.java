@@ -14,6 +14,7 @@ import com.construction.pm.models.system.SettingUserModel;
 
 import org.json.JSONException;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.util.Map;
@@ -25,6 +26,7 @@ import okhttp3.FormBody;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -440,16 +442,42 @@ public class WebApiRequest {
         HttpUrl httpUrl = httpUrlBuilder.build();
 
         // -- Initialize post data --
-        FormBody.Builder formBodyBuilder = new FormBody.Builder();
-        for (Map.Entry<String, String> apiParam : newFormData.getParams().entrySet()) {
-            String apiParamKey = apiParam.getKey();
-            if (apiParamKey != null) {
-                String apiParamValue = apiParam.getValue();
-                if (apiParamValue != null)
-                    formBodyBuilder.add(apiParamKey, apiParamValue);
+        RequestBody requestBody;
+        if (newFormData.getFileParams().size() > 0) {
+            MultipartBody.Builder formBodyBuilder = new MultipartBody.Builder();
+            formBodyBuilder.setType(MultipartBody.FORM);
+            for (Map.Entry<String, String> apiParam : newFormData.getParams().entrySet()) {
+                String apiParamKey = apiParam.getKey();
+                if (apiParamKey != null) {
+                    String apiParamValue = apiParam.getValue();
+                    if (apiParamValue != null)
+                        formBodyBuilder.addFormDataPart(apiParamKey, apiParamValue);
+                }
             }
+            for (Map.Entry<String, WebApiParam.WebApiParamFile> apiParam : newFormData.getFileParams().entrySet()) {
+                String apiParamKey = apiParam.getKey();
+                if (apiParamKey != null) {
+                    WebApiParam.WebApiParamFile apiParamValue = apiParam.getValue();
+                    if (apiParamValue != null) {
+                        String mimeType = apiParamValue.getMimeType();
+                        File file = apiParamValue.getFile();
+                        formBodyBuilder.addFormDataPart(apiParamKey, file.getName(), RequestBody.create(MediaType.parse(mimeType), file));
+                    }
+                }
+            }
+            requestBody = formBodyBuilder.build();
+        } else {
+            FormBody.Builder formBodyBuilder = new FormBody.Builder();
+            for (Map.Entry<String, String> apiParam : newFormData.getParams().entrySet()) {
+                String apiParamKey = apiParam.getKey();
+                if (apiParamKey != null) {
+                    String apiParamValue = apiParam.getValue();
+                    if (apiParamValue != null)
+                        formBodyBuilder.add(apiParamKey, apiParamValue);
+                }
+            }
+            requestBody = formBodyBuilder.build();
         }
-        RequestBody requestBody = formBodyBuilder.build();
 
         // -- Initialize requester --
         Request.Builder requestBuilder = new Request.Builder();
@@ -592,16 +620,42 @@ public class WebApiRequest {
         HttpUrl httpUrl = httpUrlBuilder.build();
 
         // -- Initialize post data --
-        FormBody.Builder formBodyBuilder = new FormBody.Builder();
-        for (Map.Entry<String, String> apiParam : newFormData.getParams().entrySet()) {
-            String apiParamKey = apiParam.getKey();
-            if (apiParamKey != null) {
-                String apiParamValue = apiParam.getValue();
-                if (apiParamValue != null)
-                    formBodyBuilder.add(apiParamKey, apiParamValue);
+        RequestBody requestBody;
+        if (newFormData.getFileParams().size() > 0) {
+            MultipartBody.Builder formBodyBuilder = new MultipartBody.Builder();
+            formBodyBuilder.setType(MultipartBody.FORM);
+            for (Map.Entry<String, String> apiParam : newFormData.getParams().entrySet()) {
+                String apiParamKey = apiParam.getKey();
+                if (apiParamKey != null) {
+                    String apiParamValue = apiParam.getValue();
+                    if (apiParamValue != null)
+                        formBodyBuilder.addFormDataPart(apiParamKey, apiParamValue);
+                }
             }
+            for (Map.Entry<String, WebApiParam.WebApiParamFile> apiParam : newFormData.getFileParams().entrySet()) {
+                String apiParamKey = apiParam.getKey();
+                if (apiParamKey != null) {
+                    WebApiParam.WebApiParamFile apiParamValue = apiParam.getValue();
+                    if (apiParamValue != null) {
+                        String mimeType = apiParamValue.getMimeType();
+                        File file = apiParamValue.getFile();
+                        formBodyBuilder.addFormDataPart(apiParamKey, file.getName(), RequestBody.create(MediaType.parse(mimeType), file));
+                    }
+                }
+            }
+            requestBody = formBodyBuilder.build();
+        } else {
+            FormBody.Builder formBodyBuilder = new FormBody.Builder();
+            for (Map.Entry<String, String> apiParam : newFormData.getParams().entrySet()) {
+                String apiParamKey = apiParam.getKey();
+                if (apiParamKey != null) {
+                    String apiParamValue = apiParam.getValue();
+                    if (apiParamValue != null)
+                        formBodyBuilder.add(apiParamKey, apiParamValue);
+                }
+            }
+            requestBody = formBodyBuilder.build();
         }
-        RequestBody requestBody = formBodyBuilder.build();
 
         // -- Initialize requester --
         Request.Builder requestBuilder = new Request.Builder();
