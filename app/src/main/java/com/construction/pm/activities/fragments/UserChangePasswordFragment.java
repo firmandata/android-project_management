@@ -134,7 +134,7 @@ public class UserChangePasswordFragment extends Fragment implements UserChangePa
         }
 
         public String getPasswordOld() {
-            return mPasswordNew;
+            return mPasswordOld;
         }
 
         public String getPasswordNew() {
