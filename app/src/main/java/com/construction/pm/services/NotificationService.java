@@ -142,6 +142,12 @@ public class NotificationService extends Service implements NotificationRoutine.
 
     @Override
     public void onNotificationRoutineRequestLogin(SessionLoginModel sessionLoginModel) {
+        // -- Prepare NotificationManager --
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        // -- Clear current notification --
+        notificationManager.cancel(ConstantUtil.NOTIFICATION_ID_NOTIFICATION);
+
         // -- Broadcast SessionLoginModel for RequestLogin message --
         int sentCount = mNotificationMessageHandler.sendRequestLogin(sessionLoginModel);
         if (sentCount > 0)
@@ -165,8 +171,7 @@ public class NotificationService extends Service implements NotificationRoutine.
         notificationBuilder.setContentIntent(contentIntent);
 
         // -- Add as notification --
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(ConstantUtil.NOTIFICATION_ID_NOTIFICATION, notificationBuilder.build());
+        notificationManager.notify(ConstantUtil.NOTIFICATION_ID_REQUEST_PASSWORD, notificationBuilder.build());
     }
 
     @Override
