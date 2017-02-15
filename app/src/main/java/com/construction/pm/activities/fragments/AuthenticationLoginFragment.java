@@ -17,11 +17,14 @@ import com.construction.pm.persistence.SettingPersistent;
 import com.construction.pm.utils.ViewUtil;
 import com.construction.pm.views.system.AuthenticationLoginView;
 
-public class AuthenticationLoginFragment extends Fragment implements AuthenticationLoginView.LoginListener {
+public class AuthenticationLoginFragment extends Fragment implements
+        AuthenticationLoginView.LoginListener,
+        AuthenticationLoginView.LoginForgetPasswordListener {
 
     protected AuthenticationLoginView mAuthenticationLoginView;
 
     protected AuthenticationLoginFragmentListener mAuthenticationLoginFragmentListener;
+    protected AuthenticationLoginFragmentForgetPasswordListener mAuthenticationLoginFragmentForgetPasswordListener;
 
     public static AuthenticationLoginFragment newInstance() {
         return new AuthenticationLoginFragment();
@@ -34,6 +37,7 @@ public class AuthenticationLoginFragment extends Fragment implements Authenticat
         // -- Prepare AuthenticationLoginView --
         mAuthenticationLoginView = AuthenticationLoginView.buildAuthenticationLoginView(getContext(), null);
         mAuthenticationLoginView.setLoginListener(this);
+        mAuthenticationLoginView.setLoginForgetPasswordListener(this);
     }
 
     @Override
@@ -80,6 +84,12 @@ public class AuthenticationLoginFragment extends Fragment implements Authenticat
 
         // -- Do LoginHandleTask --
         loginHandleTask.execute(new LoginHandleTaskParam(getContext(), settingUserModel, login, password));
+    }
+
+    @Override
+    public void onLoginForgetPasswordRequest() {
+        if (mAuthenticationLoginFragmentForgetPasswordListener != null)
+            mAuthenticationLoginFragmentForgetPasswordListener.onLoginRequestForgetPassword();
     }
 
     protected void onLoginRequestProgress(final String progressMessage) {
@@ -217,5 +227,13 @@ public class AuthenticationLoginFragment extends Fragment implements Authenticat
 
     public interface AuthenticationLoginFragmentListener {
         void onLoginSuccess(SessionLoginModel sessionLoginModel);
+    }
+
+    public void setAuthenticationLoginFragmentForgetPasswordListener(final AuthenticationLoginFragmentForgetPasswordListener authenticationLoginFragmentForgetPasswordListener) {
+        mAuthenticationLoginFragmentForgetPasswordListener = authenticationLoginFragmentForgetPasswordListener;
+    }
+
+    public interface AuthenticationLoginFragmentForgetPasswordListener {
+        void onLoginRequestForgetPassword();
     }
 }

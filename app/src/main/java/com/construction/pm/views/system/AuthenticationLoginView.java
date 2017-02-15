@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
+import android.support.v7.widget.AppCompatTextView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +27,7 @@ public class AuthenticationLoginView {
     protected AppCompatEditText mEtPassword;
 
     protected LoginListener mLoginListener;
+    protected LoginForgetPasswordListener mLoginForgetPasswordListener;
 
     protected AuthenticationLoginView(final Context context) {
         mContext = context;
@@ -64,6 +66,16 @@ public class AuthenticationLoginView {
             }
         });
 
+        AppCompatTextView btnForgetPassword = (AppCompatTextView) mAuthenticationLoginView.findViewById(R.id.forgetPasswordButton);
+        ViewUtil.setTextViewHyperlink(btnForgetPassword);
+        btnForgetPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mLoginForgetPasswordListener != null)
+                    mLoginForgetPasswordListener.onLoginForgetPasswordRequest();
+            }
+        });
+
         mProgressDialog = new ProgressDialog(mContext);
         mProgressDialog.setCancelable(false);
         mProgressDialog.setCanceledOnTouchOutside(false);
@@ -93,7 +105,7 @@ public class AuthenticationLoginView {
         String password = getPassword();
 
         if (TextUtils.isEmpty(username)) {
-            String invalidError = ViewUtil.getResourceString(mContext, R.string.system_authentication_login_view_username_required);
+            String invalidError = ViewUtil.getResourceString(mContext, R.string.system_authentication_login_view_login_required);
 
             mEtLogin.setError(invalidError);
             mEtLogin.requestFocus();
@@ -150,5 +162,13 @@ public class AuthenticationLoginView {
 
     public interface LoginListener {
         void onLoginRequest(String login, String password);
+    }
+
+    public void setLoginForgetPasswordListener(final LoginForgetPasswordListener loginForgetPasswordListener) {
+        mLoginForgetPasswordListener = loginForgetPasswordListener;
+    }
+
+    public interface LoginForgetPasswordListener {
+        void onLoginForgetPasswordRequest();
     }
 }

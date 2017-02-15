@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.construction.pm.R;
+import com.construction.pm.activities.fragments.AuthenticationForgetPasswordFragment;
 import com.construction.pm.activities.fragments.AuthenticationLoginFirstFragment;
 import com.construction.pm.activities.fragments.AuthenticationLoginFragment;
 
@@ -19,8 +20,10 @@ public class AuthenticationLayout {
 
     protected AppCompatActivity mActivity;
     protected Handler mActivityHandler;
+    protected String mFragmentTagSelected;
     protected static final String FRAGMENT_LOGIN = "FRAGMENT_LOGIN";
     protected static final String FRAGMENT_LOGIN_FIRST = "FRAGMENT_LOGIN_FIRST";
+    protected static final String FRAGMENT_FORGET_PASSWORD = "FORGET_PASSWORD";
 
     protected RelativeLayout mAuthenticationLayout;
 
@@ -57,9 +60,27 @@ public class AuthenticationLayout {
         mActivityHandler = new Handler();
     }
 
+    public boolean isLoginFragmentShow() {
+        if (mFragmentTagSelected != null)
+            return mFragmentTagSelected.equals(FRAGMENT_LOGIN);
+        return false;
+    }
+
+    public boolean isLoginFirstFragmentShow() {
+        if (mFragmentTagSelected != null)
+            return mFragmentTagSelected.equals(FRAGMENT_LOGIN_FIRST);
+        return false;
+    }
+
     protected void loadFragment(final Fragment fragment, final String tag) {
         if (mActivityHandler == null)
             return;
+        if (mFragmentTagSelected != null) {
+            if (mFragmentTagSelected.equals(tag))
+                return;
+        }
+
+        mFragmentTagSelected = tag;
 
         mActivityHandler.post(new Runnable() {
             @Override
@@ -89,5 +110,13 @@ public class AuthenticationLayout {
         loadFragment(authenticationLoginFirstFragment, FRAGMENT_LOGIN_FIRST);
 
         return authenticationLoginFirstFragment;
+    }
+
+    public AuthenticationForgetPasswordFragment showForgetPassword() {
+        AuthenticationForgetPasswordFragment authenticationForgetPasswordFragment = AuthenticationForgetPasswordFragment.newInstance();
+
+        loadFragment(authenticationForgetPasswordFragment, FRAGMENT_FORGET_PASSWORD);
+
+        return authenticationForgetPasswordFragment;
     }
 }

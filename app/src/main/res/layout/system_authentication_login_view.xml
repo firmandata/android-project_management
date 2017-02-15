@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
 
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/userNameLayout"
+        android:id="@+id/loginLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -16,7 +16,7 @@
             android:id="@+id/login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/system_authentication_login_view_username"
+            android:hint="@string/system_authentication_login_view_login"
             android:maxLines="1"
             android:singleLine="true" />
     </android.support.design.widget.TextInputLayout>
@@ -25,7 +25,7 @@
         android:id="@+id/passwordLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/userNameLayout"
+        android:layout_below="@+id/loginLayout"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginBottom="@dimen/form_element_vertical_gap">
@@ -49,5 +49,14 @@
         android:text="@string/system_authentication_login_view_ok"
         android:layout_marginTop="@dimen/form_element_vertical_gap"
         android:layout_centerHorizontal="true" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/forgetPasswordButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/loginButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/form_element_vertical_gap"
+        android:text="@string/system_authentication_login_view_forget_password" />
 
 </RelativeLayout>

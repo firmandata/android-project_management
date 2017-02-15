@@ -48,6 +48,9 @@
     <string name="login_first_handle_task_begin">Password changing &#8230;</string>
     <string name="login_first_handle_task_success">Password changed.</string>
 
+    <string name="forget_password_handle_task_begin">Sending reset password request &#8230;</string>
+    <string name="forget_password_handle_task_success">Request reset password was sent.</string>
+
     <string name="logout_handle_task_begin">Signing out &#8230;</string>
     <string name="logout_handle_task_success">Signed out</string>
 
@@ -71,11 +74,12 @@
 
     <string name="splash_layout_loading">Loading &#8230;</string>
 
-    <string name="system_authentication_login_view_username">Username</string>
-    <string name="system_authentication_login_view_username_required">Username is required.</string>
+    <string name="system_authentication_login_view_login">Login</string>
+    <string name="system_authentication_login_view_login_required">Login is required.</string>
     <string name="system_authentication_login_view_password">Password</string>
     <string name="system_authentication_login_view_password_required">Password is required.</string>
     <string name="system_authentication_login_view_ok">Login</string>
+    <string name="system_authentication_login_view_forget_password">Forget Password ?</string>
     <string name="system_authentication_login_view_alert_button">OK</string>
     <string name="system_authentication_login_view_alert_title_error">Login Failed</string>
     <string name="system_authentication_login_view_alert_first_login_title">Login Success</string>
@@ -90,6 +94,13 @@
     <string name="system_authentication_login_first_view_alert_button">OK</string>
     <string name="system_authentication_login_first_view_alert_title_error">Change Password Failed</string>
     <string name="system_authentication_login_first_view_alert_title_success">Change Password Success</string>
+
+    <string name="system_authentication_forget_password_view_login">Login</string>
+    <string name="system_authentication_forget_password_view_login_required">Login is required.</string>
+    <string name="system_authentication_forget_password_view_ok">Reset Now</string>
+    <string name="system_authentication_forget_password_view_alert_button">OK</string>
+    <string name="system_authentication_forget_password_view_alert_title_error">Reset Password Failed</string>
+    <string name="system_authentication_forget_password_view_alert_title_success">Reset Password Success</string>
 
     <string name="user_change_password_view_password_old">Old Password</string>
     <string name="user_change_password_view_password_old_required">Old Password is required.</string>

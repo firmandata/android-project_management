@@ -4,6 +4,10 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.v7.widget.AppCompatTextView;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.URLSpan;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -99,6 +103,13 @@ public class ViewUtil {
             textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         }
         textView.setGravity(Gravity.CENTER);
+    }
+
+    public static void setTextViewHyperlink(AppCompatTextView appCompatTextView) {
+        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
+        spannableStringBuilder.append(appCompatTextView.getText());
+        spannableStringBuilder.setSpan(new URLSpan("#"), 0, spannableStringBuilder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        appCompatTextView.setText(spannableStringBuilder, TextView.BufferType.SPANNABLE);
     }
 
     public static String getBytesToHexLittleEndian(final byte[] bytes) {

@@ -150,4 +150,42 @@ public class UserNetwork extends AuthenticationNetwork {
 
         return simpleResponseModel;
     }
+
+    public SimpleResponseModel forgetPassword(final String login) throws WebApiError {
+        // -- Get SessionLoginModel --
+        SessionLoginModel sessionLoginModel = getSessionLoginModel();
+        AccessTokenModel accessTokenModel = sessionLoginModel.getAccessTokenModel();
+
+        // -- Prepare WebApiParam formData parameters --
+        WebApiParam formData = new WebApiParam();
+        formData.add("login", login);
+
+        // -- Prepare WebApiParam headerParam parameters --
+        WebApiParam headerParam = new WebApiParam();
+        if (accessTokenModel != null)
+            headerParam.add("Authorization", "Bearer " + accessTokenModel.getAccessToken());
+
+        // -- Request change password first --
+        WebApiResponse webApiResponse = mWebApiRequest.post("/rest/user/lostPassword", headerParam, null, formData);
+
+        // -- Throw WebApiError if existing --
+        WebApiError webApiError = webApiResponse.getWebApiError();
+        if (webApiError != null)
+            throw webApiError;
+
+        // -- Get request result --
+        org.json.JSONObject jsonObject = webApiResponse.getSuccessJsonObject();
+        if (jsonObject == null)
+            throw new WebApiError(0, ViewUtil.getResourceString(mContext, R.string.network_unknown_response_expected));
+
+        // -- Fetch result --
+        SimpleResponseModel simpleResponseModel = null;
+        try {
+            simpleResponseModel = SimpleResponseModel.build(jsonObject);
+        } catch (JSONException jsonException) {
+            throw new WebApiError(0, jsonException.getMessage(), jsonException);
+        }
+
+        return simpleResponseModel;
+    }
 }
