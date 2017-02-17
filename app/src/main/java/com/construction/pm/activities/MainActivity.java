@@ -27,6 +27,7 @@ import com.construction.pm.persistence.NotificationPersistent;
 import com.construction.pm.persistence.PersistenceError;
 import com.construction.pm.persistence.SessionPersistent;
 import com.construction.pm.persistence.SettingPersistent;
+import com.construction.pm.services.NetworkPendingService;
 import com.construction.pm.services.NotificationMessageHandler;
 import com.construction.pm.services.NotificationService;
 import com.construction.pm.utils.ConstantUtil;
@@ -76,6 +77,10 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     protected void newIntentHandle(final Bundle bundle) {
+        // -- Start NetworkPendingService --
+        Intent networkPendingServiceStart = new Intent(this, NetworkPendingService.class);
+        startService(networkPendingServiceStart);
+
         // -- Start NotificationService --
         Intent notificationServiceStart = new Intent(this, NotificationService.class);
         startService(notificationServiceStart);
@@ -394,20 +399,17 @@ public class MainActivity extends AppCompatActivity implements
         if (sessionLoginModel != null)
             projectMemberModel = sessionLoginModel.getProjectMemberModel();
 
-        // -- Get unread NotificationModels from NotificationPersistent --
-        NotificationModel[] unreadNotificationModels = null;
+        // -- Get unread NotificationModels count from NotificationPersistent --
+        int unreadNotificationModelCount = 0;
         if (projectMemberModel != null) {
             NotificationPersistent notificationPersistent = new NotificationPersistent(this);
             try {
-                unreadNotificationModels = notificationPersistent.getUnreadNotificationModels(projectMemberModel.getProjectMemberId());
+                unreadNotificationModelCount = notificationPersistent.getUnreadNotificationModelCount(projectMemberModel.getProjectMemberId());
             } catch (PersistenceError ex) {
             }
         }
 
         // -- Show notification unread quantity to notification menu item --
-        if (unreadNotificationModels != null)
-            mMainLayout.setNotificationUnreadQuantity(unreadNotificationModels.length);
-        else
-            mMainLayout.setNotificationUnreadQuantity(0);
+        mMainLayout.setNotificationUnreadQuantity(unreadNotificationModelCount);
     }
 }

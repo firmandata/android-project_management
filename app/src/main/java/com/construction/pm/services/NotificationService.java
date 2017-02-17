@@ -17,15 +17,19 @@ import com.construction.pm.activities.BootstrapActivity;
 import com.construction.pm.activities.MainActivity;
 import com.construction.pm.activities.NotificationActivity;
 import com.construction.pm.models.NotificationModel;
+import com.construction.pm.models.ProjectMemberModel;
 import com.construction.pm.models.system.SessionLoginModel;
+import com.construction.pm.persistence.NotificationPersistent;
+import com.construction.pm.persistence.PersistenceError;
+import com.construction.pm.persistence.SessionPersistent;
 import com.construction.pm.utils.ConstantUtil;
 import com.construction.pm.utils.DateTimeUtil;
 import com.construction.pm.utils.StringUtil;
 import com.construction.pm.utils.ViewUtil;
 
-public class NotificationService extends Service implements NotificationRoutine.NotificationRoutineListener {
+public class NotificationService extends Service implements NotificationWorker.NotificationRoutineListener {
 
-    protected NotificationRoutine mNotificationRoutine;
+    protected NotificationWorker mNotificationWorker;
 
     protected Messenger mMessengerClient;
     protected NotificationMessageHandler mNotificationMessageHandler;
@@ -36,9 +40,9 @@ public class NotificationService extends Service implements NotificationRoutine.
 
         Log.i("NotificationService", "onCreate");
 
-        mNotificationRoutine = new NotificationRoutine(this);
-        mNotificationRoutine.setNotificationHandlerListener(this);
-        mNotificationRoutine.setDaemon(true);
+        mNotificationWorker = new NotificationWorker(this);
+        mNotificationWorker.setNotificationHandlerListener(this);
+        mNotificationWorker.setDaemon(true);
 
         mNotificationMessageHandler = new NotificationMessageHandler(this);
         mMessengerClient = new Messenger(mNotificationMessageHandler);
@@ -48,8 +52,8 @@ public class NotificationService extends Service implements NotificationRoutine.
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i("NotificationService", "onStartCommand");
 
-        if (!mNotificationRoutine.isAlive())
-            mNotificationRoutine.start();
+        if (!mNotificationWorker.isAlive())
+            mNotificationWorker.start();
 
         return START_STICKY;
     }
@@ -71,13 +75,44 @@ public class NotificationService extends Service implements NotificationRoutine.
         // -- Prepare NotificationManager --
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        // -- Broadcast NotificationModels message --
+        // -- Broadcast new NotificationModels message --
         int sentCount = mNotificationMessageHandler.sendNotificationModels(notificationModels);
         if (sentCount > 0) {
             // -- Clear current notification --
             notificationManager.cancel(ConstantUtil.NOTIFICATION_ID_NOTIFICATION);
             return;
         }
+
+        // -- Prepare SessionPersistent --
+        SessionPersistent sessionPersistent = new SessionPersistent(this);
+
+        // -- Get SessionLoginModel --
+        SessionLoginModel sessionLoginModel = sessionPersistent.getSessionLoginModel();
+        ProjectMemberModel projectMemberModel = null;
+        if (sessionLoginModel != null)
+            projectMemberModel = sessionLoginModel.getProjectMemberModel();
+
+        // -- Prepare NotificationPersistent --
+        NotificationPersistent notificationPersistent = new NotificationPersistent(this);
+
+        // -- Get unread NotificationModels --
+        int unReadNotificationModelCount = 0;
+        NotificationModel[] unReadNotificationModels = null;
+        if (projectMemberModel != null) {
+            try {
+                unReadNotificationModelCount = notificationPersistent.getUnreadNotificationModelCount(projectMemberModel.getProjectMemberId());
+                unReadNotificationModels = notificationPersistent.getUnreadNotificationModels(projectMemberModel.getProjectMemberId(), 5);
+            } catch (PersistenceError persistenceError) {
+            }
+        }
+
+        // -- Not create notification if no unread NotificationModel --
+        if (unReadNotificationModelCount == 0)
+            return;
+        if (unReadNotificationModels == null)
+            return;
+        if (unReadNotificationModels.length == 0)
+            return;
 
         // -- Get notification ringtone --
         Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
@@ -89,47 +124,39 @@ public class NotificationService extends Service implements NotificationRoutine.
         notificationBuilder.setAutoCancel(true);
         notificationBuilder.setVibrate(new long[]{ 0, 500, 100, 500 });
         notificationBuilder.setContentTitle(ViewUtil.getResourceString(this, R.string.service_notification_title));
-        if (notificationModels != null) {
-            if (notificationModels.length > 1) {
-                NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
-                int notificationModelIdx = 0;
-                for (NotificationModel notificationModel : notificationModels) {
-                    notificationModelIdx++;
-                    inboxStyle.addLine(notificationModel.getNotificationMessage());
-                    if (notificationModelIdx >= 7)
-                        break;
-                }
-                inboxStyle.setSummaryText(ViewUtil.getResourceString(this, R.string.service_notification_subtitle, StringUtil.numberFormat(notificationModels.length)));
-                notificationBuilder.setStyle(inboxStyle);
-                notificationBuilder.setContentText(ViewUtil.getResourceString(this, R.string.service_notification_subtitle, StringUtil.numberFormat(notificationModels.length)));
-            } else if (notificationModels.length == 1) {
-                notificationBuilder.setContentText(notificationModels[0].getNotificationMessage());
-                notificationBuilder.setSubText(DateTimeUtil.ToDateTimeDisplayString(notificationModels[0].getNotificationDate()));
+        if (unReadNotificationModelCount > 1) {
+            NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
+            for (NotificationModel notificationModel : unReadNotificationModels) {
+                inboxStyle.addLine(notificationModel.getNotificationMessage());
             }
+            inboxStyle.setSummaryText(ViewUtil.getResourceString(this, R.string.service_notification_subtitle, StringUtil.numberFormat(unReadNotificationModelCount)));
+            notificationBuilder.setStyle(inboxStyle);
+            notificationBuilder.setContentText(ViewUtil.getResourceString(this, R.string.service_notification_subtitle, StringUtil.numberFormat(unReadNotificationModelCount)));
+        } else if (unReadNotificationModelCount == 1) {
+            notificationBuilder.setContentText(unReadNotificationModels[0].getNotificationMessage());
+            notificationBuilder.setSubText(DateTimeUtil.ToDateTimeDisplayString(unReadNotificationModels[0].getNotificationDate()));
         }
 
         // -- Notification for activity response --
         Intent notificationIntent = null;
-        if (notificationModels != null) {
-            if (notificationModels.length > 1) {
-                // -- Show MainActivity with notification fragment --
-                notificationIntent = new Intent(this, MainActivity.class);
-                notificationIntent.putExtra(MainActivity.INTENT_PARAM_SHOW_DEFAULT_FRAGMENT, MainActivity.INTENT_PARAM_SHOW_FRAGMENT_NOTIFICATION);
-            } else if (notificationModels.length == 1) {
-                // -- Get NotificationModel in JSON format --
-                String notificationModelJson = null;
-                try {
-                    org.json.JSONObject notificationModelJsonObject = notificationModels[0].build();
-                    notificationModelJson = notificationModelJsonObject.toString(0);
-                } catch (org.json.JSONException ex) {
-                }
-
-                // -- Show NotificationActivity --
-                notificationIntent = new Intent(this, NotificationActivity.class);
-                notificationIntent.putExtra(NotificationActivity.INTENT_PARAM_NOTIFICATION_FROM_NOTIFICATION_SERVICE, true);
-                if (notificationModelJson != null)
-                    notificationIntent.putExtra(NotificationActivity.INTENT_PARAM_NOTIFICATION_MODEL, notificationModelJson);
+        if (unReadNotificationModelCount > 1) {
+            // -- Show MainActivity with notification fragment --
+            notificationIntent = new Intent(this, MainActivity.class);
+            notificationIntent.putExtra(MainActivity.INTENT_PARAM_SHOW_DEFAULT_FRAGMENT, MainActivity.INTENT_PARAM_SHOW_FRAGMENT_NOTIFICATION);
+        } else if (unReadNotificationModelCount == 1) {
+            // -- Get NotificationModel in JSON format --
+            String notificationModelJson = null;
+            try {
+                org.json.JSONObject notificationModelJsonObject = unReadNotificationModels[0].build();
+                notificationModelJson = notificationModelJsonObject.toString(0);
+            } catch (org.json.JSONException ex) {
             }
+
+            // -- Show NotificationActivity --
+            notificationIntent = new Intent(this, NotificationActivity.class);
+            notificationIntent.putExtra(NotificationActivity.INTENT_PARAM_NOTIFICATION_FROM_NOTIFICATION_SERVICE, true);
+            if (notificationModelJson != null)
+                notificationIntent.putExtra(NotificationActivity.INTENT_PARAM_NOTIFICATION_MODEL, notificationModelJson);
         }
         if (notificationIntent != null) {
             PendingIntent contentIntent = PendingIntent.getActivity(this, ConstantUtil.ACTIVITY_REQUEST_NOTIFICATION, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -186,7 +213,7 @@ public class NotificationService extends Service implements NotificationRoutine.
     public void onDestroy() {
         Log.i("NotificationService", "onDestroy");
 
-        mNotificationRoutine.interrupt();
+        mNotificationWorker.interrupt();
 
         super.onDestroy();
     }

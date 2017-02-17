@@ -12,23 +12,23 @@ import java.util.Calendar;
 import java.util.List;
 
 public abstract class NetworkCachePersistent extends SQLitePersistent {
-    protected enum PersistentNetworkType {
+    protected enum NetworkCachePersistentType {
         PROJECT_LIST(0), PROJECT_DEPENDENCIES(1);
 
-        private final int mPersistentNetworkType;
+        private final int mNetworkCachePersistentType;
 
-        PersistentNetworkType(int value) {
-            mPersistentNetworkType = value;
+        NetworkCachePersistentType(int value) {
+            mNetworkCachePersistentType = value;
         }
 
         public int getValue() {
-            return mPersistentNetworkType;
+            return mNetworkCachePersistentType;
         }
 
-        public static PersistentNetworkType fromInt(int value) {
-            for (PersistentNetworkType persistentNetworkType : PersistentNetworkType.values()) {
-                if (value == persistentNetworkType.getValue()) {
-                    return persistentNetworkType;
+        public static NetworkCachePersistentType fromInt(int value) {
+            for (NetworkCachePersistentType networkCachePersistentType : NetworkCachePersistentType.values()) {
+                if (value == networkCachePersistentType.getValue()) {
+                    return networkCachePersistentType;
                 }
             }
             return null;
@@ -39,7 +39,7 @@ public abstract class NetworkCachePersistent extends SQLitePersistent {
         super(context);
     }
 
-    protected long saveNetworkCache(final SQLiteDatabase sqLiteDatabase, final PersistentNetworkType persistentNetworkType, final String contentKey, final String content, final Integer projectMemberId) {
+    protected long saveNetworkCacheContent(final SQLiteDatabase sqLiteDatabase, final NetworkCachePersistentType networkCachePersistentType, final String contentKey, final String content, final Integer projectMemberId) {
         long networkCacheId = 0;
 
         // -- Check existing --
@@ -51,7 +51,7 @@ public abstract class NetworkCachePersistent extends SQLitePersistent {
             "   AND project_member_id = ?",
             new String[] {
                 contentKey,
-                String.valueOf(persistentNetworkType.getValue()),
+                String.valueOf(networkCachePersistentType.getValue()),
                 String.valueOf(projectMemberId)
             }
         );
@@ -63,7 +63,7 @@ public abstract class NetworkCachePersistent extends SQLitePersistent {
         ContentValues contentValues = new ContentValues();
         contentValues.put("content", content);
         if (networkCacheId > 0) {
-            // -- Update old notification record --
+            // -- Update old record --
             contentValues.put("updated_date", DateTimeUtil.ToDateTimeString(Calendar.getInstance()));
             int affectedRow = sqLiteDatabase.update("network_cache", contentValues, "id = ?",
                 new String[] {
@@ -71,8 +71,8 @@ public abstract class NetworkCachePersistent extends SQLitePersistent {
                 }
             );
         } else {
-            // -- Create new notification record --
-            contentValues.put("type", persistentNetworkType.getValue());
+            // -- Create new record --
+            contentValues.put("type", networkCachePersistentType.getValue());
             contentValues.put("content_key", contentKey);
             contentValues.put("project_member_id", projectMemberId);
             contentValues.put("created_date", DateTimeUtil.ToDateTimeString(Calendar.getInstance()));
@@ -82,7 +82,7 @@ public abstract class NetworkCachePersistent extends SQLitePersistent {
         return networkCacheId;
     }
 
-    protected String getNetworkCache(final SQLiteDatabase sqLiteDatabase, final PersistentNetworkType persistentNetworkType, final String contentKey, final Integer projectMemberId) {
+    protected String getNetworkCacheContent(final SQLiteDatabase sqLiteDatabase, final NetworkCachePersistentType networkCachePersistentType, final String contentKey, final Integer projectMemberId) {
         String content = null;
 
         Cursor cursor = sqLiteDatabase.rawQuery(
@@ -94,7 +94,7 @@ public abstract class NetworkCachePersistent extends SQLitePersistent {
             " LIMIT 1",
             new String[] {
                 contentKey,
-                String.valueOf(persistentNetworkType.getValue()),
+                String.valueOf(networkCachePersistentType.getValue()),
                 String.valueOf(projectMemberId)
             }
         );
@@ -106,7 +106,7 @@ public abstract class NetworkCachePersistent extends SQLitePersistent {
         return content;
     }
 
-    protected String[] getNetworkCaches(final SQLiteDatabase sqLiteDatabase, final PersistentNetworkType persistentNetworkType, final String contentKey, final Integer projectMemberId) {
+    protected String[] getNetworkCacheContents(final SQLiteDatabase sqLiteDatabase, final NetworkCachePersistentType networkCachePersistentType, final String contentKey, final Integer projectMemberId) {
         List<String> contentList = new ArrayList<String>();
 
         Cursor cursor = sqLiteDatabase.rawQuery(
@@ -117,7 +117,7 @@ public abstract class NetworkCachePersistent extends SQLitePersistent {
             "   AND project_member_id = ?",
             new String[] {
                 contentKey,
-                String.valueOf(persistentNetworkType.getValue()),
+                String.valueOf(networkCachePersistentType.getValue()),
                 String.valueOf(projectMemberId)
             }
         );

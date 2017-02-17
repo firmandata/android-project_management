@@ -10,9 +10,9 @@ import com.construction.pm.models.network.ProjectResponseModel;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProjectPersistent extends NetworkCachePersistent {
+public class ProjectCachePersistent extends NetworkCachePersistent {
 
-    public ProjectPersistent(Context context) {
+    public ProjectCachePersistent(Context context) {
         super(context);
     }
 
@@ -41,7 +41,7 @@ public class ProjectPersistent extends NetworkCachePersistent {
                 sqLiteDatabase = getWritableDatabase();
 
                 // -- Save content to cache --
-                networkCacheId = saveNetworkCache(sqLiteDatabase, PersistentNetworkType.PROJECT_LIST, contentKey, content, projectMemberId);
+                networkCacheId = saveNetworkCacheContent(sqLiteDatabase, NetworkCachePersistentType.PROJECT_LIST, contentKey, content, projectMemberId);
 
                 // -- Close database --
                 sqLiteDatabase.close();
@@ -72,7 +72,7 @@ public class ProjectPersistent extends NetworkCachePersistent {
             sqLiteDatabase = getReadableDatabase();
 
             // -- Get content from cache --
-            content = getNetworkCache(sqLiteDatabase, PersistentNetworkType.PROJECT_LIST, contentKey, projectMemberId);
+            content = getNetworkCacheContent(sqLiteDatabase, NetworkCachePersistentType.PROJECT_LIST, contentKey, projectMemberId);
 
             // -- Close database --
             sqLiteDatabase.close();
@@ -130,7 +130,7 @@ public class ProjectPersistent extends NetworkCachePersistent {
                 sqLiteDatabase = getWritableDatabase();
 
                 // -- Save content to cache --
-                networkCacheId = saveNetworkCache(sqLiteDatabase, PersistentNetworkType.PROJECT_DEPENDENCIES, contentKey, content, projectMemberId);
+                networkCacheId = saveNetworkCacheContent(sqLiteDatabase, NetworkCachePersistentType.PROJECT_DEPENDENCIES, contentKey, content, projectMemberId);
 
                 // -- Close database --
                 sqLiteDatabase.close();
@@ -161,7 +161,7 @@ public class ProjectPersistent extends NetworkCachePersistent {
             sqLiteDatabase = getReadableDatabase();
 
             // -- Get content from cache --
-            content = getNetworkCache(sqLiteDatabase, PersistentNetworkType.PROJECT_DEPENDENCIES, contentKey, projectMemberId);
+            content = getNetworkCacheContent(sqLiteDatabase, NetworkCachePersistentType.PROJECT_DEPENDENCIES, contentKey, projectMemberId);
 
             // -- Close database --
             sqLiteDatabase.close();

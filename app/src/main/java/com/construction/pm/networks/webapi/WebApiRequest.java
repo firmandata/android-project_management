@@ -67,7 +67,9 @@ public class WebApiRequest {
 
     public WebApiResponse get(final String api, final WebApiParam headerParam, final WebApiParam queryParam, final IWebApiProgress webApiProgress) {
         final WebApiResponse webApiResponse = new WebApiResponse(mContext);
-
+        webApiResponse.setApiUrl(api);
+        webApiResponse.setHeaderParam(headerParam);
+        webApiResponse.setQueryParam(queryParam);
         webApiResponse.onStart();
 
         if (mSettingUserModel == null) {
@@ -204,6 +206,9 @@ public class WebApiRequest {
     }
 
     public void get(final String api, final WebApiParam headerParam, final WebApiParam queryParam, final WebApiResponse webApiResponse, final IWebApiProgress webApiProgress) {
+        webApiResponse.setApiUrl(api);
+        webApiResponse.setHeaderParam(headerParam);
+        webApiResponse.setQueryParam(queryParam);
         webApiResponse.onStart();
 
         if (mSettingUserModel == null) {
@@ -397,7 +402,10 @@ public class WebApiRequest {
 
     public WebApiResponse post(final String api, final WebApiParam headerParam, final WebApiParam queryParam, final WebApiParam formData, final IWebApiProgress webApiProgress) {
         final WebApiResponse webApiResponse = new WebApiResponse(mContext);
-
+        webApiResponse.setApiUrl(api);
+        webApiResponse.setHeaderParam(headerParam);
+        webApiResponse.setQueryParam(queryParam);
+        webApiResponse.setFormData(formData);
         webApiResponse.onStart();
 
         if (mSettingUserModel == null) {
@@ -576,6 +584,10 @@ public class WebApiRequest {
     }
 
     public void post(final String api, final WebApiParam headerParam, final WebApiParam queryParam, final WebApiParam formData, final WebApiResponse webApiResponse, final IWebApiProgress webApiProgress) {
+        webApiResponse.setApiUrl(api);
+        webApiResponse.setHeaderParam(headerParam);
+        webApiResponse.setQueryParam(queryParam);
+        webApiResponse.setFormData(formData);
         webApiResponse.onStart();
 
         if (mSettingUserModel == null) {
@@ -811,7 +823,10 @@ public class WebApiRequest {
 
     public WebApiResponse post(final String api, final WebApiParam headerParam, final WebApiParam queryParam, final String jsonData, final IWebApiProgress webApiProgress) {
         final WebApiResponse webApiResponse = new WebApiResponse(mContext);
-
+        webApiResponse.setApiUrl(api);
+        webApiResponse.setHeaderParam(headerParam);
+        webApiResponse.setQueryParam(queryParam);
+        webApiResponse.setBodyData(jsonData);
         webApiResponse.onStart();
 
         if (mSettingUserModel == null) {
@@ -952,6 +967,10 @@ public class WebApiRequest {
     }
 
     public void post(final String api, final WebApiParam headerParam, final WebApiParam queryParam, final String jsonData, final WebApiResponse webApiResponse, final IWebApiProgress webApiProgress) {
+        webApiResponse.setApiUrl(api);
+        webApiResponse.setHeaderParam(headerParam);
+        webApiResponse.setQueryParam(queryParam);
+        webApiResponse.setBodyData(jsonData);
         webApiResponse.onStart();
 
         if (mSettingUserModel == null) {

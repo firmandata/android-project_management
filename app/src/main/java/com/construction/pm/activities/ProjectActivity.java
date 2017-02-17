@@ -18,7 +18,7 @@ import com.construction.pm.models.system.SettingUserModel;
 import com.construction.pm.networks.ProjectNetwork;
 import com.construction.pm.networks.webapi.WebApiError;
 import com.construction.pm.persistence.PersistenceError;
-import com.construction.pm.persistence.ProjectPersistent;
+import com.construction.pm.persistence.ProjectCachePersistent;
 import com.construction.pm.persistence.SessionPersistent;
 import com.construction.pm.persistence.SettingPersistent;
 import com.construction.pm.utils.ViewUtil;
@@ -213,8 +213,8 @@ public class ProjectActivity extends AppCompatActivity implements ProjectLayout.
             // -- Get ProjectModels progress --
             publishProgress(ViewUtil.getResourceString(mContext, R.string.project_handle_task_begin));
 
-            // -- Prepare ProjectPersistent --
-            ProjectPersistent projectPersistent = new ProjectPersistent(mContext);
+            // -- Prepare ProjectCachePersistent --
+            ProjectCachePersistent projectCachePersistent = new ProjectCachePersistent(mContext);
 
             // -- Prepare ProjectNetwork --
             ProjectNetwork projectNetwork = new ProjectNetwork(mContext, mProjectHandleTaskParam.getSettingUserModel());
@@ -234,16 +234,16 @@ public class ProjectActivity extends AppCompatActivity implements ProjectLayout.
                         // -- Get project from server --
                         projectResponseModel = projectNetwork.getProject(projectModel.getProjectId());
 
-                        // -- Save to ProjectPersistent --
+                        // -- Save to ProjectCachePersistent --
                         try {
-                            projectPersistent.setProjectResponseModel(projectResponseModel, projectMemberModel.getProjectMemberId());
+                            projectCachePersistent.setProjectResponseModel(projectResponseModel, projectMemberModel.getProjectMemberId());
                         } catch (PersistenceError ex) {
                         }
                     } catch (WebApiError webApiError) {
                         if (webApiError.isErrorConnection()) {
-                            // -- Get ProjectResponseModel from ProjectPersistent --
+                            // -- Get ProjectResponseModel from ProjectCachePersistent --
                             try {
-                                projectResponseModel = projectPersistent.getProjectResponseModel(projectModel.getProjectId(), projectMemberModel.getProjectMemberId());
+                                projectResponseModel = projectCachePersistent.getProjectResponseModel(projectModel.getProjectId(), projectMemberModel.getProjectMemberId());
                             } catch (PersistenceError ex) {
                             }
                         } else

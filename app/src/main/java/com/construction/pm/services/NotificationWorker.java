@@ -4,23 +4,28 @@ import android.content.Context;
 
 import com.construction.pm.models.NotificationModel;
 import com.construction.pm.models.ProjectMemberModel;
+import com.construction.pm.models.network.NetworkPendingModel;
+import com.construction.pm.models.network.SimpleResponseModel;
 import com.construction.pm.models.system.SessionLoginModel;
 import com.construction.pm.models.system.SettingUserModel;
 import com.construction.pm.networks.NotificationNetwork;
 import com.construction.pm.networks.UserNetwork;
 import com.construction.pm.networks.webapi.WebApiError;
+import com.construction.pm.persistence.NetworkPendingPersistent;
 import com.construction.pm.persistence.NotificationPersistent;
 import com.construction.pm.persistence.PersistenceError;
 import com.construction.pm.persistence.SettingPersistent;
 
-public class NotificationRoutine extends Thread {
+import java.util.Calendar;
+
+public class NotificationWorker extends Thread {
 
     protected final static int WAIT_TIME = 20000;
 
     protected Context mContext;
     protected NotificationRoutineListener mNotificationRoutineListener;
 
-    public NotificationRoutine(final Context context) {
+    public NotificationWorker(final Context context) {
         mContext = context;
     }
 
@@ -49,7 +54,6 @@ public class NotificationRoutine extends Thread {
             }
 
             try {
-                // -- Wait 10 seconds --
                 sleep(WAIT_TIME);
             } catch (InterruptedException e) {
                 break;
@@ -113,18 +117,40 @@ public class NotificationRoutine extends Thread {
 
         if (notificationModels != null) {
             try {
-                // -- Save to NotificationPersistent --
-                notificationPersistent.saveNotificationModels(notificationModels, projectMemberModel.getProjectMemberId());
+                // -- Set NotificationModels as unread --
+                for (NotificationModel notificationModel : notificationModels) {
+                    if (notificationModel.getNotificationStatus().equals(NotificationModel.NOTIFICATION_STATUS_SENT))
+                        notificationModel.setNotificationStatus(NotificationModel.NOTIFICATION_STATUS_UNREAD);
+                    notificationModel.setLastUserId(projectMemberModel.getUserId());
+                    notificationModel.setLastUpdate(Calendar.getInstance());
+                }
 
-                // -- Get unread NotificationModels --
-                NotificationModel[] unReadNotificationModels = notificationPersistent.getUnreadNotificationModels(projectMemberModel.getProjectMemberId());
+                // -- Save to NotificationPersistent --
+                notificationPersistent.saveNotificationModels(notificationModels);
+
+                // -- Set NotificationModels as unread to server --
+                try {
+                    notificationNetwork.setNotificationReceived(projectMemberModel.getProjectMemberId(), lastProjectNotificationId, projectMemberModel.getUserId());
+                } catch (WebApiError webApiError) {
+                    if (webApiError.isErrorConnection()) {
+                        // -- Prepare NetworkPendingPersistent --
+                        NetworkPendingPersistent networkPendingPersistent = new NetworkPendingPersistent(mContext);
+
+                        // -- Create NetworkPendingModel --
+                        NetworkPendingModel networkPendingModel = new NetworkPendingModel(projectMemberModel.getProjectMemberId(), webApiError.getWebApiResponse(), NetworkPendingModel.ECommandType.NOTIFICATION_RECEIVED);
+                        networkPendingModel.setCommandKey(String.valueOf(lastProjectNotificationId));
+                        try {
+                            // -- Save NetworkPendingModel to NetworkPendingPersistent
+                            networkPendingPersistent.createNetworkPending(networkPendingModel);
+                        } catch (PersistenceError ex) {
+                        }
+                    }
+                }
 
                 // -- Notify get new NotificationModels --
                 if (mNotificationRoutineListener != null) {
-                    if (unReadNotificationModels != null) {
-                        if (unReadNotificationModels.length > 0)
-                            mNotificationRoutineListener.onNotificationRoutineGetNew(unReadNotificationModels);
-                    }
+                    if (notificationModels.length > 0)
+                        mNotificationRoutineListener.onNotificationRoutineGetNew(notificationModels);
                 }
             } catch (PersistenceError ex) {
             }

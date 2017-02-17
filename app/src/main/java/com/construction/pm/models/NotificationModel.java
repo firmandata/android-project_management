@@ -8,6 +8,10 @@ import java.util.Calendar;
 
 public class NotificationModel {
 
+    public final static String NOTIFICATION_STATUS_SENT = "SENT";
+    public final static String NOTIFICATION_STATUS_UNREAD = "UNREAD";
+    public final static String NOTIFICATION_STATUS_READ = "READ";
+
     protected Integer mProjectNotificationId;
     protected Integer mProjectStageId;
     protected Integer mProjectActivityId;
@@ -21,8 +25,6 @@ public class NotificationModel {
     protected Calendar mCreateDate;
     protected Integer mLastUserId;
     protected Calendar mLastUpdate;
-
-    protected boolean mRead;
 
     public NotificationModel() {
 
@@ -124,12 +126,11 @@ public class NotificationModel {
         return mLastUpdate;
     }
 
-    public void setRead(Boolean read) {
-        mRead = read;
-    }
-
     public Boolean isRead() {
-        return mRead;
+        if (mNotificationStatus == null)
+            return false;
+
+        return mNotificationStatus.equals(NOTIFICATION_STATUS_READ);
     }
 
     public static NotificationModel build(final org.json.JSONObject jsonObject) throws JSONException {
@@ -159,9 +160,6 @@ public class NotificationModel {
             notificationModel.setLastUserId(jsonObject.getInt("last_user_id"));
         if (!jsonObject.isNull("last_update"))
             notificationModel.setLastUpdate(DateTimeUtil.FromDateTimeString(jsonObject.getString("last_update")));
-
-        if (!jsonObject.isNull("is_read"))
-            notificationModel.setRead(jsonObject.getInt("is_read") > 0);
 
         return notificationModel;
     }
@@ -193,8 +191,6 @@ public class NotificationModel {
             jsonObject.put("last_user_id", getLastUserId());
         if (getLastUpdate() != null)
             jsonObject.put("last_update", DateTimeUtil.ToDateTimeString(getLastUpdate()));
-
-        jsonObject.put("is_read", isRead() ? 1 : 0);
 
         return jsonObject;
     }

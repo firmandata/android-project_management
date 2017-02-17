@@ -29,8 +29,6 @@ public class NotificationLayout {
     protected ActionBar mActionBar;
     protected Toolbar mToolbar;
 
-    protected NotificationModel mNotificationModel;
-
     protected NotificationLayoutListener mNotificationLayoutListener;
 
     protected NotificationLayout(final Context context) {
@@ -56,10 +54,6 @@ public class NotificationLayout {
         mToolbar = (Toolbar) mNotificationLayout.findViewById(R.id.contentToolbar);
     }
 
-    public void setNotificationModel(final NotificationModel notificationModel) {
-        mNotificationModel = notificationModel;
-    }
-
     public CoordinatorLayout getLayout() {
         return mNotificationLayout;
     }
@@ -73,24 +67,19 @@ public class NotificationLayout {
         mActionBar = mActivity.getSupportActionBar();
         if (mActionBar != null) {
             mActionBar.setTitle(R.string.notification_layout_title);
-            if (mNotificationModel != null)
-                mActionBar.setSubtitle(DateTimeUtil.ToDateTimeDisplayString(mNotificationModel.getNotificationDate()));
             mActionBar.setDisplayHomeAsUpEnabled(true);
             mActionBar.setDisplayShowHomeEnabled(true);
             mActionBar.setDisplayUseLogoEnabled(false);
         }
 
         mActivityHandler = new Handler();
-
-        if (mNotificationLayoutListener != null)
-            mNotificationLayoutListener.onNotificationRequest(mNotificationModel);
     }
 
     public boolean isNotificationFragmentShow() {
         return mFragmentTagSelected.equals(FRAGMENT_TAG_NOTIFICATION_DETAIL);
     }
 
-    protected void loadFragment(final Fragment fragment, final String title, final String tag) {
+    protected void loadFragment(final Fragment fragment, final String title, final String subtitle, final String tag) {
         if (mActivityHandler == null)
             return;
         if (mFragmentTagSelected != null) {
@@ -102,6 +91,8 @@ public class NotificationLayout {
 
         if (mActionBar != null) {
             mActionBar.setTitle(title);
+            if (subtitle != null)
+                mActionBar.setSubtitle(subtitle);
         }
 
         mActivityHandler.post(new Runnable() {
@@ -121,7 +112,10 @@ public class NotificationLayout {
     public NotificationDetailFragment showNotificationDetailFragment(final NotificationModel notificationModel) {
         NotificationDetailFragment notificationDetailFragment = NotificationDetailFragment.newInstance(notificationModel);
 
-        loadFragment(notificationDetailFragment, ViewUtil.getResourceString(mContext, R.string.notification_detail_title), FRAGMENT_TAG_NOTIFICATION_DETAIL);
+        loadFragment(notificationDetailFragment, ViewUtil.getResourceString(mContext, R.string.notification_detail_title), DateTimeUtil.ToDateTimeDisplayString(notificationModel.getNotificationDate()), FRAGMENT_TAG_NOTIFICATION_DETAIL);
+
+        if (mNotificationLayoutListener != null)
+            mNotificationLayoutListener.onNotificationReadRequest(notificationModel);
 
         return notificationDetailFragment;
     }
@@ -131,6 +125,6 @@ public class NotificationLayout {
     }
 
     public interface NotificationLayoutListener {
-        void onNotificationRequest(NotificationModel notificationModel);
+        void onNotificationReadRequest(NotificationModel notificationModel);
     }
 }

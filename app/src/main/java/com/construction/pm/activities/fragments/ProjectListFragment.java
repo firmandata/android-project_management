@@ -18,7 +18,7 @@ import com.construction.pm.models.system.SettingUserModel;
 import com.construction.pm.networks.ProjectNetwork;
 import com.construction.pm.networks.webapi.WebApiError;
 import com.construction.pm.persistence.PersistenceError;
-import com.construction.pm.persistence.ProjectPersistent;
+import com.construction.pm.persistence.ProjectCachePersistent;
 import com.construction.pm.persistence.SessionPersistent;
 import com.construction.pm.persistence.SettingPersistent;
 import com.construction.pm.utils.ViewUtil;
@@ -188,8 +188,8 @@ public class ProjectListFragment extends Fragment implements ProjectListView.Pro
             // -- Get ProjectModels progress --
             publishProgress(ViewUtil.getResourceString(mContext, R.string.project_list_handle_task_begin));
 
-            // -- Prepare ProjectPersistent --
-            ProjectPersistent projectPersistent = new ProjectPersistent(mContext);
+            // -- Prepare ProjectCachePersistent --
+            ProjectCachePersistent projectCachePersistent = new ProjectCachePersistent(mContext);
 
             // -- Prepare ProjectNetwork --
             ProjectNetwork projectNetwork = new ProjectNetwork(mContext, mProjectListHandleTaskParam.getSettingUserModel());
@@ -208,16 +208,16 @@ public class ProjectListFragment extends Fragment implements ProjectListView.Pro
                         // -- Get projects from server --
                         projectModels = projectNetwork.getProjects(projectMemberModel.getProjectMemberId());
 
-                        // -- Save to ProjectPersistent --
+                        // -- Save to ProjectCachePersistent --
                         try {
-                            projectPersistent.setProjectModels(projectModels, projectMemberModel.getProjectMemberId());
+                            projectCachePersistent.setProjectModels(projectModels, projectMemberModel.getProjectMemberId());
                         } catch (PersistenceError ex) {
                         }
                     } catch (WebApiError webApiError) {
                         if (webApiError.isErrorConnection()) {
-                            // -- Get ProjectModels from ProjectPersistent --
+                            // -- Get ProjectModels from ProjectCachePersistent --
                             try {
-                                projectModels = projectPersistent.getProjectModels(projectMemberModel.getProjectMemberId());
+                                projectModels = projectCachePersistent.getProjectModels(projectMemberModel.getProjectMemberId());
                             } catch (PersistenceError ex) {
                             }
                         } else

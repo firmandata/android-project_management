@@ -2,6 +2,7 @@ package com.construction.pm.networks.webapi;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Map;
 
 public class WebApiParam {
     protected HashMap<String, String> mHashMap;
@@ -124,5 +125,32 @@ public class WebApiParam {
         public File getFile() {
             return mFile;
         }
+    }
+
+    public static WebApiParam build(org.json.JSONObject jsonObject) throws org.json.JSONException {
+        WebApiParam webApiParam = new WebApiParam();
+
+        org.json.JSONArray jsonArray = jsonObject.names();
+        for (int jsonArrayIdx = 0; jsonArrayIdx < jsonArray.length(); jsonArrayIdx++) {
+            String name = jsonArray.getString(jsonArrayIdx);
+            if (!jsonObject.isNull(name))
+                webApiParam.put(name, jsonObject.getString(name));
+        }
+
+        return webApiParam;
+    }
+
+    public org.json.JSONObject build() throws org.json.JSONException {
+        org.json.JSONObject jsonObject = new org.json.JSONObject();
+
+        for (Map.Entry<String, String> apiParam : getParams().entrySet()) {
+            String apiParamKey = apiParam.getKey();
+            if (apiParamKey != null) {
+                String apiParamValue = apiParam.getValue();
+                jsonObject.put(apiParamKey, apiParamValue);
+            }
+        }
+
+        return jsonObject;
     }
 }

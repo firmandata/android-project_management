@@ -50,14 +50,14 @@ public class UserNetwork extends AuthenticationNetwork {
         // -- Get request result --
         org.json.JSONObject jsonObject = webApiResponse.getSuccessJsonObject();
         if (jsonObject == null)
-            throw new WebApiError(0, ViewUtil.getResourceString(mContext, R.string.network_unknown_response_expected));
+            throw new WebApiError(webApiResponse, 0, ViewUtil.getResourceString(mContext, R.string.network_unknown_response_expected));
 
         // -- Fetch result --
         SimpleResponseModel simpleResponseModel = null;
         try {
             simpleResponseModel = SimpleResponseModel.build(jsonObject);
         } catch (JSONException jsonException) {
-            throw new WebApiError(0, jsonException.getMessage(), jsonException);
+            throw new WebApiError(webApiResponse, 0, jsonException.getMessage(), jsonException);
         }
 
         return simpleResponseModel;
@@ -92,14 +92,14 @@ public class UserNetwork extends AuthenticationNetwork {
         // -- Get request result --
         org.json.JSONObject jsonObject = webApiResponse.getSuccessJsonObject();
         if (jsonObject == null)
-            throw new WebApiError(0, ViewUtil.getResourceString(mContext, R.string.network_unknown_response_expected));
+            throw new WebApiError(webApiResponse, 0, ViewUtil.getResourceString(mContext, R.string.network_unknown_response_expected));
 
         // -- Fetch result --
         SimpleResponseModel simpleResponseModel = null;
         try {
             simpleResponseModel = SimpleResponseModel.build(jsonObject);
         } catch (JSONException jsonException) {
-            throw new WebApiError(0, jsonException.getMessage(), jsonException);
+            throw new WebApiError(webApiResponse, 0, jsonException.getMessage(), jsonException);
         }
 
         return simpleResponseModel;
@@ -138,14 +138,14 @@ public class UserNetwork extends AuthenticationNetwork {
         // -- Get request result --
         org.json.JSONObject jsonObject = webApiResponse.getSuccessJsonObject();
         if (jsonObject == null)
-            throw new WebApiError(0, ViewUtil.getResourceString(mContext, R.string.network_unknown_response_expected));
+            throw new WebApiError(webApiResponse, 0, ViewUtil.getResourceString(mContext, R.string.network_unknown_response_expected));
 
         // -- Fetch result --
         SimpleResponseModel simpleResponseModel = null;
         try {
             simpleResponseModel = SimpleResponseModel.build(jsonObject);
         } catch (JSONException jsonException) {
-            throw new WebApiError(0, jsonException.getMessage(), jsonException);
+            throw new WebApiError(webApiResponse, 0, jsonException.getMessage(), jsonException);
         }
 
         return simpleResponseModel;
@@ -165,7 +165,7 @@ public class UserNetwork extends AuthenticationNetwork {
         if (accessTokenModel != null)
             headerParam.add("Authorization", "Bearer " + accessTokenModel.getAccessToken());
 
-        // -- Request change password first --
+        // -- Request reset password --
         WebApiResponse webApiResponse = mWebApiRequest.post("/rest/user/lostPassword", headerParam, null, formData);
 
         // -- Throw WebApiError if existing --
@@ -176,14 +176,14 @@ public class UserNetwork extends AuthenticationNetwork {
         // -- Get request result --
         org.json.JSONObject jsonObject = webApiResponse.getSuccessJsonObject();
         if (jsonObject == null)
-            throw new WebApiError(0, ViewUtil.getResourceString(mContext, R.string.network_unknown_response_expected));
+            throw new WebApiError(webApiResponse, 0, ViewUtil.getResourceString(mContext, R.string.network_unknown_response_expected));
 
         // -- Fetch result --
         SimpleResponseModel simpleResponseModel = null;
         try {
             simpleResponseModel = SimpleResponseModel.build(jsonObject);
         } catch (JSONException jsonException) {
-            throw new WebApiError(0, jsonException.getMessage(), jsonException);
+            throw new WebApiError(webApiResponse, 0, jsonException.getMessage(), jsonException);
         }
 
         return simpleResponseModel;

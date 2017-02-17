@@ -69,6 +69,12 @@
     <string name="notification_list_handle_task_begin">Getting notification &#8230;</string>
     <string name="notification_list_handle_task_success">Getting notification finished.</string>
 
+    <string name="notification_read_handle_task_begin">Marking notification as read &#8230;</string>
+    <string name="notification_read_handle_task_success">Notification marked as read.</string>
+    <string name="notification_read_handle_task_success_pending">Notification marked as read pending.</string>
+    <string name="notification_read_handle_task_failed">Notification mark as read failed. $s1</string>
+    <string name="notification_read_handle_task_finish">Notification marked as read finished.</string>
+
     <string name="image_shadow_description">Shadow</string>
     <string name="image_logo_description">Application Logo</string>
 

@@ -20,6 +20,7 @@ public abstract class SQLitePersistent extends SQLiteOpenHelper {
             "CREATE TABLE [network_pending] (" +
             "  'id'                 INTEGER     NOT NULL    PRIMARY KEY AUTOINCREMENT" +
             ", 'type'               INTEGER     NOT NULL" +
+            ", 'command_key'        TEXT        NULL" +
             ", 'command'            TEXT        NULL" +
             ", 'is_sent'            INTEGER     NOT NULL    DEFAULT 0" +
             ", 'project_member_id'  INTEGER     NOT NULL" +
@@ -35,6 +36,9 @@ public abstract class SQLitePersistent extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(sqlCreate);
 
         sqlCreate = "CREATE INDEX network_pending_idx03 ON network_pending(is_sent)";
+        sqLiteDatabase.execSQL(sqlCreate);
+
+        sqlCreate = "CREATE INDEX network_pending_idx04 ON network_pending(command_key)";
         sqLiteDatabase.execSQL(sqlCreate);
 
         sqlCreate =

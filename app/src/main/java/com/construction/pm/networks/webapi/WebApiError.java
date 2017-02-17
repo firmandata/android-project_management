@@ -8,15 +8,25 @@ public class WebApiError extends Throwable {
     protected int mCode;
     protected String mMessage;
     protected Throwable mThrowable;
+    protected WebApiResponse mWebApiResponse;
 
-    public WebApiError(final int code, final String message) {
+    public WebApiError(final WebApiResponse webApiResponse, final int code, final String message) {
+        setWebApiResponse(webApiResponse);
         setCode(code);
         setMessage(message);
     }
 
-    public WebApiError(final int code, final String message, final Throwable cause) {
-        this(code, message);
+    public WebApiError(final WebApiResponse webApiResponse, final int code, final String message, final Throwable cause) {
+        this(webApiResponse, code, message);
         setCause(cause);
+    }
+
+    public void setWebApiResponse(final WebApiResponse webApiResponse) {
+        mWebApiResponse = webApiResponse;
+    }
+
+    public WebApiResponse getWebApiResponse() {
+        return mWebApiResponse;
     }
 
     public void setCode(final int code) {
@@ -35,7 +45,7 @@ public class WebApiError extends Throwable {
         return mMessage;
     }
 
-    public void setCause(Throwable cause) {
+    public void setCause(final Throwable cause) {
         mThrowable = cause;
     }
 
@@ -47,7 +57,7 @@ public class WebApiError extends Throwable {
         return isErrorConnection(getCause());
     }
 
-    public boolean isErrorConnection(Throwable throwable) {
+    public boolean isErrorConnection(final Throwable throwable) {
         if (throwable == null)
             return false;
 

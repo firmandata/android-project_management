@@ -13,23 +13,15 @@ import com.construction.pm.models.system.SessionLoginModel;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NotificationMessageHandler extends Handler {
-
-    public static final int MSG_CLIENT_REGISTER = 1;
-    public static final int MSG_CLIENT_UNREGISTER = 2;
-
+public class NotificationMessageHandler extends MessageHandler {
     public static final int MSG_NOTIFICATION_NEW = 3;
     public static final int MSG_REQUEST_LOGIN = 4;
     public static final int MSG_STOP = 5;
 
-    protected Context mContext;
-
-    protected List<Messenger> mClients = new ArrayList<Messenger>();
-
     protected NotificationMessageHandlerListener mNotificationMessageHandlerListener;
 
     public NotificationMessageHandler(Context context) {
-        mContext = context;
+        super(context);
     }
 
     @Override
@@ -39,12 +31,6 @@ public class NotificationMessageHandler extends Handler {
         Bundle bundle = receiveMessage.getData();
 
         switch (receiveMessage.what) {
-            case MSG_CLIENT_REGISTER:
-                onReceiveRegister(receiveMessage.replyTo);
-                break;
-            case MSG_CLIENT_UNREGISTER:
-                onReceiveUnregister(receiveMessage.replyTo);
-                break;
             case MSG_NOTIFICATION_NEW:
                 onReceiveNotificationNew(bundle);
                 break;
@@ -89,30 +75,6 @@ public class NotificationMessageHandler extends Handler {
 
     public int sendStop() {
         return sendMessage(MSG_STOP, 0, 0, null);
-    }
-
-    protected int sendMessage(final int what, final int arg1, final int arg2, final Bundle bundle) {
-        int sentCount = 0;
-        for (int i = mClients.size() - 1; i >= 0; i--) {
-            try {
-                Message message = Message.obtain(null, what, arg1, arg2);
-                if (bundle != null)
-                    message.setData(bundle);
-                mClients.get(i).send(message);
-                sentCount++;
-            } catch (RemoteException ex) {
-                mClients.remove(i);
-            }
-        }
-        return sentCount;
-    }
-
-    protected void onReceiveRegister(final Messenger messenger) {
-        mClients.add(messenger);
-    }
-
-    protected void onReceiveUnregister(final Messenger messenger) {
-        mClients.remove(messenger);
     }
 
     protected void onReceiveNotificationNew(final Bundle bundle) {
@@ -174,33 +136,5 @@ public class NotificationMessageHandler extends Handler {
         void onNotificationReceives(NotificationModel[] notificationModels);
         void onNotificationRequestLogin(SessionLoginModel sessionLoginModel);
         void onNotificationServiceStop();
-    }
-
-    public static boolean sendRegister(final Messenger messengerSender, final Messenger messengerReceiver) {
-        boolean isSent = false;
-
-        try {
-            Message message = Message.obtain(null, MSG_CLIENT_REGISTER);
-            message.replyTo = messengerReceiver;
-            messengerSender.send(message);
-            isSent = true;
-        } catch (RemoteException ex) {
-        }
-
-        return isSent;
-    }
-
-    public static boolean sendUnregister(final Messenger messengerSender, final Messenger messengerReceiver) {
-        boolean isSent = false;
-
-        try {
-            Message message = Message.obtain(null, MSG_CLIENT_UNREGISTER);
-            message.replyTo = messengerReceiver;
-            messengerSender.send(message);
-            isSent = true;
-        } catch (RemoteException ex) {
-        }
-
-        return isSent;
     }
 }

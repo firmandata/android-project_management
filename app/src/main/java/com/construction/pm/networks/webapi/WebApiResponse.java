@@ -19,9 +19,21 @@ public class WebApiResponse {
 
     protected org.json.JSONObject mSuccessJSONObject;
     protected org.json.JSONArray mSuccessJSONArray;
+
+    protected String mApiUrl;
+    protected WebApiParam mHeaderParam;
+    protected WebApiParam mQueryParam;
+    protected WebApiParam mFormData;
+    protected String mBodyData;
+
     protected WebApiError mWebApiError;
 
-    public WebApiResponse(Context context) {
+    public WebApiResponse() {
+
+    }
+
+    public WebApiResponse(final Context context) {
+        this();
         mContext = context;
     }
 
@@ -46,7 +58,7 @@ public class WebApiResponse {
     }
 
     public void onSuccess(final int statusCode, final Headers headers, final org.json.JSONObject response) {
-        WebApiError webApiError = getRestfulError(statusCode, null, response);
+        WebApiError webApiError = getWebApiError(statusCode, null, response);
         if (webApiError != null) {
             onFailure(webApiError);
         } else {
@@ -79,7 +91,7 @@ public class WebApiResponse {
             }
             onFailure(statusCode, headers, errorString, throwable);
         } else {
-            WebApiError webApiError = getRestfulError(statusCode, throwable, null);
+            WebApiError webApiError = getWebApiError(statusCode, throwable, null);
             if (webApiError != null)
                 onFailure(webApiError);
         }
@@ -94,7 +106,7 @@ public class WebApiResponse {
             }
             onFailure(statusCode, headers, errorString, throwable);
         } else {
-            WebApiError webApiError = getRestfulError(statusCode, throwable, null);
+            WebApiError webApiError = getWebApiError(statusCode, throwable, null);
             if (webApiError != null)
                 onFailure(webApiError);
         }
@@ -109,18 +121,18 @@ public class WebApiResponse {
                 if (!responseString.isEmpty())
                     errorResponse.put("responseMessage", responseString);
             }
-            webApiError = getRestfulError(statusCode, throwable, errorResponse);
+            webApiError = getWebApiError(statusCode, throwable, errorResponse);
         } catch (org.json.JSONException ex) {
-            webApiError = getRestfulError(statusCode, ex, null);
+            webApiError = getWebApiError(statusCode, ex, null);
         } catch (Exception ex) {
-            webApiError = getRestfulError(statusCode, ex, null);
+            webApiError = getWebApiError(statusCode, ex, null);
         }
 
         if (webApiError != null)
             onFailure(webApiError);
     }
 
-    public WebApiError getRestfulError(final int statusCode, final Throwable throwable, final org.json.JSONObject errorResponse) {
+    public WebApiError getWebApiError(final int statusCode, final Throwable throwable, final org.json.JSONObject errorResponse) {
         int newErrorCode = statusCode;
         List<String> messageList = new ArrayList<String>();
 
@@ -175,7 +187,7 @@ public class WebApiResponse {
 
         WebApiError webApiError = null;
         if (errorMessage != null) {
-            webApiError = new WebApiError(newErrorCode, errorMessage);
+            webApiError = new WebApiError(this, newErrorCode, errorMessage);
             if (throwable != null)
                 webApiError.setCause(throwable);
         }
@@ -189,5 +201,79 @@ public class WebApiResponse {
 
     public Context getContext() {
         return mContext;
+    }
+
+    public void setApiUrl(final String apiUrl) {
+        mApiUrl = apiUrl;
+    }
+
+    public String getApiUrl() {
+        return mApiUrl;
+    }
+
+    public void setHeaderParam(final WebApiParam headerParam) {
+        mHeaderParam = headerParam;
+    }
+
+    public WebApiParam getHeaderParam() {
+        return mHeaderParam;
+    }
+
+    public void setQueryParam(final WebApiParam queryParam) {
+        mQueryParam = queryParam;
+    }
+
+    public WebApiParam getQueryParam() {
+        return mQueryParam;
+    }
+
+    public void setFormData(final WebApiParam formData) {
+        mFormData = formData;
+    }
+
+    public WebApiParam getFormData() {
+        return mFormData;
+    }
+
+    public void setBodyData(final String bodyData) {
+        mBodyData = bodyData;
+    }
+
+    public String getBodyData() {
+        return mBodyData;
+    }
+
+    public org.json.JSONObject buildWebApiRequestCommand() throws org.json.JSONException {
+        org.json.JSONObject jsonObject = new org.json.JSONObject();
+
+        if (getApiUrl() != null)
+            jsonObject.put("apiUrl", getApiUrl());
+        if (getHeaderParam() != null)
+            jsonObject.put("headerParam", getHeaderParam().build());
+        if (getQueryParam() != null)
+            jsonObject.put("queryParam", getQueryParam().build());
+        if (getFormData() != null)
+            jsonObject.put("formData", getFormData().build());
+        if (getBodyData() != null)
+            jsonObject.put("bodyData", getBodyData());
+
+        return jsonObject;
+    }
+
+    public static WebApiResponse buildWebApiRequestCommand(final org.json.JSONObject webApiRequestCommand) throws org.json.JSONException {
+        WebApiResponse webApiResponse = new WebApiResponse();
+
+        if (!webApiRequestCommand.isNull("apiUrl"))
+            webApiResponse.setApiUrl(webApiRequestCommand.getString("apiUrl"));
+        if (!webApiRequestCommand.isNull("headerParam"))
+            webApiResponse.setHeaderParam(WebApiParam.build(webApiRequestCommand.getJSONObject("headerParam")));
+        if (!webApiRequestCommand.isNull("queryParam"))
+            webApiResponse.setQueryParam(WebApiParam.build(webApiRequestCommand.getJSONObject("queryParam")));
+        if (!webApiRequestCommand.isNull("formData"))
+            webApiResponse.setFormData(WebApiParam.build(webApiRequestCommand.getJSONObject("formData")));
+        if (!webApiRequestCommand.isNull("bodyData"))
+            webApiResponse.setBodyData(webApiRequestCommand.getString("bodyData"));
+
+        return webApiResponse;
     }
 }

@@ -22,6 +22,10 @@
             android:name=".services.NotificationService"
             android:exported="false" />
 
+        <service
+            android:name=".services.NetworkPendingService"
+            android:exported="false" />
+
         <activity
             android:name=".activities.BootstrapActivity"
             android:theme="@style/AppTheme.NoActionBar"

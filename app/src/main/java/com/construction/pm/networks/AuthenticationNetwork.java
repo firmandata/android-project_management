@@ -101,7 +101,7 @@ public class AuthenticationNetwork {
         // -- Get request result --
         org.json.JSONObject jsonObject = webApiResponse.getSuccessJsonObject();
         if (jsonObject == null)
-            throw new WebApiError(0, ViewUtil.getResourceString(mContext, R.string.network_unknown_response_expected));
+            throw new WebApiError(webApiResponse, 0, ViewUtil.getResourceString(mContext, R.string.network_unknown_response_expected));
 
         // -- Fetch result --
         AccessTokenModel accessTokenModel;
@@ -109,7 +109,7 @@ public class AuthenticationNetwork {
             accessTokenModel = AccessTokenModel.build(jsonObject);
             accessTokenModel.setTokenGenerateTime(Calendar.getInstance());
         } catch (JSONException jsonException) {
-            throw new WebApiError(0, jsonException.getMessage(), jsonException);
+            throw new WebApiError(webApiResponse, 0, jsonException.getMessage(), jsonException);
         }
 
         return accessTokenModel;
@@ -140,7 +140,7 @@ public class AuthenticationNetwork {
         // -- Get request result --
         org.json.JSONObject jsonObject = webApiResponse.getSuccessJsonObject();
         if (jsonObject == null)
-            throw new WebApiError(0, ViewUtil.getResourceString(mContext, R.string.network_unknown_response_expected));
+            throw new WebApiError(webApiResponse, 0, ViewUtil.getResourceString(mContext, R.string.network_unknown_response_expected));
 
         // -- Fetch result --
         AccessTokenModel newAccessTokenModel;
@@ -148,7 +148,7 @@ public class AuthenticationNetwork {
             newAccessTokenModel = AccessTokenModel.build(jsonObject);
             newAccessTokenModel.setTokenGenerateTime(Calendar.getInstance());
         } catch (JSONException jsonException) {
-            throw new WebApiError(0, jsonException.getMessage(), jsonException);
+            throw new WebApiError(webApiResponse, 0, jsonException.getMessage(), jsonException);
         }
 
         return newAccessTokenModel;
@@ -215,7 +215,7 @@ public class AuthenticationNetwork {
         // -- Get request result --
         org.json.JSONObject jsonObject = webApiResponse.getSuccessJsonObject();
         if (jsonObject == null)
-            throw new WebApiError(0, ViewUtil.getResourceString(mContext, R.string.network_unknown_response_expected));
+            throw new WebApiError(webApiResponse, 0, ViewUtil.getResourceString(mContext, R.string.network_unknown_response_expected));
 
         // -- Fetch result --
         UserProjectMemberModel userProjectMemberModel = null;
@@ -225,7 +225,7 @@ public class AuthenticationNetwork {
                 userProjectMemberModel = UserProjectMemberModel.build(jsonUserProjectMember);
             }
         } catch (JSONException jsonException) {
-            throw new WebApiError(0, jsonException.getMessage(), jsonException);
+            throw new WebApiError(webApiResponse, 0, jsonException.getMessage(), jsonException);
         }
 
         return userProjectMemberModel;
@@ -280,7 +280,7 @@ public class AuthenticationNetwork {
         // -- Get request result --
         org.json.JSONObject jsonObject = webApiResponse.getSuccessJsonObject();
         if (jsonObject == null)
-            throw new WebApiError(0, ViewUtil.getResourceString(mContext, R.string.network_unknown_response_expected));
+            throw new WebApiError(webApiResponse, 0, ViewUtil.getResourceString(mContext, R.string.network_unknown_response_expected));
 
         // -- Fetch result --
         UserProjectMemberModel userProjectMemberModel = null;
@@ -290,7 +290,7 @@ public class AuthenticationNetwork {
                 userProjectMemberModel = UserProjectMemberModel.build(jsonUserProjectMember);
             }
         } catch (JSONException jsonException) {
-            throw new WebApiError(0, jsonException.getMessage(), jsonException);
+            throw new WebApiError(webApiResponse, 0, jsonException.getMessage(), jsonException);
         }
 
         return userProjectMemberModel;

@@ -51,7 +51,7 @@ public class ProjectNetwork extends AuthenticationNetwork {
         // -- Get request result --
         org.json.JSONObject jsonObject = webApiResponse.getSuccessJsonObject();
         if (jsonObject == null)
-            throw new WebApiError(0, ViewUtil.getResourceString(mContext, R.string.network_unknown_response_expected));
+            throw new WebApiError(webApiResponse, 0, ViewUtil.getResourceString(mContext, R.string.network_unknown_response_expected));
 
         // -- Fetch result --
         List<ProjectModel> projectModelList = new ArrayList<ProjectModel>();
@@ -67,7 +67,7 @@ public class ProjectNetwork extends AuthenticationNetwork {
                 }
             }
         } catch (JSONException jsonException) {
-            throw new WebApiError(0, jsonException.getMessage(), jsonException);
+            throw new WebApiError(webApiResponse, 0, jsonException.getMessage(), jsonException);
         }
 
         ProjectModel[] projectModels = new ProjectModel[projectModelList.size()];
@@ -100,7 +100,7 @@ public class ProjectNetwork extends AuthenticationNetwork {
         // -- Get request result --
         org.json.JSONObject jsonObject = webApiResponse.getSuccessJsonObject();
         if (jsonObject == null)
-            throw new WebApiError(0, ViewUtil.getResourceString(mContext, R.string.network_unknown_response_expected));
+            throw new WebApiError(webApiResponse, 0, ViewUtil.getResourceString(mContext, R.string.network_unknown_response_expected));
 
         // -- Fetch result --
         ProjectResponseModel projectResponseModel = null;
@@ -109,7 +109,7 @@ public class ProjectNetwork extends AuthenticationNetwork {
                 projectResponseModel = ProjectResponseModel.build(jsonObject.getJSONObject("result"));
             }
         } catch (JSONException jsonException) {
-            throw new WebApiError(0, jsonException.getMessage(), jsonException);
+            throw new WebApiError(webApiResponse, 0, jsonException.getMessage(), jsonException);
         }
 
         return projectResponseModel;
