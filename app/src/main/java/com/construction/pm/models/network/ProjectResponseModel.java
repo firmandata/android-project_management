@@ -19,6 +19,8 @@ public class ProjectResponseModel {
     protected List<ProjectPlanModel> mProjectPlanModelList;
 
     public ProjectResponseModel() {
+        mProjectStageModelList = new ArrayList<ProjectStageModel>();
+        mProjectPlanModelList = new ArrayList<ProjectPlanModel>();
     }
 
     public void setProjectModel(final ProjectModel projectModel) {
@@ -42,22 +44,14 @@ public class ProjectResponseModel {
     }
 
     public void addProjectStageModel(ProjectStageModel projectStageModel) {
-        if (mProjectStageModelList == null)
-            mProjectStageModelList = new ArrayList<ProjectStageModel>();
-
         mProjectStageModelList.add(projectStageModel);
     }
 
     public void removeProjectStageModel(ProjectStageModel projectStageModel) {
-        if (mProjectStageModelList == null)
-            return;
-
         mProjectStageModelList.remove(projectStageModel);
     }
 
     public ProjectStageModel[] getProjectStageModels() {
-        if (mProjectStageModelList == null)
-            return null;
         if (mProjectStageModelList.size() == 0)
             return null;
 
@@ -71,22 +65,14 @@ public class ProjectResponseModel {
     }
 
     public void addProjectPlanModel(ProjectPlanModel projectPlanModel) {
-        if (mProjectPlanModelList == null)
-            mProjectPlanModelList = new ArrayList<ProjectPlanModel>();
-
         mProjectPlanModelList.add(projectPlanModel);
     }
 
     public void removeProjectPlanModel(ProjectPlanModel projectPlanModel) {
-        if (mProjectPlanModelList == null)
-            return;
-
         mProjectPlanModelList.remove(projectPlanModel);
     }
 
     public ProjectPlanModel[] getProjectPlanModels() {
-        if (mProjectPlanModelList == null)
-            return null;
         if (mProjectPlanModelList.size() == 0)
             return null;
 

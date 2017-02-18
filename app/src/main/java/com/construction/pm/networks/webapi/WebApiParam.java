@@ -108,7 +108,7 @@ public class WebApiParam {
         mHashMapFile.clear();
     }
 
-    public class WebApiParamFile {
+    public static class WebApiParamFile {
 
         protected String mMimeType;
         protected File mFile;
