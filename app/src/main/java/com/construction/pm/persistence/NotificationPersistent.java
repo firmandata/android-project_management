@@ -129,7 +129,8 @@ public class NotificationPersistent extends SQLitePersistent {
             Cursor cursor = sqLiteDatabase.rawQuery(
                 "SELECT content " +
                 "  FROM network_notification " +
-                " WHERE project_member_id = ?",
+                " WHERE project_member_id = ? " +
+                " ORDER BY project_notification_id DESC",
                 new String[] {
                     String.valueOf(projectMemberId)
                 }

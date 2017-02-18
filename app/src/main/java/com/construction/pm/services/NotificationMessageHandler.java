@@ -11,6 +11,7 @@ import com.construction.pm.models.NotificationModel;
 import com.construction.pm.models.system.SessionLoginModel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class NotificationMessageHandler extends MessageHandler {
@@ -18,10 +19,14 @@ public class NotificationMessageHandler extends MessageHandler {
     public static final int MSG_REQUEST_LOGIN = 4;
     public static final int MSG_STOP = 5;
 
+    protected List<NotificationModel> mNotificationModelList;
+
     protected NotificationMessageHandlerListener mNotificationMessageHandlerListener;
 
     public NotificationMessageHandler(Context context) {
         super(context);
+
+        mNotificationModelList = new ArrayList<NotificationModel>();
     }
 
     @Override
@@ -42,6 +47,21 @@ public class NotificationMessageHandler extends MessageHandler {
                 break;
             default:
                 super.handleMessage(receiveMessage);
+        }
+    }
+
+    @Override
+    protected void onReceiveRegister(final Messenger messenger) {
+        super.onReceiveRegister(messenger);
+
+        // -- Broadcast unsent NotificationModels message --
+        if (mNotificationModelList.size() > 0) {
+            NotificationModel[] notificationModels = new NotificationModel[mNotificationModelList.size()];
+            mNotificationModelList.toArray(notificationModels);
+
+            int sentCount = sendNotificationModels(notificationModels);
+            if (sentCount > 0)
+                clearUnReceiveNotificationNew();
         }
     }
 
@@ -126,6 +146,14 @@ public class NotificationMessageHandler extends MessageHandler {
     protected void onReceiveStop() {
         if (mNotificationMessageHandlerListener != null)
             mNotificationMessageHandlerListener.onNotificationServiceStop();
+    }
+
+    public void addUnSentNotificationNew(final NotificationModel[] notificationModels) {
+        mNotificationModelList.addAll(0, Arrays.asList(notificationModels));
+    }
+
+    protected void clearUnReceiveNotificationNew() {
+        mNotificationModelList.clear();
     }
 
     public void setNotificationMessageHandlerListener(final NotificationMessageHandlerListener notificationMessageHandlerListener) {

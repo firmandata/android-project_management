@@ -128,6 +128,14 @@ public class NotificationWorker extends Thread {
                 // -- Save to NotificationPersistent --
                 notificationPersistent.saveNotificationModels(notificationModels);
 
+                // -- Get last saved NotificationPersistent --
+                try {
+                    lastNotificationModel = notificationPersistent.getLastNotificationModel(projectMemberModel.getProjectMemberId());
+                    if (lastNotificationModel != null)
+                        lastProjectNotificationId = lastNotificationModel.getProjectNotificationId();
+                } catch (PersistenceError persistenceError) {
+                }
+
                 // -- Set NotificationModels as unread to server --
                 try {
                     notificationNetwork.setNotificationReceived(projectMemberModel.getProjectMemberId(), lastProjectNotificationId, projectMemberModel.getUserId());

@@ -1,5 +1,6 @@
 package com.construction.pm.activities;
 
+import android.app.NotificationManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -104,8 +105,10 @@ public class MainActivity extends AppCompatActivity implements
 
                         isDefaultFragmentShowed = true;
                     } else if (showFragment.equals(INTENT_PARAM_SHOW_FRAGMENT_NOTIFICATION)) {
-                        // -- Show NotificationListFragment --
-                        mMainLayout.showNotificationListFragment(this);
+                        if (!mMainLayout.isNotificationListFragmentShow()) {
+                            // -- Show NotificationListFragment --
+                            mMainLayout.showNotificationListFragment(this);
+                        }
 
                         isDefaultFragmentShowed = true;
                     }
@@ -263,6 +266,12 @@ public class MainActivity extends AppCompatActivity implements
         if (mMainLayout.isNotificationListFragmentShow()) {
             // -- Attach to NotificationListFragment --
             mMainLayout.addNotificationModelsToNotificationListFragment(notificationModels);
+
+            // -- Prepare NotificationManager --
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+            // -- Clear Notification --
+            notificationManager.cancel(ConstantUtil.NOTIFICATION_ID_NOTIFICATION);
         } else {
             // -- Recalculate notification unread quantity --
             invalidateNotificationUnreadQuantity();

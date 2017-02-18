@@ -165,6 +165,9 @@ public class NotificationService extends Service implements NotificationWorker.N
 
         // -- Add as notification --
         notificationManager.notify(ConstantUtil.NOTIFICATION_ID_NOTIFICATION, notificationBuilder.build());
+
+        // -- Add unsent NotificationModels in NotificationMessageHandler --
+        mNotificationMessageHandler.addUnSentNotificationNew(notificationModels);
     }
 
     @Override
