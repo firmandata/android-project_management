@@ -13,6 +13,7 @@ import com.construction.pm.models.system.SettingUserModel;
 import com.construction.pm.networks.webapi.WebApiError;
 import com.construction.pm.networks.webapi.WebApiParam;
 import com.construction.pm.networks.webapi.WebApiResponse;
+import com.construction.pm.utils.DateTimeUtil;
 import com.construction.pm.utils.ViewUtil;
 
 import org.json.JSONException;
@@ -179,8 +180,49 @@ public class ManagerNetwork extends AuthenticationNetwork {
         return projectActivityUpdateModels;
     }
 
-    public ProjectActivityUpdateResponseModel saveProjectActivityUpdate(final ProjectActivityUpdateModel projectActivityUpdateModel) {
-        ProjectActivityUpdateResponseModel projectActivityUpdateResponseModel = new ProjectActivityUpdateResponseModel();
+    public ProjectActivityUpdateResponseModel saveProjectActivityUpdate(final ProjectActivityUpdateModel projectActivityUpdateModel, final Integer userId) throws WebApiError {
+        // -- Get SessionLoginModel --
+        SessionLoginModel sessionLoginModel = getSessionLoginModel();
+        AccessTokenModel accessTokenModel = sessionLoginModel.getAccessTokenModel();
+
+        // -- Prepare WebApiParam headerParam parameters --
+        WebApiParam headerParam = new WebApiParam();
+        if (accessTokenModel != null)
+            headerParam.add("Authorization", "Bearer " + accessTokenModel.getAccessToken());
+
+        // -- Prepare WebApiParam formData parameters --
+        WebApiParam formData = new WebApiParam();
+        formData.add("project_activity_update_id", projectActivityUpdateModel.getProjectActivityUpdateId());
+        formData.add("project_activity_monitoring_id", projectActivityUpdateModel.getProjectActivityMonitoringId());
+        formData.add("project_member_id", projectActivityUpdateModel.getProjectMemberId());
+        formData.add("update_date", DateTimeUtil.ToDateTimeString(projectActivityUpdateModel.getUpdateDate()));
+        formData.add("actual_start_date", DateTimeUtil.ToDateString(projectActivityUpdateModel.getActualStartDate()));
+        formData.add("actual_end_date", DateTimeUtil.ToDateString(projectActivityUpdateModel.getActualEndDate()));
+        formData.add("activity_status", projectActivityUpdateModel.getActivityStatus());
+        formData.add("percent_complete", projectActivityUpdateModel.getPercentComplete());
+        formData.add("comment", projectActivityUpdateModel.getComment());
+        formData.add("user_id", userId);
+
+        // -- Request get ProjectActivityUpdateResponseModel --
+        WebApiResponse webApiResponse = mWebApiRequest.post("/rest/project/saveProjectActivityUpdate", headerParam, null, formData);
+
+        // -- Throw WebApiError if existing --
+        WebApiError webApiError = webApiResponse.getWebApiError();
+        if (webApiError != null)
+            throw webApiError;
+
+        // -- Get request result --
+        org.json.JSONObject jsonObject = webApiResponse.getSuccessJsonObject();
+        if (jsonObject == null)
+            throw new WebApiError(webApiResponse, 0, ViewUtil.getResourceString(mContext, R.string.network_unknown_response_expected));
+
+        // -- Fetch result --
+        ProjectActivityUpdateResponseModel projectActivityUpdateResponseModel = null;
+        try {
+            projectActivityUpdateResponseModel = ProjectActivityUpdateResponseModel.build(jsonObject);
+        } catch (JSONException jsonException) {
+            throw new WebApiError(webApiResponse, 0, jsonException.getMessage(), jsonException);
+        }
 
         return projectActivityUpdateResponseModel;
     }

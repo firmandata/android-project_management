@@ -14,7 +14,6 @@ import com.construction.pm.models.system.SettingUserModel;
 
 import org.json.JSONException;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.util.Map;
@@ -467,9 +466,10 @@ public class WebApiRequest {
                 if (apiParamKey != null) {
                     WebApiParam.WebApiParamFile apiParamValue = apiParam.getValue();
                     if (apiParamValue != null) {
+                        String fileName = apiParamValue.getFileName();
                         String mimeType = apiParamValue.getMimeType();
-                        File file = apiParamValue.getFile();
-                        formBodyBuilder.addFormDataPart(apiParamKey, file.getName(), RequestBody.create(MediaType.parse(mimeType), file));
+                        byte[] fileData = apiParamValue.getFileData();
+                        formBodyBuilder.addFormDataPart(apiParamKey, fileName, RequestBody.create(MediaType.parse(mimeType), fileData));
                     }
                 }
             }
@@ -649,9 +649,10 @@ public class WebApiRequest {
                 if (apiParamKey != null) {
                     WebApiParam.WebApiParamFile apiParamValue = apiParam.getValue();
                     if (apiParamValue != null) {
+                        String fileName = apiParamValue.getFileName();
                         String mimeType = apiParamValue.getMimeType();
-                        File file = apiParamValue.getFile();
-                        formBodyBuilder.addFormDataPart(apiParamKey, file.getName(), RequestBody.create(MediaType.parse(mimeType), file));
+                        byte[] fileData = apiParamValue.getFileData();
+                        formBodyBuilder.addFormDataPart(apiParamKey, fileName, RequestBody.create(MediaType.parse(mimeType), fileData));
                     }
                 }
             }

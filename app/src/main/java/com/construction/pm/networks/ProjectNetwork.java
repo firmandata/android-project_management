@@ -6,7 +6,6 @@ import com.construction.pm.R;
 import com.construction.pm.models.ProjectModel;
 import com.construction.pm.models.AccessTokenModel;
 import com.construction.pm.models.ProjectStageAssignmentCommentModel;
-import com.construction.pm.models.network.ProjectActivityUpdateResponseModel;
 import com.construction.pm.models.network.ProjectPlanResponseModel;
 import com.construction.pm.models.network.ProjectResponseModel;
 import com.construction.pm.models.network.ProjectStageAssignmentCommentResponseModel;
@@ -22,7 +21,6 @@ import com.construction.pm.utils.ViewUtil;
 import org.json.JSONException;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 public class ProjectNetwork extends AuthenticationNetwork {
@@ -199,7 +197,15 @@ public class ProjectNetwork extends AuthenticationNetwork {
         return projectPlanResponseModel;
     }
 
-    public ProjectStageAssignmentCommentResponseModel saveProjectStageAssignmentComment(final ProjectStageAssignmentCommentModel projectStageAssignmentCommentModel, final Integer userId) throws WebApiError {
+    public ProjectStageAssignmentCommentResponseModel saveProjectStageAssignmentComment(
+            final ProjectStageAssignmentCommentModel projectStageAssignmentCommentModel,
+            final WebApiParam.WebApiParamFile photo,
+            final WebApiParam.WebApiParamFile photoAdditional1,
+            final WebApiParam.WebApiParamFile photoAdditional2,
+            final WebApiParam.WebApiParamFile photoAdditional3,
+            final WebApiParam.WebApiParamFile photoAdditional4,
+            final WebApiParam.WebApiParamFile photoAdditional5,
+            final Integer userId) throws WebApiError {
         // -- Get SessionLoginModel --
         SessionLoginModel sessionLoginModel = getSessionLoginModel();
         AccessTokenModel accessTokenModel = sessionLoginModel.getAccessTokenModel();
@@ -216,23 +222,17 @@ public class ProjectNetwork extends AuthenticationNetwork {
         formData.add("comment_date", DateTimeUtil.ToDateTimeString(projectStageAssignmentCommentModel.getCommentDate()));
         formData.add("comment", projectStageAssignmentCommentModel.getComment());
         formData.add("photo_id", projectStageAssignmentCommentModel.getPhotoId());
-        if (projectStageAssignmentCommentModel.getPhoto() != null)
-            formData.add("photo_id", new WebApiParam.WebApiParamFile("image/png", projectStageAssignmentCommentModel.getPhoto()));
+        formData.add("photo_id", photo);
         formData.add("photo_additional1_id", projectStageAssignmentCommentModel.getPhotoAdditional1Id());
-        if (projectStageAssignmentCommentModel.getPhotoAdditional1() != null)
-            formData.add("photo_additional1_id", new WebApiParam.WebApiParamFile("image/png", projectStageAssignmentCommentModel.getPhotoAdditional1()));
+        formData.add("photo_additional1_id", photoAdditional1);
         formData.add("photo_additional2_id", projectStageAssignmentCommentModel.getPhotoAdditional2Id());
-        if (projectStageAssignmentCommentModel.getPhotoAdditional2() != null)
-            formData.add("photo_additional2_id", new WebApiParam.WebApiParamFile("image/png", projectStageAssignmentCommentModel.getPhotoAdditional2()));
+        formData.add("photo_additional2_id", photoAdditional2);
         formData.add("photo_additional3_id", projectStageAssignmentCommentModel.getPhotoAdditional3Id());
-        if (projectStageAssignmentCommentModel.getPhotoAdditional3() != null)
-            formData.add("photo_additional3_id", new WebApiParam.WebApiParamFile("image/png", projectStageAssignmentCommentModel.getPhotoAdditional3()));
+        formData.add("photo_additional3_id", photoAdditional3);
         formData.add("photo_additional4_id", projectStageAssignmentCommentModel.getPhotoAdditional4Id());
-        if (projectStageAssignmentCommentModel.getPhotoAdditional4() != null)
-            formData.add("photo_additional4_id", new WebApiParam.WebApiParamFile("image/png", projectStageAssignmentCommentModel.getPhotoAdditional4()));
+        formData.add("photo_additional4_id", photoAdditional4);
         formData.add("photo_additional5_id", projectStageAssignmentCommentModel.getPhotoAdditional5Id());
-        if (projectStageAssignmentCommentModel.getPhotoAdditional5() != null)
-            formData.add("photo_additional5_id", new WebApiParam.WebApiParamFile("image/png", projectStageAssignmentCommentModel.getPhotoAdditional5()));
+        formData.add("photo_additional5_id", photoAdditional5);
         formData.add("user_id", userId);
 
         // -- Request get ProjectStageAssignmentCommentResponseModel --

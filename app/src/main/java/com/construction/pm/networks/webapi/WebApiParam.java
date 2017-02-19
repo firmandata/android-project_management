@@ -1,6 +1,9 @@
 package com.construction.pm.networks.webapi;
 
-import java.io.File;
+import android.util.Base64;
+
+import org.json.JSONException;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,6 +53,13 @@ public class WebApiParam {
             mHashMap.put(key, null);
     }
 
+    public void put(final String key, final Double value) {
+        if (value != null)
+            mHashMap.put(key, String.valueOf(value));
+        else
+            mHashMap.put(key, null);
+    }
+
     public void put(final String key, final WebApiParamFile webApiParamFile) {
         mHashMapFile.put(key, webApiParamFile);
     }
@@ -82,6 +92,10 @@ public class WebApiParam {
         put(key, value);
     }
 
+    public void add(final String key, final Double value) {
+        put(key, value);
+    }
+
     public void add(final String key, final WebApiParamFile webApiParamFile) {
         put(key, webApiParamFile);
     }
@@ -110,20 +124,85 @@ public class WebApiParam {
 
     public static class WebApiParamFile {
 
+        protected String mFileName;
         protected String mMimeType;
-        protected File mFile;
+        protected byte[] mFileData;
 
-        public WebApiParamFile(final String mimeType, final File file) {
+        public WebApiParamFile() {
+
+        }
+
+        public WebApiParamFile(final String fileName, final String mimeType, final byte[] fileData) {
+            this();
+
+            mFileName = fileName;
             mMimeType = mimeType;
-            mFile = file;
+            mFileData = fileData;
+        }
+
+        public void setFileName(final String fileName) {
+            mFileName = fileName;
+        }
+
+        public String getFileName() {
+            return mFileName;
+        }
+
+        public void setMimeType(final String mimeType) {
+            mMimeType = mimeType;
         }
 
         public String getMimeType() {
             return mMimeType;
         }
 
-        public File getFile() {
-            return mFile;
+        public void setFileData(final byte[] fileData) {
+            mFileData = fileData;
+        }
+
+        public byte[] getFileData() {
+            return mFileData;
+        }
+
+        public static WebApiParamFile build(final org.json.JSONObject jsonObject) throws JSONException {
+            WebApiParamFile webApiParamFile = new WebApiParamFile();
+
+            if (!jsonObject.isNull("file_name"))
+                webApiParamFile.setFileName(jsonObject.getString("file_name"));
+            if (!jsonObject.isNull("mime_type"))
+                webApiParamFile.setMimeType(jsonObject.getString("mime_type"));
+            if (!jsonObject.isNull("file_data")) {
+                String base64Encode = jsonObject.getString("file_data");
+                byte[] fileData = null;
+                try {
+                    fileData = Base64.decode(base64Encode, Base64.NO_WRAP);
+                } catch (Exception ex) {
+                }
+                if (fileData != null)
+                    webApiParamFile.setFileData(fileData);
+            }
+
+            return webApiParamFile;
+        }
+
+        public org.json.JSONObject build() throws JSONException {
+            org.json.JSONObject jsonObject = new org.json.JSONObject();
+
+            if (getFileName() != null)
+                jsonObject.put("file_name", getFileName());
+            if (getMimeType() != null)
+                jsonObject.put("file_type", getMimeType());
+            if (getFileData() != null) {
+                String fileData = null;
+                try {
+                    fileData = Base64.encodeToString(getFileData(), Base64.NO_WRAP);
+                } catch (Exception ex) {
+                }
+                if (fileData != null)
+                    jsonObject.put("file_data", fileData);
+            }
+
+            return jsonObject;
         }
     }
 
@@ -133,8 +212,12 @@ public class WebApiParam {
         org.json.JSONArray jsonArray = jsonObject.names();
         for (int jsonArrayIdx = 0; jsonArrayIdx < jsonArray.length(); jsonArrayIdx++) {
             String name = jsonArray.getString(jsonArrayIdx);
-            if (!jsonObject.isNull(name))
-                webApiParam.put(name, jsonObject.getString(name));
+            if (!jsonObject.isNull(name)) {
+                if (name.startsWith("_WebApiParamFile_"))
+                    webApiParam.put(name.substring(17), WebApiParamFile.build(jsonObject.getJSONObject(name)));
+                else
+                    webApiParam.put(name, jsonObject.getString(name));
+            }
         }
 
         return webApiParam;
@@ -148,6 +231,13 @@ public class WebApiParam {
             if (apiParamKey != null) {
                 String apiParamValue = apiParam.getValue();
                 jsonObject.put(apiParamKey, apiParamValue);
+            }
+        }
+        for (Map.Entry<String, WebApiParamFile> apiParam : getFileParams().entrySet()) {
+            String apiParamKey = apiParam.getKey();
+            if (apiParamKey != null) {
+                WebApiParamFile apiParamValue = apiParam.getValue();
+                jsonObject.put("_WebApiParamFile_" + apiParamKey, apiParamValue);
             }
         }
 
