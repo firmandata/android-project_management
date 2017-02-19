@@ -13,7 +13,8 @@ import java.util.List;
 
 public abstract class NetworkCachePersistent extends SQLitePersistent {
     protected enum NetworkCachePersistentType {
-        PROJECT_LIST(0), PROJECT_DEPENDENCIES(1);
+        PROJECT_LIST(0), PROJECT_DEPENDENCIES(1),
+        INSPECTOR_PROJECT_ACTIVITY_LIST(2);
 
         private final int mNetworkCachePersistentType;
 

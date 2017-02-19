@@ -7,6 +7,7 @@ import org.json.JSONException;
 import java.util.Calendar;
 
 public class ProjectActivityModel {
+
     protected Integer mProjectActivityId;
     protected Integer mProjectPlanId;
     protected Integer mProjectId;
@@ -19,7 +20,7 @@ public class ProjectActivityModel {
     protected String mActivityStatus;
     protected Double mPercentComplete;
     protected Calendar mCurrentDate;
-    protected String mStatusTask;
+    protected StatusTaskEnum mStatusTask;
 
     public ProjectActivityModel() {
 
@@ -121,11 +122,11 @@ public class ProjectActivityModel {
         return mCurrentDate;
     }
 
-    public void setStatusTask(final String statusTask) {
+    public void setStatusTask(final StatusTaskEnum statusTask) {
         mStatusTask = statusTask;
     }
 
-    public String getStatusTask() {
+    public StatusTaskEnum getStatusTask() {
         return mStatusTask;
     }
 
@@ -157,7 +158,7 @@ public class ProjectActivityModel {
         if (!jsonObject.isNull("_current_date"))
             projectActivityModel.setCurrentDate(DateTimeUtil.FromDateString(jsonObject.getString("_current_date")));
         if (!jsonObject.isNull("status_task"))
-            projectActivityModel.setStatusTask(jsonObject.getString("status_task"));
+            projectActivityModel.setStatusTask(StatusTaskEnum.fromString(jsonObject.getString("status_task")));
 
         return projectActivityModel;
     }
@@ -190,7 +191,7 @@ public class ProjectActivityModel {
         if (getCurrentDate() != null)
             jsonObject.put("_current_date", DateTimeUtil.ToDateString(getCurrentDate()));
         if (getStatusTask() != null)
-            jsonObject.put("status_task", getStatusTask());
+            jsonObject.put("status_task", getStatusTask().getValue());
 
         return jsonObject;
     }

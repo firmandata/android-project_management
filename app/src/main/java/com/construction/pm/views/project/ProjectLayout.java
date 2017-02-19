@@ -1,6 +1,7 @@
 package com.construction.pm.views.project;
 
 import android.content.Context;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -31,9 +32,8 @@ public class ProjectLayout {
 
     protected Context mContext;
 
-    protected AppCompatActivity mActivity;
-
     protected CoordinatorLayout mProjectLayout;
+    protected AppBarLayout mAppBarLayout;
     protected Toolbar mToolbar;
     protected TabLayout mTabLayout;
     protected ViewPager mViewPager;
@@ -63,6 +63,7 @@ public class ProjectLayout {
 
     protected void initializeView(final CoordinatorLayout projectLayout) {
         mProjectLayout = projectLayout;
+        mAppBarLayout = (AppBarLayout) mProjectLayout.findViewById(R.id.contentAppBar);
         mToolbar = (Toolbar) mProjectLayout.findViewById(R.id.contentToolbar);
         mTabLayout = (TabLayout) mProjectLayout.findViewById(R.id.contentTab);
         mViewPager = (ViewPager) mProjectLayout.findViewById(R.id.contentBody);
@@ -76,31 +77,41 @@ public class ProjectLayout {
         return mProjectLayout;
     }
 
-    public void loadLayoutToActivity(AppCompatActivity activity) {
-        mActivity = activity;
+    public void loadLayoutToActivity(final AppCompatActivity activity) {
+        activity.setContentView(mProjectLayout);
 
-        mActivity.setContentView(mProjectLayout);
-
-        mActivity.setSupportActionBar(mToolbar);
-        ActionBar actionBar = mActivity.getSupportActionBar();
+        activity.setSupportActionBar(mToolbar);
+        ActionBar actionBar = activity.getSupportActionBar();
         if (actionBar != null) {
             if (mProjectModel != null) {
                 actionBar.setTitle(mProjectModel.getContractNo());
                 actionBar.setSubtitle(mProjectModel.getProjectName());
             } else
-                actionBar.setTitle(R.string.app_name);
+                actionBar.setTitle(R.string.project_layout_title);
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setDisplayShowHomeEnabled(true);
             actionBar.setDisplayUseLogoEnabled(false);
         }
 
-        if (mProjectLayoutListener != null)
-            mProjectLayoutListener.onProjectRequest(mProjectModel);
-
-        mViewPagerAdapter = new ViewPagerAdapter(mActivity.getSupportFragmentManager());
+        mViewPagerAdapter = new ViewPagerAdapter(activity.getSupportFragmentManager());
         mViewPager.setAdapter(mViewPagerAdapter);
 
         mTabLayout.setupWithViewPager(mViewPager);
+
+        if (mProjectLayoutListener != null)
+            mProjectLayoutListener.onProjectRequest(mProjectModel);
+    }
+
+    public void loadLayoutToFragment(final Fragment fragment) {
+        mAppBarLayout.removeView(mToolbar);
+
+        mViewPagerAdapter = new ViewPagerAdapter(fragment.getChildFragmentManager());
+        mViewPager.setAdapter(mViewPagerAdapter);
+
+        mTabLayout.setupWithViewPager(mViewPager);
+
+        if (mProjectLayoutListener != null)
+            mProjectLayoutListener.onProjectRequest(mProjectModel);
     }
 
     public void setLayoutData(final ContractModel contractModel, final ProjectModel projectModel, final ProjectStageModel[] projectStageModels, final ProjectPlanModel[] projectPlanModels) {

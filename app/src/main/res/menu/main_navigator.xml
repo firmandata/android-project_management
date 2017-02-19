@@ -6,7 +6,7 @@
             android:icon="@drawable/home_24"
             android:title="@string/menu_home_title" />
         <item
-            android:id="@+id/navigator_menu_inbox"
+            android:id="@+id/navigator_menu_notification"
             android:icon="@drawable/home_24"
             android:title="@string/menu_inbox_title" />
         <item
@@ -14,13 +14,13 @@
             android:icon="@drawable/home_24"
             android:title="@string/menu_project_title" />
         <item
-            android:id="@+id/navigator_menu_monitoring"
+            android:id="@+id/navigator_menu_inspector"
             android:icon="@drawable/home_24"
-            android:title="@string/menu_monitoring_title" />
+            android:title="@string/menu_inspector_title" />
         <item
-            android:id="@+id/navigator_menu_update_task_progress"
+            android:id="@+id/navigator_menu_manager"
             android:icon="@drawable/home_24"
-            android:title="@string/menu_update_task_progress_title" />
+            android:title="@string/menu_manager_title" />
 
         <item
             android:id="@+id/navigator_menu_request_report"

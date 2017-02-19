@@ -6,6 +6,7 @@ import com.construction.pm.R;
 import com.construction.pm.models.AccessTokenModel;
 import com.construction.pm.models.ProjectActivityModel;
 import com.construction.pm.models.ProjectActivityMonitoringModel;
+import com.construction.pm.models.StatusTaskEnum;
 import com.construction.pm.models.network.ProjectActivityMonitoringResponseModel;
 import com.construction.pm.models.system.SessionLoginModel;
 import com.construction.pm.models.system.SettingUserModel;
@@ -29,7 +30,7 @@ public class InspectorNetwork extends AuthenticationNetwork {
         return getProjectActivities(projectMemberId, null);
     }
 
-    public ProjectActivityModel[] getProjectActivities(final Integer projectMemberId, final String statusTask) throws WebApiError {
+    public ProjectActivityModel[] getProjectActivities(final Integer projectMemberId, final StatusTaskEnum statusTaskEnum) throws WebApiError {
         // -- Get SessionLoginModel --
         SessionLoginModel sessionLoginModel = getSessionLoginModel();
         AccessTokenModel accessTokenModel = sessionLoginModel.getAccessTokenModel();
@@ -42,7 +43,8 @@ public class InspectorNetwork extends AuthenticationNetwork {
         // -- Prepare WebApiParam formData parameters --
         WebApiParam formData = new WebApiParam();
         formData.add("project_member_id", projectMemberId);
-        formData.add("status_task", statusTask);
+        if (statusTaskEnum != null)
+            formData.add("status_task", statusTaskEnum.getValue());
 
         // -- Request get ProjectActivityModels --
         WebApiResponse webApiResponse = mWebApiRequest.post("/rest/project/getListProjectActivityMonitoringAssignment", headerParam, null, formData);

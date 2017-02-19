@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 
 import com.construction.pm.R;
 import com.construction.pm.activities.fragments.HomeFragment;
+import com.construction.pm.activities.fragments.InspectorFragment;
 import com.construction.pm.activities.fragments.NotificationListFragment;
 import com.construction.pm.activities.fragments.ProjectListFragment;
 import com.construction.pm.activities.fragments.UserChangePasswordFragment;
@@ -39,8 +40,8 @@ public class MainLayout implements NavigationView.OnNavigationItemSelectedListen
     protected static final String FRAGMENT_TAG_HOME = "FRAGMENT_HOME";
     protected static final String FRAGMENT_TAG_NOTIFICATION_LIST = "FRAGMENT_NOTIFICATION_LIST";
     protected static final String FRAGMENT_TAG_PROJECT_LIST = "FRAGMENT_PROJECT_LIST";
-    protected static final String FRAGMENT_TAG_MONITORING = "FRAGMENT_MONITORING";
-    protected static final String FRAGMENT_TAG_UPDATE_TASK_PROGRESS = "FRAGMENT_UPDATE_TASK_PROGRESS";
+    protected static final String FRAGMENT_TAG_INSPECTOR = "FRAGMENT_INSPECTOR";
+    protected static final String FRAGMENT_TAG_MANAGER = "FRAGMENT_MANAGER";
     protected static final String FRAGMENT_TAG_REQUEST_REPORT = "FRAGMENT_REQUEST_REPORT";
     protected static final String FRAGMENT_TAG_USER_CHANGE_PROFILE = "FRAGMENT_USER_CHANGE_PROFILE";
     protected static final String FRAGMENT_TAG_USER_CHANGE_PASSWORD = "FRAGMENT_USER_CHANGE_PASSWORD";
@@ -80,7 +81,7 @@ public class MainLayout implements NavigationView.OnNavigationItemSelectedListen
         mNavigationView.setNavigationItemSelectedListener(this);
 
         // -- Set notification unread quantity view --
-        MenuItem menuItemNotification = getMenuItemById(R.id.navigator_menu_inbox);
+        MenuItem menuItemNotification = getMenuItemById(R.id.navigator_menu_notification);
         if (menuItemNotification != null) {
             if (Build.VERSION.SDK_INT >= 11)
                 menuItemNotification.setActionView(R.layout.main_menu_notification_quantity_view);
@@ -92,7 +93,7 @@ public class MainLayout implements NavigationView.OnNavigationItemSelectedListen
     }
 
     public void setNotificationUnreadQuantity(final int notificationUnreadQuantity) {
-        MenuItem menuItem = getMenuItemById(R.id.navigator_menu_inbox);
+        MenuItem menuItem = getMenuItemById(R.id.navigator_menu_notification);
         if (menuItem != null) {
             if (Build.VERSION.SDK_INT >= 11) {
                 AppCompatTextView textView = (AppCompatTextView) menuItem.getActionView().findViewById(R.id.unreadNotificationQuantity);
@@ -166,7 +167,7 @@ public class MainLayout implements NavigationView.OnNavigationItemSelectedListen
                 if (mMainLayoutListener != null)
                     mMainLayoutListener.onMenuHomeSelected();
                 break;
-            case R.id.navigator_menu_inbox:
+            case R.id.navigator_menu_notification:
                 if (mMainLayoutListener != null)
                     mMainLayoutListener.onMenuNotificationListSelected();
                 break;
@@ -174,9 +175,11 @@ public class MainLayout implements NavigationView.OnNavigationItemSelectedListen
                 if (mMainLayoutListener != null)
                     mMainLayoutListener.onMenuProjectListSelected();
                 break;
-            case R.id.navigator_menu_monitoring:
+            case R.id.navigator_menu_inspector:
+                if (mMainLayoutListener != null)
+                    mMainLayoutListener.onMenuInspectorSelected();
                 break;
-            case R.id.navigator_menu_update_task_progress:
+            case R.id.navigator_menu_manager:
                 break;
             case R.id.navigator_menu_request_report:
                 break;
@@ -212,13 +215,13 @@ public class MainLayout implements NavigationView.OnNavigationItemSelectedListen
                 boolean isChecked = false;
                 if (mFragmentTagSelected.equals(FRAGMENT_TAG_HOME) && menuItem.getItemId() == R.id.navigator_menu_home)
                     isChecked = true;
-                if (mFragmentTagSelected.equals(FRAGMENT_TAG_NOTIFICATION_LIST) && menuItem.getItemId() == R.id.navigator_menu_inbox)
+                if (mFragmentTagSelected.equals(FRAGMENT_TAG_NOTIFICATION_LIST) && menuItem.getItemId() == R.id.navigator_menu_notification)
                     isChecked = true;
                 if (mFragmentTagSelected.equals(FRAGMENT_TAG_PROJECT_LIST) && menuItem.getItemId() == R.id.navigator_menu_project_list)
                     isChecked = true;
-                if (mFragmentTagSelected.equals(FRAGMENT_TAG_MONITORING) && menuItem.getItemId() == R.id.navigator_menu_monitoring)
+                if (mFragmentTagSelected.equals(FRAGMENT_TAG_INSPECTOR) && menuItem.getItemId() == R.id.navigator_menu_inspector)
                     isChecked = true;
-                if (mFragmentTagSelected.equals(FRAGMENT_TAG_UPDATE_TASK_PROGRESS) && menuItem.getItemId() == R.id.navigator_menu_update_task_progress)
+                if (mFragmentTagSelected.equals(FRAGMENT_TAG_MANAGER) && menuItem.getItemId() == R.id.navigator_menu_manager)
                     isChecked = true;
                 if (mFragmentTagSelected.equals(FRAGMENT_TAG_REQUEST_REPORT) && menuItem.getItemId() == R.id.navigator_menu_request_report)
                     isChecked = true;
@@ -310,6 +313,14 @@ public class MainLayout implements NavigationView.OnNavigationItemSelectedListen
         return notificationListFragment;
     }
 
+    public InspectorFragment showInspectorFragment() {
+        InspectorFragment inspectorFragment = InspectorFragment.newInstance();
+
+        loadFragment(inspectorFragment, ViewUtil.getResourceString(mContext, R.string.menu_inspector_title), FRAGMENT_TAG_INSPECTOR);
+
+        return inspectorFragment;
+    }
+
     public UserChangeProfileFragment showUserChangeProfileFragment(final UserChangeProfileFragment.UserChangeProfileFragmentListener userChangeProfileFragmentListener) {
         UserChangeProfileFragment userChangeProfileFragment = UserChangeProfileFragment.newInstance();
         userChangeProfileFragment.setUserChangeProfileFragmentListener(userChangeProfileFragmentListener);
@@ -335,6 +346,7 @@ public class MainLayout implements NavigationView.OnNavigationItemSelectedListen
     public interface MainLayoutListener {
         void onMenuHomeSelected();
         void onMenuProjectListSelected();
+        void onMenuInspectorSelected();
         void onMenuNotificationListSelected();
         void onMenuUserChangeProfileSelected();
         void onMenuUserChangePasswordSelected();

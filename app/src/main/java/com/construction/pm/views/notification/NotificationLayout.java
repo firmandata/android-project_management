@@ -2,8 +2,10 @@ package com.construction.pm.views.notification;
 
 import android.content.Context;
 import android.os.Handler;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -20,12 +22,13 @@ import com.construction.pm.utils.ViewUtil;
 public class NotificationLayout {
     protected Context mContext;
 
-    protected AppCompatActivity mActivity;
+    protected FragmentManager mFragmentManager;
     protected Handler mActivityHandler;
     protected String mFragmentTagSelected;
     protected static final String FRAGMENT_TAG_NOTIFICATION_DETAIL = "FRAGMENT_NOTIFICATION_DETAIL";
 
     protected CoordinatorLayout mNotificationLayout;
+    protected AppBarLayout mAppBarLayout;
     protected ActionBar mActionBar;
     protected Toolbar mToolbar;
 
@@ -51,6 +54,7 @@ public class NotificationLayout {
 
     protected void initializeView(final CoordinatorLayout mainLayout) {
         mNotificationLayout = mainLayout;
+        mAppBarLayout = (AppBarLayout) mNotificationLayout.findViewById(R.id.contentAppBar);
         mToolbar = (Toolbar) mNotificationLayout.findViewById(R.id.contentToolbar);
     }
 
@@ -58,13 +62,13 @@ public class NotificationLayout {
         return mNotificationLayout;
     }
 
-    public void loadLayoutToActivity(AppCompatActivity activity) {
-        mActivity = activity;
+    public void loadLayoutToActivity(final AppCompatActivity activity) {
+        mFragmentManager = activity.getSupportFragmentManager();
 
-        mActivity.setContentView(mNotificationLayout);
+        activity.setContentView(mNotificationLayout);
 
-        mActivity.setSupportActionBar(mToolbar);
-        mActionBar = mActivity.getSupportActionBar();
+        activity.setSupportActionBar(mToolbar);
+        mActionBar = activity.getSupportActionBar();
         if (mActionBar != null) {
             mActionBar.setTitle(R.string.notification_layout_title);
             mActionBar.setDisplayHomeAsUpEnabled(true);
@@ -72,6 +76,13 @@ public class NotificationLayout {
             mActionBar.setDisplayUseLogoEnabled(false);
         }
 
+        mActivityHandler = new Handler();
+    }
+
+    public void loadLayoutToFragment(final Fragment fragment) {
+        mAppBarLayout.removeView(mToolbar);
+
+        mFragmentManager = fragment.getChildFragmentManager();
         mActivityHandler = new Handler();
     }
 
@@ -98,10 +109,10 @@ public class NotificationLayout {
         mActivityHandler.post(new Runnable() {
             @Override
             public void run() {
-                if (mActivity == null)
+                if (mFragmentManager == null)
                     return;
 
-                FragmentTransaction fragmentTransaction = mActivity.getSupportFragmentManager().beginTransaction();
+                FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
                 fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
                 fragmentTransaction.replace(R.id.contentBody, fragment, tag);
                 fragmentTransaction.commitAllowingStateLoss();
