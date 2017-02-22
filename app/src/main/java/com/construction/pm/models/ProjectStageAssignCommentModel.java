@@ -4,10 +4,9 @@ import com.construction.pm.utils.DateTimeUtil;
 
 import org.json.JSONException;
 
-import java.io.File;
 import java.util.Calendar;
 
-public class ProjectStageAssignmentCommentModel {
+public class ProjectStageAssignCommentModel {
 
     protected Integer mProjectStageAssignCommentId;
     protected Integer mProjectStageAssignmentId;
@@ -26,7 +25,7 @@ public class ProjectStageAssignmentCommentModel {
     protected Integer mProjectStageId;
     protected Integer mProjectMemberId;
 
-    public ProjectStageAssignmentCommentModel() {
+    public ProjectStageAssignCommentModel() {
 
     }
 
@@ -158,43 +157,43 @@ public class ProjectStageAssignmentCommentModel {
         return mProjectMemberId;
     }
 
-    public static ProjectStageAssignmentCommentModel build(final org.json.JSONObject jsonObject) throws JSONException {
-        ProjectStageAssignmentCommentModel projectStageAssignmentCommentModel = new ProjectStageAssignmentCommentModel();
+    public static ProjectStageAssignCommentModel build(final org.json.JSONObject jsonObject) throws JSONException {
+        ProjectStageAssignCommentModel projectStageAssignCommentModel = new ProjectStageAssignCommentModel();
 
         if (!jsonObject.isNull("project_stage_assign_comment_id"))
-            projectStageAssignmentCommentModel.setProjectStageAssignCommentId(jsonObject.getInt("project_stage_assign_comment_id"));
+            projectStageAssignCommentModel.setProjectStageAssignCommentId(jsonObject.getInt("project_stage_assign_comment_id"));
         if (!jsonObject.isNull("project_stage_assignment_id"))
-            projectStageAssignmentCommentModel.setProjectStageAssignmentId(jsonObject.getInt("project_stage_assignment_id"));
+            projectStageAssignCommentModel.setProjectStageAssignmentId(jsonObject.getInt("project_stage_assignment_id"));
         if (!jsonObject.isNull("comment_date"))
-            projectStageAssignmentCommentModel.setCommentDate(DateTimeUtil.FromDateTimeString(jsonObject.getString("comment_date")));
+            projectStageAssignCommentModel.setCommentDate(DateTimeUtil.FromDateTimeString(jsonObject.getString("comment_date")));
         if (!jsonObject.isNull("comment"))
-            projectStageAssignmentCommentModel.setComment(jsonObject.getString("comment"));
+            projectStageAssignCommentModel.setComment(jsonObject.getString("comment"));
         if (!jsonObject.isNull("photo_id"))
-            projectStageAssignmentCommentModel.setPhotoId(jsonObject.getInt("photo_id"));
+            projectStageAssignCommentModel.setPhotoId(jsonObject.getInt("photo_id"));
         if (!jsonObject.isNull("photo_additional1_id"))
-            projectStageAssignmentCommentModel.setPhotoAdditional1Id(jsonObject.getInt("photo_additional1_id"));
+            projectStageAssignCommentModel.setPhotoAdditional1Id(jsonObject.getInt("photo_additional1_id"));
         if (!jsonObject.isNull("photo_additional2_id"))
-            projectStageAssignmentCommentModel.setPhotoAdditional2Id(jsonObject.getInt("photo_additional2_id"));
+            projectStageAssignCommentModel.setPhotoAdditional2Id(jsonObject.getInt("photo_additional2_id"));
         if (!jsonObject.isNull("photo_additional3_id"))
-            projectStageAssignmentCommentModel.setPhotoAdditional3Id(jsonObject.getInt("photo_additional3_id"));
+            projectStageAssignCommentModel.setPhotoAdditional3Id(jsonObject.getInt("photo_additional3_id"));
         if (!jsonObject.isNull("photo_additional4_id"))
-            projectStageAssignmentCommentModel.setPhotoAdditional4Id(jsonObject.getInt("photo_additional4_id"));
+            projectStageAssignCommentModel.setPhotoAdditional4Id(jsonObject.getInt("photo_additional4_id"));
         if (!jsonObject.isNull("photo_additional5_id"))
-            projectStageAssignmentCommentModel.setPhotoAdditional5Id(jsonObject.getInt("photo_additional5_id"));
+            projectStageAssignCommentModel.setPhotoAdditional5Id(jsonObject.getInt("photo_additional5_id"));
         if (!jsonObject.isNull("creator_id"))
-            projectStageAssignmentCommentModel.setCreatorId(jsonObject.getInt("creator_id"));
+            projectStageAssignCommentModel.setCreatorId(jsonObject.getInt("creator_id"));
         if (!jsonObject.isNull("create_date"))
-            projectStageAssignmentCommentModel.setCreateDate(DateTimeUtil.FromDateTimeString(jsonObject.getString("create_date")));
+            projectStageAssignCommentModel.setCreateDate(DateTimeUtil.FromDateTimeString(jsonObject.getString("create_date")));
         if (!jsonObject.isNull("last_user_id"))
-            projectStageAssignmentCommentModel.setLastUserId(jsonObject.getInt("last_user_id"));
+            projectStageAssignCommentModel.setLastUserId(jsonObject.getInt("last_user_id"));
         if (!jsonObject.isNull("last_update"))
-            projectStageAssignmentCommentModel.setLastUpdate(DateTimeUtil.FromDateTimeString(jsonObject.getString("last_update")));
+            projectStageAssignCommentModel.setLastUpdate(DateTimeUtil.FromDateTimeString(jsonObject.getString("last_update")));
         if (!jsonObject.isNull("project_stage_id"))
-            projectStageAssignmentCommentModel.setProjectStageId(jsonObject.getInt("project_stage_id"));
+            projectStageAssignCommentModel.setProjectStageId(jsonObject.getInt("project_stage_id"));
         if (!jsonObject.isNull("project_member_id"))
-            projectStageAssignmentCommentModel.setProjectMemberId(jsonObject.getInt("project_member_id"));
+            projectStageAssignCommentModel.setProjectMemberId(jsonObject.getInt("project_member_id"));
 
-        return projectStageAssignmentCommentModel;
+        return projectStageAssignCommentModel;
     }
 
     public org.json.JSONObject build() throws JSONException {

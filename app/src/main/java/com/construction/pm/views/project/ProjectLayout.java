@@ -29,8 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProjectLayout {
-
     protected Context mContext;
+    protected FragmentManager mFragmentManager;
 
     protected CoordinatorLayout mProjectLayout;
     protected AppBarLayout mAppBarLayout;
@@ -38,8 +38,6 @@ public class ProjectLayout {
     protected TabLayout mTabLayout;
     protected ViewPager mViewPager;
     protected ViewPagerAdapter mViewPagerAdapter;
-
-    protected ProjectModel mProjectModel;
 
     protected ProjectLayoutListener mProjectLayoutListener;
 
@@ -53,12 +51,12 @@ public class ProjectLayout {
         initializeView(projectLayout);
     }
 
-    public static ProjectLayout buildProjectDetailLayout(final Context context, final int layoutId, final ViewGroup viewGroup) {
+    public static ProjectLayout buildProjectLayout(final Context context, final int layoutId, final ViewGroup viewGroup) {
         return new ProjectLayout(context, (CoordinatorLayout) LayoutInflater.from(context).inflate(layoutId, viewGroup));
     }
 
-    public static ProjectLayout buildProjectDetailLayout(final Context context, final ViewGroup viewGroup) {
-        return buildProjectDetailLayout(context, R.layout.project_layout, viewGroup);
+    public static ProjectLayout buildProjectLayout(final Context context, final ViewGroup viewGroup) {
+        return buildProjectLayout(context, R.layout.project_layout, viewGroup);
     }
 
     protected void initializeView(final CoordinatorLayout projectLayout) {
@@ -69,23 +67,21 @@ public class ProjectLayout {
         mViewPager = (ViewPager) mProjectLayout.findViewById(R.id.contentBody);
     }
 
-    public void setProjectModel(final ProjectModel projectModel) {
-        mProjectModel = projectModel;
-    }
-
     public CoordinatorLayout getLayout() {
         return mProjectLayout;
     }
 
-    public void loadLayoutToActivity(final AppCompatActivity activity) {
+    public void loadLayoutToActivity(final AppCompatActivity activity, final ProjectModel projectModel) {
+        mFragmentManager = activity.getSupportFragmentManager();
+
         activity.setContentView(mProjectLayout);
 
         activity.setSupportActionBar(mToolbar);
         ActionBar actionBar = activity.getSupportActionBar();
         if (actionBar != null) {
-            if (mProjectModel != null) {
-                actionBar.setTitle(mProjectModel.getContractNo());
-                actionBar.setSubtitle(mProjectModel.getProjectName());
+            if (projectModel != null) {
+                actionBar.setTitle(projectModel.getContractNo());
+                actionBar.setSubtitle(projectModel.getProjectName());
             } else
                 actionBar.setTitle(R.string.project_layout_title);
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -93,25 +89,27 @@ public class ProjectLayout {
             actionBar.setDisplayUseLogoEnabled(false);
         }
 
-        mViewPagerAdapter = new ViewPagerAdapter(activity.getSupportFragmentManager());
+        mViewPagerAdapter = new ViewPagerAdapter(mFragmentManager);
         mViewPager.setAdapter(mViewPagerAdapter);
 
         mTabLayout.setupWithViewPager(mViewPager);
 
         if (mProjectLayoutListener != null)
-            mProjectLayoutListener.onProjectRequest(mProjectModel);
+            mProjectLayoutListener.onProjectRequest(projectModel);
     }
 
-    public void loadLayoutToFragment(final Fragment fragment) {
+    public void loadLayoutToFragment(final Fragment fragment, final ProjectModel projectModel) {
+        mFragmentManager = fragment.getChildFragmentManager();
+
         mAppBarLayout.removeView(mToolbar);
 
-        mViewPagerAdapter = new ViewPagerAdapter(fragment.getChildFragmentManager());
+        mViewPagerAdapter = new ViewPagerAdapter(mFragmentManager);
         mViewPager.setAdapter(mViewPagerAdapter);
 
         mTabLayout.setupWithViewPager(mViewPager);
 
         if (mProjectLayoutListener != null)
-            mProjectLayoutListener.onProjectRequest(mProjectModel);
+            mProjectLayoutListener.onProjectRequest(projectModel);
     }
 
     public void setLayoutData(final ContractModel contractModel, final ProjectModel projectModel, final ProjectStageModel[] projectStageModels, final ProjectPlanModel[] projectPlanModels) {

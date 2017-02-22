@@ -5,7 +5,9 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.construction.pm.models.ProjectModel;
+import com.construction.pm.models.network.ProjectPlanResponseModel;
 import com.construction.pm.models.network.ProjectResponseModel;
+import com.construction.pm.models.network.ProjectStageResponseModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,25 +37,14 @@ public class ProjectCachePersistent extends NetworkCachePersistent {
         }
 
         if (content != null) {
-            SQLiteDatabase sqLiteDatabase = null;
-
             try {
-                sqLiteDatabase = getWritableDatabase();
+                SQLiteDatabase sqLiteDatabase = mSQLitePersistent.getWritableDatabase();
 
                 // -- Save content to cache --
                 networkCacheId = saveNetworkCacheContent(sqLiteDatabase, NetworkCachePersistentType.PROJECT_LIST, contentKey, content, projectMemberId);
-
-                // -- Close database --
-                sqLiteDatabase.close();
             } catch (SQLException ex) {
-                // -- Close database --
-                if (sqLiteDatabase != null && sqLiteDatabase.isOpen())
-                    sqLiteDatabase.close();
                 throw new PersistenceError(0, ex.getMessage(), ex);
             } catch (Exception ex) {
-                // -- Close database --
-                if (sqLiteDatabase != null && sqLiteDatabase.isOpen())
-                    sqLiteDatabase.close();
                 throw new PersistenceError(0, ex.getMessage(), ex);
             }
         }
@@ -67,24 +58,14 @@ public class ProjectCachePersistent extends NetworkCachePersistent {
         String contentKey = String.valueOf(projectMemberId);
         String content = null;
 
-        SQLiteDatabase sqLiteDatabase = null;
         try {
-            sqLiteDatabase = getReadableDatabase();
+            SQLiteDatabase sqLiteDatabase = mSQLitePersistent.getReadableDatabase();
 
             // -- Get content from cache --
             content = getNetworkCacheContent(sqLiteDatabase, NetworkCachePersistentType.PROJECT_LIST, contentKey, projectMemberId);
-
-            // -- Close database --
-            sqLiteDatabase.close();
         } catch (SQLException ex) {
-            // -- Close database --
-            if (sqLiteDatabase != null && sqLiteDatabase.isOpen())
-                sqLiteDatabase.close();
             throw new PersistenceError(0, ex.getMessage(), ex);
         } catch (Exception ex) {
-            // -- Close database --
-            if (sqLiteDatabase != null && sqLiteDatabase.isOpen())
-                sqLiteDatabase.close();
             throw new PersistenceError(0, ex.getMessage(), ex);
         }
 
@@ -124,25 +105,14 @@ public class ProjectCachePersistent extends NetworkCachePersistent {
         }
 
         if (content != null) {
-            SQLiteDatabase sqLiteDatabase = null;
-
             try {
-                sqLiteDatabase = getWritableDatabase();
+                SQLiteDatabase sqLiteDatabase = mSQLitePersistent.getWritableDatabase();
 
                 // -- Save content to cache --
                 networkCacheId = saveNetworkCacheContent(sqLiteDatabase, NetworkCachePersistentType.PROJECT_DEPENDENCIES, contentKey, content, projectMemberId);
-
-                // -- Close database --
-                sqLiteDatabase.close();
             } catch (SQLException ex) {
-                // -- Close database --
-                if (sqLiteDatabase != null && sqLiteDatabase.isOpen())
-                    sqLiteDatabase.close();
                 throw new PersistenceError(0, ex.getMessage(), ex);
             } catch (Exception ex) {
-                // -- Close database --
-                if (sqLiteDatabase != null && sqLiteDatabase.isOpen())
-                    sqLiteDatabase.close();
                 throw new PersistenceError(0, ex.getMessage(), ex);
             }
         }
@@ -156,24 +126,14 @@ public class ProjectCachePersistent extends NetworkCachePersistent {
         String contentKey = String.valueOf(projectId);
         String content = null;
 
-        SQLiteDatabase sqLiteDatabase = null;
         try {
-            sqLiteDatabase = getReadableDatabase();
+            SQLiteDatabase sqLiteDatabase = mSQLitePersistent.getReadableDatabase();
 
             // -- Get content from cache --
             content = getNetworkCacheContent(sqLiteDatabase, NetworkCachePersistentType.PROJECT_DEPENDENCIES, contentKey, projectMemberId);
-
-            // -- Close database --
-            sqLiteDatabase.close();
         } catch (SQLException ex) {
-            // -- Close database --
-            if (sqLiteDatabase != null && sqLiteDatabase.isOpen())
-                sqLiteDatabase.close();
             throw new PersistenceError(0, ex.getMessage(), ex);
         } catch (Exception ex) {
-            // -- Close database --
-            if (sqLiteDatabase != null && sqLiteDatabase.isOpen())
-                sqLiteDatabase.close();
             throw new PersistenceError(0, ex.getMessage(), ex);
         }
 
@@ -188,5 +148,131 @@ public class ProjectCachePersistent extends NetworkCachePersistent {
         }
 
         return projectResponseModel;
+    }
+
+    public long setProjectStageResponseModel(final ProjectStageResponseModel projectStageResponseModel, final Integer projectMemberId) throws PersistenceError {
+        long networkCacheId = 0;
+
+        String contentKey = null;
+        String content = null;
+
+        // -- Get contentKey --
+        if (projectStageResponseModel.getProjectStageModel() != null)
+            contentKey = String.valueOf(projectStageResponseModel.getProjectStageModel().getProjectStageId());
+
+        // -- Get ProjectStageResponseModel content --
+        try {
+            content = projectStageResponseModel.build().toString(0);
+        } catch (org.json.JSONException ex) {
+        } catch (Exception ex) {
+        }
+
+        if (content != null) {
+            try {
+                SQLiteDatabase sqLiteDatabase = mSQLitePersistent.getWritableDatabase();
+
+                // -- Save content to cache --
+                networkCacheId = saveNetworkCacheContent(sqLiteDatabase, NetworkCachePersistentType.PROJECT_STAGE_DEPENDENCIES, contentKey, content, projectMemberId);
+            } catch (SQLException ex) {
+                throw new PersistenceError(0, ex.getMessage(), ex);
+            } catch (Exception ex) {
+                throw new PersistenceError(0, ex.getMessage(), ex);
+            }
+        }
+
+        return networkCacheId;
+    }
+
+    public ProjectStageResponseModel getProjectStageResponseModel(final Integer projectStageId, final Integer projectMemberId) throws PersistenceError {
+        ProjectStageResponseModel projectStageResponseModel = null;
+
+        String contentKey = String.valueOf(projectStageId);
+        String content = null;
+
+        try {
+            SQLiteDatabase sqLiteDatabase = mSQLitePersistent.getReadableDatabase();
+
+            // -- Get content from cache --
+            content = getNetworkCacheContent(sqLiteDatabase, NetworkCachePersistentType.PROJECT_STAGE_DEPENDENCIES, contentKey, projectMemberId);
+        } catch (SQLException ex) {
+            throw new PersistenceError(0, ex.getMessage(), ex);
+        } catch (Exception ex) {
+            throw new PersistenceError(0, ex.getMessage(), ex);
+        }
+
+        // -- Generate ProjectStageResponseModel from content
+        if (content != null) {
+            try {
+                org.json.JSONObject jsonObject = new org.json.JSONObject(content);
+                projectStageResponseModel = ProjectStageResponseModel.build(jsonObject);
+            } catch (org.json.JSONException ex) {
+            } catch (Exception ex) {
+            }
+        }
+
+        return projectStageResponseModel;
+    }
+
+    public long setProjectPlanResponseModel(final ProjectPlanResponseModel projectPlanResponseModel, final Integer projectMemberId) throws PersistenceError {
+        long networkCacheId = 0;
+
+        String contentKey = null;
+        String content = null;
+
+        // -- Get contentKey --
+        if (projectPlanResponseModel.getProjectPlanModel() != null)
+            contentKey = String.valueOf(projectPlanResponseModel.getProjectPlanModel().getProjectPlanId());
+
+        // -- Get ProjectPlanResponseModel content --
+        try {
+            content = projectPlanResponseModel.build().toString(0);
+        } catch (org.json.JSONException ex) {
+        } catch (Exception ex) {
+        }
+
+        if (content != null) {
+            try {
+                SQLiteDatabase sqLiteDatabase = mSQLitePersistent.getWritableDatabase();
+
+                // -- Save content to cache --
+                networkCacheId = saveNetworkCacheContent(sqLiteDatabase, NetworkCachePersistentType.PROJECT_PLAN_DEPENDENCIES, contentKey, content, projectMemberId);
+            } catch (SQLException ex) {
+                throw new PersistenceError(0, ex.getMessage(), ex);
+            } catch (Exception ex) {
+                throw new PersistenceError(0, ex.getMessage(), ex);
+            }
+        }
+
+        return networkCacheId;
+    }
+
+    public ProjectPlanResponseModel getProjectPlanResponseModel(final Integer projectPlanId, final Integer projectMemberId) throws PersistenceError {
+        ProjectPlanResponseModel projectPlanResponseModel = null;
+
+        String contentKey = String.valueOf(projectPlanId);
+        String content = null;
+
+        try {
+            SQLiteDatabase sqLiteDatabase = mSQLitePersistent.getReadableDatabase();
+
+            // -- Get content from cache --
+            content = getNetworkCacheContent(sqLiteDatabase, NetworkCachePersistentType.PROJECT_PLAN_DEPENDENCIES, contentKey, projectMemberId);
+        } catch (SQLException ex) {
+            throw new PersistenceError(0, ex.getMessage(), ex);
+        } catch (Exception ex) {
+            throw new PersistenceError(0, ex.getMessage(), ex);
+        }
+
+        // -- Generate ProjectPlanResponseModel from content
+        if (content != null) {
+            try {
+                org.json.JSONObject jsonObject = new org.json.JSONObject(content);
+                projectPlanResponseModel = ProjectPlanResponseModel.build(jsonObject);
+            } catch (org.json.JSONException ex) {
+            } catch (Exception ex) {
+            }
+        }
+
+        return projectPlanResponseModel;
     }
 }

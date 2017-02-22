@@ -1,6 +1,7 @@
 package com.construction.pm.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -36,8 +37,26 @@ public class ProjectActivity extends AppCompatActivity implements ProjectLayout.
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // -- Get parameters --
-        Bundle bundle = getIntent().getExtras();
+        // -- Handle intent request parameters --
+        newIntentHandle(getIntent().getExtras());
+
+        // -- Prepare ProjectLayout --
+        mProjectLayout = ProjectLayout.buildProjectLayout(this, null);
+        mProjectLayout.setProjectLayoutListener(this);
+
+        // -- Load to Activity --
+        mProjectLayout.loadLayoutToActivity(this, mProjectModel);
+    }
+
+    @Override
+    public void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        // -- Handle intent request parameters --
+        newIntentHandle(intent.getExtras());
+    }
+
+    protected void newIntentHandle(final Bundle bundle) {
         if (bundle != null) {
             // -- Get ProjectModel parameter --
             try {
@@ -46,14 +65,6 @@ public class ProjectActivity extends AppCompatActivity implements ProjectLayout.
             } catch (org.json.JSONException ex) {
             }
         }
-
-        // -- Prepare ProjectLayout --
-        mProjectLayout = ProjectLayout.buildProjectDetailLayout(this, null);
-        mProjectLayout.setProjectModel(mProjectModel);
-        mProjectLayout.setProjectLayoutListener(this);
-
-        // -- Load to Activity --
-        mProjectLayout.loadLayoutToActivity(this);
     }
 
     @Override
@@ -210,7 +221,7 @@ public class ProjectActivity extends AppCompatActivity implements ProjectLayout.
             // -- Prepare ProjectHandleTaskResult --
             ProjectHandleTaskResult projectHandleTaskResult = new ProjectHandleTaskResult();
 
-            // -- Get ProjectModels progress --
+            // -- Get ProjectResponseModel progress --
             publishProgress(ViewUtil.getResourceString(mContext, R.string.project_handle_task_begin));
 
             // -- Prepare ProjectCachePersistent --
@@ -231,7 +242,7 @@ public class ProjectActivity extends AppCompatActivity implements ProjectLayout.
                         // -- Invalidate Login --
                         projectNetwork.invalidateLogin();
 
-                        // -- Get project from server --
+                        // -- Get ProjectResponseModel from server --
                         projectResponseModel = projectNetwork.getProject(projectModel.getProjectId());
 
                         // -- Save to ProjectCachePersistent --
@@ -262,7 +273,7 @@ public class ProjectActivity extends AppCompatActivity implements ProjectLayout.
                 projectHandleTaskResult.setProjectStageModels(projectResponseModel.getProjectStageModels());
                 projectHandleTaskResult.setProjectPlanModels(projectResponseModel.getProjectPlanModels());
 
-                // -- Get ProjectModels progress --
+                // -- Get ProjectResponseModel progress --
                 publishProgress(ViewUtil.getResourceString(mContext, R.string.project_handle_task_success));
             }
 

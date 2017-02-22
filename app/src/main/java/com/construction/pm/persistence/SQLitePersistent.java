@@ -4,7 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-public abstract class SQLitePersistent extends SQLiteOpenHelper {
+public class SQLitePersistent extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "AppPersistent.db";
 

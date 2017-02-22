@@ -21,9 +21,9 @@ import com.construction.pm.utils.ViewUtil;
 
 public class NotificationLayout {
     protected Context mContext;
-
+    protected Handler mFragmentHandler;
     protected FragmentManager mFragmentManager;
-    protected Handler mActivityHandler;
+
     protected String mFragmentTagSelected;
     protected static final String FRAGMENT_TAG_NOTIFICATION_DETAIL = "FRAGMENT_NOTIFICATION_DETAIL";
 
@@ -63,6 +63,7 @@ public class NotificationLayout {
     }
 
     public void loadLayoutToActivity(final AppCompatActivity activity) {
+        mFragmentHandler = new Handler();
         mFragmentManager = activity.getSupportFragmentManager();
 
         activity.setContentView(mNotificationLayout);
@@ -75,15 +76,13 @@ public class NotificationLayout {
             mActionBar.setDisplayShowHomeEnabled(true);
             mActionBar.setDisplayUseLogoEnabled(false);
         }
-
-        mActivityHandler = new Handler();
     }
 
     public void loadLayoutToFragment(final Fragment fragment) {
-        mAppBarLayout.removeView(mToolbar);
-
+        mFragmentHandler = new Handler();
         mFragmentManager = fragment.getChildFragmentManager();
-        mActivityHandler = new Handler();
+
+        mAppBarLayout.removeView(mToolbar);
     }
 
     public boolean isNotificationFragmentShow() {
@@ -91,7 +90,7 @@ public class NotificationLayout {
     }
 
     protected void loadFragment(final Fragment fragment, final String title, final String subtitle, final String tag) {
-        if (mActivityHandler == null)
+        if (mFragmentHandler == null)
             return;
         if (mFragmentTagSelected != null) {
             if (mFragmentTagSelected.equals(tag))
@@ -106,7 +105,7 @@ public class NotificationLayout {
                 mActionBar.setSubtitle(subtitle);
         }
 
-        mActivityHandler.post(new Runnable() {
+        mFragmentHandler.post(new Runnable() {
             @Override
             public void run() {
                 if (mFragmentManager == null)

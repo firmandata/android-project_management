@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.construction.pm.MainApplication;
 import com.construction.pm.models.NotificationModel;
 import com.construction.pm.models.system.SessionLoginModel;
 import com.construction.pm.utils.DateTimeUtil;
@@ -14,19 +15,21 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class NotificationPersistent extends SQLitePersistent {
+public class NotificationPersistent {
+
+    protected Context mContext;
+    protected SQLitePersistent mSQLitePersistent;
 
     public NotificationPersistent(Context context) {
-        super(context);
+        mContext = context;
+        mSQLitePersistent = ((MainApplication) mContext.getApplicationContext()).getSQLitePersistent();
     }
 
     public long[] saveNotificationModels(final NotificationModel[] notificationModels) throws PersistenceError {
         List<Long> notificationIdList = new ArrayList<Long>();
 
-        SQLiteDatabase sqLiteDatabase = null;
-
         try {
-            sqLiteDatabase = getWritableDatabase();
+            SQLiteDatabase sqLiteDatabase = mSQLitePersistent.getWritableDatabase();
 
             // -- Start transaction --
             sqLiteDatabase.beginTransaction();
@@ -96,18 +99,9 @@ public class NotificationPersistent extends SQLitePersistent {
 
             // -- End transaction --
             sqLiteDatabase.endTransaction();
-
-            // -- Close database --
-            sqLiteDatabase.close();
         } catch (SQLException ex) {
-            // -- Close database --
-            if (sqLiteDatabase != null && sqLiteDatabase.isOpen())
-                sqLiteDatabase.close();
             throw new PersistenceError(0, ex.getMessage(), ex);
         } catch (Exception ex) {
-            // -- Close database --
-            if (sqLiteDatabase != null && sqLiteDatabase.isOpen())
-                sqLiteDatabase.close();
             throw new PersistenceError(0, ex.getMessage(), ex);
         }
 
@@ -122,9 +116,8 @@ public class NotificationPersistent extends SQLitePersistent {
     public NotificationModel[] getNotificationModels(final Integer projectMemberId) throws PersistenceError {
         List<NotificationModel> notificationModelList = new ArrayList<NotificationModel>();
 
-        SQLiteDatabase sqLiteDatabase = null;
         try {
-            sqLiteDatabase = getReadableDatabase();
+            SQLiteDatabase sqLiteDatabase = mSQLitePersistent.getReadableDatabase();
 
             Cursor cursor = sqLiteDatabase.rawQuery(
                 "SELECT content " +
@@ -149,18 +142,9 @@ public class NotificationPersistent extends SQLitePersistent {
                 } while (cursor.moveToNext());
             }
             cursor.close();
-
-            // -- Close database --
-            sqLiteDatabase.close();
         } catch (SQLException ex) {
-            // -- Close database --
-            if (sqLiteDatabase != null && sqLiteDatabase.isOpen())
-                sqLiteDatabase.close();
             throw new PersistenceError(0, ex.getMessage(), ex);
         } catch (Exception ex) {
-            // -- Close database --
-            if (sqLiteDatabase != null && sqLiteDatabase.isOpen())
-                sqLiteDatabase.close();
             throw new PersistenceError(0, ex.getMessage(), ex);
         }
 
@@ -176,9 +160,8 @@ public class NotificationPersistent extends SQLitePersistent {
     public NotificationModel[] getUnreadNotificationModels(final Integer projectMemberId, final int limit) throws PersistenceError {
         List<NotificationModel> notificationModelList = new ArrayList<NotificationModel>();
 
-        SQLiteDatabase sqLiteDatabase = null;
         try {
-            sqLiteDatabase = getReadableDatabase();
+            SQLiteDatabase sqLiteDatabase = mSQLitePersistent.getReadableDatabase();
 
             Cursor cursor = sqLiteDatabase.rawQuery(
                 "SELECT content " +
@@ -205,18 +188,9 @@ public class NotificationPersistent extends SQLitePersistent {
                 } while (cursor.moveToNext());
             }
             cursor.close();
-
-            // -- Close database --
-            sqLiteDatabase.close();
         } catch (SQLException ex) {
-            // -- Close database --
-            if (sqLiteDatabase != null && sqLiteDatabase.isOpen())
-                sqLiteDatabase.close();
             throw new PersistenceError(0, ex.getMessage(), ex);
         } catch (Exception ex) {
-            // -- Close database --
-            if (sqLiteDatabase != null && sqLiteDatabase.isOpen())
-                sqLiteDatabase.close();
             throw new PersistenceError(0, ex.getMessage(), ex);
         }
 
@@ -228,9 +202,8 @@ public class NotificationPersistent extends SQLitePersistent {
     public int getUnreadNotificationModelCount(final Integer projectMemberId) throws PersistenceError {
         int unreadNotificationModelCount = 0;
 
-        SQLiteDatabase sqLiteDatabase = null;
         try {
-            sqLiteDatabase = getReadableDatabase();
+            SQLiteDatabase sqLiteDatabase = mSQLitePersistent.getReadableDatabase();
 
             Cursor cursor = sqLiteDatabase.rawQuery(
                 "SELECT COUNT(id) num_rows " +
@@ -245,18 +218,9 @@ public class NotificationPersistent extends SQLitePersistent {
                 unreadNotificationModelCount = cursor.getInt(cursor.getColumnIndex("num_rows"));
             }
             cursor.close();
-
-            // -- Close database --
-            sqLiteDatabase.close();
         } catch (SQLException ex) {
-            // -- Close database --
-            if (sqLiteDatabase != null && sqLiteDatabase.isOpen())
-                sqLiteDatabase.close();
             throw new PersistenceError(0, ex.getMessage(), ex);
         } catch (Exception ex) {
-            // -- Close database --
-            if (sqLiteDatabase != null && sqLiteDatabase.isOpen())
-                sqLiteDatabase.close();
             throw new PersistenceError(0, ex.getMessage(), ex);
         }
 
@@ -266,9 +230,8 @@ public class NotificationPersistent extends SQLitePersistent {
     public boolean saveNotificationModel(final NotificationModel notificationModel) throws PersistenceError {
         int affectedRow = 0;
 
-        SQLiteDatabase sqLiteDatabase = null;
         try {
-            sqLiteDatabase = getWritableDatabase();
+            SQLiteDatabase sqLiteDatabase = mSQLitePersistent.getWritableDatabase();
 
             // -- Get NotificationModel json content --
             String content = null;
@@ -290,18 +253,9 @@ public class NotificationPersistent extends SQLitePersistent {
                     String.valueOf(notificationModel.getProjectMemberId())
                 }
             );
-
-            // -- Close database --
-            sqLiteDatabase.close();
         } catch (SQLException ex) {
-            // -- Close database --
-            if (sqLiteDatabase != null && sqLiteDatabase.isOpen())
-                sqLiteDatabase.close();
             throw new PersistenceError(0, ex.getMessage(), ex);
         } catch (Exception ex) {
-            // -- Close database --
-            if (sqLiteDatabase != null && sqLiteDatabase.isOpen())
-                sqLiteDatabase.close();
             throw new PersistenceError(0, ex.getMessage(), ex);
         }
 
@@ -311,9 +265,8 @@ public class NotificationPersistent extends SQLitePersistent {
     public NotificationModel getLastNotificationModel(final Integer projectMemberId) throws PersistenceError {
         NotificationModel notificationModel = null;
 
-        SQLiteDatabase sqLiteDatabase = null;
         try {
-            sqLiteDatabase = getReadableDatabase();
+            SQLiteDatabase sqLiteDatabase = mSQLitePersistent.getReadableDatabase();
 
             Cursor cursor = sqLiteDatabase.rawQuery(
                 "SELECT content, is_read " +
@@ -337,18 +290,9 @@ public class NotificationPersistent extends SQLitePersistent {
                 }
             }
             cursor.close();
-
-            // -- Close database --
-            sqLiteDatabase.close();
         } catch (SQLException ex) {
-            // -- Close database --
-            if (sqLiteDatabase != null && sqLiteDatabase.isOpen())
-                sqLiteDatabase.close();
             throw new PersistenceError(0, ex.getMessage(), ex);
         } catch (Exception ex) {
-            // -- Close database --
-            if (sqLiteDatabase != null && sqLiteDatabase.isOpen())
-                sqLiteDatabase.close();
             throw new PersistenceError(0, ex.getMessage(), ex);
         }
 

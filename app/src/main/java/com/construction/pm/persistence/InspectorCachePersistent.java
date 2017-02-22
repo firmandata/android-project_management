@@ -40,25 +40,14 @@ public class InspectorCachePersistent extends NetworkCachePersistent {
         }
 
         if (content != null) {
-            SQLiteDatabase sqLiteDatabase = null;
-
             try {
-                sqLiteDatabase = getWritableDatabase();
+                SQLiteDatabase sqLiteDatabase = mSQLitePersistent.getWritableDatabase();
 
                 // -- Save content to cache --
                 networkCacheId = saveNetworkCacheContent(sqLiteDatabase, NetworkCachePersistentType.INSPECTOR_PROJECT_ACTIVITY_LIST, contentKey, content, projectMemberId);
-
-                // -- Close database --
-                sqLiteDatabase.close();
             } catch (SQLException ex) {
-                // -- Close database --
-                if (sqLiteDatabase != null && sqLiteDatabase.isOpen())
-                    sqLiteDatabase.close();
                 throw new PersistenceError(0, ex.getMessage(), ex);
             } catch (Exception ex) {
-                // -- Close database --
-                if (sqLiteDatabase != null && sqLiteDatabase.isOpen())
-                    sqLiteDatabase.close();
                 throw new PersistenceError(0, ex.getMessage(), ex);
             }
         }
@@ -78,24 +67,14 @@ public class InspectorCachePersistent extends NetworkCachePersistent {
             contentKey += "_" + statusTaskEnum.getValue();
         String content = null;
 
-        SQLiteDatabase sqLiteDatabase = null;
         try {
-            sqLiteDatabase = getReadableDatabase();
+            SQLiteDatabase sqLiteDatabase = mSQLitePersistent.getReadableDatabase();
 
             // -- Get content from cache --
             content = getNetworkCacheContent(sqLiteDatabase, NetworkCachePersistentType.INSPECTOR_PROJECT_ACTIVITY_LIST, contentKey, projectMemberId);
-
-            // -- Close database --
-            sqLiteDatabase.close();
         } catch (SQLException ex) {
-            // -- Close database --
-            if (sqLiteDatabase != null && sqLiteDatabase.isOpen())
-                sqLiteDatabase.close();
             throw new PersistenceError(0, ex.getMessage(), ex);
         } catch (Exception ex) {
-            // -- Close database --
-            if (sqLiteDatabase != null && sqLiteDatabase.isOpen())
-                sqLiteDatabase.close();
             throw new PersistenceError(0, ex.getMessage(), ex);
         }
 

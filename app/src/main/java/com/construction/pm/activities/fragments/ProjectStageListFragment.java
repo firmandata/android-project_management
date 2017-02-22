@@ -1,12 +1,14 @@
 package com.construction.pm.activities.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.construction.pm.activities.ProjectStageActivity;
 import com.construction.pm.models.ProjectStageModel;
 import com.construction.pm.views.project.ProjectStageListView;
 
@@ -97,7 +99,18 @@ public class ProjectStageListFragment extends Fragment implements ProjectStageLi
 
     @Override
     public void onProjectStageItemClick(ProjectStageModel projectStageModel) {
+        // -- Redirect to ProjectStageActivity --
+        Intent intent = new Intent(this.getContext(), ProjectStageActivity.class);
 
+        try {
+            org.json.JSONObject projectStageModelJsonObject = projectStageModel.build();
+            String projectStageModelJson = projectStageModelJsonObject.toString(0);
+
+            intent.putExtra(ProjectStageActivity.INTENT_PARAM_PROJECT_STAGE_MODEL, projectStageModelJson);
+        } catch (org.json.JSONException ex) {
+        }
+
+        startActivity(intent);
     }
 
     public void setProjectStageModels(final ProjectStageModel[] projectStageModels) {

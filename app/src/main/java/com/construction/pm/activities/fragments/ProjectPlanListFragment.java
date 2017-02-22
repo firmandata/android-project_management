@@ -1,12 +1,14 @@
 package com.construction.pm.activities.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.construction.pm.activities.ProjectPlanActivity;
 import com.construction.pm.models.ProjectPlanModel;
 import com.construction.pm.views.project.ProjectPlanListView;
 
@@ -97,7 +99,18 @@ public class ProjectPlanListFragment extends Fragment implements ProjectPlanList
 
     @Override
     public void onProjectPlanItemClick(ProjectPlanModel projectPlanModel) {
+        // -- Redirect to ProjectPlanActivity --
+        Intent intent = new Intent(this.getContext(), ProjectPlanActivity.class);
 
+        try {
+            org.json.JSONObject projectPlanModelJsonObject = projectPlanModel.build();
+            String projectPlanModelJson = projectPlanModelJsonObject.toString(0);
+
+            intent.putExtra(ProjectPlanActivity.INTENT_PARAM_PROJECT_PLAN_MODEL, projectPlanModelJson);
+        } catch (org.json.JSONException ex) {
+        }
+
+        startActivity(intent);
     }
 
     public void setProjectPlanModels(final ProjectPlanModel[] projectPlanModels) {

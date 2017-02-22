@@ -5,16 +5,22 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.construction.pm.MainApplication;
 import com.construction.pm.utils.DateTimeUtil;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public abstract class NetworkCachePersistent extends SQLitePersistent {
+public abstract class NetworkCachePersistent {
+
+    protected Context mContext;
+    protected SQLitePersistent mSQLitePersistent;
+
     protected enum NetworkCachePersistentType {
         PROJECT_LIST(0), PROJECT_DEPENDENCIES(1),
-        INSPECTOR_PROJECT_ACTIVITY_LIST(2);
+        INSPECTOR_PROJECT_ACTIVITY_LIST(2),
+        PROJECT_STAGE_DEPENDENCIES(3), PROJECT_PLAN_DEPENDENCIES(4);
 
         private final int mNetworkCachePersistentType;
 
@@ -36,8 +42,9 @@ public abstract class NetworkCachePersistent extends SQLitePersistent {
         }
     }
 
-    protected NetworkCachePersistent(Context context) {
-        super(context);
+    public NetworkCachePersistent(Context context) {
+        mContext = context;
+        mSQLitePersistent = ((MainApplication) mContext.getApplicationContext()).getSQLitePersistent();
     }
 
     protected long saveNetworkCacheContent(final SQLiteDatabase sqLiteDatabase, final NetworkCachePersistentType networkCachePersistentType, final String contentKey, final String content, final Integer projectMemberId) {

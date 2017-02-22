@@ -66,6 +66,12 @@
     <string name="project_handle_task_begin">Getting project &#8230;</string>
     <string name="project_handle_task_success">Getting project finished.</string>
 
+    <string name="project_stage_handle_task_begin">Getting project stage &#8230;</string>
+    <string name="project_stage_handle_task_success">Getting project stage finished.</string>
+
+    <string name="project_plan_handle_task_begin">Getting project plan &#8230;</string>
+    <string name="project_plan_handle_task_success">Getting project plan finished.</string>
+
     <string name="notification_list_handle_task_begin">Getting notification &#8230;</string>
     <string name="notification_list_handle_task_success">Getting notification finished.</string>
 
@@ -167,6 +173,8 @@
     <string name="project_detail_stage_code">Stage Code</string>
     <string name="project_detail_project_status">Project Status</string>
 
+    <string name="project_stage_layout_title">Project Stage</string>
+
     <string name="project_stage_detail_stage_date">Stage Date</string>
     <string name="project_stage_detail_stage_code">Stage Code</string>
     <string name="project_stage_detail_stage_code_from">From Stage Code</string>
@@ -175,6 +183,8 @@
     <string name="project_stage_detail_stage_next_subject">Stage Next Subject</string>
     <string name="project_stage_detail_stage_next_location">Stage Next Location</string>
     <string name="project_stage_detail_stage_next_message">Stage Next Message</string>
+
+    <string name="project_plan_layout_title">Project Plan</string>
 
     <string name="project_plan_detail_sequence_no">Sequence No</string>
     <string name="project_plan_detail_task_name">Task Name</string>

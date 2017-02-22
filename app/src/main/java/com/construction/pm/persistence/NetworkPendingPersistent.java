@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.construction.pm.MainApplication;
 import com.construction.pm.models.network.NetworkPendingModel;
 import com.construction.pm.utils.DateTimeUtil;
 
@@ -13,34 +14,28 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class NetworkPendingPersistent extends SQLitePersistent {
+public class NetworkPendingPersistent {
+
+    protected Context mContext;
+    protected SQLitePersistent mSQLitePersistent;
+
     public NetworkPendingPersistent(Context context) {
-        super(context);
+        mContext = context;
+        mSQLitePersistent = ((MainApplication) mContext.getApplicationContext()).getSQLitePersistent();
     }
 
     public long createNetworkPending(final NetworkPendingModel networkPendingModel) throws PersistenceError {
         long networkPendingId = 0;
 
         if (networkPendingModel.getCommand() != null) {
-            SQLiteDatabase sqLiteDatabase = null;
-
             try {
-                sqLiteDatabase = getWritableDatabase();
+                SQLiteDatabase sqLiteDatabase = mSQLitePersistent.getWritableDatabase();
 
                 // -- Save command to pending --
                 networkPendingId = createNetworkPending(sqLiteDatabase, networkPendingModel);
-
-                // -- Close database --
-                sqLiteDatabase.close();
             } catch (SQLException ex) {
-                // -- Close database --
-                if (sqLiteDatabase != null && sqLiteDatabase.isOpen())
-                    sqLiteDatabase.close();
                 throw new PersistenceError(0, ex.getMessage(), ex);
             } catch (Exception ex) {
-                // -- Close database --
-                if (sqLiteDatabase != null && sqLiteDatabase.isOpen())
-                    sqLiteDatabase.close();
                 throw new PersistenceError(0, ex.getMessage(), ex);
             }
         }
@@ -51,25 +46,15 @@ public class NetworkPendingPersistent extends SQLitePersistent {
     public boolean setNetworkPendingSent(final NetworkPendingModel networkPendingModel) throws PersistenceError {
         boolean isSetMarked = false;
 
-        SQLiteDatabase sqLiteDatabase = null;
-
         try {
-            sqLiteDatabase = getWritableDatabase();
+            SQLiteDatabase sqLiteDatabase = mSQLitePersistent.getWritableDatabase();
 
             // -- Save NetworkPendingCommand sent --
             isSetMarked = setNetworkPendingSent(sqLiteDatabase, networkPendingModel);
 
-            // -- Close database --
-            sqLiteDatabase.close();
         } catch (SQLException ex) {
-            // -- Close database --
-            if (sqLiteDatabase != null && sqLiteDatabase.isOpen())
-                sqLiteDatabase.close();
             throw new PersistenceError(0, ex.getMessage(), ex);
         } catch (Exception ex) {
-            // -- Close database --
-            if (sqLiteDatabase != null && sqLiteDatabase.isOpen())
-                sqLiteDatabase.close();
             throw new PersistenceError(0, ex.getMessage(), ex);
         }
 
@@ -79,25 +64,14 @@ public class NetworkPendingPersistent extends SQLitePersistent {
     public NetworkPendingModel[] getUnSentNetworkPendingModels(final Integer projectMemberId) throws PersistenceError {
         NetworkPendingModel[] networkPendingModels = null;
 
-        SQLiteDatabase sqLiteDatabase = null;
-
         try {
-            sqLiteDatabase = getWritableDatabase();
+            SQLiteDatabase sqLiteDatabase = mSQLitePersistent.getWritableDatabase();
 
             // -- Get unsent NetworkPendingModel --
             networkPendingModels = getUnSentNetworkPendingModels(sqLiteDatabase, projectMemberId);
-
-            // -- Close database --
-            sqLiteDatabase.close();
         } catch (SQLException ex) {
-            // -- Close database --
-            if (sqLiteDatabase != null && sqLiteDatabase.isOpen())
-                sqLiteDatabase.close();
             throw new PersistenceError(0, ex.getMessage(), ex);
         } catch (Exception ex) {
-            // -- Close database --
-            if (sqLiteDatabase != null && sqLiteDatabase.isOpen())
-                sqLiteDatabase.close();
             throw new PersistenceError(0, ex.getMessage(), ex);
         }
 

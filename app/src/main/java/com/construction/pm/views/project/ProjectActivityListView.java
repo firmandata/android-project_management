@@ -16,6 +16,8 @@ import com.construction.pm.R;
 import com.construction.pm.libraries.widgets.RecyclerItemTouchListener;
 import com.construction.pm.models.ProjectActivityModel;
 import com.construction.pm.models.StatusTaskEnum;
+import com.construction.pm.utils.DateTimeUtil;
+import com.construction.pm.utils.StringUtil;
 
 public class ProjectActivityListView {
     protected Context mContext;
@@ -179,15 +181,33 @@ public class ProjectActivityListView {
     protected class ProjectActivityListViewHolder extends RecyclerView.ViewHolder {
 
         protected AppCompatTextView mEtTaskName;
+        protected AppCompatTextView mEtPlanStartDate;
+        protected AppCompatTextView mEtPlanEndDate;
+        protected AppCompatTextView mEtActualStartDate;
+        protected AppCompatTextView mEtActualEndDate;
+        protected AppCompatTextView mEtActivityStatus;
+        protected AppCompatTextView mEtPercentComplete;
 
         public ProjectActivityListViewHolder(View view) {
             super(view);
 
             mEtTaskName = (AppCompatTextView) view.findViewById(R.id.taskName);
+            mEtPlanStartDate = (AppCompatTextView) view.findViewById(R.id.planStartDate);
+            mEtPlanEndDate = (AppCompatTextView) view.findViewById(R.id.planEndDate);
+            mEtActualStartDate = (AppCompatTextView) view.findViewById(R.id.actualStartDate);
+            mEtActualEndDate = (AppCompatTextView) view.findViewById(R.id.actualEndDate);
+            mEtActivityStatus = (AppCompatTextView) view.findViewById(R.id.activityStatus);
+            mEtPercentComplete = (AppCompatTextView) view.findViewById(R.id.percentComplete);
         }
 
         public void setProjectActivityModel(final ProjectActivityModel projectActivityModel) {
             mEtTaskName.setText(projectActivityModel.getTaskName());
+            mEtPlanStartDate.setText(DateTimeUtil.ToDateDisplayString(projectActivityModel.getPlanStartDate()));
+            mEtPlanEndDate.setText(DateTimeUtil.ToDateDisplayString(projectActivityModel.getPlanEndDate()));
+            mEtActualStartDate.setText(DateTimeUtil.ToDateDisplayString(projectActivityModel.getActualStartDate()));
+            mEtActualEndDate.setText(DateTimeUtil.ToDateDisplayString(projectActivityModel.getActualEndDate()));
+            mEtActivityStatus.setText(projectActivityModel.getActivityStatus());
+            mEtPercentComplete.setText(StringUtil.numberFormat(projectActivityModel.getPercentComplete()));
         }
     }
 }
