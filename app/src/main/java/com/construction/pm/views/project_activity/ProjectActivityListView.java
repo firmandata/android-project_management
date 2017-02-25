@@ -92,7 +92,6 @@ public class ProjectActivityListView {
 
     public void setProjectActivityModels(final ProjectActivityModel[] projectActivityModels) {
         mProjectActivityListAdapter.setProjectActivityModels(projectActivityModels);
-        mProjectActivityListAdapter.notifyDataSetChanged();
     }
 
     public void setStatusTaskEnum(final StatusTaskEnum statusTaskEnum) {

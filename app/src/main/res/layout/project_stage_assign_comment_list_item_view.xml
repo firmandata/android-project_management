@@ -4,21 +4,34 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <ImageView
+        android:id="@+id/photoId"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:src="@drawable/home_24" />
+
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/commentDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:text="TextView" />
+        android:text="TextView"
+        android:layout_toRightOf="@+id/photoId"
+        android:layout_toEndOf="@+id/photoId" />
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/comment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:layout_below="@id/commentDate"
-        android:text="TextView" />
+        android:text="TextView"
+        android:layout_toRightOf="@+id/photoId"
+        android:layout_toEndOf="@+id/photoId" />
+
+    <include
+        android:id="@+id/file_photo_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/photoId"
+        layout="@layout/file_photo_list_view" />
 
 </RelativeLayout>

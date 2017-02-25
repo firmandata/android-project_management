@@ -18,6 +18,7 @@ import com.construction.pm.models.ProjectStageAssignCommentModel;
 import com.construction.pm.models.ProjectStageAssignmentModel;
 import com.construction.pm.models.ProjectStageModel;
 import com.construction.pm.utils.DateTimeUtil;
+import com.construction.pm.views.ImageRequestListener;
 
 public class ProjectStageLayout {
     protected Context mContext;
@@ -103,6 +104,10 @@ public class ProjectStageLayout {
         mProjectStageDetailView.setProjectStageModel(projectStageModel);
         mProjectStageAssignmentListView.setProjectStageAssignmentModels(projectStageAssignmentModels);
         mProjectStageAssignCommentListView.setProjectStageAssignCommentModels(projectStageAssignCommentModels);
+    }
+
+    public void setProjectStageAssignCommentImageRequestListener(final ImageRequestListener imageRequestListener) {
+        mProjectStageAssignCommentListView.setImageRequestListener(imageRequestListener);
     }
 
     public void setProjectStageLayoutListener(final ProjectStageLayoutListener projectStageLayoutListener) {

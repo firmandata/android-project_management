@@ -92,7 +92,6 @@ public class ProjectPlanListView {
 
     public void setProjectPlanModels(final ProjectPlanModel[] projectPlanModels) {
         mProjectPlanListAdapter.setProjectPlanModels(projectPlanModels);
-        mProjectPlanListAdapter.notifyDataSetChanged();
     }
 
     public void startRefreshAnimation() {

@@ -2,6 +2,8 @@ package com.construction.pm.utils;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v7.widget.AppCompatTextView;
@@ -12,6 +14,7 @@ import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -191,5 +194,14 @@ public class ViewUtil {
         }
 
         return valid;
+    }
+
+    public static void setImageViewFromBytes(final ImageView imageView, final byte[] byteArray) {
+        Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+        if (bitmap != null) {
+            int width = imageView.getWidth();
+            int height = imageView.getHeight();
+            imageView.setImageBitmap(Bitmap.createScaledBitmap(bitmap, width, height, false));
+        }
     }
 }

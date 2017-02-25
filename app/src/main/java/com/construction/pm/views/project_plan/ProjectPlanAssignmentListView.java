@@ -59,7 +59,6 @@ public class ProjectPlanAssignmentListView {
 
     public void setProjectPlanAssignmentModels(final ProjectPlanAssignmentModel[] projectPlanAssignmentModels) {
         mProjectPlanAssignmentListAdapter.setProjectPlanAssignmentModels(projectPlanAssignmentModels);
-        mProjectPlanAssignmentListAdapter.notifyDataSetChanged();
     }
 
     public RelativeLayout getView() {
@@ -107,8 +106,8 @@ public class ProjectPlanAssignmentListView {
             if ((position + 1) > mProjectPlanAssignmentModels.length)
                 return;
 
-            ProjectPlanAssignmentModel projectModel = mProjectPlanAssignmentModels[position];
-            holder.setProjectPlanAssignmentModel(projectModel);
+            ProjectPlanAssignmentModel projectPlanAssignmentModel = mProjectPlanAssignmentModels[position];
+            holder.setProjectPlanAssignmentModel(projectPlanAssignmentModel);
         }
 
         @Override

@@ -173,7 +173,8 @@ public class FileModel {
             String base64Encode = jsonObject.getString("binaryData");
             byte[] fileData = null;
             try {
-                fileData = Base64.decode(base64Encode, Base64.NO_WRAP);
+                String base64EncodeBytes = base64Encode.substring(base64Encode.indexOf(",") + 1);
+                fileData = Base64.decode(base64EncodeBytes, Base64.DEFAULT);
             } catch (Exception ex) {
             }
             if (fileData != null)
@@ -215,11 +216,11 @@ public class FileModel {
         if (getFileData() != null) {
             String fileData = null;
             try {
-                fileData = Base64.encodeToString(getFileData(), Base64.NO_WRAP);
+                fileData = Base64.encodeToString(getFileData(), Base64.DEFAULT);
             } catch (Exception ex) {
             }
             if (fileData != null)
-                jsonObject.put("binaryData", fileData);
+                jsonObject.put("binaryData", "data:" + (getFileType() != null ? getFileType() : "") + ";base64," + fileData);
         }
 
         return jsonObject;

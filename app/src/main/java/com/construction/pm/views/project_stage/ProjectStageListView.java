@@ -91,7 +91,6 @@ public class ProjectStageListView {
 
     public void setProjectStageModels(final ProjectStageModel[] projectStageModels) {
         mProjectStageListAdapter.setProjectStageModels(projectStageModels);
-        mProjectStageListAdapter.notifyDataSetChanged();
     }
 
     public void startRefreshAnimation() {

@@ -4,10 +4,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.os.AsyncTaskCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.widget.ImageView;
 
 import com.construction.pm.R;
+import com.construction.pm.asynctask.FileRequestAsyncTask;
+import com.construction.pm.asynctask.FileRequestAsyncTaskParam;
+import com.construction.pm.asynctask.FileRequestAsyncTaskResult;
+import com.construction.pm.models.FileModel;
 import com.construction.pm.models.ProjectMemberModel;
 import com.construction.pm.models.ProjectStageAssignCommentModel;
 import com.construction.pm.models.ProjectStageAssignmentModel;
@@ -17,14 +23,18 @@ import com.construction.pm.models.system.SessionLoginModel;
 import com.construction.pm.models.system.SettingUserModel;
 import com.construction.pm.networks.ProjectNetwork;
 import com.construction.pm.networks.webapi.WebApiError;
+import com.construction.pm.persistence.FileCachePersistent;
 import com.construction.pm.persistence.PersistenceError;
 import com.construction.pm.persistence.ProjectCachePersistent;
 import com.construction.pm.persistence.SessionPersistent;
 import com.construction.pm.persistence.SettingPersistent;
 import com.construction.pm.utils.ViewUtil;
+import com.construction.pm.views.ImageRequestListener;
 import com.construction.pm.views.project_stage.ProjectStageLayout;
 
-public class ProjectStageActivity extends AppCompatActivity implements ProjectStageLayout.ProjectStageLayoutListener {
+public class ProjectStageActivity extends AppCompatActivity implements
+        ProjectStageLayout.ProjectStageLayoutListener,
+        ImageRequestListener {
 
     public static final String INTENT_PARAM_PROJECT_STAGE_MODEL = "PROJECT_STAGE_MODEL";
 
@@ -42,6 +52,7 @@ public class ProjectStageActivity extends AppCompatActivity implements ProjectSt
         // -- Prepare ProjectStageLayout --
         mProjectStageLayout = ProjectStageLayout.buildProjectStageLayout(this, null);
         mProjectStageLayout.setProjectStageLayoutListener(this);
+        mProjectStageLayout.setProjectStageAssignCommentImageRequestListener(this);
 
         // -- Load to Activity --
         mProjectStageLayout.loadLayoutToActivity(this, mProjectStageModel);
@@ -121,6 +132,40 @@ public class ProjectStageActivity extends AppCompatActivity implements ProjectSt
 
     protected void onProjectStageRequestMessage(final String message) {
 
+    }
+
+    @Override
+    public void onImageRequest(final ImageView imageView, Integer fileId) {
+        // -- Get SettingUserModel from SettingPersistent --
+        SettingPersistent settingPersistent = new SettingPersistent(this);
+        SettingUserModel settingUserModel = settingPersistent.getSettingUserModel();
+
+        // -- Prepare FileRequestAsyncTask --
+        FileRequestAsyncTask fileRequestAsyncTask = new FileRequestAsyncTask() {
+            @Override
+            public void onPostExecute(Boolean result) {
+
+            }
+
+            @Override
+            protected void onProgressUpdate(FileRequestAsyncTaskResult... fileRequestAsyncTaskResults) {
+                if (fileRequestAsyncTaskResults != null) {
+                    if (fileRequestAsyncTaskResults.length > 0) {
+                        FileRequestAsyncTaskResult fileRequestAsyncTaskResult = fileRequestAsyncTaskResults[0];
+                        if (fileRequestAsyncTaskResult != null) {
+                            FileModel fileModel = fileRequestAsyncTaskResult.getFileModel();
+                            if (fileModel != null) {
+                                if (fileModel.getFileData() != null)
+                                    ViewUtil.setImageViewFromBytes(imageView, fileModel.getFileData());
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        // -- Do FileRequestAsyncTask --
+        AsyncTaskCompat.executeParallel(fileRequestAsyncTask, new FileRequestAsyncTaskParam(this, settingUserModel, fileId));
     }
 
     protected class ProjectStageHandleTaskParam {

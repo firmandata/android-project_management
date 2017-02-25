@@ -59,7 +59,6 @@ public class ProjectStageAssignmentListView {
 
     public void setProjectStageAssignmentModels(final ProjectStageAssignmentModel[] projectStageAssignmentModels) {
         mProjectStageAssignmentListAdapter.setProjectStageAssignmentModels(projectStageAssignmentModels);
-        mProjectStageAssignmentListAdapter.notifyDataSetChanged();
     }
 
     public RelativeLayout getView() {
@@ -107,8 +106,8 @@ public class ProjectStageAssignmentListView {
             if ((position + 1) > mProjectStageAssignmentModels.length)
                 return;
 
-            ProjectStageAssignmentModel projectModel = mProjectStageAssignmentModels[position];
-            holder.setProjectStageAssignmentModel(projectModel);
+            ProjectStageAssignmentModel projectStageAssignmentModel = mProjectStageAssignmentModels[position];
+            holder.setProjectStageAssignmentModel(projectStageAssignmentModel);
         }
 
         @Override

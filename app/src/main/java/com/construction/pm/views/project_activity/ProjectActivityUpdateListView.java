@@ -61,7 +61,6 @@ public class ProjectActivityUpdateListView {
 
     public void setProjectActivityUpdateModels(final ProjectActivityUpdateModel[] projectActivityUpdateModels) {
         mProjectActivityUpdateListAdapter.setProjectActivityUpdateModels(projectActivityUpdateModels);
-        mProjectActivityUpdateListAdapter.notifyDataSetChanged();
     }
 
     public RelativeLayout getView() {
@@ -109,8 +108,8 @@ public class ProjectActivityUpdateListView {
             if ((position + 1) > mProjectActivityUpdateModels.length)
                 return;
 
-            ProjectActivityUpdateModel projectModel = mProjectActivityUpdateModels[position];
-            holder.setProjectActivityUpdateModel(projectModel);
+            ProjectActivityUpdateModel projectActivityUpdateModel = mProjectActivityUpdateModels[position];
+            holder.setProjectActivityUpdateModel(projectActivityUpdateModel);
         }
 
         @Override

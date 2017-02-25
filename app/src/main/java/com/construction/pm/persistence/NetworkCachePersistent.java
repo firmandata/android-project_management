@@ -20,7 +20,8 @@ public abstract class NetworkCachePersistent {
     protected enum NetworkCachePersistentType {
         PROJECT_LIST(0), PROJECT_DEPENDENCIES(1),
         INSPECTOR_PROJECT_ACTIVITY_LIST(2),
-        PROJECT_STAGE_DEPENDENCIES(3), PROJECT_PLAN_DEPENDENCIES(4);
+        PROJECT_STAGE_DEPENDENCIES(3), PROJECT_PLAN_DEPENDENCIES(4),
+        FILE(5);
 
         private final int mNetworkCachePersistentType;
 

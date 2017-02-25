@@ -96,7 +96,6 @@ public class NotificationListView {
 
     public void setNotificationModels(final NotificationModel[] notificationModels) {
         mNotificationListAdapter.setNotificationModels(notificationModels);
-        mNotificationListAdapter.notifyDataSetChanged();
     }
 
     public void startRefreshAnimation() {

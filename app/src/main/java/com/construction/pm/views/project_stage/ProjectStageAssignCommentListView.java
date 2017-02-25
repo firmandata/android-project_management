@@ -9,11 +9,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.construction.pm.R;
 import com.construction.pm.models.ProjectStageAssignCommentModel;
 import com.construction.pm.utils.DateTimeUtil;
+import com.construction.pm.views.ImageRequestListener;
+import com.construction.pm.views.file.FilePhotoListView;
 
 public class ProjectStageAssignCommentListView {
     protected Context mContext;
@@ -60,7 +63,10 @@ public class ProjectStageAssignCommentListView {
 
     public void setProjectStageAssignCommentModels(final ProjectStageAssignCommentModel[] projectStageAssignCommentModels) {
         mProjectStageAssignCommentListAdapter.setProjectStageAssignCommentModels(projectStageAssignCommentModels);
-        mProjectStageAssignCommentListAdapter.notifyDataSetChanged();
+    }
+
+    public void setImageRequestListener(final ImageRequestListener imageRequestListener) {
+        mProjectStageAssignCommentListAdapter.setImageRequestListener(imageRequestListener);
     }
 
     public RelativeLayout getView() {
@@ -70,6 +76,8 @@ public class ProjectStageAssignCommentListView {
     protected class ProjectStageAssignCommentListAdapter extends RecyclerView.Adapter<ProjectStageAssignCommentListViewHolder> {
 
         protected ProjectStageAssignCommentModel[] mProjectStageAssignCommentModels;
+
+        protected ImageRequestListener mImageRequestListener;
 
         public ProjectStageAssignCommentListAdapter() {
 
@@ -108,8 +116,9 @@ public class ProjectStageAssignCommentListView {
             if ((position + 1) > mProjectStageAssignCommentModels.length)
                 return;
 
-            ProjectStageAssignCommentModel projectModel = mProjectStageAssignCommentModels[position];
-            holder.setProjectStageAssignCommentModel(projectModel);
+            ProjectStageAssignCommentModel projectStageAssignCommentModel = mProjectStageAssignCommentModels[position];
+            holder.setImageRequestListener(mImageRequestListener);
+            holder.setProjectStageAssignCommentModel(projectStageAssignCommentModel);
         }
 
         @Override
@@ -119,23 +128,52 @@ public class ProjectStageAssignCommentListView {
 
             return mProjectStageAssignCommentModels.length;
         }
+
+        public void setImageRequestListener(final ImageRequestListener imageRequestListener) {
+            mImageRequestListener = imageRequestListener;
+        }
     }
 
     protected class ProjectStageAssignCommentListViewHolder extends RecyclerView.ViewHolder {
 
         protected AppCompatTextView mCommentDate;
         protected AppCompatTextView mComment;
+        protected ImageView mPhotoId;
+        protected FilePhotoListView mFilePhotoListView;
+
+        protected ImageRequestListener mImageRequestListener;
 
         public ProjectStageAssignCommentListViewHolder(View view) {
             super(view);
 
             mCommentDate = (AppCompatTextView) view.findViewById(R.id.commentDate);
             mComment = (AppCompatTextView) view.findViewById(R.id.comment);
+            mPhotoId = (ImageView) view.findViewById(R.id.photoId);
+            mFilePhotoListView = new FilePhotoListView(view.getContext(), (RelativeLayout) view.findViewById(R.id.file_photo_list_view));
         }
 
         public void setProjectStageAssignCommentModel(final ProjectStageAssignCommentModel projectStageAssignCommentModel) {
             mCommentDate.setText(DateTimeUtil.ToDateTimeDisplayString(projectStageAssignCommentModel.getCommentDate()));
             mComment.setText(projectStageAssignCommentModel.getComment());
+            if (projectStageAssignCommentModel.getPhotoId() != null) {
+                if (mImageRequestListener != null)
+                    mImageRequestListener.onImageRequest(mPhotoId, projectStageAssignCommentModel.getPhotoId());
+            }
+            if (projectStageAssignCommentModel.getPhotoAdditional1Id() != null)
+                mFilePhotoListView.addFileId(projectStageAssignCommentModel.getPhotoAdditional1Id());
+            if (projectStageAssignCommentModel.getPhotoAdditional2Id() != null)
+                mFilePhotoListView.addFileId(projectStageAssignCommentModel.getPhotoAdditional2Id());
+            if (projectStageAssignCommentModel.getPhotoAdditional3Id() != null)
+                mFilePhotoListView.addFileId(projectStageAssignCommentModel.getPhotoAdditional3Id());
+            if (projectStageAssignCommentModel.getPhotoAdditional4Id() != null)
+                mFilePhotoListView.addFileId(projectStageAssignCommentModel.getPhotoAdditional4Id());
+            if (projectStageAssignCommentModel.getPhotoAdditional5Id() != null)
+                mFilePhotoListView.addFileId(projectStageAssignCommentModel.getPhotoAdditional5Id());
+        }
+
+        public void setImageRequestListener(final ImageRequestListener imageRequestListener) {
+            mImageRequestListener = imageRequestListener;
+            mFilePhotoListView.setImageRequestListener(mImageRequestListener);
         }
     }
 }
