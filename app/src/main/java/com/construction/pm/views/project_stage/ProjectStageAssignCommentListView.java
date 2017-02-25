@@ -15,7 +15,7 @@ import android.widget.RelativeLayout;
 import com.construction.pm.R;
 import com.construction.pm.models.ProjectStageAssignCommentModel;
 import com.construction.pm.utils.DateTimeUtil;
-import com.construction.pm.views.ImageRequestListener;
+import com.construction.pm.views.listeners.ImageRequestListener;
 import com.construction.pm.views.file.FilePhotoListView;
 
 public class ProjectStageAssignCommentListView {

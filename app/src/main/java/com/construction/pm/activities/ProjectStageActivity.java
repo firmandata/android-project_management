@@ -28,7 +28,7 @@ import com.construction.pm.persistence.ProjectCachePersistent;
 import com.construction.pm.persistence.SessionPersistent;
 import com.construction.pm.persistence.SettingPersistent;
 import com.construction.pm.utils.ViewUtil;
-import com.construction.pm.views.ImageRequestListener;
+import com.construction.pm.views.listeners.ImageRequestListener;
 import com.construction.pm.views.project_stage.ProjectStageLayout;
 
 public class ProjectStageActivity extends AppCompatActivity implements

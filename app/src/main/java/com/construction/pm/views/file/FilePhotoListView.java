@@ -12,8 +12,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.construction.pm.R;
-import com.construction.pm.models.FileModel;
-import com.construction.pm.views.ImageRequestListener;
+import com.construction.pm.views.listeners.ImageRequestListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;

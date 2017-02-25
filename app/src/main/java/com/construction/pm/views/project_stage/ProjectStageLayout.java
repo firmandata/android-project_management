@@ -18,7 +18,7 @@ import com.construction.pm.models.ProjectStageAssignCommentModel;
 import com.construction.pm.models.ProjectStageAssignmentModel;
 import com.construction.pm.models.ProjectStageModel;
 import com.construction.pm.utils.DateTimeUtil;
-import com.construction.pm.views.ImageRequestListener;
+import com.construction.pm.views.listeners.ImageRequestListener;
 
 public class ProjectStageLayout {
     protected Context mContext;
