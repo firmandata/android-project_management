@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import com.construction.pm.R;
 import com.construction.pm.models.ProjectStageAssignCommentModel;
@@ -26,6 +27,10 @@ public class ProjectStageLayout {
     protected CoordinatorLayout mProjectStageLayout;
     protected AppBarLayout mAppBarLayout;
     protected Toolbar mToolbar;
+
+    protected ProjectStageDetailView mProjectStageDetailView;
+    protected ProjectStageAssignmentListView mProjectStageAssignmentListView;
+    protected ProjectStageAssignCommentListView mProjectStageAssignCommentListView;
 
     protected ProjectStageLayoutListener mProjectStageLayoutListener;
 
@@ -51,6 +56,10 @@ public class ProjectStageLayout {
         mProjectStageLayout = projectLayout;
         mAppBarLayout = (AppBarLayout) mProjectStageLayout.findViewById(R.id.contentAppBar);
         mToolbar = (Toolbar) mProjectStageLayout.findViewById(R.id.contentToolbar);
+
+        mProjectStageDetailView = new ProjectStageDetailView(mContext, (RelativeLayout) mProjectStageLayout.findViewById(R.id.project_stage_detail_view));
+        mProjectStageAssignmentListView = new ProjectStageAssignmentListView(mContext, (RelativeLayout) mProjectStageLayout.findViewById(R.id.project_stage_assignment_list_view));
+        mProjectStageAssignCommentListView = new ProjectStageAssignCommentListView(mContext, (RelativeLayout) mProjectStageLayout.findViewById(R.id.project_stage_assign_comment_list_view));
     }
 
     public CoordinatorLayout getLayout() {
@@ -91,7 +100,9 @@ public class ProjectStageLayout {
     }
 
     public void setLayoutData(final ProjectStageModel projectStageModel, final ProjectStageAssignmentModel[] projectStageAssignmentModels, final ProjectStageAssignCommentModel[] projectStageAssignCommentModels) {
-
+        mProjectStageDetailView.setProjectModel(projectStageModel);
+        mProjectStageAssignmentListView.setProjectStageAssignmentModels(projectStageAssignmentModels);
+        mProjectStageAssignCommentListView.setProjectStageAssignCommentModels(projectStageAssignCommentModels);
     }
 
     public void setProjectStageLayoutListener(final ProjectStageLayoutListener projectStageLayoutListener) {
