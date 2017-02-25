@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 
 import com.construction.pm.activities.ProjectStageActivity;
 import com.construction.pm.models.ProjectStageModel;
-import com.construction.pm.views.project.ProjectStageListView;
+import com.construction.pm.views.project_stage.ProjectStageListView;
 
 import java.util.ArrayList;
 import java.util.List;

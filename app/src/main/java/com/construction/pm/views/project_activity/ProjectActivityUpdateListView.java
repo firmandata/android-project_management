@@ -1,4 +1,4 @@
-package com.construction.pm.views.project_plan;
+package com.construction.pm.views.project_activity;
 
 import android.content.Context;
 import android.support.v7.widget.AppCompatTextView;

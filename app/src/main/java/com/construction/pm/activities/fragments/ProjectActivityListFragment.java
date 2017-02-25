@@ -21,7 +21,7 @@ import com.construction.pm.persistence.PersistenceError;
 import com.construction.pm.persistence.SessionPersistent;
 import com.construction.pm.persistence.SettingPersistent;
 import com.construction.pm.utils.ViewUtil;
-import com.construction.pm.views.project.ProjectActivityListView;
+import com.construction.pm.views.project_activity.ProjectActivityListView;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -18,7 +18,7 @@ import com.construction.pm.models.ProjectActivityUpdateModel;
 import com.construction.pm.models.ProjectPlanAssignmentModel;
 import com.construction.pm.models.ProjectPlanModel;
 import com.construction.pm.utils.DateTimeUtil;
-import com.construction.pm.utils.StringUtil;
+import com.construction.pm.views.project_activity.ProjectActivityUpdateListView;
 
 public class ProjectPlanLayout {
     protected Context mContext;

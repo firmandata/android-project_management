@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 
 import com.construction.pm.activities.ProjectPlanActivity;
 import com.construction.pm.models.ProjectPlanModel;
-import com.construction.pm.views.project.ProjectPlanListView;
+import com.construction.pm.views.project_plan.ProjectPlanListView;
 
 import java.util.ArrayList;
 import java.util.List;
