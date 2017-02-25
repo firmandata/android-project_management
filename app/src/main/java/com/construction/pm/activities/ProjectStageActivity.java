@@ -31,6 +31,9 @@ import com.construction.pm.utils.ViewUtil;
 import com.construction.pm.views.listeners.ImageRequestListener;
 import com.construction.pm.views.project_stage.ProjectStageLayout;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ProjectStageActivity extends AppCompatActivity implements
         ProjectStageLayout.ProjectStageLayoutListener,
         ImageRequestListener {
@@ -38,12 +41,18 @@ public class ProjectStageActivity extends AppCompatActivity implements
     public static final String INTENT_PARAM_PROJECT_STAGE_MODEL = "PROJECT_STAGE_MODEL";
 
     protected ProjectStageModel mProjectStageModel;
+    protected List<FileRequestNetworkAsyncTask> mFileRequestNetworkAsyncTaskList;
+    protected List<FileRequestCacheAsyncTask> mFileRequestCacheAsyncTaskList;
 
     protected ProjectStageLayout mProjectStageLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // -- Handle AsyncTask --
+        mFileRequestNetworkAsyncTaskList = new ArrayList<FileRequestNetworkAsyncTask>();
+        mFileRequestCacheAsyncTaskList = new ArrayList<FileRequestCacheAsyncTask>();
 
         // -- Handle intent request parameters --
         newIntentHandle(getIntent().getExtras());
@@ -142,6 +151,11 @@ public class ProjectStageActivity extends AppCompatActivity implements
         // -- Prepare FileRequestNetworkAsyncTask --
         final FileRequestNetworkAsyncTask fileRequestNetworkAsyncTask = new FileRequestNetworkAsyncTask() {
             @Override
+            public void onPreExecute() {
+                mFileRequestNetworkAsyncTaskList.add(this);
+            }
+
+            @Override
             public void onPostExecute(FileRequestAsyncTaskResult fileRequestAsyncTaskResult) {
                 if (fileRequestAsyncTaskResult != null) {
                     FileModel fileModel = fileRequestAsyncTaskResult.getFileModel();
@@ -150,11 +164,18 @@ public class ProjectStageActivity extends AppCompatActivity implements
                             ViewUtil.setImageViewFromBytes(imageView, fileModel.getFileData());
                     }
                 }
+
+                mFileRequestNetworkAsyncTaskList.remove(this);
             }
         };
 
         // -- Prepare FileRequestCacheAsyncTask --
         FileRequestCacheAsyncTask fileRequestCacheAsyncTask = new FileRequestCacheAsyncTask() {
+            @Override
+            public void onPreExecute() {
+                mFileRequestCacheAsyncTaskList.add(this);
+            }
+
             @Override
             public void onPostExecute(FileRequestAsyncTaskResult fileRequestAsyncTaskResult) {
                 if (fileRequestAsyncTaskResult != null) {
@@ -167,6 +188,8 @@ public class ProjectStageActivity extends AppCompatActivity implements
 
                 // -- Do FileRequestNetworkAsyncTask --
                 fileRequestNetworkAsyncTask.execute(new FileRequestAsyncTaskParam(ProjectStageActivity.this, settingUserModel, fileId));
+
+                mFileRequestCacheAsyncTaskList.remove(this);
             }
         };
 
@@ -319,5 +342,22 @@ public class ProjectStageActivity extends AppCompatActivity implements
 
             return projectStageHandleTaskResult;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        for (FileRequestCacheAsyncTask fileRequestCacheAsyncTask : mFileRequestCacheAsyncTaskList) {
+            if (fileRequestCacheAsyncTask.getStatus() != FileRequestCacheAsyncTask.Status.FINISHED) {
+                fileRequestCacheAsyncTask.cancel(true);
+            }
+        }
+
+        for (FileRequestNetworkAsyncTask fileRequestNetworkAsyncTask : mFileRequestNetworkAsyncTaskList) {
+            if (fileRequestNetworkAsyncTask.getStatus() != FileRequestCacheAsyncTask.Status.FINISHED) {
+                fileRequestNetworkAsyncTask.cancel(true);
+            }
+        }
+
+        super.onDestroy();
     }
 }
