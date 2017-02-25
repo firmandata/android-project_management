@@ -3,19 +3,21 @@ package com.construction.pm.asynctask;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import com.construction.pm.asynctask.filerequest.FileRequestAsyncTaskParam;
+import com.construction.pm.asynctask.filerequest.FileRequestAsyncTaskResult;
 import com.construction.pm.models.FileModel;
 import com.construction.pm.networks.FileNetwork;
 import com.construction.pm.networks.webapi.WebApiError;
 import com.construction.pm.persistence.FileCachePersistent;
 import com.construction.pm.persistence.PersistenceError;
 
-public class FileRequestAsyncTask extends AsyncTask<FileRequestAsyncTaskParam, FileRequestAsyncTaskResult, Boolean> {
+public class FileRequestNetworkAsyncTask extends AsyncTask<FileRequestAsyncTaskParam, Integer, FileRequestAsyncTaskResult> {
 
     protected FileRequestAsyncTaskParam mFileRequestAsyncTaskParam;
     protected Context mContext;
 
     @Override
-    protected Boolean doInBackground(FileRequestAsyncTaskParam... fileRequestAsyncTaskParams) {
+    protected FileRequestAsyncTaskResult doInBackground(FileRequestAsyncTaskParam... fileRequestAsyncTaskParams) {
         // Get FileRequestAsyncTaskParam
         mFileRequestAsyncTaskParam = fileRequestAsyncTaskParams[0];
         mContext = mFileRequestAsyncTaskParam.getContext();
@@ -26,17 +28,9 @@ public class FileRequestAsyncTask extends AsyncTask<FileRequestAsyncTaskParam, F
         // -- Prepare FileCachePersistent --
         FileCachePersistent fileCachePersistent = new FileCachePersistent(mContext);
 
-        // -- Get FileModel from FileCachePersistent --
-        try {
-            fileRequestAsyncTaskResult.setFileModel(fileCachePersistent.getFileModel(mFileRequestAsyncTaskParam.getFileId()));
-            publishProgress(fileRequestAsyncTaskResult);
-        } catch (PersistenceError ex) {
-        }
-
         // -- Prepare FileNetwork --
         FileNetwork fileNetwork = new FileNetwork(mContext, mFileRequestAsyncTaskParam.getSettingUserModel());
 
-        FileModel fileModel = null;
         try {
             // -- Invalidate Access Token --
             fileNetwork.invalidateAccessToken();
@@ -45,25 +39,20 @@ public class FileRequestAsyncTask extends AsyncTask<FileRequestAsyncTaskParam, F
             fileNetwork.invalidateLogin();
 
             // -- Get FileModel from server --
-            fileModel = fileNetwork.getFile(mFileRequestAsyncTaskParam.getFileId());
+            FileModel fileModel = fileNetwork.getFile(mFileRequestAsyncTaskParam.getFileId());
+            fileRequestAsyncTaskResult.setFileModel(fileModel);
+
+            if (fileModel != null) {
+                // -- Save to FileCachePersistent --
+                try {
+                    fileCachePersistent.setFileModel(fileModel);
+                } catch (PersistenceError ex) {
+                }
+            }
         } catch (WebApiError webApiError) {
             fileRequestAsyncTaskResult.setMessage(webApiError.getMessage());
         }
 
-        if (fileModel != null) {
-            // -- Set result --
-            fileRequestAsyncTaskResult.setFileModel(fileModel);
-            publishProgress(fileRequestAsyncTaskResult);
-
-            // -- Save to FileCachePersistent --
-            try {
-                fileCachePersistent.setFileModel(fileModel);
-            } catch (PersistenceError ex) {
-            }
-
-            return true;
-        }
-
-        return false;
+        return fileRequestAsyncTaskResult;
     }
 }

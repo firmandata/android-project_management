@@ -4,15 +4,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.os.AsyncTaskCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.ImageView;
 
 import com.construction.pm.R;
-import com.construction.pm.asynctask.FileRequestAsyncTask;
-import com.construction.pm.asynctask.FileRequestAsyncTaskParam;
-import com.construction.pm.asynctask.FileRequestAsyncTaskResult;
+import com.construction.pm.asynctask.FileRequestCacheAsyncTask;
+import com.construction.pm.asynctask.FileRequestNetworkAsyncTask;
+import com.construction.pm.asynctask.filerequest.FileRequestAsyncTaskParam;
+import com.construction.pm.asynctask.filerequest.FileRequestAsyncTaskResult;
 import com.construction.pm.models.FileModel;
 import com.construction.pm.models.ProjectMemberModel;
 import com.construction.pm.models.ProjectStageAssignCommentModel;
@@ -23,7 +23,6 @@ import com.construction.pm.models.system.SessionLoginModel;
 import com.construction.pm.models.system.SettingUserModel;
 import com.construction.pm.networks.ProjectNetwork;
 import com.construction.pm.networks.webapi.WebApiError;
-import com.construction.pm.persistence.FileCachePersistent;
 import com.construction.pm.persistence.PersistenceError;
 import com.construction.pm.persistence.ProjectCachePersistent;
 import com.construction.pm.persistence.SessionPersistent;
@@ -135,37 +134,44 @@ public class ProjectStageActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onImageRequest(final ImageView imageView, Integer fileId) {
+    public void onImageRequest(final ImageView imageView, final Integer fileId) {
         // -- Get SettingUserModel from SettingPersistent --
         SettingPersistent settingPersistent = new SettingPersistent(this);
-        SettingUserModel settingUserModel = settingPersistent.getSettingUserModel();
+        final SettingUserModel settingUserModel = settingPersistent.getSettingUserModel();
 
-        // -- Prepare FileRequestAsyncTask --
-        FileRequestAsyncTask fileRequestAsyncTask = new FileRequestAsyncTask() {
+        // -- Prepare FileRequestNetworkAsyncTask --
+        final FileRequestNetworkAsyncTask fileRequestNetworkAsyncTask = new FileRequestNetworkAsyncTask() {
             @Override
-            public void onPostExecute(Boolean result) {
-
-            }
-
-            @Override
-            protected void onProgressUpdate(FileRequestAsyncTaskResult... fileRequestAsyncTaskResults) {
-                if (fileRequestAsyncTaskResults != null) {
-                    if (fileRequestAsyncTaskResults.length > 0) {
-                        FileRequestAsyncTaskResult fileRequestAsyncTaskResult = fileRequestAsyncTaskResults[0];
-                        if (fileRequestAsyncTaskResult != null) {
-                            FileModel fileModel = fileRequestAsyncTaskResult.getFileModel();
-                            if (fileModel != null) {
-                                if (fileModel.getFileData() != null)
-                                    ViewUtil.setImageViewFromBytes(imageView, fileModel.getFileData());
-                            }
-                        }
+            public void onPostExecute(FileRequestAsyncTaskResult fileRequestAsyncTaskResult) {
+                if (fileRequestAsyncTaskResult != null) {
+                    FileModel fileModel = fileRequestAsyncTaskResult.getFileModel();
+                    if (fileModel != null) {
+                        if (fileModel.getFileData() != null)
+                            ViewUtil.setImageViewFromBytes(imageView, fileModel.getFileData());
                     }
                 }
             }
         };
 
-        // -- Do FileRequestAsyncTask --
-        AsyncTaskCompat.executeParallel(fileRequestAsyncTask, new FileRequestAsyncTaskParam(this, settingUserModel, fileId));
+        // -- Prepare FileRequestCacheAsyncTask --
+        FileRequestCacheAsyncTask fileRequestCacheAsyncTask = new FileRequestCacheAsyncTask() {
+            @Override
+            public void onPostExecute(FileRequestAsyncTaskResult fileRequestAsyncTaskResult) {
+                if (fileRequestAsyncTaskResult != null) {
+                    FileModel fileModel = fileRequestAsyncTaskResult.getFileModel();
+                    if (fileModel != null) {
+                        if (fileModel.getFileData() != null)
+                            ViewUtil.setImageViewFromBytes(imageView, fileModel.getFileData());
+                    }
+                }
+
+                // -- Do FileRequestNetworkAsyncTask --
+                fileRequestNetworkAsyncTask.execute(new FileRequestAsyncTaskParam(ProjectStageActivity.this, settingUserModel, fileId));
+            }
+        };
+
+        // -- Do FileRequestCacheAsyncTask --
+        fileRequestCacheAsyncTask.execute(new FileRequestAsyncTaskParam(this, settingUserModel, fileId));
     }
 
     protected class ProjectStageHandleTaskParam {
