@@ -16,15 +16,41 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|enterAlways"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </android.support.design.widget.AppBarLayout>
 
-    <RelativeLayout
-        android:id="@+id/contentBody"
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:id="@+id/contentBody"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include
+                android:id="@+id/project_plan_detail_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                layout="@layout/project_plan_detail_view" />
+
+            <include
+                android:id="@+id/project_plan_assignment_list_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                layout="@layout/project_plan_assignment_list_view" />
+
+            <include
+                android:id="@+id/project_activity_update_list_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                layout="@layout/project_activity_update_list_view" />
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
 
 </android.support.design.widget.CoordinatorLayout>

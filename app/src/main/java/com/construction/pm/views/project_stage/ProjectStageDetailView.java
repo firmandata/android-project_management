@@ -60,7 +60,7 @@ public class ProjectStageDetailView {
         return mProjectStageDetailView;
     }
 
-    public void setProjectModel(final ProjectStageModel projectStageModel) {
+    public void setProjectStageModel(final ProjectStageModel projectStageModel) {
         if (projectStageModel == null)
             return;
 

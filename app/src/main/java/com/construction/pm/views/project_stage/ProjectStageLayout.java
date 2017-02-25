@@ -100,7 +100,7 @@ public class ProjectStageLayout {
     }
 
     public void setLayoutData(final ProjectStageModel projectStageModel, final ProjectStageAssignmentModel[] projectStageAssignmentModels, final ProjectStageAssignCommentModel[] projectStageAssignCommentModels) {
-        mProjectStageDetailView.setProjectModel(projectStageModel);
+        mProjectStageDetailView.setProjectStageModel(projectStageModel);
         mProjectStageAssignmentListView.setProjectStageAssignmentModels(projectStageAssignmentModels);
         mProjectStageAssignCommentListView.setProjectStageAssignCommentModels(projectStageAssignCommentModels);
     }

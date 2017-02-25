@@ -4,4 +4,238 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <RelativeLayout
+        android:id="@+id/sequenceNoContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/sequenceNoLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:text="@string/project_plan_detail_sequence_no" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/sequenceNo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/sequenceNoLabel"
+            android:text="TextView" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/taskNameContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/sequenceNoContainer">
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/taskNameLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:text="@string/project_plan_detail_task_name" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/taskName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/taskNameLabel"
+            android:text="TextView" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/taskWeightPercentageContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/taskNameContainer">
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/taskWeightPercentageLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:text="@string/project_plan_detail_task_weight_percentage" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/taskWeightPercentage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/taskWeightPercentageLabel"
+            android:text="TextView" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/planStartDateContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/taskWeightPercentageContainer">
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/planStartDateLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:text="@string/project_plan_detail_plan_start_date" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/planStartDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/planStartDateLabel"
+            android:text="TextView" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/planEndDateContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/planStartDateContainer">
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/planEndDateLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:text="@string/project_plan_detail_plan_end_date" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/planEndDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/planEndDateLabel"
+            android:text="TextView" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/realizationStartDateContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/planEndDateContainer">
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/realizationStartDateLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:text="@string/project_plan_detail_realization_start_date" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/realizationStartDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/realizationStartDateLabel"
+            android:text="TextView" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/realizationEndDateContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/realizationStartDateContainer">
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/realizationEndDateLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:text="@string/project_plan_detail_realization_end_date" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/realizationEndDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/realizationEndDateLabel"
+            android:text="TextView" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/realizationStatusContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/realizationEndDateContainer">
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/realizationStatusLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:text="@string/project_plan_detail_realization_status" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/realizationStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/realizationStatusLabel"
+            android:text="TextView" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/percentCompleteContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/realizationStatusContainer">
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/percentCompleteLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:text="@string/project_plan_detail_percent_complete" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/percentComplete"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/percentCompleteLabel"
+            android:text="TextView" />
+
+    </RelativeLayout>
+
 </RelativeLayout>

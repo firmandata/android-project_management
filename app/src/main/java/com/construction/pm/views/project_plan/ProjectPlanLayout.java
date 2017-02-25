@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import com.construction.pm.R;
 import com.construction.pm.models.ProjectActivityUpdateModel;
@@ -27,6 +28,10 @@ public class ProjectPlanLayout {
     protected CoordinatorLayout mProjectPlanLayout;
     protected AppBarLayout mAppBarLayout;
     protected Toolbar mToolbar;
+
+    protected ProjectPlanDetailView mProjectPlanDetailView;
+    protected ProjectPlanAssignmentListView mProjectPlanAssignmentListView;
+    protected ProjectActivityUpdateListView mProjectActivityUpdateListView;
 
     protected ProjectPlanLayoutListener mProjectPlanLayoutListener;
 
@@ -52,6 +57,10 @@ public class ProjectPlanLayout {
         mProjectPlanLayout = projectLayout;
         mAppBarLayout = (AppBarLayout) mProjectPlanLayout.findViewById(R.id.contentAppBar);
         mToolbar = (Toolbar) mProjectPlanLayout.findViewById(R.id.contentToolbar);
+
+        mProjectPlanDetailView = new ProjectPlanDetailView(mContext, (RelativeLayout) mProjectPlanLayout.findViewById(R.id.project_plan_detail_view));
+        mProjectPlanAssignmentListView = new ProjectPlanAssignmentListView(mContext, (RelativeLayout) mProjectPlanLayout.findViewById(R.id.project_plan_assignment_list_view));
+        mProjectActivityUpdateListView = new ProjectActivityUpdateListView(mContext, (RelativeLayout) mProjectPlanLayout.findViewById(R.id.project_activity_update_list_view));
     }
 
     public CoordinatorLayout getLayout() {
@@ -92,7 +101,9 @@ public class ProjectPlanLayout {
     }
 
     public void setLayoutData(final ProjectPlanModel projectPlanModel, final ProjectPlanAssignmentModel[] projectPlanAssignmentModels, final ProjectActivityUpdateModel[] projectActivityUpdateModels) {
-
+        mProjectPlanDetailView.setProjectPlanModel(projectPlanModel);
+        mProjectPlanAssignmentListView.setProjectPlanAssignmentModels(projectPlanAssignmentModels);
+        mProjectActivityUpdateListView.setProjectActivityUpdateModels(projectActivityUpdateModels);
     }
 
     public void setProjectPlanLayoutListener(final ProjectPlanLayoutListener projectPlanLayoutListener) {
