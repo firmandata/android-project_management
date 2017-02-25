@@ -41,8 +41,7 @@ public class ProjectStageActivity extends AppCompatActivity implements
     public static final String INTENT_PARAM_PROJECT_STAGE_MODEL = "PROJECT_STAGE_MODEL";
 
     protected ProjectStageModel mProjectStageModel;
-    protected List<FileRequestNetworkAsyncTask> mFileRequestNetworkAsyncTaskList;
-    protected List<FileRequestCacheAsyncTask> mFileRequestCacheAsyncTaskList;
+    protected List<AsyncTask> mAsyncTaskList;
 
     protected ProjectStageLayout mProjectStageLayout;
 
@@ -51,8 +50,7 @@ public class ProjectStageActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
 
         // -- Handle AsyncTask --
-        mFileRequestNetworkAsyncTaskList = new ArrayList<FileRequestNetworkAsyncTask>();
-        mFileRequestCacheAsyncTaskList = new ArrayList<FileRequestCacheAsyncTask>();
+        mAsyncTaskList = new ArrayList<AsyncTask>();
 
         // -- Handle intent request parameters --
         newIntentHandle(getIntent().getExtras());
@@ -108,12 +106,19 @@ public class ProjectStageActivity extends AppCompatActivity implements
         // -- Prepare ProjectStageHandleTask --
         ProjectStageHandleTask projectStageHandleTask = new ProjectStageHandleTask() {
             @Override
+            public void onPreExecute() {
+                mAsyncTaskList.add(this);
+            }
+
+            @Override
             public void onPostExecute(ProjectStageHandleTaskResult projectHandleTaskResult) {
                 if (projectHandleTaskResult != null) {
                     onProjectStageRequestSuccess(projectHandleTaskResult.getProjectModel(), projectHandleTaskResult.getProjectStageAssignmentModels(), projectHandleTaskResult.getProjectStageAssignCommentModels());
                     if (projectHandleTaskResult.getMessage() != null)
                         onProjectStageRequestMessage(projectHandleTaskResult.getMessage());
                 }
+
+                mAsyncTaskList.remove(this);
             }
 
             @Override
@@ -152,7 +157,7 @@ public class ProjectStageActivity extends AppCompatActivity implements
         final FileRequestNetworkAsyncTask fileRequestNetworkAsyncTask = new FileRequestNetworkAsyncTask() {
             @Override
             public void onPreExecute() {
-                mFileRequestNetworkAsyncTaskList.add(this);
+                mAsyncTaskList.add(this);
             }
 
             @Override
@@ -165,7 +170,7 @@ public class ProjectStageActivity extends AppCompatActivity implements
                     }
                 }
 
-                mFileRequestNetworkAsyncTaskList.remove(this);
+                mAsyncTaskList.remove(this);
             }
         };
 
@@ -173,7 +178,7 @@ public class ProjectStageActivity extends AppCompatActivity implements
         FileRequestCacheAsyncTask fileRequestCacheAsyncTask = new FileRequestCacheAsyncTask() {
             @Override
             public void onPreExecute() {
-                mFileRequestCacheAsyncTaskList.add(this);
+                mAsyncTaskList.add(this);
             }
 
             @Override
@@ -189,7 +194,7 @@ public class ProjectStageActivity extends AppCompatActivity implements
                 // -- Do FileRequestNetworkAsyncTask --
                 fileRequestNetworkAsyncTask.execute(new FileRequestAsyncTaskParam(ProjectStageActivity.this, settingUserModel, fileId));
 
-                mFileRequestCacheAsyncTaskList.remove(this);
+                mAsyncTaskList.remove(this);
             }
         };
 
@@ -346,16 +351,9 @@ public class ProjectStageActivity extends AppCompatActivity implements
 
     @Override
     protected void onDestroy() {
-        for (FileRequestCacheAsyncTask fileRequestCacheAsyncTask : mFileRequestCacheAsyncTaskList) {
-            if (fileRequestCacheAsyncTask.getStatus() != FileRequestCacheAsyncTask.Status.FINISHED) {
-                fileRequestCacheAsyncTask.cancel(true);
-            }
-        }
-
-        for (FileRequestNetworkAsyncTask fileRequestNetworkAsyncTask : mFileRequestNetworkAsyncTaskList) {
-            if (fileRequestNetworkAsyncTask.getStatus() != FileRequestCacheAsyncTask.Status.FINISHED) {
-                fileRequestNetworkAsyncTask.cancel(true);
-            }
+        for (AsyncTask asyncTask : mAsyncTaskList) {
+            if (asyncTask.getStatus() != AsyncTask.Status.FINISHED)
+                asyncTask.cancel(true);
         }
 
         super.onDestroy();
