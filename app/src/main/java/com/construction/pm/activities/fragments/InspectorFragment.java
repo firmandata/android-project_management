@@ -9,6 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.construction.pm.R;
+import com.construction.pm.asynctask.InspectorProjectActivityListAsyncTask;
+import com.construction.pm.asynctask.param.InspectorProjectActivityListAsyncTaskParam;
+import com.construction.pm.asynctask.result.InspectorProjectActivityListAsyncTaskResult;
 import com.construction.pm.models.ProjectActivityModel;
 import com.construction.pm.models.ProjectMemberModel;
 import com.construction.pm.models.system.SessionLoginModel;
@@ -22,7 +25,13 @@ import com.construction.pm.persistence.SettingPersistent;
 import com.construction.pm.utils.ViewUtil;
 import com.construction.pm.views.inspector.InspectorLayout;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class InspectorFragment extends Fragment implements InspectorLayout.InspectorLayoutListener {
+
+    protected List<AsyncTask> mAsyncTaskList;
+
     protected InspectorLayout mInspectorLayout;
 
     public static InspectorFragment newInstance() {
@@ -32,6 +41,9 @@ public class InspectorFragment extends Fragment implements InspectorLayout.Inspe
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // -- Handle AsyncTask --
+        mAsyncTaskList = new ArrayList<AsyncTask>();
 
         // -- Prepare InspectorLayout --
         mInspectorLayout = InspectorLayout.buildInspectorLayout(getContext(), null);
@@ -67,10 +79,17 @@ public class InspectorFragment extends Fragment implements InspectorLayout.Inspe
         SessionPersistent sessionPersistent = new SessionPersistent(getContext());
         SessionLoginModel sessionLoginModel = sessionPersistent.getSessionLoginModel();
 
-        // -- Prepare ProjectActivityListHandleTask --
-        ProjectActivityListHandleTask projectActivityListHandleTask = new ProjectActivityListHandleTask() {
+        // -- Prepare InspectorProjectActivityListAsyncTask --
+        InspectorProjectActivityListAsyncTask inspectorProjectActivityListAsyncTask = new InspectorProjectActivityListAsyncTask() {
             @Override
-            public void onPostExecute(ProjectActivityListHandleTaskResult projectActivityListHandleTaskResult) {
+            public void onPreExecute() {
+                mAsyncTaskList.add(this);
+            }
+
+            @Override
+            public void onPostExecute(InspectorProjectActivityListAsyncTaskResult projectActivityListHandleTaskResult) {
+                mAsyncTaskList.remove(this);
+
                 if (projectActivityListHandleTaskResult != null) {
                     ProjectActivityModel[] projectActivityModels = projectActivityListHandleTaskResult.getProjectActivityModels();
                     if (projectActivityModels != null)
@@ -90,8 +109,8 @@ public class InspectorFragment extends Fragment implements InspectorLayout.Inspe
             }
         };
 
-        // -- Do ProjectActivityListHandleTask --
-        projectActivityListHandleTask.execute(new ProjectActivityListHandleTaskParam(getContext(), settingUserModel, sessionLoginModel.getProjectMemberModel()));
+        // -- Do InspectorProjectActivityListAsyncTask --
+        inspectorProjectActivityListAsyncTask.execute(new InspectorProjectActivityListAsyncTaskParam(getContext(), settingUserModel, sessionLoginModel.getProjectMemberModel()));
     }
 
     protected void onProjectActivityListRequestProgress(final String progressMessage) {
@@ -106,128 +125,18 @@ public class InspectorFragment extends Fragment implements InspectorLayout.Inspe
 
     }
 
-    protected class ProjectActivityListHandleTaskParam {
-
-        protected Context mContext;
-        protected SettingUserModel mSettingUserModel;
-        protected ProjectMemberModel mProjectMemberModel;
-
-        public ProjectActivityListHandleTaskParam(final Context context, final SettingUserModel settingUserModel, final ProjectMemberModel projectMemberModel) {
-            mContext = context;
-            mSettingUserModel = settingUserModel;
-            mProjectMemberModel = projectMemberModel;
-        }
-
-        public Context getContext() {
-            return mContext;
-        }
-
-        public SettingUserModel getSettingUserModel() {
-            return mSettingUserModel;
-        }
-
-        public ProjectMemberModel getProjectMemberModel() {
-            return mProjectMemberModel;
-        }
-    }
-
-    protected class ProjectActivityListHandleTaskResult {
-
-        protected ProjectActivityModel[] mProjectActivityModels;
-        protected String mMessage;
-
-        public ProjectActivityListHandleTaskResult() {
-
-        }
-
-        public void setProjectActivityModels(final ProjectActivityModel[] projectPlanModels) {
-            mProjectActivityModels = projectPlanModels;
-        }
-
-        public ProjectActivityModel[] getProjectActivityModels() {
-            return mProjectActivityModels;
-        }
-
-        public void setMessage(final String message) {
-            mMessage = message;
-        }
-
-        public String getMessage() {
-            return mMessage;
-        }
-    }
-
-    protected class ProjectActivityListHandleTask extends AsyncTask<ProjectActivityListHandleTaskParam, String, ProjectActivityListHandleTaskResult> {
-        protected ProjectActivityListHandleTaskParam mProjectActivityListHandleTaskParam;
-        protected Context mContext;
-
-        @Override
-        protected ProjectActivityListHandleTaskResult doInBackground(ProjectActivityListHandleTaskParam... projectActivityListHandleTaskParams) {
-            // Get ProjectActivityListHandleTaskParam
-            mProjectActivityListHandleTaskParam = projectActivityListHandleTaskParams[0];
-            mContext = mProjectActivityListHandleTaskParam.getContext();
-
-            // -- Prepare ProjectActivityListHandleTaskResult --
-            ProjectActivityListHandleTaskResult projectActivityListHandleTaskResult = new ProjectActivityListHandleTaskResult();
-
-            // -- Get ProjectActivityModels progress --
-            publishProgress(ViewUtil.getResourceString(mContext, R.string.inspector_activity_list_handle_task_begin));
-
-            // -- Prepare InspectorCachePersistent --
-            InspectorCachePersistent inspectorCachePersistent = new InspectorCachePersistent(mContext);
-
-            // -- Prepare InspectorNetwork --
-            InspectorNetwork inspectorNetwork = new InspectorNetwork(mContext, mProjectActivityListHandleTaskParam.getSettingUserModel());
-
-            ProjectActivityModel[] projectActivityModels = null;
-            try {
-                ProjectMemberModel projectMemberModel = mProjectActivityListHandleTaskParam.getProjectMemberModel();
-                if (projectMemberModel != null) {
-                    try {
-                        // -- Invalidate Access Token --
-                        inspectorNetwork.invalidateAccessToken();
-
-                        // -- Invalidate Login --
-                        inspectorNetwork.invalidateLogin();
-
-                        // -- Get ProjectActivityModels from server --
-                        projectActivityModels = inspectorNetwork.getProjectActivities(projectMemberModel.getProjectMemberId());
-
-                        // -- Save to InspectorCachePersistent --
-                        try {
-                            inspectorCachePersistent.setProjectActivityModels(projectActivityModels, projectMemberModel.getProjectMemberId());
-                        } catch (PersistenceError ex) {
-                        }
-                    } catch (WebApiError webApiError) {
-                        if (webApiError.isErrorConnection()) {
-                            // -- Get ProjectActivityModels from InspectorCachePersistent --
-                            try {
-                                projectActivityModels = inspectorCachePersistent.getProjectActivityModels(projectMemberModel.getProjectMemberId());
-                            } catch (PersistenceError ex) {
-                            }
-                        } else
-                            throw webApiError;
-                    }
-                }
-            } catch (WebApiError webApiError) {
-                projectActivityListHandleTaskResult.setMessage(webApiError.getMessage());
-                publishProgress(webApiError.getMessage());
-            }
-
-            if (projectActivityModels != null) {
-                // -- Set result --
-                projectActivityListHandleTaskResult.setProjectActivityModels(projectActivityModels);
-
-                // -- Get ProjectActivityModels progress --
-                publishProgress(ViewUtil.getResourceString(mContext, R.string.inspector_activity_list_handle_task_success));
-            }
-
-            return projectActivityListHandleTaskResult;
-        }
-    }
-
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+
+    @Override
+    public void onDestroy() {
+        for (AsyncTask asyncTask : mAsyncTaskList) {
+            if (asyncTask.getStatus() != AsyncTask.Status.FINISHED)
+                asyncTask.cancel(true);
+        }
+
+        super.onDestroy();
     }
 }

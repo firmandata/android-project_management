@@ -8,18 +8,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.construction.pm.R;
+import com.construction.pm.asynctask.LoginAsyncTask;
+import com.construction.pm.asynctask.param.LoginAsyncTaskParam;
+import com.construction.pm.asynctask.result.LoginAsyncTaskResult;
 import com.construction.pm.models.system.SessionLoginModel;
 import com.construction.pm.models.system.SettingUserModel;
-import com.construction.pm.networks.UserNetwork;
-import com.construction.pm.networks.webapi.WebApiError;
 import com.construction.pm.persistence.SettingPersistent;
-import com.construction.pm.utils.ViewUtil;
 import com.construction.pm.views.system.AuthenticationLoginView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AuthenticationLoginFragment extends Fragment implements
         AuthenticationLoginView.LoginListener,
         AuthenticationLoginView.LoginForgetPasswordListener {
+
+    protected List<AsyncTask> mAsyncTaskList;
 
     protected AuthenticationLoginView mAuthenticationLoginView;
 
@@ -33,6 +37,9 @@ public class AuthenticationLoginFragment extends Fragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // -- Handle AsyncTask --
+        mAsyncTaskList = new ArrayList<AsyncTask>();
 
         // -- Prepare AuthenticationLoginView --
         mAuthenticationLoginView = AuthenticationLoginView.buildAuthenticationLoginView(getContext(), null);
@@ -59,10 +66,17 @@ public class AuthenticationLoginFragment extends Fragment implements
         // -- Get SettingUserModel from SettingPersistent --
         SettingUserModel settingUserModel = settingPersistent.getSettingUserModel();
 
-        // -- Prepare LoginHandleTask --
-        LoginHandleTask loginHandleTask = new LoginHandleTask() {
+        // -- Prepare LoginAsyncTask --
+        LoginAsyncTask loginAsyncTask = new LoginAsyncTask() {
             @Override
-            public void onPostExecute(LoginHandleTaskResult loginHandleTaskResult) {
+            public void onPreExecute() {
+                mAsyncTaskList.add(this);
+            }
+
+            @Override
+            public void onPostExecute(LoginAsyncTaskResult loginHandleTaskResult) {
+                mAsyncTaskList.remove(this);
+
                 if (loginHandleTaskResult != null) {
                     if (loginHandleTaskResult.getSessionLoginModel() != null) {
                         onLoginRequestSuccess(loginHandleTaskResult.getSessionLoginModel());
@@ -82,8 +96,8 @@ public class AuthenticationLoginFragment extends Fragment implements
             }
         };
 
-        // -- Do LoginHandleTask --
-        loginHandleTask.execute(new LoginHandleTaskParam(getContext(), settingUserModel, login, password));
+        // -- Do LoginAsyncTask --
+        loginAsyncTask.execute(new LoginAsyncTaskParam(getContext(), settingUserModel, login, password));
     }
 
     @Override
@@ -118,107 +132,19 @@ public class AuthenticationLoginFragment extends Fragment implements
         mAuthenticationLoginView.alertDialogErrorShow(errorMessage);
     }
 
-    protected class LoginHandleTaskParam {
-
-        protected Context mContext;
-        protected SettingUserModel mSettingUserModel;
-        protected String mLogin;
-        protected String mPassword;
-
-        public LoginHandleTaskParam(final Context context, final SettingUserModel settingUserModel, final String login, final String password) {
-            mContext = context;
-            mSettingUserModel = settingUserModel;
-            mLogin = login;
-            mPassword = password;
-        }
-
-        public Context getContext() {
-            return mContext;
-        }
-
-        public SettingUserModel getSettingUserModel() {
-            return mSettingUserModel;
-        }
-
-        public String getLogin() {
-            return mLogin;
-        }
-
-        public String getPassword() {
-            return mPassword;
-        }
-    }
-
-    protected class LoginHandleTaskResult {
-
-        protected SessionLoginModel mSessionLoginModel;
-        protected String mMessage;
-
-        public LoginHandleTaskResult() {
-
-        }
-
-        public void setSessionLoginModel(final SessionLoginModel sessionLoginModel) {
-            mSessionLoginModel = sessionLoginModel;
-        }
-
-        public SessionLoginModel getSessionLoginModel() {
-            return mSessionLoginModel;
-        }
-
-        public void setMessage(final String message) {
-            mMessage = message;
-        }
-
-        public String getMessage() {
-            return mMessage;
-        }
-    }
-
-    protected class LoginHandleTask extends AsyncTask<LoginHandleTaskParam, String, LoginHandleTaskResult> {
-        protected LoginHandleTaskParam mLoginHandleTaskParam;
-        protected Context mContext;
-
-        @Override
-        protected LoginHandleTaskResult doInBackground(LoginHandleTaskParam... loginHandleTaskParams) {
-            // Get LoginHandleTaskParam
-            mLoginHandleTaskParam = loginHandleTaskParams[0];
-            mContext = mLoginHandleTaskParam.getContext();
-
-            // -- Prepare LoginHandleTaskResult --
-            LoginHandleTaskResult loginHandleTaskResult = new LoginHandleTaskResult();
-
-            // -- Login to server begin progress --
-            publishProgress(ViewUtil.getResourceString(mContext, R.string.login_handle_task_begin));
-
-            // -- Prepare UserNetwork --
-            UserNetwork userNetwork = new UserNetwork(mContext, mLoginHandleTaskParam.getSettingUserModel());
-
-            // -- Login to server --
-            SessionLoginModel sessionLoginModel = null;
-            try {
-                sessionLoginModel = userNetwork.generateLogin(mLoginHandleTaskParam.getLogin(), mLoginHandleTaskParam.getPassword());
-            } catch (WebApiError webApiError) {
-                loginHandleTaskResult.setMessage(webApiError.getMessage());
-                publishProgress(webApiError.getMessage());
-            }
-
-            if (sessionLoginModel != null) {
-                // -- Login to server successfully --
-                loginHandleTaskResult.setSessionLoginModel(sessionLoginModel);
-                loginHandleTaskResult.setMessage(ViewUtil.getResourceString(mContext, R.string.login_handle_task_success));
-
-                // -- Login to server successfully progress --
-                publishProgress(ViewUtil.getResourceString(mContext, R.string.login_handle_task_success));
-            }
-
-            return loginHandleTaskResult;
-        }
-    }
-
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+
+    @Override
+    public void onDestroy() {
+        for (AsyncTask asyncTask : mAsyncTaskList) {
+            if (asyncTask.getStatus() != AsyncTask.Status.FINISHED)
+                asyncTask.cancel(true);
+        }
+
+        super.onDestroy();
     }
 
     public void setAuthenticationLoginFragmentListener(final AuthenticationLoginFragmentListener authenticationLoginFragmentListener) {

@@ -8,16 +8,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.construction.pm.R;
+import com.construction.pm.asynctask.UserChangePasswordAsyncTask;
+import com.construction.pm.asynctask.param.UserChangePasswordAsyncTaskParam;
+import com.construction.pm.asynctask.result.UserChangePasswordAsyncTaskResult;
 import com.construction.pm.models.network.SimpleResponseModel;
 import com.construction.pm.models.system.SettingUserModel;
-import com.construction.pm.networks.UserNetwork;
-import com.construction.pm.networks.webapi.WebApiError;
 import com.construction.pm.persistence.SettingPersistent;
-import com.construction.pm.utils.ViewUtil;
 import com.construction.pm.views.user.UserChangePasswordView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class UserChangePasswordFragment extends Fragment implements UserChangePasswordView.UserChangePasswordListener {
+
+    protected List<AsyncTask> mAsyncTaskList;
 
     protected UserChangePasswordView mUserChangePasswordView;
 
@@ -30,6 +34,9 @@ public class UserChangePasswordFragment extends Fragment implements UserChangePa
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // -- Handle AsyncTask --
+        mAsyncTaskList = new ArrayList<AsyncTask>();
 
         // -- Prepare UserChangePasswordView --
         mUserChangePasswordView = UserChangePasswordView.buildAuthenticationChangePasswordView(getContext(), null);
@@ -50,10 +57,17 @@ public class UserChangePasswordFragment extends Fragment implements UserChangePa
         // -- Get SettingUserModel from SettingPersistent --
         SettingUserModel settingUserModel = settingPersistent.getSettingUserModel();
 
-        // -- Prepare UserChangePasswordHandleTask --
-        UserChangePasswordHandleTask userChangePasswordHandleTask = new UserChangePasswordHandleTask() {
+        // -- Prepare UserChangePasswordAsyncTask --
+        UserChangePasswordAsyncTask userChangePasswordAsyncTask = new UserChangePasswordAsyncTask() {
             @Override
-            public void onPostExecute(UserChangePasswordHandleTaskResult userChangePasswordHandleTaskResult) {
+            public void onPreExecute() {
+                mAsyncTaskList.add(this);
+            }
+
+            @Override
+            public void onPostExecute(UserChangePasswordAsyncTaskResult userChangePasswordHandleTaskResult) {
+                mAsyncTaskList.remove(this);
+
                 if (userChangePasswordHandleTaskResult != null) {
                     SimpleResponseModel simpleResponseModel = userChangePasswordHandleTaskResult.getSimpleResponseModel();
                     if (simpleResponseModel != null) {
@@ -77,8 +91,8 @@ public class UserChangePasswordFragment extends Fragment implements UserChangePa
             }
         };
 
-        // -- Do UserChangePasswordHandleTask --
-        userChangePasswordHandleTask.execute(new UserChangePasswordHandleTaskParam(getContext(), settingUserModel, passwordOld, passwordNew));
+        // -- Do UserChangePasswordAsyncTask --
+        userChangePasswordAsyncTask.execute(new UserChangePasswordAsyncTaskParam(getContext(), settingUserModel, passwordOld, passwordNew));
     }
 
     protected void onUserChangePasswordRequestProgress(final String progressMessage) {
@@ -111,110 +125,19 @@ public class UserChangePasswordFragment extends Fragment implements UserChangePa
         super.onAttach(context);
     }
 
-    protected class UserChangePasswordHandleTaskParam {
-
-        protected Context mContext;
-        protected SettingUserModel mSettingUserModel;
-        protected String mPasswordOld;
-        protected String mPasswordNew;
-
-        public UserChangePasswordHandleTaskParam(final Context context, final SettingUserModel settingUserModel, final String passwordOld, final String passwordNew) {
-            mContext = context;
-            mSettingUserModel = settingUserModel;
-            mPasswordOld = passwordOld;
-            mPasswordNew = passwordNew;
-        }
-
-        public Context getContext() {
-            return mContext;
-        }
-
-        public SettingUserModel getSettingUserModel() {
-            return mSettingUserModel;
-        }
-
-        public String getPasswordOld() {
-            return mPasswordOld;
-        }
-
-        public String getPasswordNew() {
-            return mPasswordNew;
-        }
-    }
-
-    protected class UserChangePasswordHandleTaskResult {
-
-        protected SimpleResponseModel mSimpleResponseModel;
-        protected String mMessage;
-
-        public UserChangePasswordHandleTaskResult() {
-
-        }
-
-        public void setSimpleResponseModel(final SimpleResponseModel simpleResponseModel) {
-            mSimpleResponseModel = simpleResponseModel;
-        }
-
-        public SimpleResponseModel getSimpleResponseModel() {
-            return mSimpleResponseModel;
-        }
-
-        public void setMessage(final String message) {
-            mMessage = message;
-        }
-
-        public String getMessage() {
-            return mMessage;
-        }
-    }
-
-    protected class UserChangePasswordHandleTask extends AsyncTask<UserChangePasswordHandleTaskParam, String, UserChangePasswordHandleTaskResult> {
-        protected UserChangePasswordHandleTaskParam mUserChangePasswordHandleTaskParam;
-        protected Context mContext;
-
-        @Override
-        protected UserChangePasswordHandleTaskResult doInBackground(UserChangePasswordHandleTaskParam... userChangePasswordHandleTaskParams) {
-            // Get UserChangePasswordHandleTaskParam
-            mUserChangePasswordHandleTaskParam = userChangePasswordHandleTaskParams[0];
-            mContext = mUserChangePasswordHandleTaskParam.getContext();
-
-            // -- Prepare UserChangePasswordHandleTaskResult --
-            UserChangePasswordHandleTaskResult userChangePasswordHandleTaskResult = new UserChangePasswordHandleTaskResult();
-
-            // -- Change password to server begin progress --
-            publishProgress(ViewUtil.getResourceString(mContext, R.string.user_change_password_handle_task_begin));
-
-            // -- Prepare UserNetwork --
-            UserNetwork userNetwork = new UserNetwork(mContext, mUserChangePasswordHandleTaskParam.getSettingUserModel());
-
-            SimpleResponseModel simpleResponseModel = null;
-            try {
-                // -- Invalidate Access Token --
-                userNetwork.invalidateAccessToken();
-
-                // -- Change password to server --
-                simpleResponseModel = userNetwork.changePassword(mUserChangePasswordHandleTaskParam.getPasswordOld(), mUserChangePasswordHandleTaskParam.getPasswordNew());
-            } catch (WebApiError webApiError) {
-                userChangePasswordHandleTaskResult.setMessage(webApiError.getMessage());
-                publishProgress(webApiError.getMessage());
-            }
-
-            if (simpleResponseModel != null) {
-                // -- Change password to server successfully --
-                userChangePasswordHandleTaskResult.setSimpleResponseModel(simpleResponseModel);
-                userChangePasswordHandleTaskResult.setMessage(ViewUtil.getResourceString(mContext, R.string.user_change_password_handle_task_success));
-
-                // -- Change password to server successfully progress --
-                publishProgress(ViewUtil.getResourceString(mContext, R.string.user_change_password_handle_task_success));
-            }
-
-            return userChangePasswordHandleTaskResult;
-        }
-    }
-
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+
+    @Override
+    public void onDestroy() {
+        for (AsyncTask asyncTask : mAsyncTaskList) {
+            if (asyncTask.getStatus() != AsyncTask.Status.FINISHED)
+                asyncTask.cancel(true);
+        }
+
+        super.onDestroy();
     }
 
     public void setUserChangePasswordFragmentListener(final UserChangePasswordFragmentListener userChangePasswordFragmentListener) {

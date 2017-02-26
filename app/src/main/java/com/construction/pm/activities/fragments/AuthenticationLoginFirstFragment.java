@@ -8,16 +8,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.construction.pm.R;
+import com.construction.pm.asynctask.LoginFirstAsyncTask;
+import com.construction.pm.asynctask.param.LoginFirstAsyncTaskParam;
+import com.construction.pm.asynctask.result.LoginFirstAsyncTaskResult;
 import com.construction.pm.models.network.SimpleResponseModel;
 import com.construction.pm.models.system.SettingUserModel;
-import com.construction.pm.networks.UserNetwork;
-import com.construction.pm.networks.webapi.WebApiError;
 import com.construction.pm.persistence.SettingPersistent;
-import com.construction.pm.utils.ViewUtil;
 import com.construction.pm.views.system.AuthenticationLoginFirstView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class AuthenticationLoginFirstFragment extends Fragment implements AuthenticationLoginFirstView.AuthenticationLoginFirstListener {
+
+    protected List<AsyncTask> mAsyncTaskList;
 
     protected AuthenticationLoginFirstView mAuthenticationLoginFirstView;
 
@@ -30,6 +34,9 @@ public class AuthenticationLoginFirstFragment extends Fragment implements Authen
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // -- Handle AsyncTask --
+        mAsyncTaskList = new ArrayList<AsyncTask>();
 
         // -- Prepare AuthenticationLoginFirstView --
         mAuthenticationLoginFirstView = AuthenticationLoginFirstView.buildAuthenticationLoginFirstView(getContext(), null);
@@ -50,10 +57,17 @@ public class AuthenticationLoginFirstFragment extends Fragment implements Authen
         // -- Get SettingUserModel from SettingPersistent --
         SettingUserModel settingUserModel = settingPersistent.getSettingUserModel();
 
-        // -- Prepare FirstLoginHandleTask --
-        FirstLoginHandleTask firstLoginHandleTask = new FirstLoginHandleTask() {
+        // -- Prepare LoginFirstAsyncTask --
+        LoginFirstAsyncTask loginFirstAsyncTask = new LoginFirstAsyncTask() {
             @Override
-            public void onPostExecute(FirstLoginHandleTaskResult firstLoginHandleTaskResult) {
+            public void onPreExecute() {
+                mAsyncTaskList.add(this);
+            }
+
+            @Override
+            public void onPostExecute(LoginFirstAsyncTaskResult firstLoginHandleTaskResult) {
+                mAsyncTaskList.remove(this);
+
                 if (firstLoginHandleTaskResult != null) {
                     SimpleResponseModel simpleResponseModel = firstLoginHandleTaskResult.getSimpleResponseModel();
                     if (simpleResponseModel != null) {
@@ -77,8 +91,8 @@ public class AuthenticationLoginFirstFragment extends Fragment implements Authen
             }
         };
 
-        // -- Do FirstLoginHandleTask --
-        firstLoginHandleTask.execute(new FirstLoginHandleTaskParam(getContext(), settingUserModel, passwordNew));
+        // -- Do LoginFirstAsyncTask --
+        loginFirstAsyncTask.execute(new LoginFirstAsyncTaskParam(getContext(), settingUserModel, passwordNew));
     }
 
     protected void onFirstPasswordRequestProgress(final String progressMessage) {
@@ -111,101 +125,19 @@ public class AuthenticationLoginFirstFragment extends Fragment implements Authen
         super.onAttach(context);
     }
 
-    protected class FirstLoginHandleTaskParam {
-
-        protected Context mContext;
-        protected SettingUserModel mSettingUserModel;
-        protected String mPasswordNew;
-
-        public FirstLoginHandleTaskParam(final Context context, final SettingUserModel settingUserModel, final String passwordNew) {
-            mContext = context;
-            mSettingUserModel = settingUserModel;
-            mPasswordNew = passwordNew;
-        }
-
-        public Context getContext() {
-            return mContext;
-        }
-
-        public SettingUserModel getSettingUserModel() {
-            return mSettingUserModel;
-        }
-
-        public String getPasswordNew() {
-            return mPasswordNew;
-        }
-    }
-
-    protected class FirstLoginHandleTaskResult {
-
-        protected SimpleResponseModel mSimpleResponseModel;
-        protected String mMessage;
-
-        public FirstLoginHandleTaskResult() {
-
-        }
-
-        public void setSimpleResponseModel(final SimpleResponseModel simpleResponseModel) {
-            mSimpleResponseModel = simpleResponseModel;
-        }
-
-        public SimpleResponseModel getSimpleResponseModel() {
-            return mSimpleResponseModel;
-        }
-
-        public void setMessage(final String message) {
-            mMessage = message;
-        }
-
-        public String getMessage() {
-            return mMessage;
-        }
-    }
-
-    protected class FirstLoginHandleTask extends AsyncTask<FirstLoginHandleTaskParam, String, FirstLoginHandleTaskResult> {
-        protected FirstLoginHandleTaskParam mFirstLoginHandleTaskParam;
-        protected Context mContext;
-
-        @Override
-        protected FirstLoginHandleTaskResult doInBackground(FirstLoginHandleTaskParam... firstLoginHandleTaskParams) {
-            // Get FirstLoginHandleTaskParam
-            mFirstLoginHandleTaskParam = firstLoginHandleTaskParams[0];
-            mContext = mFirstLoginHandleTaskParam.getContext();
-
-            // -- Prepare FirstLoginHandleTaskResult --
-            FirstLoginHandleTaskResult firstLoginHandleTaskResult = new FirstLoginHandleTaskResult();
-
-            // -- Login first change password to server begin progress --
-            publishProgress(ViewUtil.getResourceString(mContext, R.string.login_first_handle_task_begin));
-
-            // -- Prepare UserNetwork --
-            UserNetwork userNetwork = new UserNetwork(mContext, mFirstLoginHandleTaskParam.getSettingUserModel());
-
-            // -- Login first change password to server --
-            SimpleResponseModel simpleResponseModel = null;
-            try {
-                simpleResponseModel = userNetwork.changePasswordFirst(mFirstLoginHandleTaskParam.getPasswordNew());
-            } catch (WebApiError webApiError) {
-                firstLoginHandleTaskResult.setMessage(webApiError.getMessage());
-                publishProgress(webApiError.getMessage());
-            }
-
-            if (simpleResponseModel != null) {
-                // -- Login first change password to server successfully --
-                firstLoginHandleTaskResult.setSimpleResponseModel(simpleResponseModel);
-                firstLoginHandleTaskResult.setMessage(ViewUtil.getResourceString(mContext, R.string.login_first_handle_task_success));
-
-                // -- Login first change password to server successfully progress --
-                publishProgress(ViewUtil.getResourceString(mContext, R.string.login_first_handle_task_success));
-            }
-
-            return firstLoginHandleTaskResult;
-        }
-    }
-
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+
+    @Override
+    public void onDestroy() {
+        for (AsyncTask asyncTask : mAsyncTaskList) {
+            if (asyncTask.getStatus() != AsyncTask.Status.FINISHED)
+                asyncTask.cancel(true);
+        }
+
+        super.onDestroy();
     }
 
     public void setAuthenticationLoginFirstFragmentListener(final AuthenticationLoginFirstFragmentListener authenticationLoginFirstFragmentListener) {

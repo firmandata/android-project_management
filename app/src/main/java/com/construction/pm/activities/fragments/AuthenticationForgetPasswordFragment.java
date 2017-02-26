@@ -8,16 +8,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.construction.pm.R;
+import com.construction.pm.asynctask.ForgetPasswordAsyncTask;
+import com.construction.pm.asynctask.param.ForgetPasswordAsyncTaskParam;
+import com.construction.pm.asynctask.result.ForgetPasswordAsyncTaskResult;
 import com.construction.pm.models.network.SimpleResponseModel;
 import com.construction.pm.models.system.SettingUserModel;
-import com.construction.pm.networks.UserNetwork;
-import com.construction.pm.networks.webapi.WebApiError;
 import com.construction.pm.persistence.SettingPersistent;
-import com.construction.pm.utils.ViewUtil;
 import com.construction.pm.views.system.AuthenticationForgetPasswordView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class AuthenticationForgetPasswordFragment extends Fragment implements AuthenticationForgetPasswordView.ForgetPasswordListener {
+
+    protected List<AsyncTask> mAsyncTaskList;
 
     protected AuthenticationForgetPasswordView mAuthenticationForgetPasswordView;
 
@@ -30,6 +34,9 @@ public class AuthenticationForgetPasswordFragment extends Fragment implements Au
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // -- Handle AsyncTask --
+        mAsyncTaskList = new ArrayList<AsyncTask>();
 
         // -- Prepare AuthenticationForgetPasswordView --
         mAuthenticationForgetPasswordView = AuthenticationForgetPasswordView.buildAuthenticationForgetPasswordView(getContext(), null);
@@ -55,10 +62,17 @@ public class AuthenticationForgetPasswordFragment extends Fragment implements Au
         // -- Get SettingUserModel from SettingPersistent --
         SettingUserModel settingUserModel = settingPersistent.getSettingUserModel();
 
-        // -- Prepare ForgetPasswordHandleTask --
-        ForgetPasswordHandleTask forgetPasswordHandleTask = new ForgetPasswordHandleTask() {
+        // -- Prepare ForgetPasswordAsyncTask --
+        ForgetPasswordAsyncTask forgetPasswordAsyncTask = new ForgetPasswordAsyncTask() {
             @Override
-            public void onPostExecute(ForgetPasswordHandleTaskResult forgetPasswordHandleTaskResult) {
+            public void onPreExecute() {
+                mAsyncTaskList.add(this);
+            }
+
+            @Override
+            public void onPostExecute(ForgetPasswordAsyncTaskResult forgetPasswordHandleTaskResult) {
+                mAsyncTaskList.remove(this);
+
                 if (forgetPasswordHandleTaskResult != null) {
                     SimpleResponseModel simpleResponseModel = forgetPasswordHandleTaskResult.getSimpleResponseModel();
                     if (simpleResponseModel != null) {
@@ -82,8 +96,8 @@ public class AuthenticationForgetPasswordFragment extends Fragment implements Au
             }
         };
 
-        // -- Do ForgetPasswordHandleTask --
-        forgetPasswordHandleTask.execute(new ForgetPasswordHandleTaskParam(getContext(), settingUserModel, login));
+        // -- Do ForgetPasswordAsyncTask --
+        forgetPasswordAsyncTask.execute(new ForgetPasswordAsyncTaskParam(getContext(), settingUserModel, login));
     }
 
     protected void onForgetPasswordRequestProgress(final String progressMessage) {
@@ -116,96 +130,14 @@ public class AuthenticationForgetPasswordFragment extends Fragment implements Au
         super.onDetach();
     }
 
-    protected class ForgetPasswordHandleTaskParam {
-
-        protected Context mContext;
-        protected SettingUserModel mSettingUserModel;
-        protected String mLogin;
-
-        public ForgetPasswordHandleTaskParam(final Context context, final SettingUserModel settingUserModel, final String login) {
-            mContext = context;
-            mSettingUserModel = settingUserModel;
-            mLogin = login;
+    @Override
+    public void onDestroy() {
+        for (AsyncTask asyncTask : mAsyncTaskList) {
+            if (asyncTask.getStatus() != AsyncTask.Status.FINISHED)
+                asyncTask.cancel(true);
         }
 
-        public Context getContext() {
-            return mContext;
-        }
-
-        public SettingUserModel getSettingUserModel() {
-            return mSettingUserModel;
-        }
-
-        public String getLogin() {
-            return mLogin;
-        }
-    }
-
-    protected class ForgetPasswordHandleTaskResult {
-
-        protected SimpleResponseModel mSimpleResponseModel;
-        protected String mMessage;
-
-        public ForgetPasswordHandleTaskResult() {
-
-        }
-
-        public void setSimpleResponseModel(final SimpleResponseModel simpleResponseModel) {
-            mSimpleResponseModel = simpleResponseModel;
-        }
-
-        public SimpleResponseModel getSimpleResponseModel() {
-            return mSimpleResponseModel;
-        }
-
-        public void setMessage(final String message) {
-            mMessage = message;
-        }
-
-        public String getMessage() {
-            return mMessage;
-        }
-    }
-
-    protected class ForgetPasswordHandleTask extends AsyncTask<ForgetPasswordHandleTaskParam, String, ForgetPasswordHandleTaskResult> {
-        protected ForgetPasswordHandleTaskParam mForgetPasswordHandleTaskParam;
-        protected Context mContext;
-
-        @Override
-        protected ForgetPasswordHandleTaskResult doInBackground(ForgetPasswordHandleTaskParam... forgetPasswordHandleTaskParams) {
-            // Get ForgetPasswordHandleTaskParam
-            mForgetPasswordHandleTaskParam = forgetPasswordHandleTaskParams[0];
-            mContext = mForgetPasswordHandleTaskParam.getContext();
-
-            // -- Prepare ForgetPasswordHandleTaskResult --
-            ForgetPasswordHandleTaskResult forgetPasswordHandleTaskResult = new ForgetPasswordHandleTaskResult();
-
-            // -- Send request reset password to server begin progress --
-            publishProgress(ViewUtil.getResourceString(mContext, R.string.forget_password_handle_task_begin));
-
-            // -- Prepare UserNetwork --
-            UserNetwork userNetwork = new UserNetwork(mContext, mForgetPasswordHandleTaskParam.getSettingUserModel());
-
-            // -- Send request reset password to server --
-            SimpleResponseModel simpleResponseModel = null;
-            try {
-                simpleResponseModel = userNetwork.forgetPassword(mForgetPasswordHandleTaskParam.getLogin());
-            } catch (WebApiError webApiError) {
-                forgetPasswordHandleTaskResult.setMessage(webApiError.getMessage());
-                publishProgress(webApiError.getMessage());
-            }
-
-            if (simpleResponseModel != null) {
-                // -- Send request reset password to server successfully --
-                forgetPasswordHandleTaskResult.setSimpleResponseModel(simpleResponseModel);
-                forgetPasswordHandleTaskResult.setMessage(simpleResponseModel.getMessage());
-
-                // -- Send request reset password to server successfully progress --
-                publishProgress(ViewUtil.getResourceString(mContext, R.string.forget_password_handle_task_success));
-            }
-
-            return forgetPasswordHandleTaskResult;
-        }
+        super.onDestroy();
     }
 
     public void setAuthenticationForgetPasswordFragmentListener(final AuthenticationForgetPasswordFragmentListener authenticationForgetPasswordFragmentListener) {

@@ -9,23 +9,26 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.construction.pm.R;
 import com.construction.pm.activities.NotificationActivity;
+import com.construction.pm.asynctask.NotificationListAsyncTask;
+import com.construction.pm.asynctask.param.NotificationListAsyncTaskParam;
+import com.construction.pm.asynctask.result.NotificationListAsyncTaskResult;
 import com.construction.pm.models.NotificationModel;
-import com.construction.pm.models.ProjectMemberModel;
 import com.construction.pm.models.system.SessionLoginModel;
 import com.construction.pm.models.system.SettingUserModel;
-import com.construction.pm.persistence.NotificationPersistent;
-import com.construction.pm.persistence.PersistenceError;
 import com.construction.pm.persistence.SessionPersistent;
 import com.construction.pm.persistence.SettingPersistent;
 import com.construction.pm.utils.ConstantUtil;
-import com.construction.pm.utils.ViewUtil;
 import com.construction.pm.views.notification.NotificationListView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
 public class NotificationListFragment extends Fragment implements NotificationListView.NotificationListListener {
+
+    protected List<AsyncTask> mAsyncTaskList;
 
     protected NotificationListView mNotificationListView;
 
@@ -38,6 +41,9 @@ public class NotificationListFragment extends Fragment implements NotificationLi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // -- Handle AsyncTask --
+        mAsyncTaskList = new ArrayList<AsyncTask>();
 
         // -- Prepare NotificationListView --
         mNotificationListView = NotificationListView.buildNotificationListView(getContext(), null);
@@ -68,10 +74,17 @@ public class NotificationListFragment extends Fragment implements NotificationLi
         SessionPersistent sessionPersistent = new SessionPersistent(getContext());
         SessionLoginModel sessionLoginModel = sessionPersistent.getSessionLoginModel();
 
-        // -- Prepare NotificationListHandleTask --
-        NotificationListHandleTask notificationListHandleTask = new NotificationListHandleTask() {
+        // -- Prepare NotificationListAsyncTask --
+        NotificationListAsyncTask notificationListAsyncTask = new NotificationListAsyncTask() {
             @Override
-            public void onPostExecute(NotificationListHandleTaskResult notificationListHandleTaskResult) {
+            public void onPreExecute() {
+                mAsyncTaskList.add(this);
+            }
+
+            @Override
+            public void onPostExecute(NotificationListAsyncTaskResult notificationListHandleTaskResult) {
+                mAsyncTaskList.remove(this);
+
                 if (notificationListHandleTaskResult != null) {
                     NotificationModel[] notificationModels = notificationListHandleTaskResult.getNotificationModels();
                     if (notificationModels != null)
@@ -91,8 +104,8 @@ public class NotificationListFragment extends Fragment implements NotificationLi
             }
         };
 
-        // -- Do NotificationListHandleTask --
-        notificationListHandleTask.execute(new NotificationListHandleTaskParam(getContext(), settingUserModel, sessionLoginModel.getProjectMemberModel()));
+        // -- Do NotificationListAsyncTask --
+        notificationListAsyncTask.execute(new NotificationListAsyncTaskParam(getContext(), settingUserModel, sessionLoginModel.getProjectMemberModel()));
     }
 
     @Override
@@ -159,98 +172,6 @@ public class NotificationListFragment extends Fragment implements NotificationLi
         mNotificationListView.stopRefreshAnimation();
     }
 
-    protected class NotificationListHandleTaskParam {
-
-        protected Context mContext;
-        protected SettingUserModel mSettingUserModel;
-        protected ProjectMemberModel mProjectMemberModel;
-
-        public NotificationListHandleTaskParam(final Context context, final SettingUserModel settingUserModel, final ProjectMemberModel notificationMemberModel) {
-            mContext = context;
-            mSettingUserModel = settingUserModel;
-            mProjectMemberModel = notificationMemberModel;
-        }
-
-        public Context getContext() {
-            return mContext;
-        }
-
-        public SettingUserModel getSettingUserModel() {
-            return mSettingUserModel;
-        }
-
-        public ProjectMemberModel getProjectMemberModel() {
-            return mProjectMemberModel;
-        }
-    }
-
-    protected class NotificationListHandleTaskResult {
-
-        protected NotificationModel[] mNotificationModels;
-        protected String mMessage;
-
-        public NotificationListHandleTaskResult() {
-
-        }
-
-        public void setNotificationModels(final NotificationModel[] notificationModels) {
-            mNotificationModels = notificationModels;
-        }
-
-        public NotificationModel[] getNotificationModels() {
-            return mNotificationModels;
-        }
-
-        public void setMessage(final String message) {
-            mMessage = message;
-        }
-
-        public String getMessage() {
-            return mMessage;
-        }
-    }
-
-    protected class NotificationListHandleTask extends AsyncTask<NotificationListHandleTaskParam, String, NotificationListHandleTaskResult> {
-        protected NotificationListHandleTaskParam mNotificationListHandleTaskParam;
-        protected Context mContext;
-
-        @Override
-        protected NotificationListHandleTaskResult doInBackground(NotificationListHandleTaskParam... notificationListHandleTaskParams) {
-            // Get NotificationListHandleTaskParam
-            mNotificationListHandleTaskParam = notificationListHandleTaskParams[0];
-            mContext = mNotificationListHandleTaskParam.getContext();
-            ProjectMemberModel projectMemberModel = mNotificationListHandleTaskParam.getProjectMemberModel();
-
-            // -- Prepare NotificationListHandleTaskResult --
-            NotificationListHandleTaskResult notificationListHandleTaskResult = new NotificationListHandleTaskResult();
-
-            // -- Get NotificationModels progress --
-            publishProgress(ViewUtil.getResourceString(mContext, R.string.notification_list_handle_task_begin));
-
-            // -- Prepare NotificationPersistent --
-            NotificationPersistent notificationPersistent = new NotificationPersistent(mContext);
-
-            // -- Get NotificationModels from NotificationPersistent --
-            NotificationModel[] notificationModels = null;
-            try {
-                notificationModels = notificationPersistent.getNotificationModels(projectMemberModel.getProjectMemberId());
-            } catch (PersistenceError ex) {
-                notificationListHandleTaskResult.setMessage(ex.getMessage());
-                publishProgress(ex.getMessage());
-            }
-
-            if (notificationModels != null) {
-                // -- Set NotificationModels to result --
-                notificationListHandleTaskResult.setNotificationModels(notificationModels);
-
-                // -- Get NotificationModels progress --
-                publishProgress(ViewUtil.getResourceString(mContext, R.string.notification_list_handle_task_success));
-            }
-
-            return notificationListHandleTaskResult;
-        }
-    }
-
     public void addNotificationModels(final NotificationModel[] notificationModels) {
         if (mNotificationListView != null)
             mNotificationListView.addNotificationModels(notificationModels);
@@ -259,6 +180,16 @@ public class NotificationListFragment extends Fragment implements NotificationLi
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+
+    @Override
+    public void onDestroy() {
+        for (AsyncTask asyncTask : mAsyncTaskList) {
+            if (asyncTask.getStatus() != AsyncTask.Status.FINISHED)
+                asyncTask.cancel(true);
+        }
+
+        super.onDestroy();
     }
 
     public void setNotificationListFragmentListener(final NotificationListFragmentListener notificationListFragmentListener) {

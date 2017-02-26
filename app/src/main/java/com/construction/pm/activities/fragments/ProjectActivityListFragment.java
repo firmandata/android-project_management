@@ -9,6 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.construction.pm.R;
+import com.construction.pm.asynctask.InspectorProjectActivityListAsyncTask;
+import com.construction.pm.asynctask.param.InspectorProjectActivityListAsyncTaskParam;
+import com.construction.pm.asynctask.result.InspectorProjectActivityListAsyncTaskResult;
 import com.construction.pm.models.ProjectActivityModel;
 import com.construction.pm.models.ProjectMemberModel;
 import com.construction.pm.models.StatusTaskEnum;
@@ -29,6 +32,8 @@ import java.util.List;
 public class ProjectActivityListFragment extends Fragment implements ProjectActivityListView.ProjectActivityListListener {
     public static final String PARAM_PROJECT_ACTIVITY_MODELS = "ProjectActivityModels";
     public static final String PARAM_STATUS_TASK_ENUM = "StatusTaskEnum";
+
+    protected List<AsyncTask> mAsyncTaskList;
 
     protected ProjectActivityListView mProjectActivityListView;
 
@@ -70,6 +75,9 @@ public class ProjectActivityListFragment extends Fragment implements ProjectActi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // -- Handle AsyncTask --
+        mAsyncTaskList = new ArrayList<AsyncTask>();
 
         ProjectActivityModel[] projectActivityModels = null;
         StatusTaskEnum statusTaskEnum = null;
@@ -130,16 +138,23 @@ public class ProjectActivityListFragment extends Fragment implements ProjectActi
         SessionPersistent sessionPersistent = new SessionPersistent(getContext());
         SessionLoginModel sessionLoginModel = sessionPersistent.getSessionLoginModel();
 
-        // -- Prepare ProjectActivityListHandleTask --
-        ProjectActivityListHandleTask projectActivityListHandleTask = new ProjectActivityListHandleTask() {
+        // -- Prepare InspectorProjectActivityListAsyncTask --
+        InspectorProjectActivityListAsyncTask inspectorProjectActivityListAsyncTask = new InspectorProjectActivityListAsyncTask() {
             @Override
-            public void onPostExecute(ProjectActivityListHandleTaskResult projectActivityListHandleTaskResult) {
-                if (projectActivityListHandleTaskResult != null) {
-                    ProjectActivityModel[] projectActivityModels = projectActivityListHandleTaskResult.getProjectActivityModels();
+            public void onPreExecute() {
+                mAsyncTaskList.add(this);
+            }
+
+            @Override
+            public void onPostExecute(InspectorProjectActivityListAsyncTaskResult inspectorProjectActivityListAsyncTaskResult) {
+                mAsyncTaskList.remove(this);
+
+                if (inspectorProjectActivityListAsyncTaskResult != null) {
+                    ProjectActivityModel[] projectActivityModels = inspectorProjectActivityListAsyncTaskResult.getProjectActivityModels();
                     if (projectActivityModels != null)
                         onProjectActivityListRequestSuccess(projectActivityModels);
                     else
-                        onProjectActivityListRequestFailed(projectActivityListHandleTaskResult.getMessage());
+                        onProjectActivityListRequestFailed(inspectorProjectActivityListAsyncTaskResult.getMessage());
                 }
             }
 
@@ -153,8 +168,8 @@ public class ProjectActivityListFragment extends Fragment implements ProjectActi
             }
         };
 
-        // -- Do ProjectActivityListHandleTask --
-        projectActivityListHandleTask.execute(new ProjectActivityListHandleTaskParam(getContext(), settingUserModel, sessionLoginModel.getProjectMemberModel(), statusTaskEnum));
+        // -- Do InspectorProjectActivityListAsyncTask --
+        inspectorProjectActivityListAsyncTask.execute(new InspectorProjectActivityListAsyncTaskParam(getContext(), settingUserModel, sessionLoginModel.getProjectMemberModel(), statusTaskEnum));
     }
 
     protected void onProjectActivityListRequestProgress(final String progressMessage) {
@@ -170,132 +185,6 @@ public class ProjectActivityListFragment extends Fragment implements ProjectActi
         mProjectActivityListView.stopRefreshAnimation();
     }
 
-    protected class ProjectActivityListHandleTaskParam {
-
-        protected Context mContext;
-        protected SettingUserModel mSettingUserModel;
-        protected ProjectMemberModel mProjectMemberModel;
-        protected StatusTaskEnum mStatusTaskEnum;
-
-        public ProjectActivityListHandleTaskParam(final Context context, final SettingUserModel settingUserModel, final ProjectMemberModel projectMemberModel, final StatusTaskEnum statusTaskEnum) {
-            mContext = context;
-            mSettingUserModel = settingUserModel;
-            mProjectMemberModel = projectMemberModel;
-            mStatusTaskEnum = statusTaskEnum;
-        }
-
-        public Context getContext() {
-            return mContext;
-        }
-
-        public SettingUserModel getSettingUserModel() {
-            return mSettingUserModel;
-        }
-
-        public ProjectMemberModel getProjectMemberModel() {
-            return mProjectMemberModel;
-        }
-
-        public StatusTaskEnum getStatusTaskEnum() {
-            return mStatusTaskEnum;
-        }
-    }
-
-    protected class ProjectActivityListHandleTaskResult {
-
-        protected ProjectActivityModel[] mProjectActivityModels;
-        protected String mMessage;
-
-        public ProjectActivityListHandleTaskResult() {
-
-        }
-
-        public void setProjectActivityModels(final ProjectActivityModel[] projectPlanModels) {
-            mProjectActivityModels = projectPlanModels;
-        }
-
-        public ProjectActivityModel[] getProjectActivityModels() {
-            return mProjectActivityModels;
-        }
-
-        public void setMessage(final String message) {
-            mMessage = message;
-        }
-
-        public String getMessage() {
-            return mMessage;
-        }
-    }
-
-    protected class ProjectActivityListHandleTask extends AsyncTask<ProjectActivityListHandleTaskParam, String, ProjectActivityListHandleTaskResult> {
-        protected ProjectActivityListHandleTaskParam mProjectActivityListHandleTaskParam;
-        protected Context mContext;
-
-        @Override
-        protected ProjectActivityListHandleTaskResult doInBackground(ProjectActivityListHandleTaskParam... projectActivityListHandleTaskParams) {
-            // Get ProjectActivityListHandleTaskParam
-            mProjectActivityListHandleTaskParam = projectActivityListHandleTaskParams[0];
-            mContext = mProjectActivityListHandleTaskParam.getContext();
-
-            // -- Prepare ProjectActivityListHandleTaskResult --
-            ProjectActivityListHandleTaskResult projectActivityListHandleTaskResult = new ProjectActivityListHandleTaskResult();
-
-            // -- Get ProjectActivityModels progress --
-            publishProgress(ViewUtil.getResourceString(mContext, R.string.inspector_activity_list_handle_task_begin));
-
-            // -- Prepare InspectorCachePersistent --
-            InspectorCachePersistent inspectorCachePersistent = new InspectorCachePersistent(mContext);
-
-            // -- Prepare InspectorNetwork --
-            InspectorNetwork inspectorNetwork = new InspectorNetwork(mContext, mProjectActivityListHandleTaskParam.getSettingUserModel());
-
-            ProjectActivityModel[] projectActivityModels = null;
-            try {
-                ProjectMemberModel projectMemberModel = mProjectActivityListHandleTaskParam.getProjectMemberModel();
-                if (projectMemberModel != null) {
-                    try {
-                        // -- Invalidate Access Token --
-                        inspectorNetwork.invalidateAccessToken();
-
-                        // -- Invalidate Login --
-                        inspectorNetwork.invalidateLogin();
-
-                        // -- Get ProjectActivityModels from server --
-                        projectActivityModels = inspectorNetwork.getProjectActivities(projectMemberModel.getProjectMemberId(), mProjectActivityListHandleTaskParam.getStatusTaskEnum());
-
-                        // -- Save to InspectorCachePersistent --
-                        try {
-                            inspectorCachePersistent.setProjectActivityModels(projectActivityModels, mProjectActivityListHandleTaskParam.getStatusTaskEnum(), projectMemberModel.getProjectMemberId());
-                        } catch (PersistenceError ex) {
-                        }
-                    } catch (WebApiError webApiError) {
-                        if (webApiError.isErrorConnection()) {
-                            // -- Get ProjectActivityModels from InspectorCachePersistent --
-                            try {
-                                projectActivityModels = inspectorCachePersistent.getProjectActivityModels(mProjectActivityListHandleTaskParam.getStatusTaskEnum(), projectMemberModel.getProjectMemberId());
-                            } catch (PersistenceError ex) {
-                            }
-                        } else
-                            throw webApiError;
-                    }
-                }
-            } catch (WebApiError webApiError) {
-                projectActivityListHandleTaskResult.setMessage(webApiError.getMessage());
-                publishProgress(webApiError.getMessage());
-            }
-
-            if (projectActivityModels != null) {
-                // -- Set result --
-                projectActivityListHandleTaskResult.setProjectActivityModels(projectActivityModels);
-
-                // -- Get ProjectActivityModels progress --
-                publishProgress(ViewUtil.getResourceString(mContext, R.string.inspector_activity_list_handle_task_success));
-            }
-
-            return projectActivityListHandleTaskResult;
-        }
-    }
-
     @Override
     public void onProjectActivityItemClick(ProjectActivityModel projectActivityModel) {
 
@@ -304,5 +193,15 @@ public class ProjectActivityListFragment extends Fragment implements ProjectActi
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+
+    @Override
+    public void onDestroy() {
+        for (AsyncTask asyncTask : mAsyncTaskList) {
+            if (asyncTask.getStatus() != AsyncTask.Status.FINISHED)
+                asyncTask.cancel(true);
+        }
+
+        super.onDestroy();
     }
 }

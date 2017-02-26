@@ -8,19 +8,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.construction.pm.R;
+import com.construction.pm.asynctask.UserChangeProfileAsyncTask;
+import com.construction.pm.asynctask.param.UserChangeProfileAsyncTaskParam;
+import com.construction.pm.asynctask.result.UserChangeProfileAsyncTaskResult;
 import com.construction.pm.models.ProjectMemberModel;
 import com.construction.pm.models.network.SimpleResponseModel;
 import com.construction.pm.models.system.SessionLoginModel;
 import com.construction.pm.models.system.SettingUserModel;
-import com.construction.pm.networks.UserNetwork;
-import com.construction.pm.networks.webapi.WebApiError;
 import com.construction.pm.persistence.SessionPersistent;
 import com.construction.pm.persistence.SettingPersistent;
-import com.construction.pm.utils.ViewUtil;
 import com.construction.pm.views.user.UserChangeProfileView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class UserChangeProfileFragment extends Fragment implements UserChangeProfileView.UserChangeProfileListener {
+
+    protected List<AsyncTask> mAsyncTaskList;
 
     protected UserChangeProfileView mUserChangeProfileView;
 
@@ -33,6 +37,9 @@ public class UserChangeProfileFragment extends Fragment implements UserChangePro
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // -- Handle AsyncTask --
+        mAsyncTaskList = new ArrayList<AsyncTask>();
 
         // -- Prepare SessionPersistent --
         SessionPersistent sessionPersistent = new SessionPersistent(getContext());
@@ -68,10 +75,17 @@ public class UserChangeProfileFragment extends Fragment implements UserChangePro
         // -- Get SettingUserModel from SettingPersistent --
         SettingUserModel settingUserModel = settingPersistent.getSettingUserModel();
 
-        // -- Prepare UserChangeProfileHandleTask --
-        UserChangeProfileHandleTask userChangeProfileHandleTask = new UserChangeProfileHandleTask() {
+        // -- Prepare UserChangeProfileAsyncTask --
+        UserChangeProfileAsyncTask userChangeProfileAsyncTask = new UserChangeProfileAsyncTask() {
             @Override
-            public void onPostExecute(UserChangeProfileHandleTaskResult userChangeProfileHandleTaskResult) {
+            public void onPreExecute() {
+                mAsyncTaskList.add(this);
+            }
+
+            @Override
+            public void onPostExecute(UserChangeProfileAsyncTaskResult userChangeProfileHandleTaskResult) {
+                mAsyncTaskList.remove(this);
+
                 if (userChangeProfileHandleTaskResult != null) {
                     SimpleResponseModel simpleResponseModel = userChangeProfileHandleTaskResult.getSimpleResponseModel();
                     if (simpleResponseModel != null) {
@@ -95,8 +109,8 @@ public class UserChangeProfileFragment extends Fragment implements UserChangePro
             }
         };
 
-        // -- Do UserChangeProfileHandleTask --
-        userChangeProfileHandleTask.execute(new UserChangeProfileHandleTaskParam(getContext(), settingUserModel, projectMemberModel));
+        // -- Do UserChangeProfileAsyncTask --
+        userChangeProfileAsyncTask.execute(new UserChangeProfileAsyncTaskParam(getContext(), settingUserModel, projectMemberModel));
     }
 
     protected void onUserChangeProfileRequestProgress(final String progressMessage) {
@@ -129,107 +143,19 @@ public class UserChangeProfileFragment extends Fragment implements UserChangePro
         super.onAttach(context);
     }
 
-    protected class UserChangeProfileHandleTaskParam {
-
-        protected Context mContext;
-        protected SettingUserModel mSettingUserModel;
-        protected ProjectMemberModel mProjectMemberModel;
-
-        public UserChangeProfileHandleTaskParam(final Context context, final SettingUserModel settingUserModel, final ProjectMemberModel projectMemberModel) {
-            mContext = context;
-            mSettingUserModel = settingUserModel;
-            mProjectMemberModel = projectMemberModel;
-        }
-
-        public Context getContext() {
-            return mContext;
-        }
-
-        public SettingUserModel getSettingUserModel() {
-            return mSettingUserModel;
-        }
-
-        public ProjectMemberModel getProjectMemberModel() {
-            return mProjectMemberModel;
-        }
-    }
-
-    protected class UserChangeProfileHandleTaskResult {
-
-        protected SimpleResponseModel mSimpleResponseModel;
-        protected String mMessage;
-
-        public UserChangeProfileHandleTaskResult() {
-
-        }
-
-        public void setSimpleResponseModel(final SimpleResponseModel simpleResponseModel) {
-            mSimpleResponseModel = simpleResponseModel;
-        }
-
-        public SimpleResponseModel getSimpleResponseModel() {
-            return mSimpleResponseModel;
-        }
-
-        public void setMessage(final String message) {
-            mMessage = message;
-        }
-
-        public String getMessage() {
-            return mMessage;
-        }
-    }
-
-    protected class UserChangeProfileHandleTask extends AsyncTask<UserChangeProfileHandleTaskParam, String, UserChangeProfileHandleTaskResult> {
-        protected UserChangeProfileHandleTaskParam mUserChangeProfileHandleTaskParam;
-        protected Context mContext;
-
-        @Override
-        protected UserChangeProfileHandleTaskResult doInBackground(UserChangeProfileHandleTaskParam... userChangeProfileHandleTaskParams) {
-            // Get UserChangeProfileHandleTaskParam
-            mUserChangeProfileHandleTaskParam = userChangeProfileHandleTaskParams[0];
-            mContext = mUserChangeProfileHandleTaskParam.getContext();
-
-            // -- Prepare UserChangeProfileHandleTaskResult --
-            UserChangeProfileHandleTaskResult userChangeProfileHandleTaskResult = new UserChangeProfileHandleTaskResult();
-
-            // -- Change Profile to server begin progress --
-            publishProgress(ViewUtil.getResourceString(mContext, R.string.user_change_profile_handle_task_begin));
-
-            // -- Prepare UserNetwork --
-            UserNetwork userNetwork = new UserNetwork(mContext, mUserChangeProfileHandleTaskParam.getSettingUserModel());
-
-            SimpleResponseModel simpleResponseModel = null;
-            try {
-                // -- Invalidate Access Token --
-                userNetwork.invalidateAccessToken();
-
-                // -- Change Profile to server --
-                simpleResponseModel = userNetwork.updateProfile(mUserChangeProfileHandleTaskParam.getProjectMemberModel());
-
-                // -- Invalidate Login --
-                userNetwork.invalidateLogin();
-            } catch (WebApiError webApiError) {
-                userChangeProfileHandleTaskResult.setMessage(webApiError.getMessage());
-                publishProgress(webApiError.getMessage());
-            }
-
-            if (simpleResponseModel != null) {
-                // -- Change Profile to server successfully --
-                userChangeProfileHandleTaskResult.setSimpleResponseModel(simpleResponseModel);
-                userChangeProfileHandleTaskResult.setMessage(ViewUtil.getResourceString(mContext, R.string.user_change_profile_handle_task_success));
-
-                // -- Change Profile to server successfully progress --
-                publishProgress(ViewUtil.getResourceString(mContext, R.string.user_change_profile_handle_task_success));
-            }
-
-            return userChangeProfileHandleTaskResult;
-        }
-    }
-
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+
+    @Override
+    public void onDestroy() {
+        for (AsyncTask asyncTask : mAsyncTaskList) {
+            if (asyncTask.getStatus() != AsyncTask.Status.FINISHED)
+                asyncTask.cancel(true);
+        }
+
+        super.onDestroy();
     }
 
     public void setUserChangeProfileFragmentListener(final UserChangeProfileFragmentListener userChangeProfileFragmentListener) {
