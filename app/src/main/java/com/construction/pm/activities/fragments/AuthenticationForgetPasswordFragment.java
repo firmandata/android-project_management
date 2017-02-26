@@ -66,13 +66,11 @@ public class AuthenticationForgetPasswordFragment extends Fragment implements Au
         ForgetPasswordAsyncTask forgetPasswordAsyncTask = new ForgetPasswordAsyncTask() {
             @Override
             public void onPreExecute() {
-                mAsyncTaskList.add(this);
+
             }
 
             @Override
             public void onPostExecute(ForgetPasswordAsyncTaskResult forgetPasswordHandleTaskResult) {
-                mAsyncTaskList.remove(this);
-
                 if (forgetPasswordHandleTaskResult != null) {
                     SimpleResponseModel simpleResponseModel = forgetPasswordHandleTaskResult.getSimpleResponseModel();
                     if (simpleResponseModel != null) {

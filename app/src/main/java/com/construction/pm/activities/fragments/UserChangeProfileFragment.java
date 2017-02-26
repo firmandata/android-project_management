@@ -79,13 +79,11 @@ public class UserChangeProfileFragment extends Fragment implements UserChangePro
         UserChangeProfileAsyncTask userChangeProfileAsyncTask = new UserChangeProfileAsyncTask() {
             @Override
             public void onPreExecute() {
-                mAsyncTaskList.add(this);
+
             }
 
             @Override
             public void onPostExecute(UserChangeProfileAsyncTaskResult userChangeProfileHandleTaskResult) {
-                mAsyncTaskList.remove(this);
-
                 if (userChangeProfileHandleTaskResult != null) {
                     SimpleResponseModel simpleResponseModel = userChangeProfileHandleTaskResult.getSimpleResponseModel();
                     if (simpleResponseModel != null) {

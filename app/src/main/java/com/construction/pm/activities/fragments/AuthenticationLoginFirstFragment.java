@@ -61,13 +61,11 @@ public class AuthenticationLoginFirstFragment extends Fragment implements Authen
         LoginFirstAsyncTask loginFirstAsyncTask = new LoginFirstAsyncTask() {
             @Override
             public void onPreExecute() {
-                mAsyncTaskList.add(this);
+
             }
 
             @Override
             public void onPostExecute(LoginFirstAsyncTaskResult firstLoginHandleTaskResult) {
-                mAsyncTaskList.remove(this);
-
                 if (firstLoginHandleTaskResult != null) {
                     SimpleResponseModel simpleResponseModel = firstLoginHandleTaskResult.getSimpleResponseModel();
                     if (simpleResponseModel != null) {

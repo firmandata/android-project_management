@@ -61,13 +61,11 @@ public class UserChangePasswordFragment extends Fragment implements UserChangePa
         UserChangePasswordAsyncTask userChangePasswordAsyncTask = new UserChangePasswordAsyncTask() {
             @Override
             public void onPreExecute() {
-                mAsyncTaskList.add(this);
+
             }
 
             @Override
             public void onPostExecute(UserChangePasswordAsyncTaskResult userChangePasswordHandleTaskResult) {
-                mAsyncTaskList.remove(this);
-
                 if (userChangePasswordHandleTaskResult != null) {
                     SimpleResponseModel simpleResponseModel = userChangePasswordHandleTaskResult.getSimpleResponseModel();
                     if (simpleResponseModel != null) {

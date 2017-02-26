@@ -120,13 +120,11 @@ public class NotificationActivity extends AppCompatActivity implements Notificat
             NotificationReadAsyncTask notificationReadAsyncTask = new NotificationReadAsyncTask() {
                 @Override
                 public void onPreExecute() {
-                    mAsyncTaskList.add(this);
+
                 }
 
                 @Override
                 public void onPostExecute(NotificationReadAsyncTaskResult notificationReadAsyncTaskResult) {
-                    mAsyncTaskList.remove(this);
-
                     if (notificationReadAsyncTaskResult != null) {
                         onNotificationReadRequestSuccess(notificationReadAsyncTaskResult.getNotificationModel());
                         if (notificationReadAsyncTaskResult.getMessage() != null)

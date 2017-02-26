@@ -70,13 +70,11 @@ public class AuthenticationLoginFragment extends Fragment implements
         LoginAsyncTask loginAsyncTask = new LoginAsyncTask() {
             @Override
             public void onPreExecute() {
-                mAsyncTaskList.add(this);
+
             }
 
             @Override
             public void onPostExecute(LoginAsyncTaskResult loginHandleTaskResult) {
-                mAsyncTaskList.remove(this);
-
                 if (loginHandleTaskResult != null) {
                     if (loginHandleTaskResult.getSessionLoginModel() != null) {
                         onLoginRequestSuccess(loginHandleTaskResult.getSessionLoginModel());
