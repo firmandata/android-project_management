@@ -74,6 +74,18 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTask" />
 
+        <activity
+            android:name=".activities.ProjectStageAssignCommentActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTask" />
+
+        <activity
+            android:name=".activities.FileViewActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTask" />
+
     </application>
 
 </manifest>

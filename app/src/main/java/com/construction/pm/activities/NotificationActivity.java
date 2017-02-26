@@ -173,8 +173,13 @@ public class NotificationActivity extends AppCompatActivity implements Notificat
 
     @Override
     public void onBackPressed() {
-        handleFinish();
-        super.onBackPressed();
+        if (mNotificationLayout.isNotificationFragmentShow()) {
+            handleFinish();
+            super.onBackPressed();
+        } else {
+            // -- Load NotificationFragment --
+            mNotificationLayout.showNotificationDetailFragment(mNotificationModel);
+        }
     }
 
     protected void handleFinish() {

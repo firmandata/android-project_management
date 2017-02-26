@@ -23,6 +23,7 @@ import com.construction.pm.models.system.SettingUserModel;
 import com.construction.pm.persistence.SessionPersistent;
 import com.construction.pm.persistence.SettingPersistent;
 import com.construction.pm.utils.ViewUtil;
+import com.construction.pm.views.listeners.ImageRequestClickListener;
 import com.construction.pm.views.listeners.ImageRequestListener;
 import com.construction.pm.views.project_stage.ProjectStageLayout;
 
@@ -31,12 +32,14 @@ import java.util.List;
 
 public class ProjectStageActivity extends AppCompatActivity implements
         ProjectStageLayout.ProjectStageLayoutListener,
-        ImageRequestListener {
+        ImageRequestListener,
+        ImageRequestClickListener {
 
     public static final String INTENT_PARAM_PROJECT_STAGE_MODEL = "PROJECT_STAGE_MODEL";
 
     protected ProjectStageModel mProjectStageModel;
     protected List<AsyncTask> mAsyncTaskList;
+    protected List<AsyncTask> mAsyncTaskPendingList;
 
     protected ProjectStageLayout mProjectStageLayout;
 
@@ -46,6 +49,7 @@ public class ProjectStageActivity extends AppCompatActivity implements
 
         // -- Handle AsyncTask --
         mAsyncTaskList = new ArrayList<AsyncTask>();
+        mAsyncTaskPendingList = new ArrayList<AsyncTask>();
 
         // -- Handle intent request parameters --
         newIntentHandle(getIntent().getExtras());
@@ -53,7 +57,8 @@ public class ProjectStageActivity extends AppCompatActivity implements
         // -- Prepare ProjectStageLayout --
         mProjectStageLayout = ProjectStageLayout.buildProjectStageLayout(this, null);
         mProjectStageLayout.setProjectStageLayoutListener(this);
-        mProjectStageLayout.setProjectStageAssignCommentImageRequestListener(this);
+        mProjectStageLayout.setImageRequestListener(this);
+        mProjectStageLayout.setImageRequestClickListener(this);
 
         // -- Load to Activity --
         mProjectStageLayout.loadLayoutToActivity(this, mProjectStageModel);
@@ -163,7 +168,7 @@ public class ProjectStageActivity extends AppCompatActivity implements
                     FileModel fileModel = fileRequestAsyncTaskResult.getFileModel();
                     if (fileModel != null) {
                         if (fileModel.getFileData() != null)
-                            ViewUtil.setImageViewFromBytes(imageView, fileModel.getFileData());
+                            ViewUtil.setImageThumbnailView(ProjectStageActivity.this, imageView, fileModel.getFileData());
                     }
                 }
             }
@@ -182,7 +187,7 @@ public class ProjectStageActivity extends AppCompatActivity implements
                     FileModel fileModel = fileRequestAsyncTaskResult.getFileModel();
                     if (fileModel != null) {
                         if (fileModel.getFileData() != null)
-                            ViewUtil.setImageViewFromBytes(imageView, fileModel.getFileData());
+                            ViewUtil.setImageThumbnailView(ProjectStageActivity.this, imageView, fileModel.getFileData());
                     }
                 }
 
@@ -198,10 +203,40 @@ public class ProjectStageActivity extends AppCompatActivity implements
     }
 
     @Override
-    protected void onDestroy() {
-        for (AsyncTask asyncTask : mAsyncTaskList) {
+    public void onImageRequestClick(Integer fileId) {
+        // -- Redirect to FileViewActivity --
+        Intent intent = new Intent(this, FileViewActivity.class);
+        intent.putExtra(FileViewActivity.INTENT_PARAM_FILE_ID, fileId);
+        startActivity(intent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        for (AsyncTask asyncTask : mAsyncTaskPendingList) {
+
+        }
+        mAsyncTaskPendingList.clear();
+    }
+
+    @Override
+    protected void onPause() {
+        for (AsyncTask asyncTask : mAsyncTaskPendingList) {
             if (asyncTask.getStatus() != AsyncTask.Status.FINISHED)
                 asyncTask.cancel(true);
+        }
+
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        for (AsyncTask asyncTask : mAsyncTaskList) {
+            if (asyncTask.getStatus() != AsyncTask.Status.FINISHED) {
+                asyncTask.cancel(true);
+                mAsyncTaskPendingList.add(asyncTask);
+            }
         }
 
         super.onDestroy();

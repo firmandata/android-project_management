@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 import com.construction.pm.R;
 import com.construction.pm.models.ProjectStageAssignCommentModel;
 import com.construction.pm.utils.DateTimeUtil;
+import com.construction.pm.views.listeners.ImageRequestClickListener;
 import com.construction.pm.views.listeners.ImageRequestListener;
 import com.construction.pm.views.file.FilePhotoListView;
 
@@ -69,6 +70,10 @@ public class ProjectStageAssignCommentListView {
         mProjectStageAssignCommentListAdapter.setImageRequestListener(imageRequestListener);
     }
 
+    public void setImageRequestClickListener(final ImageRequestClickListener imageRequestClickListener) {
+        mProjectStageAssignCommentListAdapter.setImageRequestClickListener(imageRequestClickListener);
+    }
+
     public RelativeLayout getView() {
         return mProjectStageAssignCommentListView;
     }
@@ -78,6 +83,7 @@ public class ProjectStageAssignCommentListView {
         protected ProjectStageAssignCommentModel[] mProjectStageAssignCommentModels;
 
         protected ImageRequestListener mImageRequestListener;
+        protected ImageRequestClickListener mImageRequestClickListener;
 
         public ProjectStageAssignCommentListAdapter() {
 
@@ -118,6 +124,7 @@ public class ProjectStageAssignCommentListView {
 
             ProjectStageAssignCommentModel projectStageAssignCommentModel = mProjectStageAssignCommentModels[position];
             holder.setImageRequestListener(mImageRequestListener);
+            holder.setImageRequestClickListener(mImageRequestClickListener);
             holder.setProjectStageAssignCommentModel(projectStageAssignCommentModel);
         }
 
@@ -132,6 +139,10 @@ public class ProjectStageAssignCommentListView {
         public void setImageRequestListener(final ImageRequestListener imageRequestListener) {
             mImageRequestListener = imageRequestListener;
         }
+
+        public void setImageRequestClickListener(final ImageRequestClickListener imageRequestClickListener) {
+            mImageRequestClickListener = imageRequestClickListener;
+        }
     }
 
     protected class ProjectStageAssignCommentListViewHolder extends RecyclerView.ViewHolder {
@@ -142,6 +153,7 @@ public class ProjectStageAssignCommentListView {
         protected FilePhotoListView mFilePhotoListView;
 
         protected ImageRequestListener mImageRequestListener;
+        protected ImageRequestClickListener mImageRequestClickListener;
 
         public ProjectStageAssignCommentListViewHolder(View view) {
             super(view);
@@ -158,6 +170,14 @@ public class ProjectStageAssignCommentListView {
             if (projectStageAssignCommentModel.getPhotoId() != null) {
                 if (mImageRequestListener != null)
                     mImageRequestListener.onImageRequest(mPhotoId, projectStageAssignCommentModel.getPhotoId());
+                if (mImageRequestClickListener != null) {
+                    mPhotoId.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            mImageRequestClickListener.onImageRequestClick(projectStageAssignCommentModel.getPhotoId());
+                        }
+                    });
+                }
             }
             if (projectStageAssignCommentModel.getPhotoAdditional1Id() != null)
                 mFilePhotoListView.addFileId(projectStageAssignCommentModel.getPhotoAdditional1Id());
@@ -174,6 +194,11 @@ public class ProjectStageAssignCommentListView {
         public void setImageRequestListener(final ImageRequestListener imageRequestListener) {
             mImageRequestListener = imageRequestListener;
             mFilePhotoListView.setImageRequestListener(mImageRequestListener);
+        }
+
+        public void setImageRequestClickListener(final ImageRequestClickListener imageRequestClickListener) {
+            mImageRequestClickListener = imageRequestClickListener;
+            mFilePhotoListView.setImageRequestClickListener(imageRequestClickListener);
         }
     }
 }

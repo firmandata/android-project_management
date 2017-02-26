@@ -53,8 +53,8 @@ public class ProjectPlanLayout {
         return buildProjectPlanLayout(context, R.layout.project_plan_layout, viewGroup);
     }
 
-    protected void initializeView(final CoordinatorLayout projectLayout) {
-        mProjectPlanLayout = projectLayout;
+    protected void initializeView(final CoordinatorLayout projectPlanLayout) {
+        mProjectPlanLayout = projectPlanLayout;
         mAppBarLayout = (AppBarLayout) mProjectPlanLayout.findViewById(R.id.contentAppBar);
         mToolbar = (Toolbar) mProjectPlanLayout.findViewById(R.id.contentToolbar);
 

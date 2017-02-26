@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.construction.pm.R;
+import com.construction.pm.views.listeners.ImageRequestClickListener;
 import com.construction.pm.views.listeners.ImageRequestListener;
 
 import java.util.ArrayList;
@@ -64,6 +65,10 @@ public class FilePhotoListView {
         mFilePhotoListAdapter.setImageRequestListener(imageRequestListener);
     }
 
+    public void setImageRequestClickListener(final ImageRequestClickListener imageRequestClickListener) {
+        mFilePhotoListAdapter.setImageRequestClickListener(imageRequestClickListener);
+    }
+
     public void setFileIds(final Integer[] fileIds) {
         mFilePhotoListAdapter.setFileIds(fileIds);
     }
@@ -100,6 +105,7 @@ public class FilePhotoListView {
         protected List<Integer> mFileIdList;
 
         protected ImageRequestListener mImageRequestListener;
+        protected ImageRequestClickListener mImageRequestClickListener;
 
         public FilePhotoListAdapter() {
             mFileIdList = new ArrayList<Integer>();
@@ -219,6 +225,7 @@ public class FilePhotoListView {
 
             Integer fileId = mFileIdList.get(position);
             holder.setImageRequestListener(mImageRequestListener);
+            holder.setImageRequestClickListener(mImageRequestClickListener);
             holder.setFileId(fileId);
         }
 
@@ -230,6 +237,10 @@ public class FilePhotoListView {
         public void setImageRequestListener(final ImageRequestListener imageRequestListener) {
             mImageRequestListener = imageRequestListener;
         }
+
+        public void setImageRequestClickListener(final ImageRequestClickListener imageRequestClickListener) {
+            mImageRequestClickListener = imageRequestClickListener;
+        }
     }
 
     protected class FilePhotoListViewHolder extends RecyclerView.ViewHolder {
@@ -237,6 +248,7 @@ public class FilePhotoListView {
         protected ImageView mPhotoId;
 
         protected ImageRequestListener mImageRequestListener;
+        protected ImageRequestClickListener mImageRequestClickListener;
 
         public FilePhotoListViewHolder(View view) {
             super(view);
@@ -248,11 +260,23 @@ public class FilePhotoListView {
             if (fileId != null) {
                 if (mImageRequestListener != null)
                     mImageRequestListener.onImageRequest(mPhotoId, fileId);
+                if (mImageRequestClickListener != null) {
+                    mPhotoId.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            mImageRequestClickListener.onImageRequestClick(fileId);
+                        }
+                    });
+                }
             }
         }
 
         public void setImageRequestListener(final ImageRequestListener imageRequestListener) {
             mImageRequestListener = imageRequestListener;
+        }
+
+        public void setImageRequestClickListener(final ImageRequestClickListener imageRequestClickListener) {
+            mImageRequestClickListener = imageRequestClickListener;
         }
     }
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v7.widget.AppCompatTextView;
@@ -12,29 +13,16 @@ import android.text.Spanned;
 import android.text.style.URLSpan;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ViewUtil {
-
-    public static final String INTENT_EXTRA_SESSION_LOGIN_MODEL = "SESSION_LOGIN_MODEL";
-    public static final String INTENT_EXTRA_BLUETOOTH_MODEL = "BLUETOOTH_MODEL";
-
-    public static final int REQUEST_PERMISSION = 10;
-
-    public static final int REQUEST_CONTROLLER_BASE_DRAWER = 100;
-    public static final int REQUEST_CONTROLLER_AUTHENTICATION = 200;
-    public static final int REQUEST_CONTROLLER_SETTING = 300;
-    public static final int REQUEST_CONTROLLER_BLUETOOTH_PRINTER = 400;
-    public static final int REQUEST_CONTROLLER_BLUETOOTH_CARD_READER = 401;
-    public static final int REQUEST_CONTROLLER_BLUETOOTH_ENABLE = 450;
-
-    public static final int RESULT_CONTROLLER_BASE_DRAWER_CLOSE_ALL = 101;
-    public static final int RESULT_CONTROLLER_SETTING_CHANGED = 301;
 
     private static final AtomicInteger sNextGeneratedId = new AtomicInteger(1);
 
@@ -157,11 +145,11 @@ public class ViewUtil {
         return result;
     }
 
-    public static String getResourceString(Context context, int id) {
+    public static String getResourceString(final Context context, final int id) {
         return context.getResources().getString(id);
     }
 
-    public static String getResourceString(Context context, int id, String... args) {
+    public static String getResourceString(final Context context, final int id, final String... args) {
         String string = context.getResources().getString(id);
         for (int arg = 1; arg <= args.length; arg++) {
             String argValue = args[arg - 1];
@@ -172,36 +160,78 @@ public class ViewUtil {
         return string;
     }
 
-    public static boolean isBluetoothNameValid(final CharSequence[] bluetoothNameFilters, final String bluetoothName) {
-        boolean valid = true;
+    public static Point getScreenPoint(final Context context) {
+        WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = windowManager.getDefaultDisplay();
 
-        if (bluetoothNameFilters != null) {
-            if (bluetoothNameFilters.length > 0) {
-                valid = false;
-                if (bluetoothName != null) {
-                    if (!bluetoothName.isEmpty()) {
-                        for (CharSequence bluetoothNameFilter : bluetoothNameFilters) {
-                            if (bluetoothNameFilter != null) {
-                                if (bluetoothName.contains(bluetoothNameFilter)) {
-                                    valid = true;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+        Point point = new Point();
+        if (Build.VERSION.SDK_INT >= 13)
+            display.getSize(point);
+        else {
+            point.x = display.getWidth();
+            point.y = display.getHeight();
         }
 
-        return valid;
+        return point;
     }
 
-    public static void setImageViewFromBytes(final ImageView imageView, final byte[] byteArray) {
+    public static int getScreenWidth(final Context context) {
+        Point point = getScreenPoint(context);
+        return point.x;
+    }
+
+    public static int getScreenHeight(final Context context) {
+        Point point = getScreenPoint(context);
+        return point.y;
+    }
+
+    public static void setImageThumbnailView(final Context context, final ImageView imageView, final byte[] byteArray) {
+        int width = imageView.getWidth();
+        int height = imageView.getHeight();
+        if (width == 0 || height == 0) {
+            Point point = getScreenPoint(context);
+            if (width == 0)
+                width = point.x;
+            if (height == 0)
+                height = point.y;
+        }
+
+        Bitmap bitmap = getThumbnail(byteArray, width, height);
+        if (bitmap != null) {
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            imageView.setImageBitmap(bitmap);
+        }
+    }
+
+    public static void setImageView(final Context context, final ImageView imageView, final byte[] byteArray) {
+        int width = imageView.getWidth();
+        int height = imageView.getHeight();
+        if (width == 0 || height == 0) {
+            Point point = getScreenPoint(context);
+            if (width == 0)
+                width = point.x;
+            if (height == 0)
+                height = point.y;
+        }
+
         Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
         if (bitmap != null) {
-            int width = imageView.getWidth();
-            int height = imageView.getHeight();
             imageView.setImageBitmap(Bitmap.createScaledBitmap(bitmap, width, height, false));
         }
+    }
+
+    public static Bitmap getThumbnail(final byte[] byteArray, final int width, final int height) {
+        BitmapFactory.Options bitmapFactoryOption = new BitmapFactory.Options();
+        bitmapFactoryOption.inJustDecodeBounds = true;
+        BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length, bitmapFactoryOption);
+
+        int scale = 1;
+        while (bitmapFactoryOption.outWidth / scale / 2 >= width && bitmapFactoryOption.outHeight / scale / 2 >= height) {
+            scale *= 2;
+        }
+
+        BitmapFactory.Options bitmapFactoryOptionScaled = new BitmapFactory.Options();
+        bitmapFactoryOptionScaled.inSampleSize = scale;
+        return BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length, bitmapFactoryOptionScaled);
     }
 }

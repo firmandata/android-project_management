@@ -1,4 +1,4 @@
-package com.construction.pm.views.notification;
+package com.construction.pm.views.file;
 
 import android.content.Context;
 import android.os.Handler;
@@ -14,64 +14,62 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.construction.pm.R;
-import com.construction.pm.activities.fragments.NotificationDetailFragment;
-import com.construction.pm.models.NotificationModel;
-import com.construction.pm.utils.DateTimeUtil;
+import com.construction.pm.activities.fragments.FilePhotoViewFragment;
 import com.construction.pm.utils.ViewUtil;
 
-public class NotificationLayout {
+public class FileLayout {
     protected Context mContext;
     protected Handler mFragmentHandler;
     protected FragmentManager mFragmentManager;
 
     protected String mFragmentTagSelected;
-    protected static final String FRAGMENT_TAG_NOTIFICATION_DETAIL = "FRAGMENT_NOTIFICATION_DETAIL";
+    protected static final String FRAGMENT_TAG_FILE_PHOTO = "FRAGMENT_FILE_PHOTO";
 
-    protected CoordinatorLayout mNotificationLayout;
+    protected CoordinatorLayout mFileLayout;
     protected AppBarLayout mAppBarLayout;
     protected ActionBar mActionBar;
     protected Toolbar mToolbar;
 
-    protected NotificationLayoutListener mNotificationLayoutListener;
+    protected FileLayoutListener mFileLayoutListener;
 
-    protected NotificationLayout(final Context context) {
+    protected FileLayout(final Context context) {
         mContext = context;
     }
 
-    public NotificationLayout(final Context context, final CoordinatorLayout notificationLayout) {
+    public FileLayout(final Context context, final CoordinatorLayout fileLayout) {
         this(context);
 
-        initializeView(notificationLayout);
+        initializeView(fileLayout);
     }
 
-    public static NotificationLayout buildNotificationLayout(final Context context, final int layoutId, final ViewGroup viewGroup) {
-        return new NotificationLayout(context, (CoordinatorLayout) LayoutInflater.from(context).inflate(layoutId, viewGroup));
+    public static FileLayout buildFileLayout(final Context context, final int layoutId, final ViewGroup viewGroup) {
+        return new FileLayout(context, (CoordinatorLayout) LayoutInflater.from(context).inflate(layoutId, viewGroup));
     }
 
-    public static NotificationLayout buildNotificationLayout(final Context context, final ViewGroup viewGroup) {
-        return buildNotificationLayout(context, R.layout.notification_layout, viewGroup);
+    public static FileLayout buildFileLayout(final Context context, final ViewGroup viewGroup) {
+        return buildFileLayout(context, R.layout.file_layout, viewGroup);
     }
 
-    protected void initializeView(final CoordinatorLayout notificationLayout) {
-        mNotificationLayout = notificationLayout;
-        mAppBarLayout = (AppBarLayout) mNotificationLayout.findViewById(R.id.contentAppBar);
-        mToolbar = (Toolbar) mNotificationLayout.findViewById(R.id.contentToolbar);
+    protected void initializeView(final CoordinatorLayout fileLayout) {
+        mFileLayout = fileLayout;
+        mAppBarLayout = (AppBarLayout) mFileLayout.findViewById(R.id.contentAppBar);
+        mToolbar = (Toolbar) mFileLayout.findViewById(R.id.contentToolbar);
     }
 
     public CoordinatorLayout getLayout() {
-        return mNotificationLayout;
+        return mFileLayout;
     }
 
     public void loadLayoutToActivity(final AppCompatActivity activity) {
         mFragmentHandler = new Handler();
         mFragmentManager = activity.getSupportFragmentManager();
 
-        activity.setContentView(mNotificationLayout);
+        activity.setContentView(mFileLayout);
 
         activity.setSupportActionBar(mToolbar);
         mActionBar = activity.getSupportActionBar();
         if (mActionBar != null) {
-            mActionBar.setTitle(R.string.notification_layout_title);
+            mActionBar.setTitle(R.string.file_layout_title);
             mActionBar.setDisplayHomeAsUpEnabled(true);
             mActionBar.setDisplayShowHomeEnabled(true);
             mActionBar.setDisplayUseLogoEnabled(false);
@@ -85,8 +83,8 @@ public class NotificationLayout {
         mAppBarLayout.removeView(mToolbar);
     }
 
-    public boolean isNotificationFragmentShow() {
-        return mFragmentTagSelected.equals(FRAGMENT_TAG_NOTIFICATION_DETAIL);
+    public boolean isFilePhotoFragmentShow() {
+        return mFragmentTagSelected.equals(FRAGMENT_TAG_FILE_PHOTO);
     }
 
     protected void loadFragment(final Fragment fragment, final String title, final String subtitle, final String tag) {
@@ -119,22 +117,22 @@ public class NotificationLayout {
         });
     }
 
-    public NotificationDetailFragment showNotificationDetailFragment(final NotificationModel notificationModel) {
-        NotificationDetailFragment notificationDetailFragment = NotificationDetailFragment.newInstance(notificationModel);
+    public FilePhotoViewFragment showFilePhotoViewFragment(final Integer fileId) {
+        FilePhotoViewFragment filePhotoViewFragment = FilePhotoViewFragment.newInstance(fileId);
 
-        loadFragment(notificationDetailFragment, ViewUtil.getResourceString(mContext, R.string.notification_detail_title), DateTimeUtil.ToDateTimeDisplayString(notificationModel.getNotificationDate()), FRAGMENT_TAG_NOTIFICATION_DETAIL);
+        loadFragment(filePhotoViewFragment, ViewUtil.getResourceString(mContext, R.string.file_photo_detail_title), null, FRAGMENT_TAG_FILE_PHOTO);
 
-        if (mNotificationLayoutListener != null)
-            mNotificationLayoutListener.onNotificationReadRequest(notificationModel);
+        if (mFileLayoutListener != null)
+            mFileLayoutListener.onFilePhotoRequest(fileId);
 
-        return notificationDetailFragment;
+        return filePhotoViewFragment;
     }
 
-    public void setNotificationLayoutListener(final NotificationLayoutListener notificationLayoutListener) {
-        mNotificationLayoutListener = notificationLayoutListener;
+    public void setFileLayoutListener(final FileLayoutListener fileLayoutListener) {
+        mFileLayoutListener = fileLayoutListener;
     }
 
-    public interface NotificationLayoutListener {
-        void onNotificationReadRequest(NotificationModel notificationModel);
+    public interface FileLayoutListener {
+        void onFilePhotoRequest(Integer fileId);
     }
 }

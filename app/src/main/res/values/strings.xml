@@ -201,6 +201,9 @@
     <string name="notification_layout_title">Notification</string>
     <string name="notification_detail_title">Notification</string>
 
+    <string name="file_layout_title">File</string>
+    <string name="file_photo_detail_title">Photo</string>
+
     <string name="inspector_layout_title">Monitoring</string>
     <string name="inspector_layout_tab_in_progress">In Progress</string>
     <string name="inspector_layout_tab_coming_due">Coming Due</string>
