@@ -1,20 +1,17 @@
-package com.construction.pm.asynctask.filerequest;
+package com.construction.pm.asynctask.param;
 
 import android.content.Context;
 
 import com.construction.pm.models.system.SettingUserModel;
 
-public class FileRequestAsyncTaskParam {
+public class LogoutAsyncTaskParam {
 
     protected Context mContext;
-
     protected SettingUserModel mSettingUserModel;
-    protected Integer mFileId;
 
-    public FileRequestAsyncTaskParam(final Context context, final SettingUserModel settingUserModel, final Integer fileId) {
+    public LogoutAsyncTaskParam(final Context context, final SettingUserModel settingUserModel) {
         mContext = context;
         mSettingUserModel = settingUserModel;
-        mFileId = fileId;
     }
 
     public Context getContext() {
@@ -23,9 +20,5 @@ public class FileRequestAsyncTaskParam {
 
     public SettingUserModel getSettingUserModel() {
         return mSettingUserModel;
-    }
-
-    public Integer getFileId() {
-        return mFileId;
     }
 }

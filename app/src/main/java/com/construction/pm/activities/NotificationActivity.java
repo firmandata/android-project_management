@@ -1,28 +1,25 @@
 package com.construction.pm.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
-import com.construction.pm.R;
+import com.construction.pm.asynctask.NotificationReadAsyncTask;
+import com.construction.pm.asynctask.param.NotificationReadAsyncTaskParam;
+import com.construction.pm.asynctask.result.NotificationReadAsyncTaskResult;
 import com.construction.pm.models.NotificationModel;
 import com.construction.pm.models.ProjectMemberModel;
-import com.construction.pm.models.network.NetworkPendingModel;
 import com.construction.pm.models.system.SessionLoginModel;
 import com.construction.pm.models.system.SettingUserModel;
-import com.construction.pm.networks.NotificationNetwork;
-import com.construction.pm.networks.webapi.WebApiError;
-import com.construction.pm.persistence.NetworkPendingPersistent;
-import com.construction.pm.persistence.NotificationPersistent;
-import com.construction.pm.persistence.PersistenceError;
 import com.construction.pm.persistence.SessionPersistent;
 import com.construction.pm.persistence.SettingPersistent;
 import com.construction.pm.utils.ConstantUtil;
-import com.construction.pm.utils.ViewUtil;
 import com.construction.pm.views.notification.NotificationLayout;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class NotificationActivity extends AppCompatActivity implements NotificationLayout.NotificationLayoutListener {
 
@@ -32,12 +29,16 @@ public class NotificationActivity extends AppCompatActivity implements Notificat
     protected boolean mIsFromNotificationService;
 
     protected NotificationModel mNotificationModel;
+    protected List<AsyncTask> mAsyncTaskList;
 
     protected NotificationLayout mNotificationLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // -- Handle AsyncTask --
+        mAsyncTaskList = new ArrayList<AsyncTask>();
 
         // -- Handle intent request parameters --
         newIntentHandle(getIntent().getExtras());
@@ -115,14 +116,21 @@ public class NotificationActivity extends AppCompatActivity implements Notificat
             notificationModel.setNotificationStatus(NotificationModel.NOTIFICATION_STATUS_READ);
             notificationModel.setLastUserId(projectMemberModel.getUserId());
 
-            // -- Prepare NotificationReadHandleTask --
-            NotificationReadHandleTask projectHandleTask = new NotificationReadHandleTask() {
+            // -- Prepare NotificationReadAsyncTask --
+            NotificationReadAsyncTask notificationReadAsyncTask = new NotificationReadAsyncTask() {
                 @Override
-                public void onPostExecute(NotificationReadHandleTaskResult notificationHandleTaskResult) {
-                    if (notificationHandleTaskResult != null) {
-                        onNotificationReadRequestSuccess(notificationHandleTaskResult.getNotificationModel());
-                        if (notificationHandleTaskResult.getMessage() != null)
-                            onNotificationReadRequestMessage(notificationHandleTaskResult.getMessage());
+                public void onPreExecute() {
+                    mAsyncTaskList.add(this);
+                }
+
+                @Override
+                public void onPostExecute(NotificationReadAsyncTaskResult notificationReadAsyncTaskResult) {
+                    mAsyncTaskList.remove(this);
+
+                    if (notificationReadAsyncTaskResult != null) {
+                        onNotificationReadRequestSuccess(notificationReadAsyncTaskResult.getNotificationModel());
+                        if (notificationReadAsyncTaskResult.getMessage() != null)
+                            onNotificationReadRequestMessage(notificationReadAsyncTaskResult.getMessage());
                     }
                 }
 
@@ -136,8 +144,8 @@ public class NotificationActivity extends AppCompatActivity implements Notificat
                 }
             };
 
-            // -- Do NotificationReadHandleTask --
-            projectHandleTask.execute(new NotificationReadHandleTaskParam(this, settingUserModel, notificationModel, sessionLoginModel.getProjectMemberModel()));
+            // -- Do NotificationReadAsyncTask --
+            notificationReadAsyncTask.execute(new NotificationReadAsyncTaskParam(this, settingUserModel, notificationModel, sessionLoginModel.getProjectMemberModel()));
         }
     }
 
@@ -163,134 +171,6 @@ public class NotificationActivity extends AppCompatActivity implements Notificat
                 }
         }
         return super.onOptionsItemSelected(menuItem);
-    }
-
-    protected class NotificationReadHandleTaskParam {
-
-        protected Context mContext;
-        protected SettingUserModel mSettingUserModel;
-        protected NotificationModel mNotificationModel;
-        protected ProjectMemberModel mProjectMemberModel;
-
-        public NotificationReadHandleTaskParam(final Context context, final SettingUserModel settingUserModel, final NotificationModel notificationModel, final ProjectMemberModel projectMemberModel) {
-            mContext = context;
-            mSettingUserModel = settingUserModel;
-            mNotificationModel = notificationModel;
-            mProjectMemberModel = projectMemberModel;
-        }
-
-        public Context getContext() {
-            return mContext;
-        }
-
-        public SettingUserModel getSettingUserModel() {
-            return mSettingUserModel;
-        }
-
-        public NotificationModel getNotificationModel() {
-            return mNotificationModel;
-        }
-
-        public ProjectMemberModel getProjectMemberModel() {
-            return mProjectMemberModel;
-        }
-    }
-
-    protected class NotificationReadHandleTaskResult {
-
-        protected NotificationModel mNotificationModel;
-        protected String mMessage;
-
-        public NotificationReadHandleTaskResult() {
-
-        }
-
-        public void setNotificationModel(final NotificationModel notificationModel) {
-            mNotificationModel = notificationModel;
-        }
-
-        public NotificationModel getNotificationModel() {
-            return mNotificationModel;
-        }
-
-        public void setMessage(final String message) {
-            mMessage = message;
-        }
-
-        public String getMessage() {
-            return mMessage;
-        }
-    }
-
-    protected class NotificationReadHandleTask extends AsyncTask<NotificationReadHandleTaskParam, String, NotificationReadHandleTaskResult> {
-        protected NotificationReadHandleTaskParam mNotificationReadHandleTaskParam;
-        protected Context mContext;
-
-        @Override
-        protected NotificationReadHandleTaskResult doInBackground(NotificationReadHandleTaskParam... notificationReadHandleTaskParams) {
-            // Get NotificationReadHandleTaskParam
-            mNotificationReadHandleTaskParam = notificationReadHandleTaskParams[0];
-            mContext = mNotificationReadHandleTaskParam.getContext();
-            NotificationModel notificationModel = mNotificationReadHandleTaskParam.getNotificationModel();
-
-            // -- Prepare NotificationReadHandleTaskResult --
-            NotificationReadHandleTaskResult notificationReadHandleTaskResult = new NotificationReadHandleTaskResult();
-            notificationReadHandleTaskResult.setNotificationModel(notificationModel);
-
-            // -- Get NotificationModel marking as read progress --
-            publishProgress(ViewUtil.getResourceString(mContext, R.string.notification_read_handle_task_begin));
-
-            // -- Prepare NotificationNetwork --
-            NotificationNetwork notificationNetwork = new NotificationNetwork(mContext, mNotificationReadHandleTaskParam.getSettingUserModel());
-
-            // -- Prepare NotificationPersistent --
-            NotificationPersistent notificationPersistent = new NotificationPersistent(mContext);
-
-            // -- Get ProjectMemberModel --
-            ProjectMemberModel projectMemberModel = mNotificationReadHandleTaskParam.getProjectMemberModel();
-            if (projectMemberModel != null) {
-                try {
-                    // -- Save NotificationModel to NotificationPersistent --
-                    notificationPersistent.saveNotificationModel(notificationModel);
-
-                    // -- Set NotificationModel as read to server --
-                    try {
-                        notificationNetwork.setNotificationRead(notificationModel.getProjectNotificationId(), projectMemberModel.getUserId());
-
-                        // -- Set NotificationReadHandleTaskResult message --
-                        notificationReadHandleTaskResult.setMessage(ViewUtil.getResourceString(mContext, R.string.notification_read_handle_task_success));
-                    } catch (WebApiError webApiError) {
-                        if (webApiError.isErrorConnection()) {
-                            // -- Prepare NetworkPendingPersistent --
-                            NetworkPendingPersistent networkPendingPersistent = new NetworkPendingPersistent(mContext);
-
-                            // -- Create NetworkPendingModel --
-                            NetworkPendingModel networkPendingModel = new NetworkPendingModel(projectMemberModel.getProjectMemberId(), webApiError.getWebApiResponse(), NetworkPendingModel.ECommandType.NOTIFICATION_READ);
-                            networkPendingModel.setCommandKey(String.valueOf(notificationModel.getProjectNotificationId()));
-                            try {
-                                // -- Save NetworkPendingModel to NetworkPendingPersistent
-                                networkPendingPersistent.createNetworkPending(networkPendingModel);
-
-                                // -- Set NotificationReadHandleTaskResult message --
-                                notificationReadHandleTaskResult.setMessage(ViewUtil.getResourceString(mContext, R.string.notification_read_handle_task_success_pending));
-                            } catch (PersistenceError ex) {
-                            }
-                        } else {
-                            // -- Set NotificationReadHandleTaskResult message --
-                            notificationReadHandleTaskResult.setMessage(ViewUtil.getResourceString(mContext, R.string.notification_read_handle_task_failed, webApiError.getMessage()));
-                        }
-                    }
-                } catch (PersistenceError persistenceError) {
-                    // -- Set NotificationReadHandleTaskResult message --
-                    notificationReadHandleTaskResult.setMessage(ViewUtil.getResourceString(mContext, R.string.notification_read_handle_task_failed, persistenceError.getMessage()));
-                }
-            }
-
-            // -- Get NotificationModel marked as read finish progress --
-            publishProgress(ViewUtil.getResourceString(mContext, R.string.notification_read_handle_task_finish));
-
-            return notificationReadHandleTaskResult;
-        }
     }
 
     @Override
@@ -321,5 +201,15 @@ public class NotificationActivity extends AppCompatActivity implements Notificat
             intent.putExtra(ConstantUtil.INTENT_RESULT_NOTIFICATION_MODEL, notificationModelJson);
             setResult(RESULT_OK, intent);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        for (AsyncTask asyncTask : mAsyncTaskList) {
+            if (asyncTask.getStatus() != AsyncTask.Status.FINISHED)
+                asyncTask.cancel(true);
+        }
+
+        super.onDestroy();
     }
 }

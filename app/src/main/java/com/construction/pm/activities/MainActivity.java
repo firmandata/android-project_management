@@ -14,16 +14,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.construction.pm.R;
 import com.construction.pm.activities.fragments.NotificationListFragment;
 import com.construction.pm.activities.fragments.UserChangePasswordFragment;
 import com.construction.pm.activities.fragments.UserChangeProfileFragment;
+import com.construction.pm.asynctask.LogoutAsyncTask;
+import com.construction.pm.asynctask.param.LogoutAsyncTaskParam;
 import com.construction.pm.models.NotificationModel;
 import com.construction.pm.models.ProjectMemberModel;
 import com.construction.pm.models.network.SimpleResponseModel;
 import com.construction.pm.models.system.SessionLoginModel;
 import com.construction.pm.models.system.SettingUserModel;
-import com.construction.pm.networks.UserNetwork;
 import com.construction.pm.persistence.NotificationPersistent;
 import com.construction.pm.persistence.PersistenceError;
 import com.construction.pm.persistence.SessionPersistent;
@@ -32,8 +32,10 @@ import com.construction.pm.services.NetworkPendingService;
 import com.construction.pm.services.NotificationMessageHandler;
 import com.construction.pm.services.NotificationService;
 import com.construction.pm.utils.ConstantUtil;
-import com.construction.pm.utils.ViewUtil;
 import com.construction.pm.views.MainLayout;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements
         MainLayout.MainLayoutListener,
@@ -46,11 +48,16 @@ public class MainActivity extends AppCompatActivity implements
     public static final String INTENT_PARAM_SHOW_FRAGMENT_HOME = "SHOW_FRAGMENT_HOME";
     public static final String INTENT_PARAM_SHOW_FRAGMENT_NOTIFICATION = "SHOW_FRAGMENT_NOTIFICATION";
 
+    protected List<AsyncTask> mAsyncTaskList;
+
     protected MainLayout mMainLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // -- Handle AsyncTask --
+        mAsyncTaskList = new ArrayList<AsyncTask>();
 
         // -- Handle intent request parameters --
         newIntentHandle(getIntent().getExtras());
@@ -168,6 +175,16 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         super.onBackPressed();
+    }
+
+    @Override
+    protected void onDestroy() {
+        for (AsyncTask asyncTask : mAsyncTaskList) {
+            if (asyncTask.getStatus() != AsyncTask.Status.FINISHED)
+                asyncTask.cancel(true);
+        }
+
+        super.onDestroy();
     }
 
 
@@ -312,10 +329,17 @@ public class MainActivity extends AppCompatActivity implements
         // -- Get SettingUserModel from SettingPersistent --
         SettingUserModel settingUserModel = settingPersistent.getSettingUserModel();
 
-        // -- Prepare LogoutHandleTask --
-        LogoutHandleTask logoutHandleTask = new LogoutHandleTask() {
+        // -- Prepare LogoutAsyncTask --
+        LogoutAsyncTask logoutAsyncTask = new LogoutAsyncTask() {
+            @Override
+            public void onPreExecute() {
+                mAsyncTaskList.add(this);
+            }
+
             @Override
             public void onPostExecute(Boolean isLoggedOut) {
+                mAsyncTaskList.remove(this);
+
                 onLogoutHandleFinish(isLoggedOut != null ? isLoggedOut : false);
             }
 
@@ -329,8 +353,8 @@ public class MainActivity extends AppCompatActivity implements
             }
         };
 
-        // -- Do SessionHandleTask --
-        logoutHandleTask.execute(new LogoutHandleTaskParam(this, settingUserModel));
+        // -- Do LogoutAsyncTask --
+        logoutAsyncTask.execute(new LogoutAsyncTaskParam(this, settingUserModel));
     }
 
     protected void onLogoutHandleFinish(final boolean isLoggedOut) {
@@ -350,52 +374,6 @@ public class MainActivity extends AppCompatActivity implements
     protected void onLogoutHandleProgress(final String progressMessage) {
         // -- Show progress dialog --
         mMainLayout.progressDialogShow(progressMessage);
-    }
-
-    protected class LogoutHandleTaskParam {
-
-        protected Context mContext;
-        protected SettingUserModel mSettingUserModel;
-
-        public LogoutHandleTaskParam(final Context context, final SettingUserModel settingUserModel) {
-            mContext = context;
-            mSettingUserModel = settingUserModel;
-        }
-
-        public Context getContext() {
-            return mContext;
-        }
-
-        public SettingUserModel getSettingUserModel() {
-            return mSettingUserModel;
-        }
-    }
-
-    protected class LogoutHandleTask extends AsyncTask<LogoutHandleTaskParam, String, Boolean> {
-
-        protected LogoutHandleTaskParam mLogoutHandleTaskParam;
-        protected Context mContext;
-
-        @Override
-        protected Boolean doInBackground(LogoutHandleTaskParam... logoutHandleTaskParams) {
-            // -- Get SessionHandleTaskParam --
-            mLogoutHandleTaskParam = logoutHandleTaskParams[0];
-            mContext = mLogoutHandleTaskParam.getContext();
-
-            // -- Prepare UserNetwork --
-            UserNetwork userNetwork = new UserNetwork(mContext, mLogoutHandleTaskParam.getSettingUserModel());
-
-            // -- Set publishProgress AccessTokenModel handle --
-            publishProgress(ViewUtil.getResourceString(mContext, R.string.logout_handle_task_begin));
-
-            // -- Do logout handle --
-            userNetwork.doLogout();
-
-            // -- Set publishProgress as finish --
-            publishProgress(ViewUtil.getResourceString(mContext, R.string.logout_handle_task_success));
-
-            return true;
-        }
     }
 
 

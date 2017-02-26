@@ -1,6 +1,5 @@
 package com.construction.pm.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -8,23 +7,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.ImageView;
 
-import com.construction.pm.R;
-import com.construction.pm.asynctask.FileRequestCacheAsyncTask;
-import com.construction.pm.asynctask.FileRequestNetworkAsyncTask;
-import com.construction.pm.asynctask.filerequest.FileRequestAsyncTaskParam;
-import com.construction.pm.asynctask.filerequest.FileRequestAsyncTaskResult;
+import com.construction.pm.asynctask.FileGetCacheAsyncTask;
+import com.construction.pm.asynctask.FileGetNetworkAsyncTask;
+import com.construction.pm.asynctask.ProjectStageGetAsyncTask;
+import com.construction.pm.asynctask.param.FileGetAsyncTaskParam;
+import com.construction.pm.asynctask.param.ProjectStageGetAsyncTaskParam;
+import com.construction.pm.asynctask.result.FileGetAsyncTaskResult;
+import com.construction.pm.asynctask.result.ProjectStageGetAsyncTaskResult;
 import com.construction.pm.models.FileModel;
-import com.construction.pm.models.ProjectMemberModel;
 import com.construction.pm.models.ProjectStageAssignCommentModel;
 import com.construction.pm.models.ProjectStageAssignmentModel;
 import com.construction.pm.models.ProjectStageModel;
-import com.construction.pm.models.network.ProjectStageResponseModel;
 import com.construction.pm.models.system.SessionLoginModel;
 import com.construction.pm.models.system.SettingUserModel;
-import com.construction.pm.networks.ProjectNetwork;
-import com.construction.pm.networks.webapi.WebApiError;
-import com.construction.pm.persistence.PersistenceError;
-import com.construction.pm.persistence.ProjectCachePersistent;
 import com.construction.pm.persistence.SessionPersistent;
 import com.construction.pm.persistence.SettingPersistent;
 import com.construction.pm.utils.ViewUtil;
@@ -103,22 +98,22 @@ public class ProjectStageActivity extends AppCompatActivity implements
         SessionPersistent sessionPersistent = new SessionPersistent(this);
         SessionLoginModel sessionLoginModel = sessionPersistent.getSessionLoginModel();
 
-        // -- Prepare ProjectStageHandleTask --
-        ProjectStageHandleTask projectStageHandleTask = new ProjectStageHandleTask() {
+        // -- Prepare ProjectStageGetAsyncTask --
+        ProjectStageGetAsyncTask projectStageGetAsyncTask = new ProjectStageGetAsyncTask() {
             @Override
             public void onPreExecute() {
                 mAsyncTaskList.add(this);
             }
 
             @Override
-            public void onPostExecute(ProjectStageHandleTaskResult projectHandleTaskResult) {
+            public void onPostExecute(ProjectStageGetAsyncTaskResult projectHandleTaskResult) {
+                mAsyncTaskList.remove(this);
+
                 if (projectHandleTaskResult != null) {
                     onProjectStageRequestSuccess(projectHandleTaskResult.getProjectModel(), projectHandleTaskResult.getProjectStageAssignmentModels(), projectHandleTaskResult.getProjectStageAssignCommentModels());
                     if (projectHandleTaskResult.getMessage() != null)
                         onProjectStageRequestMessage(projectHandleTaskResult.getMessage());
                 }
-
-                mAsyncTaskList.remove(this);
             }
 
             @Override
@@ -131,8 +126,8 @@ public class ProjectStageActivity extends AppCompatActivity implements
             }
         };
 
-        // -- Do ProjectStageHandleTask --
-        projectStageHandleTask.execute(new ProjectStageHandleTaskParam(this, settingUserModel, projectStageModel, sessionLoginModel.getProjectMemberModel()));
+        // -- Do ProjectStageGetAsyncTask --
+        projectStageGetAsyncTask.execute(new ProjectStageGetAsyncTaskParam(this, settingUserModel, projectStageModel, sessionLoginModel.getProjectMemberModel()));
     }
 
     protected void onProjectStageRequestProgress(final String progressMessage) {
@@ -153,15 +148,36 @@ public class ProjectStageActivity extends AppCompatActivity implements
         SettingPersistent settingPersistent = new SettingPersistent(this);
         final SettingUserModel settingUserModel = settingPersistent.getSettingUserModel();
 
-        // -- Prepare FileRequestNetworkAsyncTask --
-        final FileRequestNetworkAsyncTask fileRequestNetworkAsyncTask = new FileRequestNetworkAsyncTask() {
+        // -- Prepare FileGetNetworkAsyncTask --
+        final FileGetNetworkAsyncTask fileGetNetworkAsyncTask = new FileGetNetworkAsyncTask() {
             @Override
             public void onPreExecute() {
                 mAsyncTaskList.add(this);
             }
 
             @Override
-            public void onPostExecute(FileRequestAsyncTaskResult fileRequestAsyncTaskResult) {
+            public void onPostExecute(FileGetAsyncTaskResult fileRequestAsyncTaskResult) {
+                mAsyncTaskList.remove(this);
+
+                if (fileRequestAsyncTaskResult != null) {
+                    FileModel fileModel = fileRequestAsyncTaskResult.getFileModel();
+                    if (fileModel != null) {
+                        if (fileModel.getFileData() != null)
+                            ViewUtil.setImageViewFromBytes(imageView, fileModel.getFileData());
+                    }
+                }
+            }
+        };
+
+        // -- Prepare FileGetCacheAsyncTask --
+        FileGetCacheAsyncTask fileGetCacheAsyncTask = new FileGetCacheAsyncTask() {
+            @Override
+            public void onPreExecute() {
+                mAsyncTaskList.add(this);
+            }
+
+            @Override
+            public void onPostExecute(FileGetAsyncTaskResult fileRequestAsyncTaskResult) {
                 if (fileRequestAsyncTaskResult != null) {
                     FileModel fileModel = fileRequestAsyncTaskResult.getFileModel();
                     if (fileModel != null) {
@@ -170,183 +186,15 @@ public class ProjectStageActivity extends AppCompatActivity implements
                     }
                 }
 
-                mAsyncTaskList.remove(this);
-            }
-        };
-
-        // -- Prepare FileRequestCacheAsyncTask --
-        FileRequestCacheAsyncTask fileRequestCacheAsyncTask = new FileRequestCacheAsyncTask() {
-            @Override
-            public void onPreExecute() {
-                mAsyncTaskList.add(this);
-            }
-
-            @Override
-            public void onPostExecute(FileRequestAsyncTaskResult fileRequestAsyncTaskResult) {
-                if (fileRequestAsyncTaskResult != null) {
-                    FileModel fileModel = fileRequestAsyncTaskResult.getFileModel();
-                    if (fileModel != null) {
-                        if (fileModel.getFileData() != null)
-                            ViewUtil.setImageViewFromBytes(imageView, fileModel.getFileData());
-                    }
-                }
-
-                // -- Do FileRequestNetworkAsyncTask --
-                fileRequestNetworkAsyncTask.execute(new FileRequestAsyncTaskParam(ProjectStageActivity.this, settingUserModel, fileId));
+                // -- Do FileGetNetworkAsyncTask --
+                fileGetNetworkAsyncTask.execute(new FileGetAsyncTaskParam(ProjectStageActivity.this, settingUserModel, fileId));
 
                 mAsyncTaskList.remove(this);
             }
         };
 
-        // -- Do FileRequestCacheAsyncTask --
-        fileRequestCacheAsyncTask.execute(new FileRequestAsyncTaskParam(this, settingUserModel, fileId));
-    }
-
-    protected class ProjectStageHandleTaskParam {
-
-        protected Context mContext;
-        protected SettingUserModel mSettingUserModel;
-        protected ProjectStageModel mProjectStageModel;
-        protected ProjectMemberModel mProjectMemberModel;
-
-        public ProjectStageHandleTaskParam(final Context context, final SettingUserModel settingUserModel, final ProjectStageModel projectStageModel, final ProjectMemberModel projectMemberModel) {
-            mContext = context;
-            mSettingUserModel = settingUserModel;
-            mProjectStageModel = projectStageModel;
-            mProjectMemberModel = projectMemberModel;
-        }
-
-        public Context getContext() {
-            return mContext;
-        }
-
-        public SettingUserModel getSettingUserModel() {
-            return mSettingUserModel;
-        }
-
-        public ProjectStageModel getProjectStageModel() {
-            return mProjectStageModel;
-        }
-
-        public ProjectMemberModel getProjectMemberModel() {
-            return mProjectMemberModel;
-        }
-    }
-
-    protected class ProjectStageHandleTaskResult {
-
-        protected ProjectStageModel mProjectStageModel;
-        protected ProjectStageAssignmentModel[] mProjectStageAssignmentModels;
-        protected ProjectStageAssignCommentModel[] mProjectStageAssignCommentModels;
-        protected String mMessage;
-
-        public ProjectStageHandleTaskResult() {
-
-        }
-
-        public void setProjectModel(final ProjectStageModel projectModel) {
-            mProjectStageModel = projectModel;
-        }
-
-        public ProjectStageModel getProjectModel() {
-            return mProjectStageModel;
-        }
-
-        public void setProjectStageAssignmentModels(final ProjectStageAssignmentModel[] projectStageModels) {
-            mProjectStageAssignmentModels = projectStageModels;
-        }
-
-        public ProjectStageAssignmentModel[] getProjectStageAssignmentModels() {
-            return mProjectStageAssignmentModels;
-        }
-
-        public void setProjectStageAssignCommentModels(final ProjectStageAssignCommentModel[] projectStageAssignCommentModels) {
-            mProjectStageAssignCommentModels = projectStageAssignCommentModels;
-        }
-
-        public ProjectStageAssignCommentModel[] getProjectStageAssignCommentModels() {
-            return mProjectStageAssignCommentModels;
-        }
-
-        public void setMessage(final String message) {
-            mMessage = message;
-        }
-
-        public String getMessage() {
-            return mMessage;
-        }
-    }
-
-    protected class ProjectStageHandleTask extends AsyncTask<ProjectStageHandleTaskParam, String, ProjectStageHandleTaskResult> {
-        protected ProjectStageHandleTaskParam mProjectStageHandleTaskParam;
-        protected Context mContext;
-
-        @Override
-        protected ProjectStageHandleTaskResult doInBackground(ProjectStageHandleTaskParam... projectStageHandleTaskParams) {
-            // Get ProjectStageHandleTaskParam
-            mProjectStageHandleTaskParam = projectStageHandleTaskParams[0];
-            mContext = mProjectStageHandleTaskParam.getContext();
-
-            // -- Prepare ProjectStageHandleTaskResult --
-            ProjectStageHandleTaskResult projectStageHandleTaskResult = new ProjectStageHandleTaskResult();
-
-            // -- Get ProjectStageResponseModel progress --
-            publishProgress(ViewUtil.getResourceString(mContext, R.string.project_stage_handle_task_begin));
-
-            // -- Prepare ProjectCachePersistent --
-            ProjectCachePersistent projectCachePersistent = new ProjectCachePersistent(mContext);
-
-            // -- Prepare ProjectNetwork --
-            ProjectNetwork projectNetwork = new ProjectNetwork(mContext, mProjectStageHandleTaskParam.getSettingUserModel());
-
-            ProjectStageResponseModel projectStageResponseModel = null;
-            try {
-                ProjectStageModel projectStageModel = mProjectStageHandleTaskParam.getProjectStageModel();
-                ProjectMemberModel projectMemberModel = mProjectStageHandleTaskParam.getProjectMemberModel();
-                if (projectStageModel != null && projectMemberModel != null) {
-                    try {
-                        // -- Invalidate Access Token --
-                        projectNetwork.invalidateAccessToken();
-
-                        // -- Invalidate Login --
-                        projectNetwork.invalidateLogin();
-
-                        // -- Get project from server --
-                        projectStageResponseModel = projectNetwork.getProjectStage(projectStageModel.getProjectStageId());
-
-                        // -- Save to ProjectCachePersistent --
-                        try {
-                            projectCachePersistent.setProjectStageResponseModel(projectStageResponseModel, projectMemberModel.getProjectMemberId());
-                        } catch (PersistenceError ex) {
-                        }
-                    } catch (WebApiError webApiError) {
-                        if (webApiError.isErrorConnection()) {
-                            // -- Get ProjectStageResponseModel from ProjectCachePersistent --
-                            try {
-                                projectStageResponseModel = projectCachePersistent.getProjectStageResponseModel(projectStageModel.getProjectStageId(), projectMemberModel.getProjectMemberId());
-                            } catch (PersistenceError ex) {
-                            }
-                        } else
-                            throw webApiError;
-                    }
-                }
-            } catch (WebApiError webApiError) {
-                projectStageHandleTaskResult.setMessage(webApiError.getMessage());
-                publishProgress(webApiError.getMessage());
-            }
-
-            if (projectStageResponseModel != null) {
-                // -- Set result --
-                projectStageHandleTaskResult.setProjectModel(projectStageResponseModel.getProjectStageModel());
-                projectStageHandleTaskResult.setProjectStageAssignmentModels(projectStageResponseModel.getProjectStageAssignmentModels());
-                projectStageHandleTaskResult.setProjectStageAssignCommentModels(projectStageResponseModel.getProjectStageAssignCommentModels());
-
-                // -- Get ProjectStageResponseModel progress --
-                publishProgress(ViewUtil.getResourceString(mContext, R.string.project_stage_handle_task_success));
-            }
-
-            return projectStageHandleTaskResult;
-        }
+        // -- Do FileGetCacheAsyncTask --
+        fileGetCacheAsyncTask.execute(new FileGetAsyncTaskParam(this, settingUserModel, fileId));
     }
 
     @Override

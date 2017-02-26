@@ -1,40 +1,41 @@
 package com.construction.pm.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
-import com.construction.pm.R;
+import com.construction.pm.asynctask.ProjectPlanGetAsyncTask;
+import com.construction.pm.asynctask.param.ProjectPlanGetAsyncTaskParam;
+import com.construction.pm.asynctask.result.ProjectPlanGetAsyncTaskResult;
 import com.construction.pm.models.ProjectActivityUpdateModel;
-import com.construction.pm.models.ProjectMemberModel;
 import com.construction.pm.models.ProjectPlanAssignmentModel;
 import com.construction.pm.models.ProjectPlanModel;
-import com.construction.pm.models.network.ProjectPlanResponseModel;
 import com.construction.pm.models.system.SessionLoginModel;
 import com.construction.pm.models.system.SettingUserModel;
-import com.construction.pm.networks.ProjectNetwork;
-import com.construction.pm.networks.webapi.WebApiError;
-import com.construction.pm.persistence.PersistenceError;
-import com.construction.pm.persistence.ProjectCachePersistent;
 import com.construction.pm.persistence.SessionPersistent;
 import com.construction.pm.persistence.SettingPersistent;
-import com.construction.pm.utils.ViewUtil;
 import com.construction.pm.views.project_plan.ProjectPlanLayout;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProjectPlanActivity extends AppCompatActivity implements ProjectPlanLayout.ProjectPlanLayoutListener {
 
     public static final String INTENT_PARAM_PROJECT_PLAN_MODEL = "PROJECT_PLAN_MODEL";
 
     protected ProjectPlanModel mProjectPlanModel;
+    protected List<AsyncTask> mAsyncTaskList;
 
     protected ProjectPlanLayout mProjectPlanLayout;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // -- Handle AsyncTask --
+        mAsyncTaskList = new ArrayList<AsyncTask>();
 
         // -- Handle intent request parameters --
         newIntentHandle(getIntent().getExtras());
@@ -86,10 +87,17 @@ public class ProjectPlanActivity extends AppCompatActivity implements ProjectPla
         SessionPersistent sessionPersistent = new SessionPersistent(this);
         SessionLoginModel sessionLoginModel = sessionPersistent.getSessionLoginModel();
 
-        // -- Prepare ProjectPlanHandleTask --
-        ProjectPlanHandleTask projectPlanHandleTask = new ProjectPlanHandleTask() {
+        // -- Prepare ProjectPlanGetAsyncTask --
+        ProjectPlanGetAsyncTask projectPlanGetAsyncTask = new ProjectPlanGetAsyncTask() {
             @Override
-            public void onPostExecute(ProjectPlanHandleTaskResult projectHandleTaskResult) {
+            public void onPreExecute() {
+                mAsyncTaskList.add(this);
+            }
+
+            @Override
+            public void onPostExecute(ProjectPlanGetAsyncTaskResult projectHandleTaskResult) {
+                mAsyncTaskList.remove(this);
+
                 if (projectHandleTaskResult != null) {
                     onProjectPlanRequestSuccess(projectHandleTaskResult.getProjectModel(), projectHandleTaskResult.getProjectPlanAssignmentModels(), projectHandleTaskResult.getProjectActivityUpdateModels());
                     if (projectHandleTaskResult.getMessage() != null)
@@ -107,8 +115,8 @@ public class ProjectPlanActivity extends AppCompatActivity implements ProjectPla
             }
         };
 
-        // -- Do ProjectPlanHandleTask --
-        projectPlanHandleTask.execute(new ProjectPlanHandleTaskParam(this, settingUserModel, projectPlanModel, sessionLoginModel.getProjectMemberModel()));
+        // -- Do ProjectPlanGetAsyncTask --
+        projectPlanGetAsyncTask.execute(new ProjectPlanGetAsyncTaskParam(this, settingUserModel, projectPlanModel, sessionLoginModel.getProjectMemberModel()));
     }
 
     protected void onProjectPlanRequestProgress(final String progressMessage) {
@@ -123,150 +131,13 @@ public class ProjectPlanActivity extends AppCompatActivity implements ProjectPla
 
     }
 
-    protected class ProjectPlanHandleTaskParam {
-
-        protected Context mContext;
-        protected SettingUserModel mSettingUserModel;
-        protected ProjectPlanModel mProjectPlanModel;
-        protected ProjectMemberModel mProjectMemberModel;
-
-        public ProjectPlanHandleTaskParam(final Context context, final SettingUserModel settingUserModel, final ProjectPlanModel projectPlanModel, final ProjectMemberModel projectMemberModel) {
-            mContext = context;
-            mSettingUserModel = settingUserModel;
-            mProjectPlanModel = projectPlanModel;
-            mProjectMemberModel = projectMemberModel;
+    @Override
+    protected void onDestroy() {
+        for (AsyncTask asyncTask : mAsyncTaskList) {
+            if (asyncTask.getStatus() != AsyncTask.Status.FINISHED)
+                asyncTask.cancel(true);
         }
 
-        public Context getContext() {
-            return mContext;
-        }
-
-        public SettingUserModel getSettingUserModel() {
-            return mSettingUserModel;
-        }
-
-        public ProjectPlanModel getProjectPlanModel() {
-            return mProjectPlanModel;
-        }
-
-        public ProjectMemberModel getProjectMemberModel() {
-            return mProjectMemberModel;
-        }
-    }
-
-    protected class ProjectPlanHandleTaskResult {
-
-        protected ProjectPlanModel mProjectPlanModel;
-        protected ProjectPlanAssignmentModel[] mProjectPlanAssignmentModels;
-        protected ProjectActivityUpdateModel[] mProjectActivityUpdateModels;
-        protected String mMessage;
-
-        public ProjectPlanHandleTaskResult() {
-
-        }
-
-        public void setProjectModel(final ProjectPlanModel projectModel) {
-            mProjectPlanModel = projectModel;
-        }
-
-        public ProjectPlanModel getProjectModel() {
-            return mProjectPlanModel;
-        }
-
-        public void setProjectPlanAssignmentModels(final ProjectPlanAssignmentModel[] projectPlanModels) {
-            mProjectPlanAssignmentModels = projectPlanModels;
-        }
-
-        public ProjectPlanAssignmentModel[] getProjectPlanAssignmentModels() {
-            return mProjectPlanAssignmentModels;
-        }
-
-        public void setProjectActivityUpdateModels(final ProjectActivityUpdateModel[] projectActivityUpdateModels) {
-            mProjectActivityUpdateModels = projectActivityUpdateModels;
-        }
-
-        public ProjectActivityUpdateModel[] getProjectActivityUpdateModels() {
-            return mProjectActivityUpdateModels;
-        }
-
-        public void setMessage(final String message) {
-            mMessage = message;
-        }
-
-        public String getMessage() {
-            return mMessage;
-        }
-    }
-
-    protected class ProjectPlanHandleTask extends AsyncTask<ProjectPlanHandleTaskParam, String, ProjectPlanHandleTaskResult> {
-        protected ProjectPlanHandleTaskParam mProjectPlanHandleTaskParam;
-        protected Context mContext;
-
-        @Override
-        protected ProjectPlanHandleTaskResult doInBackground(ProjectPlanHandleTaskParam... projectPlanHandleTaskParams) {
-            // Get ProjectPlanHandleTaskParam
-            mProjectPlanHandleTaskParam = projectPlanHandleTaskParams[0];
-            mContext = mProjectPlanHandleTaskParam.getContext();
-
-            // -- Prepare ProjectPlanHandleTaskResult --
-            ProjectPlanHandleTaskResult projectPlanHandleTaskResult = new ProjectPlanHandleTaskResult();
-
-            // -- Get ProjectPlanResponseModel progress --
-            publishProgress(ViewUtil.getResourceString(mContext, R.string.project_plan_handle_task_begin));
-
-            // -- Prepare ProjectCachePersistent --
-            ProjectCachePersistent projectCachePersistent = new ProjectCachePersistent(mContext);
-
-            // -- Prepare ProjectNetwork --
-            ProjectNetwork projectNetwork = new ProjectNetwork(mContext, mProjectPlanHandleTaskParam.getSettingUserModel());
-
-            ProjectPlanResponseModel projectPlanResponseModel = null;
-            try {
-                ProjectPlanModel projectPlanModel = mProjectPlanHandleTaskParam.getProjectPlanModel();
-                ProjectMemberModel projectMemberModel = mProjectPlanHandleTaskParam.getProjectMemberModel();
-                if (projectPlanModel != null && projectMemberModel != null) {
-                    try {
-                        // -- Invalidate Access Token --
-                        projectNetwork.invalidateAccessToken();
-
-                        // -- Invalidate Login --
-                        projectNetwork.invalidateLogin();
-
-                        // -- Get project from server --
-                        projectPlanResponseModel = projectNetwork.getProjectPlan(projectPlanModel.getProjectPlanId());
-
-                        // -- Save to ProjectCachePersistent --
-                        try {
-                            projectCachePersistent.setProjectPlanResponseModel(projectPlanResponseModel, projectMemberModel.getProjectMemberId());
-                        } catch (PersistenceError ex) {
-                        }
-                    } catch (WebApiError webApiError) {
-                        if (webApiError.isErrorConnection()) {
-                            // -- Get ProjectPlanResponseModel from ProjectCachePersistent --
-                            try {
-                                projectPlanResponseModel = projectCachePersistent.getProjectPlanResponseModel(projectPlanModel.getProjectPlanId(), projectMemberModel.getProjectMemberId());
-                            } catch (PersistenceError ex) {
-                            }
-                        } else
-                            throw webApiError;
-                    }
-                }
-            } catch (WebApiError webApiError) {
-                projectPlanHandleTaskResult.setMessage(webApiError.getMessage());
-                publishProgress(webApiError.getMessage());
-            }
-
-            if (projectPlanResponseModel != null) {
-                // -- Set result --
-                projectPlanHandleTaskResult.setProjectModel(projectPlanResponseModel.getProjectPlanModel());
-                projectPlanHandleTaskResult.setProjectPlanAssignmentModels(projectPlanResponseModel.getProjectPlanAssignmentModels());
-                projectPlanHandleTaskResult.setProjectActivityUpdateModels(projectPlanResponseModel.getProjectActivityUpdateModels());
-
-                // -- Get ProjectPlanResponseModel progress --
-                publishProgress(ViewUtil.getResourceString(mContext, R.string.project_plan_handle_task_success));
-            }
-
-            return projectPlanHandleTaskResult;
-        }
+        super.onDestroy();
     }
 }

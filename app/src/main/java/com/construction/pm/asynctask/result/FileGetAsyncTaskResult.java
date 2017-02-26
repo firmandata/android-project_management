@@ -1,13 +1,13 @@
-package com.construction.pm.asynctask.filerequest;
+package com.construction.pm.asynctask.result;
 
 import com.construction.pm.models.FileModel;
 
-public class FileRequestAsyncTaskResult {
+public class FileGetAsyncTaskResult {
 
     protected FileModel mFileModel;
     protected String mMessage;
 
-    public FileRequestAsyncTaskResult() {
+    public FileGetAsyncTaskResult() {
 
     }
 

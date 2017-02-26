@@ -1,27 +1,32 @@
 package com.construction.pm.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import com.construction.pm.R;
+import com.construction.pm.asynctask.SessionCheckAsyncTask;
+import com.construction.pm.asynctask.param.SessionCheckAsyncTaskParam;
 import com.construction.pm.models.system.SessionLoginModel;
 import com.construction.pm.models.system.SettingUserModel;
-import com.construction.pm.networks.UserNetwork;
-import com.construction.pm.networks.webapi.WebApiError;
 import com.construction.pm.persistence.SettingPersistent;
-import com.construction.pm.utils.ViewUtil;
 import com.construction.pm.views.SplashLayout;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class BootstrapActivity extends AppCompatActivity {
+
+    protected List<AsyncTask> mAsyncTaskList;
 
     protected SplashLayout mSplashLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // -- Handle AsyncTask --
+        mAsyncTaskList = new ArrayList<AsyncTask>();
 
         // -- Prepare SettingPersistent --
         SettingPersistent settingPersistent = new SettingPersistent(this);
@@ -35,10 +40,17 @@ public class BootstrapActivity extends AppCompatActivity {
         // -- Load SplashLayout to activity
         mSplashLayout.loadLayoutToActivity(this);
 
-        // -- Prepare SessionHandleTask --
-        SessionHandleTask sessionHandleTask = new SessionHandleTask() {
+        // -- Prepare SessionCheckAsyncTask --
+        SessionCheckAsyncTask sessionCheckAsyncTask = new SessionCheckAsyncTask() {
+            @Override
+            public void onPreExecute() {
+                mAsyncTaskList.add(this);
+            }
+
             @Override
             public void onPostExecute(SessionLoginModel sessionLoginModel) {
+                mAsyncTaskList.remove(this);
+
                 onSessionHandleFinish(sessionLoginModel);
             }
 
@@ -55,8 +67,8 @@ public class BootstrapActivity extends AppCompatActivity {
         // -- showProgressBar --
         mSplashLayout.showProgressBar();
 
-        // -- Do SessionHandleTask --
-        sessionHandleTask.execute(new SessionHandleTaskParam(this, settingUserModel));
+        // -- Do SessionCheckAsyncTask --
+        sessionCheckAsyncTask.execute(new SessionCheckAsyncTaskParam(this, settingUserModel));
     }
 
     protected void onSessionHandleFinish(final SessionLoginModel sessionLoginModel) {
@@ -86,75 +98,13 @@ public class BootstrapActivity extends AppCompatActivity {
         mSplashLayout.setDescription(message);
     }
 
-    protected class SessionHandleTaskParam {
-
-        protected Context mContext;
-        protected SettingUserModel mSettingUserModel;
-
-        public SessionHandleTaskParam(final Context context, final SettingUserModel settingUserModel) {
-            mContext = context;
-            mSettingUserModel = settingUserModel;
+    @Override
+    protected void onDestroy() {
+        for (AsyncTask asyncTask : mAsyncTaskList) {
+            if (asyncTask.getStatus() != AsyncTask.Status.FINISHED)
+                asyncTask.cancel(true);
         }
 
-        public Context getContext() {
-            return mContext;
-        }
-
-        public SettingUserModel getSettingUserModel() {
-            return mSettingUserModel;
-        }
-    }
-
-    protected class SessionHandleTask extends AsyncTask<SessionHandleTaskParam, String, SessionLoginModel> {
-
-        protected static final int WAIT_FOR_USER_READ_ERROR_MESSAGE = 2000;
-
-        protected SessionHandleTaskParam mSessionHandleTaskParam;
-        protected Context mContext;
-
-        @Override
-        protected SessionLoginModel doInBackground(SessionHandleTaskParam... sessionHandleTaskParams) {
-            // -- Get SessionHandleTaskParam --
-            mSessionHandleTaskParam = sessionHandleTaskParams[0];
-            mContext = mSessionHandleTaskParam.getContext();
-
-            // -- Prepare UserNetwork --
-            UserNetwork userNetwork = new UserNetwork(mContext, mSessionHandleTaskParam.getSettingUserModel());
-
-            // -- AuthenticationNetwork handle --
-            SessionLoginModel sessionLoginModel = null;
-            try {
-                // -- Set publishProgress AccessTokenModel handle --
-                publishProgress(ViewUtil.getResourceString(mContext, R.string.session_handle_task_handle_access_token));
-
-                // -- AccessTokenModel handle --
-                sessionLoginModel = userNetwork.invalidateAccessToken();
-
-                if (sessionLoginModel.getUserProjectMemberModel() != null) {
-                    // -- Set publishProgress UserProjectMemberModel handle --
-                    publishProgress(ViewUtil.getResourceString(mContext, R.string.session_handle_task_handle_user_project_member));
-
-                    // -- UserProjectMemberModel handle --
-                    sessionLoginModel = userNetwork.invalidateLogin();
-                }
-
-                // -- Set publishProgress as finish --
-                publishProgress(ViewUtil.getResourceString(mContext, R.string.session_handle_task_finish));
-            } catch (WebApiError webApiError) {
-                // -- Set new SessionLoginModel --
-                sessionLoginModel = userNetwork.getSessionLoginModel();
-
-                // -- Set publishProgress --
-                publishProgress(webApiError.getMessage());
-
-                // -- Pause process for user read error message --
-                try {
-                    Thread.sleep(WAIT_FOR_USER_READ_ERROR_MESSAGE);
-                } catch (InterruptedException interruptedException) {
-                }
-            }
-
-            return sessionLoginModel;
-        }
+        super.onDestroy();
     }
 }
