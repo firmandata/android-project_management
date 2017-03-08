@@ -8,22 +8,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.construction.pm.R;
 import com.construction.pm.asynctask.InspectorProjectActivityListAsyncTask;
 import com.construction.pm.asynctask.param.InspectorProjectActivityListAsyncTaskParam;
 import com.construction.pm.asynctask.result.InspectorProjectActivityListAsyncTaskResult;
 import com.construction.pm.models.ProjectActivityModel;
-import com.construction.pm.models.ProjectMemberModel;
 import com.construction.pm.models.StatusTaskEnum;
 import com.construction.pm.models.system.SessionLoginModel;
 import com.construction.pm.models.system.SettingUserModel;
-import com.construction.pm.networks.InspectorNetwork;
-import com.construction.pm.networks.webapi.WebApiError;
-import com.construction.pm.persistence.InspectorCachePersistent;
-import com.construction.pm.persistence.PersistenceError;
 import com.construction.pm.persistence.SessionPersistent;
 import com.construction.pm.persistence.SettingPersistent;
-import com.construction.pm.utils.ViewUtil;
 import com.construction.pm.views.project_activity.ProjectActivityListView;
 
 import java.util.ArrayList;
@@ -36,6 +29,8 @@ public class ProjectActivityListFragment extends Fragment implements ProjectActi
     protected List<AsyncTask> mAsyncTaskList;
 
     protected ProjectActivityListView mProjectActivityListView;
+
+    protected ProjectActivityListFragmentListener mProjectActivityListFragmentListener;
 
     public static ProjectActivityListFragment newInstance() {
         return newInstance(null, null);
@@ -50,6 +45,10 @@ public class ProjectActivityListFragment extends Fragment implements ProjectActi
     }
 
     public static ProjectActivityListFragment newInstance(final ProjectActivityModel[] projectActivityModels, final StatusTaskEnum statusTaskEnum) {
+        return newInstance(projectActivityModels, statusTaskEnum, null);
+    }
+
+    public static ProjectActivityListFragment newInstance(final ProjectActivityModel[] projectActivityModels, final StatusTaskEnum statusTaskEnum, final ProjectActivityListFragmentListener projectActivityListFragmentListener) {
         // -- Set parameters --
         Bundle bundle = new Bundle();
         if (projectActivityModels != null) {
@@ -68,6 +67,7 @@ public class ProjectActivityListFragment extends Fragment implements ProjectActi
 
         // -- Create ProjectActivityListFragment --
         ProjectActivityListFragment projectActivityListFragment = new ProjectActivityListFragment();
+        projectActivityListFragment.setProjectActivityListFragmentListener(projectActivityListFragmentListener);
         projectActivityListFragment.setArguments(bundle);
         return projectActivityListFragment;
     }
@@ -187,7 +187,8 @@ public class ProjectActivityListFragment extends Fragment implements ProjectActi
 
     @Override
     public void onProjectActivityItemClick(ProjectActivityModel projectActivityModel) {
-
+        if (mProjectActivityListFragmentListener != null)
+            mProjectActivityListFragmentListener.onProjectActivityClick(projectActivityModel);
     }
 
     @Override
@@ -203,5 +204,13 @@ public class ProjectActivityListFragment extends Fragment implements ProjectActi
         }
 
         super.onDestroy();
+    }
+
+    public void setProjectActivityListFragmentListener(final ProjectActivityListFragmentListener projectActivityListFragmentListener) {
+        mProjectActivityListFragmentListener = projectActivityListFragmentListener;
+    }
+
+    public interface ProjectActivityListFragmentListener {
+        void onProjectActivityClick(ProjectActivityModel projectActivityModel);
     }
 }

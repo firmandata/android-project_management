@@ -1,6 +1,7 @@
 package com.construction.pm.activities.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,21 +9,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.construction.pm.R;
+import com.construction.pm.activities.InspectorDetailActivity;
 import com.construction.pm.asynctask.InspectorProjectActivityListAsyncTask;
 import com.construction.pm.asynctask.param.InspectorProjectActivityListAsyncTaskParam;
 import com.construction.pm.asynctask.result.InspectorProjectActivityListAsyncTaskResult;
 import com.construction.pm.models.ProjectActivityModel;
-import com.construction.pm.models.ProjectMemberModel;
 import com.construction.pm.models.system.SessionLoginModel;
 import com.construction.pm.models.system.SettingUserModel;
-import com.construction.pm.networks.InspectorNetwork;
-import com.construction.pm.networks.webapi.WebApiError;
-import com.construction.pm.persistence.InspectorCachePersistent;
-import com.construction.pm.persistence.PersistenceError;
 import com.construction.pm.persistence.SessionPersistent;
 import com.construction.pm.persistence.SettingPersistent;
-import com.construction.pm.utils.ViewUtil;
 import com.construction.pm.views.inspector.InspectorLayout;
 
 import java.util.ArrayList;
@@ -111,6 +106,23 @@ public class InspectorFragment extends Fragment implements InspectorLayout.Inspe
 
         // -- Do InspectorProjectActivityListAsyncTask --
         inspectorProjectActivityListAsyncTask.execute(new InspectorProjectActivityListAsyncTaskParam(getContext(), settingUserModel, sessionLoginModel.getProjectMemberModel()));
+    }
+
+    @Override
+    public void onProjectActivityListItemClick(ProjectActivityModel projectActivityModel) {
+        // -- Redirect to InspectorDetailActivity --
+        Intent intent = new Intent(this.getContext(), InspectorDetailActivity.class);
+
+        try {
+            org.json.JSONObject projectActivityModelJsonObject = projectActivityModel.build();
+            String projectActivityModelJson = projectActivityModelJsonObject.toString(0);
+
+            intent.putExtra(InspectorDetailActivity.INTENT_PARAM_PROJECT_ACTIVITY_MODEL, projectActivityModelJson);
+        } catch (org.json.JSONException ex) {
+
+        }
+
+        startActivity(intent);
     }
 
     protected void onProjectActivityListRequestProgress(final String progressMessage) {

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="?android:attr/selectableItemBackground">
+
+    <ImageView
+        android:id="@+id/photoId"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:src="@drawable/home_24" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/monitoringDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/photoId"
+        android:layout_toEndOf="@+id/photoId"
+        android:text="TextView" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/actualStartDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/monitoringDate"
+        android:layout_toRightOf="@+id/photoId"
+        android:layout_toEndOf="@+id/photoId"
+        android:text="TextView" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/actualEndDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/actualStartDate"
+        android:layout_toRightOf="@+id/photoId"
+        android:layout_toEndOf="@+id/photoId"
+        android:text="TextView" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/activityStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/actualEndDate"
+        android:layout_toRightOf="@+id/photoId"
+        android:layout_toEndOf="@+id/photoId"
+        android:text="TextView" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/percentComplete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/activityStatus"
+        android:layout_toRightOf="@+id/photoId"
+        android:layout_toEndOf="@+id/photoId"
+        android:text="TextView" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/comment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/percentComplete"
+        android:layout_toRightOf="@+id/photoId"
+        android:layout_toEndOf="@+id/photoId"
+        android:text="TextView" />
+
+</RelativeLayout>

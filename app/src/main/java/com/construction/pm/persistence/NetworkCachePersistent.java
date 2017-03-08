@@ -21,7 +21,8 @@ public abstract class NetworkCachePersistent {
         PROJECT_LIST(0), PROJECT_DEPENDENCIES(1),
         INSPECTOR_PROJECT_ACTIVITY_LIST(2),
         PROJECT_STAGE_DEPENDENCIES(3), PROJECT_PLAN_DEPENDENCIES(4),
-        FILE(5);
+        FILE(5),
+        INSPECTOR_PROJECT_ACTIVITY_MONITORING_LIST(6);
 
         private final int mNetworkCachePersistentType;
 

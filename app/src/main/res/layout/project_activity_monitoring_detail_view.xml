@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/photoId"
+        android:layout_width="128dp"
+        android:layout_height="128dp"
+        android:src="@drawable/home_24"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <RelativeLayout
+        android:id="@+id/monitoringDateContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_toLeftOf="@+id/photoId"
+        android:layout_toStartOf="@+id/photoId">
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/monitoringDateLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:text="@string/project_activity_monitoring_monitoring_date" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/monitoringDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/monitoringDateLabel"
+            android:text="TextView" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/actualStartDateContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/monitoringDateContainer"
+        android:layout_toLeftOf="@+id/photoId"
+        android:layout_toStartOf="@+id/photoId">
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/actualStartDateLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:text="@string/project_activity_monitoring_actual_start_date" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/actualStartDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/actualStartDateLabel"
+            android:text="TextView" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/actualEndDateContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/actualStartDateContainer"
+        android:layout_toLeftOf="@+id/photoId"
+        android:layout_toStartOf="@+id/photoId">
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/actualEndDateLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:text="@string/project_activity_monitoring_actual_end_date" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/actualEndDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/actualEndDateLabel"
+            android:text="TextView" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/activityStatusContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/actualEndDateContainer"
+        android:layout_toLeftOf="@+id/photoId"
+        android:layout_toStartOf="@+id/photoId">
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/activityStatusLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:text="@string/project_activity_monitoring_activity_status" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/activityStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/activityStatusLabel"
+            android:text="TextView" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/percentCompleteContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/activityStatusContainer"
+        android:layout_alignRight="@+id/activityStatusContainer"
+        android:layout_alignEnd="@+id/activityStatusContainer">
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/percentCompleteLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:text="@string/project_activity_monitoring_percent_complete" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/percentComplete"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/percentCompleteLabel"
+            android:text="TextView" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/commentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/percentCompleteContainer">
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/commentLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:text="@string/project_activity_monitoring_comment" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/comment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/commentLabel"
+            android:text="TextView" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/filePhotoContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/commentContainer">
+
+        <include
+            android:id="@+id/file_photo_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            layout="@layout/file_photo_list_view" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -12,7 +12,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import com.construction.pm.R;
@@ -24,7 +23,7 @@ import com.construction.pm.utils.ViewUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InspectorLayout {
+public class InspectorLayout implements ProjectActivityListFragment.ProjectActivityListFragmentListener {
     protected Context mContext;
 
     protected CoordinatorLayout mInspectorLayout;
@@ -137,12 +136,18 @@ public class InspectorLayout {
         completedProjectActivityModelList.toArray(completedProjectActivityModels);
 
         mViewPagerAdapter.clearFragments();
-        mViewPagerAdapter.addFragment(ProjectActivityListFragment.newInstance(inProgressProjectActivityModels, StatusTaskEnum.IN_PROGRESS), ViewUtil.getResourceString(mContext, R.string.inspector_layout_tab_in_progress));
-        mViewPagerAdapter.addFragment(ProjectActivityListFragment.newInstance(comingDueProjectActivityModels, StatusTaskEnum.COMING_DUE), ViewUtil.getResourceString(mContext, R.string.inspector_layout_tab_coming_due));
-        mViewPagerAdapter.addFragment(ProjectActivityListFragment.newInstance(shouldHaveStartedProjectActivityModels, StatusTaskEnum.SHOULD_HAVE_STARTED), ViewUtil.getResourceString(mContext, R.string.inspector_layout_tab_should_have_started));
-        mViewPagerAdapter.addFragment(ProjectActivityListFragment.newInstance(lateProjectActivityModels, StatusTaskEnum.LATE), ViewUtil.getResourceString(mContext, R.string.inspector_layout_tab_late));
-        mViewPagerAdapter.addFragment(ProjectActivityListFragment.newInstance(completedProjectActivityModels, StatusTaskEnum.COMPLETED), ViewUtil.getResourceString(mContext, R.string.inspector_layout_tab_completed));
+        mViewPagerAdapter.addFragment(ProjectActivityListFragment.newInstance(inProgressProjectActivityModels, StatusTaskEnum.IN_PROGRESS, this), ViewUtil.getResourceString(mContext, R.string.inspector_layout_tab_in_progress));
+        mViewPagerAdapter.addFragment(ProjectActivityListFragment.newInstance(comingDueProjectActivityModels, StatusTaskEnum.COMING_DUE, this), ViewUtil.getResourceString(mContext, R.string.inspector_layout_tab_coming_due));
+        mViewPagerAdapter.addFragment(ProjectActivityListFragment.newInstance(shouldHaveStartedProjectActivityModels, StatusTaskEnum.SHOULD_HAVE_STARTED, this), ViewUtil.getResourceString(mContext, R.string.inspector_layout_tab_should_have_started));
+        mViewPagerAdapter.addFragment(ProjectActivityListFragment.newInstance(lateProjectActivityModels, StatusTaskEnum.LATE, this), ViewUtil.getResourceString(mContext, R.string.inspector_layout_tab_late));
+        mViewPagerAdapter.addFragment(ProjectActivityListFragment.newInstance(completedProjectActivityModels, StatusTaskEnum.COMPLETED, this), ViewUtil.getResourceString(mContext, R.string.inspector_layout_tab_completed));
         mViewPagerAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onProjectActivityClick(ProjectActivityModel projectActivityModel) {
+        if (mInspectorLayoutListener != null)
+            mInspectorLayoutListener.onProjectActivityListItemClick(projectActivityModel);
     }
 
     protected class ViewPagerAdapter extends FragmentPagerAdapter {
@@ -199,5 +204,6 @@ public class InspectorLayout {
 
     public interface InspectorLayoutListener {
         void onInspectorRequest();
+        void onProjectActivityListItemClick(ProjectActivityModel projectActivityModel);
     }
 }
