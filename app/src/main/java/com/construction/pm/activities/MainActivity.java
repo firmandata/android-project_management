@@ -208,6 +208,11 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void onMenuManagerSelected() {
+        mMainLayout.showManagerFragment();
+    }
+
+    @Override
     public void onMenuNotificationListSelected() {
         mMainLayout.showNotificationListFragment(this);
     }

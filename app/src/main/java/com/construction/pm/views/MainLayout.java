@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import com.construction.pm.R;
 import com.construction.pm.activities.fragments.HomeFragment;
 import com.construction.pm.activities.fragments.InspectorFragment;
+import com.construction.pm.activities.fragments.ManagerFragment;
 import com.construction.pm.activities.fragments.NotificationListFragment;
 import com.construction.pm.activities.fragments.ProjectListFragment;
 import com.construction.pm.activities.fragments.UserChangePasswordFragment;
@@ -180,6 +181,8 @@ public class MainLayout implements NavigationView.OnNavigationItemSelectedListen
                     mMainLayoutListener.onMenuInspectorSelected();
                 break;
             case R.id.navigator_menu_manager:
+                if (mMainLayoutListener != null)
+                    mMainLayoutListener.onMenuManagerSelected();
                 break;
             case R.id.navigator_menu_request_report:
                 break;
@@ -321,6 +324,14 @@ public class MainLayout implements NavigationView.OnNavigationItemSelectedListen
         return inspectorFragment;
     }
 
+    public ManagerFragment showManagerFragment() {
+        ManagerFragment managerFragment = ManagerFragment.newInstance();
+
+        loadFragment(managerFragment, ViewUtil.getResourceString(mContext, R.string.menu_manager_title), FRAGMENT_TAG_MANAGER);
+
+        return managerFragment;
+    }
+
     public UserChangeProfileFragment showUserChangeProfileFragment(final UserChangeProfileFragment.UserChangeProfileFragmentListener userChangeProfileFragmentListener) {
         UserChangeProfileFragment userChangeProfileFragment = UserChangeProfileFragment.newInstance();
         userChangeProfileFragment.setUserChangeProfileFragmentListener(userChangeProfileFragmentListener);
@@ -347,6 +358,7 @@ public class MainLayout implements NavigationView.OnNavigationItemSelectedListen
         void onMenuHomeSelected();
         void onMenuProjectListSelected();
         void onMenuInspectorSelected();
+        void onMenuManagerSelected();
         void onMenuNotificationListSelected();
         void onMenuUserChangeProfileSelected();
         void onMenuUserChangePasswordSelected();
