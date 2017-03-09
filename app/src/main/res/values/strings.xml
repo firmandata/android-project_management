@@ -90,6 +90,12 @@
     <string name="manager_activity_list_handle_task_begin">Getting activities &#8230;</string>
     <string name="manager_activity_list_handle_task_success">Getting activities finished.</string>
 
+    <string name="manager_activity_monitoring_list_handle_task_begin">Getting monitoring activities &#8230;</string>
+    <string name="manager_activity_monitoring_list_handle_task_success">Getting monitoring activities finished.</string>
+
+    <string name="manager_activity_update_list_handle_task_begin">Getting update activities &#8230;</string>
+    <string name="manager_activity_update_list_handle_task_success">Getting update activities finished.</string>
+
     <string name="image_shadow_description">Shadow</string>
     <string name="image_logo_description">Application Logo</string>
 
@@ -227,6 +233,8 @@
     <string name="manager_layout_tab_completed">Completed</string>
 
     <string name="manager_detail_layout_title">Activity</string>
+    <string name="manager_detail_layout_tab_update">Update</string>
+    <string name="manager_detail_layout_tab_monitoring">Monitoring</string>
 
     <string name="project_activity_task_name">Task Name</string>
     <string name="project_activity_plan_start_date">Plan Start Date</string>

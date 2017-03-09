@@ -29,7 +29,6 @@ public class InspectorProjectActivityMonitoringListAsyncTask extends AsyncTask<I
 
         // -- Prepare InspectorProjectActivityMonitoringListAsyncTaskResult --
         InspectorProjectActivityMonitoringListAsyncTaskResult inspectorProjectActivityMonitoringListAsyncTaskResult = new InspectorProjectActivityMonitoringListAsyncTaskResult();
-        inspectorProjectActivityMonitoringListAsyncTaskResult.setProjectActivityModel(projectActivityModel);
 
         // -- Get ProjectActivityMonitoringModels progress --
         publishProgress(ViewUtil.getResourceString(mContext, R.string.inspector_activity_monitoring_list_handle_task_begin));

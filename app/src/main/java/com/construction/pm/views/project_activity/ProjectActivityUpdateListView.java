@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.construction.pm.R;
+import com.construction.pm.libraries.widgets.RecyclerItemTouchListener;
+import com.construction.pm.models.ProjectActivityModel;
 import com.construction.pm.models.ProjectActivityUpdateModel;
 import com.construction.pm.utils.DateTimeUtil;
 import com.construction.pm.utils.StringUtil;
@@ -23,6 +25,10 @@ public class ProjectActivityUpdateListView {
 
     protected RecyclerView mProjectActivityUpdateList;
     protected ProjectActivityUpdateListAdapter mProjectActivityUpdateListAdapter;
+
+    protected ProjectActivityModel mProjectActivityModel;
+
+    protected ProjectActivityUpdateListListener mProjectActivityUpdateListListener;
 
     public ProjectActivityUpdateListView(final Context context) {
         mContext = context;
@@ -48,6 +54,21 @@ public class ProjectActivityUpdateListView {
         mProjectActivityUpdateList = (RecyclerView) mProjectActivityUpdateListView.findViewById(R.id.projectActivityUpdateList);
         mProjectActivityUpdateList.setItemAnimator(new DefaultItemAnimator());
         mProjectActivityUpdateList.setNestedScrollingEnabled(false);
+        mProjectActivityUpdateList.addOnItemTouchListener(new RecyclerItemTouchListener(mContext, mProjectActivityUpdateList, new RecyclerItemTouchListener.ItemClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                ProjectActivityUpdateModel projectActivityUpdateModel = mProjectActivityUpdateListAdapter.getItem(position);
+                if (projectActivityUpdateModel != null) {
+                    if (mProjectActivityUpdateListListener != null)
+                        mProjectActivityUpdateListListener.onProjectActivityUpdateListItemClick(projectActivityUpdateModel);
+                }
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
+        }));
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(mContext);
         mProjectActivityUpdateList.setLayoutManager(layoutManager);
@@ -57,6 +78,13 @@ public class ProjectActivityUpdateListView {
 
         mProjectActivityUpdateListAdapter = new ProjectActivityUpdateListAdapter();
         mProjectActivityUpdateList.setAdapter(mProjectActivityUpdateListAdapter);
+
+        if (mProjectActivityUpdateListListener != null)
+            mProjectActivityUpdateListListener.onProjectActivityUpdateListRequest(mProjectActivityModel);
+    }
+
+    public void setProjectActivityModel(final ProjectActivityModel projectActivityModel) {
+        mProjectActivityModel = projectActivityModel;
     }
 
     public void setProjectActivityUpdateModels(final ProjectActivityUpdateModel[] projectActivityUpdateModels) {
@@ -65,6 +93,15 @@ public class ProjectActivityUpdateListView {
 
     public RelativeLayout getView() {
         return mProjectActivityUpdateListView;
+    }
+
+    public void setProjectActivityUpdateListListener(final ProjectActivityUpdateListListener projectActivityUpdateListListener) {
+        mProjectActivityUpdateListListener = projectActivityUpdateListListener;
+    }
+
+    public interface ProjectActivityUpdateListListener {
+        void onProjectActivityUpdateListRequest(ProjectActivityModel projectActivityModel);
+        void onProjectActivityUpdateListItemClick(ProjectActivityUpdateModel projectActivityUpdateModel);
     }
 
     protected class ProjectActivityUpdateListAdapter extends RecyclerView.Adapter<ProjectActivityUpdateListViewHolder> {

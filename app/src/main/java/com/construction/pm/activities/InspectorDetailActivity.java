@@ -20,7 +20,6 @@ public class InspectorDetailActivity extends AppCompatActivity implements
 
     protected ProjectActivityModel mProjectActivityModel;
     protected List<AsyncTask> mAsyncTaskList;
-    protected List<AsyncTask> mAsyncTaskPendingList;
 
     protected InspectorDetailLayout mInspectorDetailLayout;
 
@@ -30,7 +29,6 @@ public class InspectorDetailActivity extends AppCompatActivity implements
 
         // -- Handle AsyncTask --
         mAsyncTaskList = new ArrayList<AsyncTask>();
-        mAsyncTaskPendingList = new ArrayList<AsyncTask>();
 
         // -- Handle intent request parameters --
         newIntentHandle(getIntent().getExtras());
@@ -99,30 +97,18 @@ public class InspectorDetailActivity extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-
-        for (AsyncTask asyncTask : mAsyncTaskPendingList) {
-
-        }
-        mAsyncTaskPendingList.clear();
     }
 
     @Override
     protected void onPause() {
-        for (AsyncTask asyncTask : mAsyncTaskPendingList) {
-            if (asyncTask.getStatus() != AsyncTask.Status.FINISHED)
-                asyncTask.cancel(true);
-        }
-
         super.onPause();
     }
 
     @Override
     protected void onDestroy() {
         for (AsyncTask asyncTask : mAsyncTaskList) {
-            if (asyncTask.getStatus() != AsyncTask.Status.FINISHED) {
+            if (asyncTask.getStatus() != AsyncTask.Status.FINISHED)
                 asyncTask.cancel(true);
-                mAsyncTaskPendingList.add(asyncTask);
-            }
         }
 
         super.onDestroy();

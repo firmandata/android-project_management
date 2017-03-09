@@ -57,6 +57,7 @@ public class ProjectActivityMonitoringListView {
 
         mProjectActivityMonitoringList = (RecyclerView) mProjectActivityMonitoringListView.findViewById(R.id.projectActivityMonitoringList);
         mProjectActivityMonitoringList.setItemAnimator(new DefaultItemAnimator());
+        mProjectActivityMonitoringList.setNestedScrollingEnabled(false);
         mProjectActivityMonitoringList.addOnItemTouchListener(new RecyclerItemTouchListener(mContext, mProjectActivityMonitoringList, new RecyclerItemTouchListener.ItemClickListener() {
             @Override
             public void onClick(View view, int position) {
