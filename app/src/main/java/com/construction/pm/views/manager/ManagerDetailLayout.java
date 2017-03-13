@@ -1,13 +1,12 @@
 package com.construction.pm.views.manager;
 
 import android.content.Context;
+import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -16,30 +15,31 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.construction.pm.R;
-import com.construction.pm.activities.fragments.ProjectActivityMonitoringListFragment;
-import com.construction.pm.activities.fragments.ProjectActivityUpdateListFragment;
+import com.construction.pm.activities.fragments.ManagerDetailFragment;
+import com.construction.pm.activities.fragments.ProjectActivityMonitoringDetailFragment;
 import com.construction.pm.models.ProjectActivityModel;
 import com.construction.pm.models.ProjectActivityMonitoringModel;
 import com.construction.pm.models.ProjectActivityUpdateModel;
-import com.construction.pm.utils.ViewUtil;
+import com.construction.pm.utils.DateTimeUtil;
+import com.construction.pm.utils.StringUtil;
 import com.construction.pm.views.project_activity.ProjectActivityDetailView;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class ManagerDetailLayout implements
-        ProjectActivityUpdateListFragment.ProjectActivityUpdateListFragmentListener,
-        ProjectActivityMonitoringListFragment.ProjectActivityMonitoringListFragmentListener {
+public class ManagerDetailLayout implements ManagerDetailFragment.ManagerDetailFragmentListener {
 
     protected Context mContext;
+    protected Handler mFragmentHandler;
+    protected FragmentManager mFragmentManager;
 
     protected CoordinatorLayout mManagerDetailLayout;
     protected AppBarLayout mAppBarLayout;
     protected ActionBar mActionBar;
     protected Toolbar mToolbar;
-    protected TabLayout mTabLayout;
-    protected ViewPager mViewPager;
-    protected ViewPagerAdapter mViewPagerAdapter;
+
+    protected ManagerDetailFragment mManagerDetailFragment;
+
+    protected String mFragmentTagSelected;
+    protected static final String FRAGMENT_TAG_MANAGER_DETAIL = "FRAGMENT_MANAGER_DETAIL";
+    protected static final String FRAGMENT_TAG_PROJECT_ACTIVITY_MONITORING_DETAIL = "FRAGMENT_PROJECT_ACTIVITY_MONITORING_DETAIL";
 
     protected ProjectActivityDetailView mProjectActivityDetailView;
 
@@ -67,8 +67,6 @@ public class ManagerDetailLayout implements
         mManagerDetailLayout = managerDetailLayout;
         mAppBarLayout = (AppBarLayout) mManagerDetailLayout.findViewById(R.id.contentAppBar);
         mToolbar = (Toolbar) mManagerDetailLayout.findViewById(R.id.contentToolbar);
-        mTabLayout = (TabLayout) mManagerDetailLayout.findViewById(R.id.contentTab);
-        mViewPager = (ViewPager) mManagerDetailLayout.findViewById(R.id.contentBody);
 
         mProjectActivityDetailView = new ProjectActivityDetailView(mContext, (RelativeLayout) mManagerDetailLayout.findViewById(R.id.project_activity_detail_view));
     }
@@ -78,6 +76,9 @@ public class ManagerDetailLayout implements
     }
 
     public void loadLayoutToActivity(final AppCompatActivity activity, final ProjectActivityModel projectActivityModel) {
+        mFragmentHandler = new Handler();
+        mFragmentManager = activity.getSupportFragmentManager();
+
         activity.setContentView(mManagerDetailLayout);
 
         activity.setSupportActionBar(mToolbar);
@@ -93,34 +94,69 @@ public class ManagerDetailLayout implements
             mActionBar.setDisplayUseLogoEnabled(false);
         }
 
-        mViewPagerAdapter = new ViewPagerAdapter(activity.getSupportFragmentManager());
-        mViewPager.setAdapter(mViewPagerAdapter);
-
-        mTabLayout.setupWithViewPager(mViewPager);
+        mProjectActivityDetailView.setProjectActivityModel(projectActivityModel);
 
         if (mManagerDetailLayoutListener != null)
             mManagerDetailLayoutListener.onManagerDetailRequest(projectActivityModel);
     }
 
     public void loadLayoutToFragment(final Fragment fragment, final ProjectActivityModel projectActivityModel) {
+        mFragmentHandler = new Handler();
+        mFragmentManager = fragment.getChildFragmentManager();
+
         mAppBarLayout.removeView(mToolbar);
 
-        mViewPagerAdapter = new ViewPagerAdapter(fragment.getChildFragmentManager());
-        mViewPager.setAdapter(mViewPagerAdapter);
-
-        mTabLayout.setupWithViewPager(mViewPager);
+        mProjectActivityDetailView.setProjectActivityModel(projectActivityModel);
 
         if (mManagerDetailLayoutListener != null)
             mManagerDetailLayoutListener.onManagerDetailRequest(projectActivityModel);
     }
 
-    public void setLayoutData(final ProjectActivityModel projectActivityModel) {
-        mProjectActivityDetailView.setProjectActivityModel(projectActivityModel);
+    public boolean isManagerFragmentShow() {
+        return mFragmentTagSelected.equals(FRAGMENT_TAG_MANAGER_DETAIL);
+    }
 
-        mViewPagerAdapter.clearFragments();
-        mViewPagerAdapter.addFragment(ProjectActivityUpdateListFragment.newInstance(projectActivityModel, this), ViewUtil.getResourceString(mContext, R.string.manager_detail_layout_tab_update));
-        mViewPagerAdapter.addFragment(ProjectActivityMonitoringListFragment.newInstance(projectActivityModel, this), ViewUtil.getResourceString(mContext, R.string.manager_detail_layout_tab_monitoring));
-        mViewPagerAdapter.notifyDataSetChanged();
+    protected void loadFragment(final Fragment fragment, final String title, final String subtitle, final String tag) {
+        if (mFragmentHandler == null)
+            return;
+        if (mFragmentTagSelected != null) {
+            if (mFragmentTagSelected.equals(tag))
+                return;
+        }
+
+        mFragmentTagSelected = tag;
+
+        if (mActionBar != null) {
+            mActionBar.setTitle(title);
+            if (subtitle != null)
+                mActionBar.setSubtitle(subtitle);
+        }
+
+        mFragmentHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (mFragmentManager == null)
+                    return;
+
+                FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+                fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+                fragmentTransaction.replace(R.id.contentBody, fragment, tag);
+                fragmentTransaction.commitAllowingStateLoss();
+            }
+        });
+    }
+
+    public void showManagerDetailFragment(final ProjectActivityModel projectActivityModel) {
+        if (mManagerDetailFragment == null)
+            mManagerDetailFragment = ManagerDetailFragment.newInstance(projectActivityModel, this);
+
+        loadFragment(mManagerDetailFragment, projectActivityModel.getTaskName(), projectActivityModel.getActivityStatus(), FRAGMENT_TAG_MANAGER_DETAIL);
+    }
+
+    public void showProjectActivityMonitoringDetailFragment(final ProjectActivityMonitoringModel projectActivityMonitoringModel) {
+        ProjectActivityMonitoringDetailFragment projectActivityMonitoringDetailFragment = ProjectActivityMonitoringDetailFragment.newInstance(projectActivityMonitoringModel, true);
+
+        loadFragment(projectActivityMonitoringDetailFragment, DateTimeUtil.ToDateTimeDisplayString(projectActivityMonitoringModel.getMonitoringDate()), StringUtil.numberFormat(projectActivityMonitoringModel.getPercentComplete()), FRAGMENT_TAG_PROJECT_ACTIVITY_MONITORING_DETAIL);
     }
 
     @Override
@@ -133,54 +169,6 @@ public class ManagerDetailLayout implements
     public void onProjectActivityMonitoringListItemClick(ProjectActivityMonitoringModel projectActivityMonitoringModel) {
         if (mManagerDetailLayoutListener != null)
             mManagerDetailLayoutListener.onProjectActivityMonitoringListItemClick(projectActivityMonitoringModel);
-    }
-
-    protected class ViewPagerAdapter extends FragmentPagerAdapter {
-
-        protected List<Fragment> mFragmentList;
-        protected List<String> mTitleList;
-
-        public ViewPagerAdapter(final FragmentManager fragmentManager) {
-            super(fragmentManager);
-
-            mFragmentList = new ArrayList<Fragment>();
-            mTitleList = new ArrayList<String>();
-        }
-
-        public void addFragment(final Fragment fragment, final String title) {
-            mFragmentList.add(fragment);
-            mTitleList.add(title);
-        }
-
-        public void removeFragment(final Fragment fragment) {
-            int position = mFragmentList.indexOf(fragment);
-            removeFragment(position);
-        }
-
-        public void removeFragment(final int position) {
-            mFragmentList.remove(position);
-            mTitleList.remove(position);
-        }
-
-        public void clearFragments() {
-            mFragmentList.clear();
-            mTitleList.clear();
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return mFragmentList.get(position);
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return mTitleList.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return mFragmentList.size();
-        }
     }
 
     public void setManagerDetailLayoutListener(final ManagerDetailLayoutListener managerDetailLayoutListener) {

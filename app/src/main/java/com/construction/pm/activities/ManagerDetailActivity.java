@@ -64,7 +64,10 @@ public class ManagerDetailActivity extends AppCompatActivity implements
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case android.R.id.home:
-                finish();
+                if (!mManagerDetailLayout.isManagerFragmentShow())
+                    mManagerDetailLayout.showManagerDetailFragment(mProjectActivityModel);
+                else
+                    finish();
                 return true;
         }
         return super.onOptionsItemSelected(menuItem);
@@ -72,7 +75,7 @@ public class ManagerDetailActivity extends AppCompatActivity implements
 
     @Override
     public void onManagerDetailRequest(ProjectActivityModel projectActivityModel) {
-        mManagerDetailLayout.setLayoutData(projectActivityModel);
+        mManagerDetailLayout.showManagerDetailFragment(projectActivityModel);
     }
 
     @Override
@@ -82,11 +85,16 @@ public class ManagerDetailActivity extends AppCompatActivity implements
 
     @Override
     public void onProjectActivityMonitoringListItemClick(ProjectActivityMonitoringModel projectActivityMonitoringModel) {
-
+        mManagerDetailLayout.showProjectActivityMonitoringDetailFragment(projectActivityMonitoringModel);
     }
 
     @Override
     public void onBackPressed() {
+        if (!mManagerDetailLayout.isManagerFragmentShow()) {
+            mManagerDetailLayout.showManagerDetailFragment(mProjectActivityModel);
+            return;
+        }
+
         super.onBackPressed();
     }
 

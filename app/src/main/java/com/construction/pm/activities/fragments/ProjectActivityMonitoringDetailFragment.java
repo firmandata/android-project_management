@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.construction.pm.R;
 import com.construction.pm.activities.FileViewActivity;
 import com.construction.pm.asynctask.FileGetCacheAsyncTask;
 import com.construction.pm.asynctask.FileGetNetworkAsyncTask;
@@ -32,6 +33,7 @@ public class ProjectActivityMonitoringDetailFragment extends Fragment implements
         ImageRequestClickListener {
 
     public static final String PARAM_PROJECT_ACTIVITY_MONITORING_MODEL = "PROJECT_ACTIVITY_MONITORING_MODEL";
+    public static final String PARAM_SHOW_AS_LAYOUT = "SHOW_AS_LAYOUT";
 
     protected List<AsyncTask> mAsyncTaskList;
 
@@ -42,6 +44,10 @@ public class ProjectActivityMonitoringDetailFragment extends Fragment implements
     }
 
     public static ProjectActivityMonitoringDetailFragment newInstance(final ProjectActivityMonitoringModel projectActivityMonitoringModel) {
+        return newInstance(projectActivityMonitoringModel, false);
+    }
+
+    public static ProjectActivityMonitoringDetailFragment newInstance(final ProjectActivityMonitoringModel projectActivityMonitoringModel, final boolean showAsLayout) {
         // -- Set parameters --
         Bundle bundle = new Bundle();
         if (projectActivityMonitoringModel != null) {
@@ -51,6 +57,7 @@ public class ProjectActivityMonitoringDetailFragment extends Fragment implements
             } catch (org.json.JSONException ex) {
             }
         }
+        bundle.putBoolean(PARAM_SHOW_AS_LAYOUT, showAsLayout);
 
         // -- Create ProjectActivityMonitoringDetailFragment --
         ProjectActivityMonitoringDetailFragment projectActivityMonitoringDetailFragment = new ProjectActivityMonitoringDetailFragment();
@@ -66,10 +73,14 @@ public class ProjectActivityMonitoringDetailFragment extends Fragment implements
         mAsyncTaskList = new ArrayList<AsyncTask>();
 
         ProjectActivityMonitoringModel projectActivityMonitoringModel = null;
+        boolean showAsLayout = false;
 
         // -- Get parameters --
         Bundle bundle = getArguments();
         if (bundle != null) {
+            // -- Get ShowAsLayout parameter --
+            showAsLayout = bundle.getBoolean(PARAM_SHOW_AS_LAYOUT);
+
             // -- Get ProjectActivityMonitoringModel parameter --
             String projectActivityModelJson = bundle.getString(PARAM_PROJECT_ACTIVITY_MONITORING_MODEL);
             if (projectActivityModelJson != null) {
@@ -82,7 +93,10 @@ public class ProjectActivityMonitoringDetailFragment extends Fragment implements
         }
 
         // -- Prepare ProjectActivityMonitoringDetailView --
-        mProjectActivityMonitoringDetailView = ProjectActivityMonitoringDetailView.buildProjectActivityMonitoringDetailView(getContext(), null);
+        if (showAsLayout)
+            mProjectActivityMonitoringDetailView = ProjectActivityMonitoringDetailView.buildProjectActivityMonitoringDetailView(getContext(), R.layout.project_activity_monitoring_detail_layout, null);
+        else
+            mProjectActivityMonitoringDetailView = ProjectActivityMonitoringDetailView.buildProjectActivityMonitoringDetailView(getContext(), null);
         mProjectActivityMonitoringDetailView.setImageRequestListener(this);
         mProjectActivityMonitoringDetailView.setImageRequestClickListener(this);
         mProjectActivityMonitoringDetailView.setProjectActivityMonitoringModel(projectActivityMonitoringModel);
