@@ -151,14 +151,6 @@ public class InspectorDetailLayout implements ProjectActivityMonitoringListFragm
         return projectActivityMonitoringListFragment;
     }
 
-    public ProjectActivityMonitoringDetailFragment showProjectActivityMonitoringDetailFragment(final ProjectActivityMonitoringModel projectActivityMonitoringModel) {
-        ProjectActivityMonitoringDetailFragment projectActivityMonitoringDetailFragment = ProjectActivityMonitoringDetailFragment.newInstance(projectActivityMonitoringModel);
-
-        loadFragment(projectActivityMonitoringDetailFragment, DateTimeUtil.ToDateTimeDisplayString(projectActivityMonitoringModel.getMonitoringDate()), StringUtil.numberFormat(projectActivityMonitoringModel.getPercentComplete()), FRAGMENT_TAG_PROJECT_ACTIVITY_MONITORING_DETAIL);
-
-        return projectActivityMonitoringDetailFragment;
-    }
-
     @Override
     public void onProjectActivityMonitoringListItemClick(ProjectActivityMonitoringModel projectActivityMonitoringModel) {
         if (mInspectorDetailLayoutListener != null)

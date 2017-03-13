@@ -85,7 +85,19 @@ public class ManagerDetailActivity extends AppCompatActivity implements
 
     @Override
     public void onProjectActivityMonitoringListItemClick(ProjectActivityMonitoringModel projectActivityMonitoringModel) {
-        mManagerDetailLayout.showProjectActivityMonitoringDetailFragment(projectActivityMonitoringModel);
+        // -- Redirect to ProjectActivityMonitoringDetailActivity --
+        Intent intent = new Intent(this, ProjectActivityMonitoringDetailActivity.class);
+
+        try {
+            org.json.JSONObject projectActivityMonitoringModelJsonObject = projectActivityMonitoringModel.build();
+            String projectActivityMonitoringModelJson = projectActivityMonitoringModelJsonObject.toString(0);
+
+            intent.putExtra(ProjectActivityMonitoringDetailActivity.INTENT_PARAM_PROJECT_ACTIVITY_MONITORING_MODEL, projectActivityMonitoringModelJson);
+        } catch (org.json.JSONException ex) {
+
+        }
+
+        startActivity(intent);
     }
 
     @Override

@@ -153,12 +153,6 @@ public class ManagerDetailLayout implements ManagerDetailFragment.ManagerDetailF
         loadFragment(mManagerDetailFragment, projectActivityModel.getTaskName(), projectActivityModel.getActivityStatus(), FRAGMENT_TAG_MANAGER_DETAIL);
     }
 
-    public void showProjectActivityMonitoringDetailFragment(final ProjectActivityMonitoringModel projectActivityMonitoringModel) {
-        ProjectActivityMonitoringDetailFragment projectActivityMonitoringDetailFragment = ProjectActivityMonitoringDetailFragment.newInstance(projectActivityMonitoringModel, true);
-
-        loadFragment(projectActivityMonitoringDetailFragment, DateTimeUtil.ToDateTimeDisplayString(projectActivityMonitoringModel.getMonitoringDate()), StringUtil.numberFormat(projectActivityMonitoringModel.getPercentComplete()), FRAGMENT_TAG_PROJECT_ACTIVITY_MONITORING_DETAIL);
-    }
-
     @Override
     public void onProjectActivityUpdateListItemClick(ProjectActivityUpdateModel projectActivityUpdateModel) {
         if (mManagerDetailLayoutListener != null)

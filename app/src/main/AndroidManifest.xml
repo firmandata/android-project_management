@@ -63,6 +63,12 @@
             android:launchMode="singleTask" />
 
         <activity
+            android:name=".activities.ProjectActivityMonitoringDetailActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTask" />
+
+        <activity
             android:name=".activities.ProjectPlanActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:configChanges="orientation|keyboardHidden|screenSize"

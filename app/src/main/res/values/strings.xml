@@ -252,6 +252,8 @@
     <string name="project_activity_monitoring_percent_complete">Percent Complete</string>
     <string name="project_activity_monitoring_comment">Comment</string>
 
+    <string name="project_activity_monitoring_detail_title">Monitoring Detail</string>
+
     <string name="service_notification_title">Project Management</string>
     <string name="service_notification_subtitle">$s1 new notifications</string>
     <string name="service_notification_need_login">Session expired! Need login first</string>
