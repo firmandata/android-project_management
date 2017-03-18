@@ -229,6 +229,11 @@ public class ProjectActivityMonitoringListFragment extends Fragment implements
 
     }
 
+    public void reloadProjectActivityMonitoringListRequest(final ProjectActivityModel projectActivityModel) {
+        // -- Load ProjectActivityMonitoringList --
+        onProjectActivityMonitoringListRequest(projectActivityModel);
+    }
+
     @Override
     public void onDetach() {
         super.onDetach();

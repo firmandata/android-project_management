@@ -110,6 +110,14 @@ public class ManagerDetailFragment extends Fragment implements ManagerDetailView
             mManagerDetailFragmentListener.onProjectActivityMonitoringListItemClick(projectActivityMonitoringModel);
     }
 
+    public void reloadProjectActivityUpdateList(final ProjectActivityModel projectActivityModel) {
+        mManagerDetailView.reloadProjectActivityUpdateList(projectActivityModel);
+    }
+
+    public void reloadProjectActivityMonitoringList(final ProjectActivityModel projectActivityModel) {
+        mManagerDetailView.reloadProjectActivityMonitoringList(projectActivityModel);
+    }
+
     @Override
     public void onDetach() {
         super.onDetach();

@@ -164,6 +164,11 @@ public class ProjectActivityUpdateListFragment extends Fragment implements
 
     }
 
+    public void reloadProjectActivityUpdateList(final ProjectActivityModel projectActivityModel) {
+        // -- Load ProjectActivityUpdateList --
+        onProjectActivityUpdateListRequest(projectActivityModel);
+    }
+
     @Override
     public void onDetach() {
         super.onDetach();

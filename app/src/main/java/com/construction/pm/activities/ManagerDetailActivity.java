@@ -168,6 +168,8 @@ public class ManagerDetailActivity extends AppCompatActivity implements
                                 projectActivityUpdateModel = ProjectActivityUpdateModel.build(jsonObject);
                             } catch (org.json.JSONException ex) {
                             }
+                            if (projectActivityUpdateModel != null)
+                                mManagerDetailLayout.reloadProjectActivityUpdateList(mProjectActivityModel);
                         }
                     }
                 }
