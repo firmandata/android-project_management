@@ -102,6 +102,18 @@
     <string name="manager_activity_update_save_handle_task_failed">Update save failed. $s1</string>
     <string name="manager_activity_update_save_handle_task_finish">Update saved.</string>
 
+    <string name="project_stage_assign_comment_save_handle_task_begin">Saving comment &#8230;</string>
+    <string name="project_stage_assign_comment_save_handle_task_success">Comment saved.</string>
+    <string name="project_stage_assign_comment_save_handle_task_success_pending">Comment saved as pending.</string>
+    <string name="project_stage_assign_comment_save_handle_task_failed">Comment save failed. $s1</string>
+    <string name="project_stage_assign_comment_save_handle_task_finish">Comment saved.</string>
+
+    <string name="inspector_project_activity_monitoring_save_handle_task_begin">Saving comment &#8230;</string>
+    <string name="inspector_project_activity_monitoring_save_handle_task_success">Comment saved.</string>
+    <string name="inspector_project_activity_monitoring_save_handle_task_success_pending">Comment saved as pending.</string>
+    <string name="inspector_project_activity_monitoring_save_handle_task_failed">Comment save failed. $s1</string>
+    <string name="inspector_project_activity_monitoring_save_handle_task_finish">Comment saved.</string>
+
     <string name="image_shadow_description">Shadow</string>
     <string name="image_logo_description">Application Logo</string>
 

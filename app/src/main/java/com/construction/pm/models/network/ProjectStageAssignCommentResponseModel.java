@@ -34,7 +34,7 @@ public class ProjectStageAssignCommentResponseModel extends SimpleResponseModel 
         if (!jsonObject.isNull("result")) {
             org.json.JSONObject jsonResultObject = jsonObject.getJSONObject("result");
             if (!jsonResultObject.isNull("projectStageAssignmentComment")) {
-                org.json.JSONArray projectStageAssignCommentArray = jsonObject.getJSONArray("projectStageAssignmentComment");
+                org.json.JSONArray projectStageAssignCommentArray = jsonResultObject.getJSONArray("projectStageAssignmentComment");
                 for (int projectStageAssignCommentIdx = 0; projectStageAssignCommentIdx < projectStageAssignCommentArray.length(); projectStageAssignCommentIdx++) {
                     ProjectStageAssignCommentModel projectStageAssignCommentModel = ProjectStageAssignCommentModel.build(projectStageAssignCommentArray.getJSONObject(projectStageAssignCommentIdx));
                     projectStageAssignCommentResponseModel.setProjectStageAssignCommentModel(projectStageAssignCommentModel);

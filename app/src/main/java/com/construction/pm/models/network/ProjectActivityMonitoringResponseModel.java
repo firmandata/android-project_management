@@ -34,7 +34,7 @@ public class ProjectActivityMonitoringResponseModel extends SimpleResponseModel 
         if (!jsonObject.isNull("result")) {
             org.json.JSONObject jsonResultObject = jsonObject.getJSONObject("result");
             if (!jsonResultObject.isNull("projectActivityMonitoring")) {
-                org.json.JSONArray projectActivityMonitoringArray = jsonObject.getJSONArray("projectActivityMonitoring");
+                org.json.JSONArray projectActivityMonitoringArray = jsonResultObject.getJSONArray("projectActivityMonitoring");
                 for (int projectActivityMonitoringIdx = 0; projectActivityMonitoringIdx < projectActivityMonitoringArray.length(); projectActivityMonitoringIdx++) {
                     ProjectActivityMonitoringModel projectActivityMonitoringModel = ProjectActivityMonitoringModel.build(projectActivityMonitoringArray.getJSONObject(projectActivityMonitoringIdx));
                     projectActivityMonitoringResponseModel.setProjectActivityMonitoringModel(projectActivityMonitoringModel);

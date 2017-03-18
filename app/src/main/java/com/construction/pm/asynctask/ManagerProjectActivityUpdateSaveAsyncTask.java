@@ -42,7 +42,7 @@ public class ManagerProjectActivityUpdateSaveAsyncTask extends AsyncTask<Manager
         // -- Get ProjectMemberModel --
         ProjectMemberModel projectMemberModel = mManagerProjectActivityUpdateSaveAsyncTaskParam.getProjectMemberModel();
         if (projectMemberModel != null) {
-            // -- Set NotificationModel as read to server --
+            // -- Save ProjectActivityUpdateModel to server --
             try {
                 ProjectActivityUpdateResponseModel projectActivityUpdateResponseModel = managerNetwork.saveProjectActivityUpdate(projectActivityUpdateModel, projectMemberModel.getUserId());
                 managerProjectActivityUpdateSaveAsyncTaskResult.setProjectActivityUpdateModel(projectActivityUpdateResponseModel.getProjectActivityUpdateModel());
@@ -78,7 +78,7 @@ public class ManagerProjectActivityUpdateSaveAsyncTask extends AsyncTask<Manager
             }
         }
         
-        // -- Get NotificationModel marked as read finish progress --
+        // -- Get ProjectActivityUpdateModel finish progress --
         publishProgress(ViewUtil.getResourceString(mContext, R.string.manager_activity_update_save_handle_task_finish));
 
         return managerProjectActivityUpdateSaveAsyncTaskResult;

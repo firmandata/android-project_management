@@ -8,7 +8,9 @@ public class NetworkPendingModel {
 
     public enum ECommandType {
         NOTIFICATION_RECEIVED(0), NOTIFICATION_READ(1),
-        PROJECT_ACTIVITY_UPDATE_SAVE(2);
+        PROJECT_ACTIVITY_UPDATE_SAVE(2),
+        PROJECT_STAGE_ASSIGN_COMMENT_SAVE(3),
+        INSPECTOR_PROJECT_ACTIVITY_MONITORING_SAVE(4);
 
         private final int mCommandType;
 

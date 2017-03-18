@@ -14,8 +14,6 @@ import com.construction.pm.persistence.NetworkPendingPersistent;
 import com.construction.pm.persistence.PersistenceError;
 import com.construction.pm.persistence.SettingPersistent;
 
-import java.util.Calendar;
-
 public class NetworkPendingWorker extends Thread {
 
     protected final static int WAIT_TIME = 20000;
@@ -122,6 +120,10 @@ public class NetworkPendingWorker extends Thread {
             } else if (networkPendingModel.getType() == NetworkPendingModel.ECommandType.NOTIFICATION_READ) {
                 webApiResponse = webApiRequest.post(webApiResponseRequest.getApiUrl(), webApiResponseRequest.getHeaderParam(), null, webApiResponseRequest.getFormData());
             } else if (networkPendingModel.getType() == NetworkPendingModel.ECommandType.PROJECT_ACTIVITY_UPDATE_SAVE) {
+                webApiResponse = webApiRequest.post(webApiResponseRequest.getApiUrl(), webApiResponseRequest.getHeaderParam(), null, webApiResponseRequest.getFormData());
+            } else if (networkPendingModel.getType() == NetworkPendingModel.ECommandType.PROJECT_STAGE_ASSIGN_COMMENT_SAVE) {
+                webApiResponse = webApiRequest.post(webApiResponseRequest.getApiUrl(), webApiResponseRequest.getHeaderParam(), null, webApiResponseRequest.getFormData());
+            } else if (networkPendingModel.getType() == NetworkPendingModel.ECommandType.INSPECTOR_PROJECT_ACTIVITY_MONITORING_SAVE) {
                 webApiResponse = webApiRequest.post(webApiResponseRequest.getApiUrl(), webApiResponseRequest.getHeaderParam(), null, webApiResponseRequest.getFormData());
             }
 
