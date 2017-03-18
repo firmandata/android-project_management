@@ -1,6 +1,7 @@
 package com.construction.pm.views.project_activity;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -11,6 +12,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.ViewGroup;
 
 import com.construction.pm.R;
@@ -78,6 +81,22 @@ public class ProjectActivityMonitoringDetailLayout {
         }
     }
 
+    public void createProjectActivityUpdateMenu(final Menu menu) {
+        MenuItem menuItemUpdateActivity = menu.add(R.string.project_activity_monitoring_detail_menu_update_activity);
+        menuItemUpdateActivity.setIcon(R.drawable.plus_24);
+        if (Build.VERSION.SDK_INT > 10) {
+            menuItemUpdateActivity.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        }
+        menuItemUpdateActivity.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                if (mProjectActivityMonitoringDetailLayoutListener != null)
+                    mProjectActivityMonitoringDetailLayoutListener.onProjectActivityMonitoringDetailActivityUpdateClick();
+                return true;
+            }
+        });
+    }
+
     public void loadLayoutToFragment(final Fragment fragment) {
         mFragmentHandler = new Handler();
         mFragmentManager = fragment.getChildFragmentManager();
@@ -132,5 +151,6 @@ public class ProjectActivityMonitoringDetailLayout {
     }
 
     public interface ProjectActivityMonitoringDetailLayoutListener {
+        void onProjectActivityMonitoringDetailActivityUpdateClick();
     }
 }

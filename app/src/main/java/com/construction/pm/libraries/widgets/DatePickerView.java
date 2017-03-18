@@ -5,6 +5,7 @@ import android.content.Context;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.InputType;
+import android.util.AttributeSet;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.DatePicker;
@@ -33,11 +34,26 @@ public class DatePickerView extends RelativeLayout {
     /* ----------------- */
 
     public DatePickerView(final Context context) {
-        this(context, 0, -1, 0);
+        super(context);
+        initialize(context, 0, -1, 0);
     }
 
-    public DatePickerView(final Context context, final int defaultYear, final int defaultMonthOfYear, final int defaultDayOfMonth) {
+    public DatePickerView(final Context context, AttributeSet attrs) {
+        super(context, attrs);
+        initialize(context, 0, -1, 0);
+    }
+
+    public DatePickerView(final Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        initialize(context, 0, -1, 0);
+    }
+
+    public DatePickerView(final Context context, final Calendar calendar) {
         super(context);
+        initialize(context, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+    }
+
+    protected void initialize(Context context, final int defaultYear, final int defaultMonthOfYear, final int defaultDayOfMonth) {
         mContext = context;
 
         // Set default format setting
@@ -86,13 +102,15 @@ public class DatePickerView extends RelativeLayout {
         if (newDefaultDayOfMonth == 0)
             newDefaultDayOfMonth = defaultCalendar.get(Calendar.DAY_OF_MONTH);
 
-        mDatePickerDialog = new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                setDate(year, monthOfYear, dayOfMonth);
-                mEditText.setError(null);
-            }
-        }, newDefaultYear, newDefaultMonthOfYear, newDefaultDayOfMonth);
+        if (!isInEditMode()) {
+            mDatePickerDialog = new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
+                @Override
+                public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                    setDate(year, monthOfYear, dayOfMonth);
+                    mEditText.setError(null);
+                }
+            }, newDefaultYear, newDefaultMonthOfYear, newDefaultDayOfMonth);
+        }
 
         mButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -108,10 +126,6 @@ public class DatePickerView extends RelativeLayout {
                     setDateFromDisplay(mEditText.getText().toString());
             }
         });
-    }
-
-    public DatePickerView(final Context context, final Calendar calendar) {
-        this(context, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
     }
 
     /* ------------ */

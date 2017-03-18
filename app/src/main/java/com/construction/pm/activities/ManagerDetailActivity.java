@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import com.construction.pm.models.ProjectActivityModel;
 import com.construction.pm.models.ProjectActivityMonitoringModel;
 import com.construction.pm.models.ProjectActivityUpdateModel;
+import com.construction.pm.utils.ConstantUtil;
 import com.construction.pm.views.manager.ManagerDetailLayout;
 
 import java.util.ArrayList;
@@ -80,13 +81,14 @@ public class ManagerDetailActivity extends AppCompatActivity implements
 
     @Override
     public void onProjectActivityUpdateListItemClick(ProjectActivityUpdateModel projectActivityUpdateModel) {
-
+        showProjectActivityUpdateFormActivity(projectActivityUpdateModel);
     }
 
     @Override
     public void onProjectActivityMonitoringListItemClick(ProjectActivityMonitoringModel projectActivityMonitoringModel) {
         // -- Redirect to ProjectActivityMonitoringDetailActivity --
         Intent intent = new Intent(this, ProjectActivityMonitoringDetailActivity.class);
+        intent.putExtra(ProjectActivityMonitoringDetailActivity.INTENT_PARAM_SHOW_MENU_PROJECT_ACTIVITY_UPDATE, true);
 
         try {
             org.json.JSONObject projectActivityMonitoringModelJsonObject = projectActivityMonitoringModel.build();
@@ -97,7 +99,80 @@ public class ManagerDetailActivity extends AppCompatActivity implements
 
         }
 
-        startActivity(intent);
+        startActivityForResult(intent, ConstantUtil.INTENT_REQUEST_PROJECT_ACTIVITY_MONITORING_DETAIL);
+    }
+
+    protected void showProjectActivityUpdateFormActivity(final ProjectActivityMonitoringModel projectActivityMonitoringModel) {
+        // -- Redirect to ProjectActivityUpdateFormActivity --
+        Intent intent = new Intent(this, ProjectActivityUpdateFormActivity.class);
+
+        try {
+            org.json.JSONObject projectActivityMonitoringModelJsonObject = projectActivityMonitoringModel.build();
+            String projectActivityMonitoringModelJson = projectActivityMonitoringModelJsonObject.toString(0);
+            intent.putExtra(ProjectActivityUpdateFormActivity.INTENT_PARAM_PROJECT_ACTIVITY_MONITORING_MODEL, projectActivityMonitoringModelJson);
+        } catch (org.json.JSONException ex) {
+        }
+
+        startActivityForResult(intent, ConstantUtil.INTENT_REQUEST_PROJECT_ACTIVITY_UPDATE_FORM);
+    }
+
+    protected void showProjectActivityUpdateFormActivity(final ProjectActivityUpdateModel projectActivityUpdateModel) {
+        // -- Redirect to ProjectActivityUpdateFormActivity --
+        Intent intent = new Intent(this, ProjectActivityUpdateFormActivity.class);
+
+        try {
+            org.json.JSONObject projectActivityUpdateModelJsonObject = projectActivityUpdateModel.build();
+            String projectActivityUpdateModelJson = projectActivityUpdateModelJsonObject.toString(0);
+            intent.putExtra(ProjectActivityUpdateFormActivity.INTENT_PARAM_PROJECT_ACTIVITY_UPDATE_MODEL, projectActivityUpdateModelJson);
+        } catch (org.json.JSONException ex) {
+        }
+
+        startActivityForResult(intent, ConstantUtil.INTENT_REQUEST_PROJECT_ACTIVITY_UPDATE_FORM);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        Bundle bundle = null;
+        if (data != null)
+            bundle = data.getExtras();
+
+        if (requestCode == ConstantUtil.INTENT_REQUEST_PROJECT_ACTIVITY_MONITORING_DETAIL) {
+            if (resultCode == ConstantUtil.INTENT_REQUEST_PROJECT_ACTIVITY_MONITORING_DETAIL_RESULT_UPDATE) {
+                if (bundle != null) {
+                    if (bundle.containsKey(ConstantUtil.INTENT_RESULT_PROJECT_ACTIVITY_MONITORING_MODEL)) {
+                        String projectActivityMonitoringModelJson = bundle.getString(ConstantUtil.INTENT_RESULT_PROJECT_ACTIVITY_MONITORING_MODEL);
+                        if (projectActivityMonitoringModelJson != null) {
+                            ProjectActivityMonitoringModel projectActivityMonitoringModel = null;
+                            try {
+                                org.json.JSONObject jsonObject = new org.json.JSONObject(projectActivityMonitoringModelJson);
+                                projectActivityMonitoringModel = ProjectActivityMonitoringModel.build(jsonObject);
+                            } catch (org.json.JSONException ex) {
+                            }
+                            if (projectActivityMonitoringModel != null)
+                                showProjectActivityUpdateFormActivity(projectActivityMonitoringModel);
+                        }
+                    }
+                }
+            }
+        } else if (requestCode == ConstantUtil.INTENT_REQUEST_PROJECT_ACTIVITY_UPDATE_FORM) {
+            if (resultCode == ConstantUtil.INTENT_REQUEST_PROJECT_ACTIVITY_UPDATE_FORM_RESULT_UPDATED) {
+                if (bundle != null) {
+                    if (bundle.containsKey(ConstantUtil.INTENT_RESULT_PROJECT_ACTIVITY_UPDATE_MODEL)) {
+                        String projectActivityUpdateModelJson = bundle.getString(ConstantUtil.INTENT_RESULT_PROJECT_ACTIVITY_UPDATE_MODEL);
+                        if (projectActivityUpdateModelJson != null) {
+                            ProjectActivityUpdateModel projectActivityUpdateModel = null;
+                            try {
+                                org.json.JSONObject jsonObject = new org.json.JSONObject(projectActivityUpdateModelJson);
+                                projectActivityUpdateModel = ProjectActivityUpdateModel.build(jsonObject);
+                            } catch (org.json.JSONException ex) {
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     @Override

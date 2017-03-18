@@ -1,6 +1,7 @@
 package com.construction.pm.views.manager;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -11,17 +12,16 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.construction.pm.R;
 import com.construction.pm.activities.fragments.ManagerDetailFragment;
-import com.construction.pm.activities.fragments.ProjectActivityMonitoringDetailFragment;
 import com.construction.pm.models.ProjectActivityModel;
 import com.construction.pm.models.ProjectActivityMonitoringModel;
 import com.construction.pm.models.ProjectActivityUpdateModel;
-import com.construction.pm.utils.DateTimeUtil;
-import com.construction.pm.utils.StringUtil;
 import com.construction.pm.views.project_activity.ProjectActivityDetailView;
 
 public class ManagerDetailLayout implements ManagerDetailFragment.ManagerDetailFragmentListener {
@@ -39,7 +39,6 @@ public class ManagerDetailLayout implements ManagerDetailFragment.ManagerDetailF
 
     protected String mFragmentTagSelected;
     protected static final String FRAGMENT_TAG_MANAGER_DETAIL = "FRAGMENT_MANAGER_DETAIL";
-    protected static final String FRAGMENT_TAG_PROJECT_ACTIVITY_MONITORING_DETAIL = "FRAGMENT_PROJECT_ACTIVITY_MONITORING_DETAIL";
 
     protected ProjectActivityDetailView mProjectActivityDetailView;
 

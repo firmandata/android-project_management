@@ -7,7 +7,8 @@ import java.util.Calendar;
 public class NetworkPendingModel {
 
     public enum ECommandType {
-        NOTIFICATION_RECEIVED(0), NOTIFICATION_READ(1);
+        NOTIFICATION_RECEIVED(0), NOTIFICATION_READ(1),
+        PROJECT_ACTIVITY_UPDATE_SAVE(2);
 
         private final int mCommandType;
 

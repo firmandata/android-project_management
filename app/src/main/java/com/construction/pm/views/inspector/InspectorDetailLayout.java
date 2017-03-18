@@ -31,7 +31,6 @@ public class InspectorDetailLayout implements ProjectActivityMonitoringListFragm
 
     protected String mFragmentTagSelected;
     protected static final String FRAGMENT_TAG_PROJECT_ACTIVITY_MONITORING_LIST = "FRAGMENT_PROJECT_ACTIVITY_MONITORING_LIST";
-    protected static final String FRAGMENT_TAG_PROJECT_ACTIVITY_MONITORING_DETAIL = "FRAGMENT_PROJECT_ACTIVITY_MONITORING_DETAIL";
 
     protected CoordinatorLayout mInspectorDetailLayout;
     protected AppBarLayout mAppBarLayout;

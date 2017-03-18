@@ -96,6 +96,12 @@
     <string name="manager_activity_update_list_handle_task_begin">Getting update activities &#8230;</string>
     <string name="manager_activity_update_list_handle_task_success">Getting update activities finished.</string>
 
+    <string name="manager_activity_update_save_handle_task_begin">Saving update &#8230;</string>
+    <string name="manager_activity_update_save_handle_task_success">Update saved.</string>
+    <string name="manager_activity_update_save_handle_task_success_pending">Update saved as pending.</string>
+    <string name="manager_activity_update_save_handle_task_failed">Update save failed. $s1</string>
+    <string name="manager_activity_update_save_handle_task_finish">Update saved.</string>
+
     <string name="image_shadow_description">Shadow</string>
     <string name="image_logo_description">Application Logo</string>
 
@@ -253,6 +259,14 @@
     <string name="project_activity_monitoring_comment">Comment</string>
 
     <string name="project_activity_monitoring_detail_title">Monitoring Detail</string>
+    <string name="project_activity_monitoring_detail_menu_update_activity">Update Activity</string>
+
+    <string name="project_activity_update_form_layout_menu_update_activity">Update</string>
+
+    <string name="project_activity_update_form_title">Update Form</string>
+    <string name="project_activity_update_form_view_alert_button">OK</string>
+    <string name="project_activity_update_form_view_alert_title_error">Failed</string>
+    <string name="project_activity_update_form_activity_status_blank">-- Activity Status --</string>
 
     <string name="service_notification_title">Project Management</string>
     <string name="service_notification_subtitle">$s1 new notifications</string>

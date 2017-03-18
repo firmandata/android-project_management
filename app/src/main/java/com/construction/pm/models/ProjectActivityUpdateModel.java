@@ -221,4 +221,26 @@ public class ProjectActivityUpdateModel {
 
         return jsonObject;
     }
+
+    public ProjectActivityUpdateModel duplicate() {
+        ProjectActivityUpdateModel projectActivityUpdateModel = new ProjectActivityUpdateModel();
+
+        projectActivityUpdateModel.setProjectActivityUpdateId(getProjectActivityUpdateId());
+        projectActivityUpdateModel.setProjectActivityMonitoringId(getProjectActivityMonitoringId());
+        projectActivityUpdateModel.setProjectMemberId(getProjectMemberId());
+        projectActivityUpdateModel.setUpdateDate(getUpdateDate());
+        projectActivityUpdateModel.setActualStartDate(getActualStartDate());
+        projectActivityUpdateModel.setActualEndDate(getActualEndDate());
+        projectActivityUpdateModel.setActivityStatus(getActivityStatus());
+        projectActivityUpdateModel.setPercentComplete(getPercentComplete());
+        projectActivityUpdateModel.setComment(getComment());
+        projectActivityUpdateModel.setCreatorId(getCreatorId());
+        projectActivityUpdateModel.setCreateDate(getCreateDate());
+        projectActivityUpdateModel.setLastUserId(getLastUserId());
+        projectActivityUpdateModel.setLastUpdate(getLastUpdate());
+        projectActivityUpdateModel.setProjectActivityId(getProjectActivityId());
+        projectActivityUpdateModel.setProjectPlanId(getProjectPlanId());
+
+        return projectActivityUpdateModel;
+    }
 }
