@@ -124,6 +124,10 @@ public class InspectorDetailLayout implements ProjectActivityMonitoringListFragm
         mProjectActivityDetailView.setProjectActivityModel(projectActivityModel);
     }
 
+    public void setProjectActivityModel(final ProjectActivityModel projectActivityModel) {
+        mProjectActivityDetailView.setProjectActivityModel(projectActivityModel);
+    }
+
     public boolean isProjectActivityMonitoringListFragmentShow() {
         return mFragmentTagSelected.equals(FRAGMENT_TAG_PROJECT_ACTIVITY_MONITORING_LIST);
     }

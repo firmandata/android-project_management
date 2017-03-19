@@ -2,11 +2,11 @@ package com.construction.pm.asynctask.result;
 
 import com.construction.pm.models.ProjectActivityModel;
 
-public class ManagerProjectActivityGetAsyncTaskResult {
+public class InspectorProjectActivityGetAsyncTaskResult {
     protected ProjectActivityModel mProjectActivityModel;
     protected String mMessage;
 
-    public ManagerProjectActivityGetAsyncTaskResult() {
+    public InspectorProjectActivityGetAsyncTaskResult() {
 
     }
 

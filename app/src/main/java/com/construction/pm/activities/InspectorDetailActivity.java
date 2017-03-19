@@ -7,8 +7,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.construction.pm.asynctask.InspectorProjectActivityGetAsyncTask;
+import com.construction.pm.asynctask.param.InspectorProjectActivityGetAsyncTaskParam;
+import com.construction.pm.asynctask.result.InspectorProjectActivityGetAsyncTaskResult;
 import com.construction.pm.models.ProjectActivityModel;
 import com.construction.pm.models.ProjectActivityMonitoringModel;
+import com.construction.pm.models.system.SessionLoginModel;
+import com.construction.pm.models.system.SettingUserModel;
+import com.construction.pm.persistence.SessionPersistent;
+import com.construction.pm.persistence.SettingPersistent;
 import com.construction.pm.utils.ConstantUtil;
 import com.construction.pm.views.inspector.InspectorDetailLayout;
 
@@ -115,6 +122,7 @@ public class InspectorDetailActivity extends AppCompatActivity implements
 
                         if (projectActivityMonitoringModel != null) {
                             if (resultCode == ConstantUtil.INTENT_REQUEST_PROJECT_ACTIVITY_MONITORING_FORM_RESULT_SAVED) {
+                                reloadProjectActivityMonitoringGet(mProjectActivityModel);
                                 mInspectorDetailLayout.addProjectActivityMonitoringModel(projectActivityMonitoringModel);
                             } else if (resultCode == ConstantUtil.INTENT_REQUEST_PROJECT_ACTIVITY_MONITORING_DETAIL_RESULT_EDIT) {
                                 showProjectActivityMonitoringFormActivity(projectActivityMonitoringModel);
@@ -124,6 +132,63 @@ public class InspectorDetailActivity extends AppCompatActivity implements
                 }
             }
         }
+    }
+
+    public void reloadProjectActivityMonitoringGet(final ProjectActivityModel projectActivityModel) {
+        // -- Get SettingUserModel from SettingPersistent --
+        SettingPersistent settingPersistent = new SettingPersistent(this);
+        SettingUserModel settingUserModel = settingPersistent.getSettingUserModel();
+
+        // -- Get SessionLoginModel from SessionPersistent --
+        SessionPersistent sessionPersistent = new SessionPersistent(this);
+        SessionLoginModel sessionLoginModel = sessionPersistent.getSessionLoginModel();
+
+        // -- Prepare InspectorProjectActivityGetAsyncTask --
+        InspectorProjectActivityGetAsyncTask inspectorProjectActivityGetAsyncTask = new InspectorProjectActivityGetAsyncTask() {
+            @Override
+            public void onPreExecute() {
+                mAsyncTaskList.add(this);
+            }
+
+            @Override
+            public void onPostExecute(InspectorProjectActivityGetAsyncTaskResult projectActivityGetHandleTaskResult) {
+                mAsyncTaskList.remove(this);
+
+                if (projectActivityGetHandleTaskResult != null) {
+                    ProjectActivityModel projectActivityModelNew = projectActivityGetHandleTaskResult.getProjectActivityModel();
+                    if (projectActivityModelNew != null) {
+                        onProjectActivityGetReloadSuccess(projectActivityModelNew);
+                    } else
+                        onProjectActivityGetReloadFailed(projectActivityModel, projectActivityGetHandleTaskResult.getMessage());
+                }
+            }
+
+            @Override
+            protected void onProgressUpdate(String... messages) {
+                if (messages != null) {
+                    if (messages.length > 0) {
+                        onProjectActivityGetReloadProgress(projectActivityModel, messages[0]);
+                    }
+                }
+            }
+        };
+
+        // -- Do InspectorProjectActivityGetAsyncTask --
+        inspectorProjectActivityGetAsyncTask.execute(new InspectorProjectActivityGetAsyncTaskParam(this, settingUserModel, sessionLoginModel.getProjectMemberModel(), projectActivityModel.getProjectActivityId()));
+    }
+
+    public void onProjectActivityGetReloadProgress(final ProjectActivityModel projectActivityModel, final String progressMessage) {
+
+    }
+
+    public void onProjectActivityGetReloadSuccess(final ProjectActivityModel projectActivityModel) {
+        mProjectActivityModel = projectActivityModel;
+
+        mInspectorDetailLayout.setProjectActivityModel(mProjectActivityModel);
+    }
+
+    public void onProjectActivityGetReloadFailed(final ProjectActivityModel projectActivityModel, final String errorMessage) {
+
     }
 
     public void showProjectActivityMonitoringFormActivity(final ProjectActivityModel projectActivityModel) {
