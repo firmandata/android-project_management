@@ -61,6 +61,10 @@ public class ProjectStageAssignmentListView {
         mProjectStageAssignmentListAdapter.setProjectStageAssignmentModels(projectStageAssignmentModels);
     }
 
+    public ProjectStageAssignmentModel[] getProjectStageAssignmentModels() {
+        return mProjectStageAssignmentListAdapter.getProjectStageAssignmentModels();
+    }
+
     public RelativeLayout getView() {
         return mProjectStageAssignmentListView;
     }
@@ -82,6 +86,10 @@ public class ProjectStageAssignmentListView {
             mProjectStageAssignmentModels = projectStageAssignmentModels;
 
             notifyDataSetChanged();
+        }
+
+        public ProjectStageAssignmentModel[] getProjectStageAssignmentModels() {
+            return mProjectStageAssignmentModels;
         }
 
         public ProjectStageAssignmentModel getItem(final int position) {

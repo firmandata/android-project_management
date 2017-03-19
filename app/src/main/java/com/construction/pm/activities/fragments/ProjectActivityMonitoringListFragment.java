@@ -249,6 +249,10 @@ public class ProjectActivityMonitoringListFragment extends Fragment implements
         super.onDestroy();
     }
 
+    public void addProjectActivityMonitoringModel(final ProjectActivityMonitoringModel projectActivityMonitoringModel) {
+        mProjectActivityMonitoringListView.addProjectActivityMonitoringModel(projectActivityMonitoringModel);
+    }
+
     public void setProjectActivityMonitoringListFragmentListener(final ProjectActivityMonitoringListFragmentListener projectActivityMonitoringListFragmentListener) {
         mProjectActivityMonitoringListFragmentListener = projectActivityMonitoringListFragmentListener;
     }

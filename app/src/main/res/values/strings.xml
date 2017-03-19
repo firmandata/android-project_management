@@ -207,6 +207,7 @@
     <string name="project_detail_project_status">Project Status</string>
 
     <string name="project_stage_layout_title">Project Stage</string>
+    <string name="project_stage_layout_menu_comment_add">Add Comment</string>
 
     <string name="project_stage_detail_stage_date">Stage Date</string>
     <string name="project_stage_detail_stage_code">Stage Code</string>
@@ -245,6 +246,7 @@
     <string name="inspector_layout_tab_completed">Completed</string>
 
     <string name="inspector_detail_layout_title">Activity</string>
+    <string name="inspector_detail_layout_menu_monitoring_add">Add Monitoring</string>
 
     <string name="manager_layout_title">Update Task Progress</string>
     <string name="manager_layout_tab_in_progress">In Progress</string>

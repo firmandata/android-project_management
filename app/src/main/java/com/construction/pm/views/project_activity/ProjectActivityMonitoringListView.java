@@ -1,7 +1,6 @@
 package com.construction.pm.views.project_activity;
 
 import android.content.Context;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
@@ -20,6 +19,10 @@ import com.construction.pm.models.ProjectActivityMonitoringModel;
 import com.construction.pm.utils.DateTimeUtil;
 import com.construction.pm.utils.StringUtil;
 import com.construction.pm.views.listeners.ImageRequestListener;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class ProjectActivityMonitoringListView {
 
@@ -61,7 +64,7 @@ public class ProjectActivityMonitoringListView {
         mProjectActivityMonitoringList.addOnItemTouchListener(new RecyclerItemTouchListener(mContext, mProjectActivityMonitoringList, new RecyclerItemTouchListener.ItemClickListener() {
             @Override
             public void onClick(View view, int position) {
-                ProjectActivityMonitoringModel projectActivityMonitoringModel = mProjectActivityMonitoringListAdapter.getItem(position);
+                ProjectActivityMonitoringModel projectActivityMonitoringModel = mProjectActivityMonitoringListAdapter.getProjectActivityMonitoringModel(position);
                 if (projectActivityMonitoringModel != null) {
                     if (mProjectActivityMonitoringListListener != null)
                         mProjectActivityMonitoringListListener.onProjectActivityMonitoringListItemClick(projectActivityMonitoringModel);
@@ -95,6 +98,10 @@ public class ProjectActivityMonitoringListView {
         mProjectActivityMonitoringListAdapter.setProjectActivityMonitoringModels(projectActivityMonitoringModels);
     }
 
+    public void addProjectActivityMonitoringModel(final ProjectActivityMonitoringModel projectActivityMonitoringModel) {
+        mProjectActivityMonitoringListAdapter.addProjectActivityMonitoringModels(new ProjectActivityMonitoringModel[] { projectActivityMonitoringModel });
+    }
+
     public void setImageRequestListener(final ImageRequestListener imageRequestListener) {
         mProjectActivityMonitoringListAdapter.setImageRequestListener(imageRequestListener);
     }
@@ -114,32 +121,100 @@ public class ProjectActivityMonitoringListView {
 
     protected class ProjectActivityMonitoringListAdapter extends RecyclerView.Adapter<ProjectActivityMonitoringListViewHolder> {
 
-        protected ProjectActivityMonitoringModel[] mProjectActivityMonitoringModels;
+        protected List<ProjectActivityMonitoringModel> mProjectActivityMonitoringModelList;
 
         protected ImageRequestListener mImageRequestListener;
 
         public ProjectActivityMonitoringListAdapter() {
-
+            mProjectActivityMonitoringModelList = new ArrayList<ProjectActivityMonitoringModel>();
         }
 
         public ProjectActivityMonitoringListAdapter(final ProjectActivityMonitoringModel[] projectActivityMonitoringModels) {
             this();
-            mProjectActivityMonitoringModels = projectActivityMonitoringModels;
+            mProjectActivityMonitoringModelList = new ArrayList<ProjectActivityMonitoringModel>(Arrays.asList(projectActivityMonitoringModels));
         }
 
         public void setProjectActivityMonitoringModels(final ProjectActivityMonitoringModel[] projectActivityMonitoringModels) {
-            mProjectActivityMonitoringModels = projectActivityMonitoringModels;
-
+            mProjectActivityMonitoringModelList = new ArrayList<ProjectActivityMonitoringModel>(Arrays.asList(projectActivityMonitoringModels));
             notifyDataSetChanged();
         }
 
-        public ProjectActivityMonitoringModel getItem(final int position) {
-            if (mProjectActivityMonitoringModels == null)
-                return null;
-            if ((position + 1) > mProjectActivityMonitoringModels.length)
+        public void addProjectActivityMonitoringModels(final ProjectActivityMonitoringModel[] projectActivityMonitoringModels) {
+            List<ProjectActivityMonitoringModel> newProjectActivityMonitoringModelList = new ArrayList<ProjectActivityMonitoringModel>();
+            for (ProjectActivityMonitoringModel newProjectActivityMonitoringModel : projectActivityMonitoringModels) {
+                int position = getPosition(newProjectActivityMonitoringModel);
+                if (position >= 0) {
+                    // -- replace item --
+                    setProjectActivityMonitoringModel(position, newProjectActivityMonitoringModel);
+                } else {
+                    // -- new items --
+                    newProjectActivityMonitoringModelList.add(newProjectActivityMonitoringModel);
+                }
+            }
+            if (newProjectActivityMonitoringModelList.size() > 0) {
+                mProjectActivityMonitoringModelList.addAll(0, newProjectActivityMonitoringModelList);
+                notifyItemRangeInserted(0, newProjectActivityMonitoringModelList.size());
+            }
+        }
+
+        public void setProjectActivityMonitoringModel(final int position, final ProjectActivityMonitoringModel projectActivityMonitoringModel) {
+            if ((position + 1) > mProjectActivityMonitoringModelList.size())
+                return;
+
+            mProjectActivityMonitoringModelList.set(position, projectActivityMonitoringModel);
+            notifyItemChanged(position);
+        }
+
+        public ProjectActivityMonitoringModel getProjectActivityMonitoringModel(final int position) {
+            if ((position + 1) > mProjectActivityMonitoringModelList.size())
                 return null;
 
-            return mProjectActivityMonitoringModels[position];
+            return mProjectActivityMonitoringModelList.get(position);
+        }
+
+        public int getPosition(final ProjectActivityMonitoringModel projectActivityMonitoringModel) {
+            if (projectActivityMonitoringModel == null)
+                return -1;
+
+            boolean isPositionFound;
+            int position;
+
+            // -- Search by object --
+            isPositionFound = false;
+            position = 0;
+            for (ProjectActivityMonitoringModel projectActivityMonitoringModelExist : mProjectActivityMonitoringModelList) {
+                if (projectActivityMonitoringModelExist.equals(projectActivityMonitoringModel)) {
+                    isPositionFound = true;
+                    break;
+                }
+                position++;
+            }
+
+            if (isPositionFound)
+                return position;
+
+            // -- Search by id --
+            Integer searchProjectActivityMonitoringId = projectActivityMonitoringModel.getProjectActivityMonitoringId();
+            if (searchProjectActivityMonitoringId == null)
+                return -1;
+
+            isPositionFound = false;
+            position = 0;
+            for (ProjectActivityMonitoringModel projectActivityMonitoringModelExist : mProjectActivityMonitoringModelList) {
+                Integer existProjectActivityMonitoringId = projectActivityMonitoringModelExist.getProjectActivityMonitoringId();
+                if (existProjectActivityMonitoringId != null) {
+                    if (existProjectActivityMonitoringId.equals(searchProjectActivityMonitoringId)) {
+                        isPositionFound = true;
+                        break;
+                    }
+                }
+                position++;
+            }
+
+            if (isPositionFound)
+                return position;
+
+            return -1;
         }
 
         @Override
@@ -150,22 +225,17 @@ public class ProjectActivityMonitoringListView {
 
         @Override
         public void onBindViewHolder(ProjectActivityMonitoringListViewHolder holder, int position) {
-            if (mProjectActivityMonitoringModels == null)
-                return;
-            if ((position + 1) > mProjectActivityMonitoringModels.length)
+            if ((position + 1) > mProjectActivityMonitoringModelList.size())
                 return;
 
-            ProjectActivityMonitoringModel projectActivityMonitoringModel = mProjectActivityMonitoringModels[position];
+            ProjectActivityMonitoringModel projectActivityMonitoringModel = mProjectActivityMonitoringModelList.get(position);
             holder.setImageRequestListener(mImageRequestListener);
             holder.setProjectActivityMonitoringModel(projectActivityMonitoringModel);
         }
 
         @Override
         public int getItemCount() {
-            if (mProjectActivityMonitoringModels == null)
-                return 0;
-
-            return mProjectActivityMonitoringModels.length;
+            return mProjectActivityMonitoringModelList.size();
         }
 
         public void setImageRequestListener(final ImageRequestListener imageRequestListener) {

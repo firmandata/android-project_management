@@ -4,10 +4,12 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import com.construction.pm.models.ProjectActivityModel;
 import com.construction.pm.models.ProjectActivityMonitoringModel;
+import com.construction.pm.utils.ConstantUtil;
 import com.construction.pm.views.inspector.InspectorDetailLayout;
 
 import java.util.ArrayList;
@@ -61,6 +63,12 @@ public class InspectorDetailActivity extends AppCompatActivity implements
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        mInspectorDetailLayout.createProjectActivityMonitoringAddMenu(menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case android.R.id.home:
@@ -77,6 +85,50 @@ public class InspectorDetailActivity extends AppCompatActivity implements
     public void onInspectorDetailRequest(ProjectActivityModel projectActivityModel) {
         mInspectorDetailLayout.setLayoutData(projectActivityModel);
         mInspectorDetailLayout.showProjectActivityMonitoringListFragment(projectActivityModel);
+    }
+
+    @Override
+    public void onProjectActivityMonitoringAddMenuClick() {
+        // -- Redirect to ProjectActivityMonitoringFormActivity --
+        Intent intent = new Intent(this, ProjectActivityMonitoringFormActivity.class);
+
+        try {
+            org.json.JSONObject projectActivityModelJsonObject = mProjectActivityModel.build();
+            String projectActivityModelJson = projectActivityModelJsonObject.toString(0);
+            intent.putExtra(ProjectActivityMonitoringFormActivity.INTENT_PARAM_PROJECT_ACTIVITY_MODEL, projectActivityModelJson);
+        } catch (org.json.JSONException ex) {
+        }
+
+        startActivityForResult(intent, ConstantUtil.INTENT_REQUEST_PROJECT_ACTIVITY_MONITORING_FORM);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        Bundle bundle = null;
+        if (data != null)
+            bundle = data.getExtras();
+
+        if (requestCode == ConstantUtil.INTENT_REQUEST_PROJECT_ACTIVITY_MONITORING_FORM) {
+            if (resultCode == ConstantUtil.INTENT_REQUEST_PROJECT_ACTIVITY_MONITORING_FORM_RESULT_SAVED) {
+                if (bundle != null) {
+                    if (bundle.containsKey(ConstantUtil.INTENT_RESULT_PROJECT_ACTIVITY_MONITORING_MODEL)) {
+                        String projectActivityMonitoringModelJson = bundle.getString(ConstantUtil.INTENT_RESULT_PROJECT_ACTIVITY_MONITORING_MODEL);
+                        if (projectActivityMonitoringModelJson != null) {
+                            ProjectActivityMonitoringModel projectActivityMonitoringModel = null;
+                            try {
+                                org.json.JSONObject jsonObject = new org.json.JSONObject(projectActivityMonitoringModelJson);
+                                projectActivityMonitoringModel = ProjectActivityMonitoringModel.build(jsonObject);
+                            } catch (org.json.JSONException ex) {
+                            }
+                            if (projectActivityMonitoringModel != null)
+                                mInspectorDetailLayout.addProjectActivityMonitoringModel(projectActivityMonitoringModel);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     @Override

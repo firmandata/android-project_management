@@ -1,6 +1,7 @@
 package com.construction.pm.views.inspector;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -11,17 +12,15 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.construction.pm.R;
-import com.construction.pm.activities.fragments.ProjectActivityMonitoringDetailFragment;
 import com.construction.pm.activities.fragments.ProjectActivityMonitoringListFragment;
 import com.construction.pm.models.ProjectActivityModel;
 import com.construction.pm.models.ProjectActivityMonitoringModel;
-import com.construction.pm.utils.DateTimeUtil;
-import com.construction.pm.utils.StringUtil;
-import com.construction.pm.utils.ViewUtil;
 import com.construction.pm.views.project_activity.ProjectActivityDetailView;
 
 public class InspectorDetailLayout implements ProjectActivityMonitoringListFragment.ProjectActivityMonitoringListFragmentListener {
@@ -38,6 +37,7 @@ public class InspectorDetailLayout implements ProjectActivityMonitoringListFragm
     protected Toolbar mToolbar;
 
     protected ProjectActivityDetailView mProjectActivityDetailView;
+    protected ProjectActivityMonitoringListFragment mProjectActivityMonitoringListFragment;
 
     protected InspectorDetailLayoutListener mInspectorDetailLayoutListener;
 
@@ -94,6 +94,22 @@ public class InspectorDetailLayout implements ProjectActivityMonitoringListFragm
             mInspectorDetailLayoutListener.onInspectorDetailRequest(projectActivityModel);
     }
 
+    public void createProjectActivityMonitoringAddMenu(final Menu menu) {
+        MenuItem menuItemUpdateActivity = menu.add(R.string.inspector_detail_layout_menu_monitoring_add);
+        menuItemUpdateActivity.setIcon(R.drawable.plus_24);
+        if (Build.VERSION.SDK_INT > 10) {
+            menuItemUpdateActivity.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        }
+        menuItemUpdateActivity.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                if (mInspectorDetailLayoutListener != null)
+                    mInspectorDetailLayoutListener.onProjectActivityMonitoringAddMenuClick();
+                return true;
+            }
+        });
+    }
+
     public void loadLayoutToFragment(final Fragment fragment, final ProjectActivityModel projectActivityModel) {
         mFragmentHandler = new Handler();
         mFragmentManager = fragment.getChildFragmentManager();
@@ -143,11 +159,16 @@ public class InspectorDetailLayout implements ProjectActivityMonitoringListFragm
     }
 
     public ProjectActivityMonitoringListFragment showProjectActivityMonitoringListFragment(final ProjectActivityModel projectActivityModel) {
-        ProjectActivityMonitoringListFragment projectActivityMonitoringListFragment = ProjectActivityMonitoringListFragment.newInstance(projectActivityModel, this);
+        if (mProjectActivityMonitoringListFragment == null)
+            mProjectActivityMonitoringListFragment = ProjectActivityMonitoringListFragment.newInstance(projectActivityModel, this);
 
-        loadFragment(projectActivityMonitoringListFragment, projectActivityModel.getTaskName(), projectActivityModel.getActivityStatus(), FRAGMENT_TAG_PROJECT_ACTIVITY_MONITORING_LIST);
+        loadFragment(mProjectActivityMonitoringListFragment, projectActivityModel.getTaskName(), projectActivityModel.getActivityStatus(), FRAGMENT_TAG_PROJECT_ACTIVITY_MONITORING_LIST);
 
-        return projectActivityMonitoringListFragment;
+        return mProjectActivityMonitoringListFragment;
+    }
+
+    public void addProjectActivityMonitoringModel(final ProjectActivityMonitoringModel projectActivityMonitoringModel) {
+        mProjectActivityMonitoringListFragment.addProjectActivityMonitoringModel(projectActivityMonitoringModel);
     }
 
     @Override
@@ -162,6 +183,7 @@ public class InspectorDetailLayout implements ProjectActivityMonitoringListFragm
 
     public interface InspectorDetailLayoutListener {
         void onInspectorDetailRequest(ProjectActivityModel projectActivityModel);
+        void onProjectActivityMonitoringAddMenuClick();
         void onProjectActivityMonitoringListItemClick(ProjectActivityMonitoringModel projectActivityMonitoringModel);
     }
 }

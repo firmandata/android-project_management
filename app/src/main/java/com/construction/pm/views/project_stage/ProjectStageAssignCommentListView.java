@@ -19,6 +19,10 @@ import com.construction.pm.views.listeners.ImageRequestClickListener;
 import com.construction.pm.views.listeners.ImageRequestListener;
 import com.construction.pm.views.file.FilePhotoListView;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class ProjectStageAssignCommentListView {
     protected Context mContext;
 
@@ -66,6 +70,14 @@ public class ProjectStageAssignCommentListView {
         mProjectStageAssignCommentListAdapter.setProjectStageAssignCommentModels(projectStageAssignCommentModels);
     }
 
+    public void addProjectStageAssignCommentModel(final ProjectStageAssignCommentModel projectStageAssignCommentModel) {
+        mProjectStageAssignCommentListAdapter.addProjectStageAssignCommentModels(new ProjectStageAssignCommentModel[] { projectStageAssignCommentModel });
+    }
+
+    public ProjectStageAssignCommentModel[] getProjectStageAssignCommentModels() {
+        return mProjectStageAssignCommentListAdapter.getProjectStageAssignCommentModels();
+    }
+
     public void setImageRequestListener(final ImageRequestListener imageRequestListener) {
         mProjectStageAssignCommentListAdapter.setImageRequestListener(imageRequestListener);
     }
@@ -80,33 +92,107 @@ public class ProjectStageAssignCommentListView {
 
     protected class ProjectStageAssignCommentListAdapter extends RecyclerView.Adapter<ProjectStageAssignCommentListViewHolder> {
 
-        protected ProjectStageAssignCommentModel[] mProjectStageAssignCommentModels;
+        protected List<ProjectStageAssignCommentModel> mProjectStageAssignCommentModelList;
 
         protected ImageRequestListener mImageRequestListener;
         protected ImageRequestClickListener mImageRequestClickListener;
 
         public ProjectStageAssignCommentListAdapter() {
-
+            mProjectStageAssignCommentModelList = new ArrayList<ProjectStageAssignCommentModel>();
         }
 
         public ProjectStageAssignCommentListAdapter(final ProjectStageAssignCommentModel[] projectStageAssignCommentModels) {
             this();
-            mProjectStageAssignCommentModels = projectStageAssignCommentModels;
+            mProjectStageAssignCommentModelList = new ArrayList<ProjectStageAssignCommentModel>(Arrays.asList(projectStageAssignCommentModels));
         }
 
         public void setProjectStageAssignCommentModels(final ProjectStageAssignCommentModel[] projectStageAssignCommentModels) {
-            mProjectStageAssignCommentModels = projectStageAssignCommentModels;
-
+            mProjectStageAssignCommentModelList = new ArrayList<ProjectStageAssignCommentModel>(Arrays.asList(projectStageAssignCommentModels));
             notifyDataSetChanged();
         }
 
-        public ProjectStageAssignCommentModel getItem(final int position) {
-            if (mProjectStageAssignCommentModels == null)
-                return null;
-            if ((position + 1) > mProjectStageAssignCommentModels.length)
+        public void addProjectStageAssignCommentModels(final ProjectStageAssignCommentModel[] projectStageAssignCommentModels) {
+            List<ProjectStageAssignCommentModel> newProjectStageAssignCommentModelList = new ArrayList<ProjectStageAssignCommentModel>();
+            for (ProjectStageAssignCommentModel newProjectStageAssignCommentModel : projectStageAssignCommentModels) {
+                int position = getPosition(newProjectStageAssignCommentModel);
+                if (position >= 0) {
+                    // -- replace item --
+                    setProjectStageAssignCommentModel(position, newProjectStageAssignCommentModel);
+                } else {
+                    // -- new items --
+                    newProjectStageAssignCommentModelList.add(newProjectStageAssignCommentModel);
+                }
+            }
+            if (newProjectStageAssignCommentModelList.size() > 0) {
+                mProjectStageAssignCommentModelList.addAll(0, newProjectStageAssignCommentModelList);
+                notifyItemRangeInserted(0, newProjectStageAssignCommentModelList.size());
+            }
+        }
+
+        public void setProjectStageAssignCommentModel(final int position, final ProjectStageAssignCommentModel projectStageAssignCommentModel) {
+            if ((position + 1) > mProjectStageAssignCommentModelList.size())
+                return;
+
+            mProjectStageAssignCommentModelList.set(position, projectStageAssignCommentModel);
+            notifyItemChanged(position);
+        }
+
+        public ProjectStageAssignCommentModel[] getProjectStageAssignCommentModels() {
+            ProjectStageAssignCommentModel[] projectStageAssignCommentModels = new ProjectStageAssignCommentModel[mProjectStageAssignCommentModelList.size()];
+            mProjectStageAssignCommentModelList.toArray(projectStageAssignCommentModels);
+            return projectStageAssignCommentModels;
+        }
+
+        public ProjectStageAssignCommentModel getProjectStageAssignCommentModel(final int position) {
+            if ((position + 1) > mProjectStageAssignCommentModelList.size())
                 return null;
 
-            return mProjectStageAssignCommentModels[position];
+            return mProjectStageAssignCommentModelList.get(position);
+        }
+
+        public int getPosition(final ProjectStageAssignCommentModel projectStageAssignCommentModel) {
+            if (projectStageAssignCommentModel == null)
+                return -1;
+
+            boolean isPositionFound;
+            int position;
+
+            // -- Search by object --
+            isPositionFound = false;
+            position = 0;
+            for (ProjectStageAssignCommentModel projectStageAssignCommentModelExist : mProjectStageAssignCommentModelList) {
+                if (projectStageAssignCommentModelExist.equals(projectStageAssignCommentModel)) {
+                    isPositionFound = true;
+                    break;
+                }
+                position++;
+            }
+
+            if (isPositionFound)
+                return position;
+
+            // -- Search by id --
+            Integer searchProjectStageAssignCommentId = projectStageAssignCommentModel.getProjectStageAssignCommentId();
+            if (searchProjectStageAssignCommentId == null)
+                return -1;
+
+            isPositionFound = false;
+            position = 0;
+            for (ProjectStageAssignCommentModel projectStageAssignCommentModelExist : mProjectStageAssignCommentModelList) {
+                Integer existProjectStageAssignCommentId = projectStageAssignCommentModelExist.getProjectStageAssignCommentId();
+                if (existProjectStageAssignCommentId != null) {
+                    if (existProjectStageAssignCommentId.equals(searchProjectStageAssignCommentId)) {
+                        isPositionFound = true;
+                        break;
+                    }
+                }
+                position++;
+            }
+
+            if (isPositionFound)
+                return position;
+
+            return -1;
         }
 
         @Override
@@ -117,12 +203,10 @@ public class ProjectStageAssignCommentListView {
 
         @Override
         public void onBindViewHolder(ProjectStageAssignCommentListViewHolder holder, int position) {
-            if (mProjectStageAssignCommentModels == null)
-                return;
-            if ((position + 1) > mProjectStageAssignCommentModels.length)
+            if ((position + 1) > mProjectStageAssignCommentModelList.size())
                 return;
 
-            ProjectStageAssignCommentModel projectStageAssignCommentModel = mProjectStageAssignCommentModels[position];
+            ProjectStageAssignCommentModel projectStageAssignCommentModel = mProjectStageAssignCommentModelList.get(position);
             holder.setImageRequestListener(mImageRequestListener);
             holder.setImageRequestClickListener(mImageRequestClickListener);
             holder.setProjectStageAssignCommentModel(projectStageAssignCommentModel);
@@ -130,10 +214,7 @@ public class ProjectStageAssignCommentListView {
 
         @Override
         public int getItemCount() {
-            if (mProjectStageAssignCommentModels == null)
-                return 0;
-
-            return mProjectStageAssignCommentModels.length;
+            return mProjectStageAssignCommentModelList.size();
         }
 
         public void setImageRequestListener(final ImageRequestListener imageRequestListener) {

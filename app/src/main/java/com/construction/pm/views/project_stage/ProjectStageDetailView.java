@@ -25,6 +25,8 @@ public class ProjectStageDetailView {
     protected AppCompatTextView mStageNextLocation;
     protected AppCompatTextView mStageNextMessage;
 
+    protected ProjectStageModel mProjectStageModel;
+
     public ProjectStageDetailView(final Context context) {
         mContext = context;
     }
@@ -64,6 +66,8 @@ public class ProjectStageDetailView {
         if (projectStageModel == null)
             return;
 
+        mProjectStageModel = projectStageModel;
+
         mStageDate.setText(DateTimeUtil.ToDateDisplayString(projectStageModel.getStageDate()));
         mStageCode.setText(projectStageModel.getStageCode());
         mStageFromCode.setText(projectStageModel.getStageFromCode());
@@ -72,5 +76,9 @@ public class ProjectStageDetailView {
         mStageNextSubject.setText(projectStageModel.getStageNextSubject());
         mStageNextLocation.setText(projectStageModel.getStageNextLocation());
         mStageNextMessage.setText(projectStageModel.getStageNextMessage());
+    }
+
+    public ProjectStageModel getProjectStageModel() {
+        return mProjectStageModel;
     }
 }

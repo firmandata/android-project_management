@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 
@@ -15,6 +16,7 @@ import com.construction.pm.asynctask.param.ProjectStageGetAsyncTaskParam;
 import com.construction.pm.asynctask.result.FileGetAsyncTaskResult;
 import com.construction.pm.asynctask.result.ProjectStageGetAsyncTaskResult;
 import com.construction.pm.models.FileModel;
+import com.construction.pm.models.ProjectMemberModel;
 import com.construction.pm.models.ProjectStageAssignCommentModel;
 import com.construction.pm.models.ProjectStageAssignmentModel;
 import com.construction.pm.models.ProjectStageModel;
@@ -22,6 +24,7 @@ import com.construction.pm.models.system.SessionLoginModel;
 import com.construction.pm.models.system.SettingUserModel;
 import com.construction.pm.persistence.SessionPersistent;
 import com.construction.pm.persistence.SettingPersistent;
+import com.construction.pm.utils.ConstantUtil;
 import com.construction.pm.utils.ViewUtil;
 import com.construction.pm.views.listeners.ImageRequestClickListener;
 import com.construction.pm.views.listeners.ImageRequestListener;
@@ -84,6 +87,12 @@ public class ProjectStageActivity extends AppCompatActivity implements
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        mProjectStageLayout.createProjectStageAssignCommentAddMenu(menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case android.R.id.home:
@@ -133,6 +142,91 @@ public class ProjectStageActivity extends AppCompatActivity implements
 
         // -- Do ProjectStageGetAsyncTask --
         projectStageGetAsyncTask.execute(new ProjectStageGetAsyncTaskParam(this, settingUserModel, projectStageModel, sessionLoginModel.getProjectMemberModel()));
+    }
+
+    @Override
+    public void onProjectStageAssignCommentAddMenuClick() {
+        int projectMemberId = 0;
+        int projectStageId = 0;
+
+        // -- Get ProjectMemberModel form SessionLoginModel in SessionPersistent --
+        SessionPersistent sessionPersistent = new SessionPersistent(this);
+        SessionLoginModel sessionLoginModel = sessionPersistent.getSessionLoginModel();
+        ProjectMemberModel projectMemberModel = sessionLoginModel.getProjectMemberModel();
+        if (projectMemberModel != null) {
+            if (projectMemberModel.getProjectMemberId() != null)
+                projectMemberId = projectMemberModel.getProjectMemberId();
+        }
+
+        // -- Get ProjectStageModel --
+        ProjectStageModel projectStageModel = mProjectStageLayout.getProjectStageModel();
+        if (projectStageModel != null) {
+            if (projectStageModel.getProjectStageId() != null)
+                projectStageId = projectStageModel.getProjectStageId();
+        }
+
+        // -- Get ProjectStageAssignmentModel --
+        ProjectStageAssignmentModel projectStageAssignmentModel = null;
+        ProjectStageAssignmentModel[] projectStageAssignmentModels = mProjectStageLayout.getProjectStageAssignmentModels();
+        if (projectStageAssignmentModels != null) {
+            for (ProjectStageAssignmentModel existProjectStageAssignmentModel : projectStageAssignmentModels) {
+                int existProjectMemberId = 0;
+                if (existProjectStageAssignmentModel.getProjectMemberId() != null)
+                    existProjectMemberId = existProjectStageAssignmentModel.getProjectMemberId();
+                int existProjectStageId = 0;
+                if (existProjectStageAssignmentModel.getProjectStageId() != null)
+                    existProjectStageId = existProjectStageAssignmentModel.getProjectStageId();
+
+                if (projectMemberId == existProjectMemberId && projectStageId == existProjectStageId) {
+                    projectStageAssignmentModel = existProjectStageAssignmentModel;
+                    break;
+                }
+            }
+        }
+
+        if (projectStageAssignmentModel == null)
+            return;
+
+        // -- Redirect to ProjectStageAssignCommentFormActivity --
+        Intent intent = new Intent(this, ProjectStageAssignCommentFormActivity.class);
+
+        try {
+            org.json.JSONObject projectStageAssignmentModelJsonObject = projectStageAssignmentModel.build();
+            String projectStageAssignmentModelJson = projectStageAssignmentModelJsonObject.toString(0);
+            intent.putExtra(ProjectStageAssignCommentFormActivity.INTENT_PARAM_PROJECT_STAGE_ASSIGNMENT_MODEL, projectStageAssignmentModelJson);
+        } catch (org.json.JSONException ex) {
+        }
+
+        startActivityForResult(intent, ConstantUtil.INTENT_REQUEST_PROJECT_STAGE_ASSIGN_COMMENT_FORM);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        Bundle bundle = null;
+        if (data != null)
+            bundle = data.getExtras();
+
+        if (requestCode == ConstantUtil.INTENT_REQUEST_PROJECT_STAGE_ASSIGN_COMMENT_FORM) {
+            if (resultCode == ConstantUtil.INTENT_REQUEST_PROJECT_STAGE_ASSIGN_COMMENT_FORM_RESULT_SAVED) {
+                if (bundle != null) {
+                    if (bundle.containsKey(ConstantUtil.INTENT_RESULT_PROJECT_STAGE_ASSIGN_COMMENT_MODEL)) {
+                        String projectStageAssignCommentModelJson = bundle.getString(ConstantUtil.INTENT_RESULT_PROJECT_STAGE_ASSIGN_COMMENT_MODEL);
+                        if (projectStageAssignCommentModelJson != null) {
+                            ProjectStageAssignCommentModel projectStageAssignCommentModel = null;
+                            try {
+                                org.json.JSONObject jsonObject = new org.json.JSONObject(projectStageAssignCommentModelJson);
+                                projectStageAssignCommentModel = ProjectStageAssignCommentModel.build(jsonObject);
+                            } catch (org.json.JSONException ex) {
+                            }
+                            if (projectStageAssignCommentModel != null)
+                                mProjectStageLayout.addProjectStageAssignCommentModel(projectStageAssignCommentModel);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     protected void onProjectStageRequestProgress(final String progressMessage) {
