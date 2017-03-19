@@ -24,7 +24,7 @@ import com.construction.pm.utils.DateTimeUtil;
 import com.construction.pm.views.listeners.ImageRequestClickListener;
 import com.construction.pm.views.listeners.ImageRequestListener;
 
-public class ProjectStageLayout {
+public class ProjectStageLayout implements ProjectStageAssignCommentListView.ProjectStageAssignCommentListListener {
     protected Context mContext;
     protected Handler mFragmentHandler;
     protected FragmentManager mFragmentManager;
@@ -65,6 +65,13 @@ public class ProjectStageLayout {
         mProjectStageDetailView = new ProjectStageDetailView(mContext, (RelativeLayout) mProjectStageLayout.findViewById(R.id.project_stage_detail_view));
         mProjectStageAssignmentListView = new ProjectStageAssignmentListView(mContext, (RelativeLayout) mProjectStageLayout.findViewById(R.id.project_stage_assignment_list_view));
         mProjectStageAssignCommentListView = new ProjectStageAssignCommentListView(mContext, (RelativeLayout) mProjectStageLayout.findViewById(R.id.project_stage_assign_comment_list_view));
+        mProjectStageAssignCommentListView.setProjectStageAssignCommentListListener(this);
+    }
+
+    @Override
+    public void onProjectStageAssignCommentItemClick(ProjectStageAssignCommentModel projectStageAssignCommentModel) {
+        if (mProjectStageLayoutListener != null)
+            mProjectStageLayoutListener.onProjectStageAssignCommentItemClick(projectStageAssignCommentModel);
     }
 
     public CoordinatorLayout getLayout() {
@@ -157,5 +164,6 @@ public class ProjectStageLayout {
     public interface ProjectStageLayoutListener {
         void onProjectStageRequest(ProjectStageModel projectStageModel);
         void onProjectStageAssignCommentAddMenuClick();
+        void onProjectStageAssignCommentItemClick(ProjectStageAssignCommentModel projectStageAssignCommentModel);
     }
 }

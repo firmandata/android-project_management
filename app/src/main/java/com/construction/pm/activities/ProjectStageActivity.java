@@ -201,6 +201,21 @@ public class ProjectStageActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void onProjectStageAssignCommentItemClick(ProjectStageAssignCommentModel projectStageAssignCommentModel) {
+        // -- Redirect to ProjectStageAssignCommentFormActivity --
+        Intent intent = new Intent(this, ProjectStageAssignCommentFormActivity.class);
+
+        try {
+            org.json.JSONObject projectStageAssignCommentModelJsonObject = projectStageAssignCommentModel.build();
+            String projectStageAssignCommentModelJson = projectStageAssignCommentModelJsonObject.toString(0);
+            intent.putExtra(ProjectStageAssignCommentFormActivity.INTENT_PARAM_PROJECT_STAGE_ASSIGN_COMMENT_MODEL, projectStageAssignCommentModelJson);
+        } catch (org.json.JSONException ex) {
+        }
+
+        startActivityForResult(intent, ConstantUtil.INTENT_REQUEST_PROJECT_STAGE_ASSIGN_COMMENT_FORM);
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 

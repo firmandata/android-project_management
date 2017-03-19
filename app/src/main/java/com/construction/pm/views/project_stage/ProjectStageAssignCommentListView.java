@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.construction.pm.R;
+import com.construction.pm.libraries.widgets.RecyclerItemTouchListener;
 import com.construction.pm.models.ProjectStageAssignCommentModel;
 import com.construction.pm.utils.DateTimeUtil;
 import com.construction.pm.views.listeners.ImageRequestClickListener;
@@ -30,6 +31,8 @@ public class ProjectStageAssignCommentListView {
 
     protected RecyclerView mProjectStageAssignCommentList;
     protected ProjectStageAssignCommentListAdapter mProjectStageAssignCommentListAdapter;
+
+    protected ProjectStageAssignCommentListListener mProjectStageAssignCommentListListener;
 
     public ProjectStageAssignCommentListView(final Context context) {
         mContext = context;
@@ -55,6 +58,21 @@ public class ProjectStageAssignCommentListView {
         mProjectStageAssignCommentList = (RecyclerView) mProjectStageAssignCommentListView.findViewById(R.id.projectStageAssignCommentList);
         mProjectStageAssignCommentList.setItemAnimator(new DefaultItemAnimator());
         mProjectStageAssignCommentList.setNestedScrollingEnabled(false);
+        mProjectStageAssignCommentList.addOnItemTouchListener(new RecyclerItemTouchListener(mContext, mProjectStageAssignCommentList, new RecyclerItemTouchListener.ItemClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                ProjectStageAssignCommentModel projectStageAssignCommentModel = mProjectStageAssignCommentListAdapter.getProjectStageAssignCommentModel(position);
+                if (projectStageAssignCommentModel != null) {
+                    if (mProjectStageAssignCommentListListener != null)
+                        mProjectStageAssignCommentListListener.onProjectStageAssignCommentItemClick(projectStageAssignCommentModel);
+                }
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
+        }));
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(mContext);
         mProjectStageAssignCommentList.setLayoutManager(layoutManager);
@@ -88,6 +106,14 @@ public class ProjectStageAssignCommentListView {
 
     public RelativeLayout getView() {
         return mProjectStageAssignCommentListView;
+    }
+
+    public void setProjectStageAssignCommentListListener(final ProjectStageAssignCommentListListener projectStageAssignCommentListListener) {
+        mProjectStageAssignCommentListListener = projectStageAssignCommentListListener;
+    }
+
+    public interface ProjectStageAssignCommentListListener {
+        void onProjectStageAssignCommentItemClick(ProjectStageAssignCommentModel projectStageAssignCommentModel);
     }
 
     protected class ProjectStageAssignCommentListAdapter extends RecyclerView.Adapter<ProjectStageAssignCommentListViewHolder> {
