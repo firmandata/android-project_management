@@ -48,7 +48,7 @@ public class ProjectActivityUpdateFormActivity extends AppCompatActivity impleme
 
         // -- Prepare ProjectActivityUpdateFormLayout --
         mProjectActivityUpdateFormLayout = ProjectActivityUpdateFormLayout.buildProjectActivityUpdateFormLayout(this, null);
-        mProjectActivityUpdateFormLayout.setProjectActivityMonitoringDetailLayoutListener(this);
+        mProjectActivityUpdateFormLayout.setProjectActivityMonitoringFormLayoutListener(this);
 
         // -- Load to Activity --
         mProjectActivityUpdateFormLayout.loadLayoutToActivity(this);
@@ -100,7 +100,7 @@ public class ProjectActivityUpdateFormActivity extends AppCompatActivity impleme
     }
 
     @Override
-    public void onProjectActivityUpdateFormLayoutUpdateMenuClick() {
+    public void onProjectActivityUpdateFormLayoutSaveMenuClick() {
         ProjectActivityUpdateModel projectActivityUpdateModel = mProjectActivityUpdateFormLayout.getProjectActivityUpdateModel();
         if (projectActivityUpdateModel == null)
             return;
@@ -169,7 +169,7 @@ public class ProjectActivityUpdateFormActivity extends AppCompatActivity impleme
 
             Intent intent = new Intent();
             intent.putExtra(ConstantUtil.INTENT_RESULT_PROJECT_ACTIVITY_UPDATE_MODEL, projectActivityUpdateModelJson);
-            setResult(ConstantUtil.INTENT_REQUEST_PROJECT_ACTIVITY_UPDATE_FORM_RESULT_UPDATED, intent);
+            setResult(ConstantUtil.INTENT_REQUEST_PROJECT_ACTIVITY_UPDATE_FORM_RESULT_SAVED, intent);
 
             finish();
         } else {

@@ -126,7 +126,7 @@ public class ProjectActivityUpdateFormLayout {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
                 if (mProjectActivityUpdateFormLayoutListener != null)
-                    mProjectActivityUpdateFormLayoutListener.onProjectActivityUpdateFormLayoutUpdateMenuClick();
+                    mProjectActivityUpdateFormLayoutListener.onProjectActivityUpdateFormLayoutSaveMenuClick();
                 return true;
             }
         });
@@ -189,11 +189,11 @@ public class ProjectActivityUpdateFormLayout {
         return mProjectActivityUpdateFormFragment.getProjectActivityUpdateModel();
     }
 
-    public void setProjectActivityMonitoringDetailLayoutListener(final ProjectActivityUpdateFormLayoutListener projectActivityUpdateFormLayoutListener) {
+    public void setProjectActivityMonitoringFormLayoutListener(final ProjectActivityUpdateFormLayoutListener projectActivityUpdateFormLayoutListener) {
         mProjectActivityUpdateFormLayoutListener = projectActivityUpdateFormLayoutListener;
     }
 
     public interface ProjectActivityUpdateFormLayoutListener {
-        void onProjectActivityUpdateFormLayoutUpdateMenuClick();
+        void onProjectActivityUpdateFormLayoutSaveMenuClick();
     }
 }

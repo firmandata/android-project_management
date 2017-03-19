@@ -69,6 +69,12 @@
             android:launchMode="singleTask" />
 
         <activity
+            android:name=".activities.ProjectActivityMonitoringFormActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTask" />
+
+        <activity
             android:name=".activities.ProjectActivityUpdateFormActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -87,7 +93,7 @@
             android:launchMode="singleTask" />
 
         <activity
-            android:name=".activities.ProjectStageAssignCommentActivity"
+            android:name=".activities.ProjectStageAssignCommentFormActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTask" />

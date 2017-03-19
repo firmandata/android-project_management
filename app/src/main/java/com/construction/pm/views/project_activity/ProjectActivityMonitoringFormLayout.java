@@ -126,7 +126,7 @@ public class ProjectActivityMonitoringFormLayout {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
                 if (mProjectActivityMonitoringFormLayoutListener != null)
-                    mProjectActivityMonitoringFormLayoutListener.onProjectActivityMonitoringFormLayoutMonitoringMenuClick();
+                    mProjectActivityMonitoringFormLayoutListener.onProjectActivityMonitoringFormLayoutSaveMenuClick();
                 return true;
             }
         });
@@ -189,11 +189,11 @@ public class ProjectActivityMonitoringFormLayout {
         return mProjectActivityMonitoringFormFragment.getProjectActivityMonitoringModel();
     }
 
-    public void setProjectActivityMonitoringDetailLayoutListener(final ProjectActivityMonitoringFormLayoutListener projectActivityMonitoringFormLayoutListener) {
+    public void setProjectActivityMonitoringFormLayoutListener(final ProjectActivityMonitoringFormLayoutListener projectActivityMonitoringFormLayoutListener) {
         mProjectActivityMonitoringFormLayoutListener = projectActivityMonitoringFormLayoutListener;
     }
 
     public interface ProjectActivityMonitoringFormLayoutListener {
-        void onProjectActivityMonitoringFormLayoutMonitoringMenuClick();
+        void onProjectActivityMonitoringFormLayoutSaveMenuClick();
     }
 }

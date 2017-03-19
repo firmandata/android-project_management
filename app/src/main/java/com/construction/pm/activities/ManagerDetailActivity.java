@@ -164,7 +164,7 @@ public class ManagerDetailActivity extends AppCompatActivity implements
                 }
             }
         } else if (requestCode == ConstantUtil.INTENT_REQUEST_PROJECT_ACTIVITY_UPDATE_FORM) {
-            if (resultCode == ConstantUtil.INTENT_REQUEST_PROJECT_ACTIVITY_UPDATE_FORM_RESULT_UPDATED) {
+            if (resultCode == ConstantUtil.INTENT_REQUEST_PROJECT_ACTIVITY_UPDATE_FORM_RESULT_SAVED) {
                 if (bundle != null) {
                     if (bundle.containsKey(ConstantUtil.INTENT_RESULT_PROJECT_ACTIVITY_UPDATE_MODEL)) {
                         String projectActivityUpdateModelJson = bundle.getString(ConstantUtil.INTENT_RESULT_PROJECT_ACTIVITY_UPDATE_MODEL);

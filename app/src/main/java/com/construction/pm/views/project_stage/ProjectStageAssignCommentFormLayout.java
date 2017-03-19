@@ -126,7 +126,7 @@ public class ProjectStageAssignCommentFormLayout {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
                 if (mProjectStageAssignCommentFormLayoutListener != null)
-                    mProjectStageAssignCommentFormLayoutListener.onProjectStageAssignCommentFormLayoutMonitoringMenuClick();
+                    mProjectStageAssignCommentFormLayoutListener.onProjectStageAssignCommentFormLayoutSaveMenuClick();
                 return true;
             }
         });
@@ -189,11 +189,11 @@ public class ProjectStageAssignCommentFormLayout {
         return mProjectStageAssignCommentFormFragment.getProjectStageAssignCommentModel();
     }
 
-    public void setProjectStageAssignCommentDetailLayoutListener(final ProjectStageAssignCommentFormLayoutListener projectStageAssignCommentFormLayoutListener) {
+    public void setProjectStageAssignCommentFormLayoutListener(final ProjectStageAssignCommentFormLayoutListener projectStageAssignCommentFormLayoutListener) {
         mProjectStageAssignCommentFormLayoutListener = projectStageAssignCommentFormLayoutListener;
     }
 
     public interface ProjectStageAssignCommentFormLayoutListener {
-        void onProjectStageAssignCommentFormLayoutMonitoringMenuClick();
+        void onProjectStageAssignCommentFormLayoutSaveMenuClick();
     }
 }
