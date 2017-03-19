@@ -18,6 +18,10 @@ import com.construction.pm.models.ProjectActivityUpdateModel;
 import com.construction.pm.utils.DateTimeUtil;
 import com.construction.pm.utils.StringUtil;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class ProjectActivityUpdateListView {
     protected Context mContext;
 
@@ -57,7 +61,7 @@ public class ProjectActivityUpdateListView {
         mProjectActivityUpdateList.addOnItemTouchListener(new RecyclerItemTouchListener(mContext, mProjectActivityUpdateList, new RecyclerItemTouchListener.ItemClickListener() {
             @Override
             public void onClick(View view, int position) {
-                ProjectActivityUpdateModel projectActivityUpdateModel = mProjectActivityUpdateListAdapter.getItem(position);
+                ProjectActivityUpdateModel projectActivityUpdateModel = mProjectActivityUpdateListAdapter.getProjectActivityUpdateModel(position);
                 if (projectActivityUpdateModel != null) {
                     if (mProjectActivityUpdateListListener != null)
                         mProjectActivityUpdateListListener.onProjectActivityUpdateListItemClick(projectActivityUpdateModel);
@@ -91,6 +95,10 @@ public class ProjectActivityUpdateListView {
         mProjectActivityUpdateListAdapter.setProjectActivityUpdateModels(projectActivityUpdateModels);
     }
 
+    public void addProjectActivityUpdateModel(final ProjectActivityUpdateModel projectActivityUpdateModel) {
+        mProjectActivityUpdateListAdapter.addProjectActivityUpdateModels(new ProjectActivityUpdateModel[] { projectActivityUpdateModel });
+    }
+
     public RelativeLayout getView() {
         return mProjectActivityUpdateListView;
     }
@@ -106,30 +114,98 @@ public class ProjectActivityUpdateListView {
 
     protected class ProjectActivityUpdateListAdapter extends RecyclerView.Adapter<ProjectActivityUpdateListViewHolder> {
 
-        protected ProjectActivityUpdateModel[] mProjectActivityUpdateModels;
+        protected List<ProjectActivityUpdateModel> mProjectActivityUpdateModelList;
 
         public ProjectActivityUpdateListAdapter() {
-
+            mProjectActivityUpdateModelList = new ArrayList<ProjectActivityUpdateModel>();
         }
 
         public ProjectActivityUpdateListAdapter(final ProjectActivityUpdateModel[] projectActivityUpdateModels) {
             this();
-            mProjectActivityUpdateModels = projectActivityUpdateModels;
+            mProjectActivityUpdateModelList = new ArrayList<ProjectActivityUpdateModel>(Arrays.asList(projectActivityUpdateModels));
         }
 
         public void setProjectActivityUpdateModels(final ProjectActivityUpdateModel[] projectActivityUpdateModels) {
-            mProjectActivityUpdateModels = projectActivityUpdateModels;
-
+            mProjectActivityUpdateModelList = new ArrayList<ProjectActivityUpdateModel>(Arrays.asList(projectActivityUpdateModels));
             notifyDataSetChanged();
         }
 
-        public ProjectActivityUpdateModel getItem(final int position) {
-            if (mProjectActivityUpdateModels == null)
-                return null;
-            if ((position + 1) > mProjectActivityUpdateModels.length)
+        public void addProjectActivityUpdateModels(final ProjectActivityUpdateModel[] projectActivityUpdateModels) {
+            List<ProjectActivityUpdateModel> newProjectActivityUpdateModelList = new ArrayList<ProjectActivityUpdateModel>();
+            for (ProjectActivityUpdateModel newProjectActivityUpdateModel : projectActivityUpdateModels) {
+                int position = getPosition(newProjectActivityUpdateModel);
+                if (position >= 0) {
+                    // -- replace item --
+                    setProjectActivityUpdateModel(position, newProjectActivityUpdateModel);
+                } else {
+                    // -- new items --
+                    newProjectActivityUpdateModelList.add(newProjectActivityUpdateModel);
+                }
+            }
+            if (newProjectActivityUpdateModelList.size() > 0) {
+                mProjectActivityUpdateModelList.addAll(0, newProjectActivityUpdateModelList);
+                notifyItemRangeInserted(0, newProjectActivityUpdateModelList.size());
+            }
+        }
+
+        public void setProjectActivityUpdateModel(final int position, final ProjectActivityUpdateModel projectActivityUpdateModel) {
+            if ((position + 1) > mProjectActivityUpdateModelList.size())
+                return;
+
+            mProjectActivityUpdateModelList.set(position, projectActivityUpdateModel);
+            notifyItemChanged(position);
+        }
+
+        public ProjectActivityUpdateModel getProjectActivityUpdateModel(final int position) {
+            if ((position + 1) > mProjectActivityUpdateModelList.size())
                 return null;
 
-            return mProjectActivityUpdateModels[position];
+            return mProjectActivityUpdateModelList.get(position);
+        }
+
+        public int getPosition(final ProjectActivityUpdateModel projectActivityUpdateModel) {
+            if (projectActivityUpdateModel == null)
+                return -1;
+
+            boolean isPositionFound;
+            int position;
+
+            // -- Search by object --
+            isPositionFound = false;
+            position = 0;
+            for (ProjectActivityUpdateModel projectActivityUpdateModelExist : mProjectActivityUpdateModelList) {
+                if (projectActivityUpdateModelExist.equals(projectActivityUpdateModel)) {
+                    isPositionFound = true;
+                    break;
+                }
+                position++;
+            }
+
+            if (isPositionFound)
+                return position;
+
+            // -- Search by id --
+            Integer searchProjectActivityUpdateId = projectActivityUpdateModel.getProjectActivityUpdateId();
+            if (searchProjectActivityUpdateId == null)
+                return -1;
+
+            isPositionFound = false;
+            position = 0;
+            for (ProjectActivityUpdateModel projectActivityUpdateModelExist : mProjectActivityUpdateModelList) {
+                Integer existProjectActivityUpdateId = projectActivityUpdateModelExist.getProjectActivityUpdateId();
+                if (existProjectActivityUpdateId != null) {
+                    if (existProjectActivityUpdateId.equals(searchProjectActivityUpdateId)) {
+                        isPositionFound = true;
+                        break;
+                    }
+                }
+                position++;
+            }
+
+            if (isPositionFound)
+                return position;
+
+            return -1;
         }
 
         @Override
@@ -140,21 +216,16 @@ public class ProjectActivityUpdateListView {
 
         @Override
         public void onBindViewHolder(ProjectActivityUpdateListViewHolder holder, int position) {
-            if (mProjectActivityUpdateModels == null)
-                return;
-            if ((position + 1) > mProjectActivityUpdateModels.length)
+            if ((position + 1) > mProjectActivityUpdateModelList.size())
                 return;
 
-            ProjectActivityUpdateModel projectActivityUpdateModel = mProjectActivityUpdateModels[position];
+            ProjectActivityUpdateModel projectActivityUpdateModel = mProjectActivityUpdateModelList.get(position);
             holder.setProjectActivityUpdateModel(projectActivityUpdateModel);
         }
 
         @Override
         public int getItemCount() {
-            if (mProjectActivityUpdateModels == null)
-                return 0;
-
-            return mProjectActivityUpdateModels.length;
+            return mProjectActivityUpdateModelList.size();
         }
     }
 

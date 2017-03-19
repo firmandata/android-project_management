@@ -124,9 +124,19 @@ public class ManagerDetailView implements
         projectActivityUpdateListFragment.reloadProjectActivityUpdateList(projectActivityModel);
     }
 
+    public void addProjectActivityUpdateModel(final ProjectActivityUpdateModel projectActivityUpdateModel) {
+        ProjectActivityUpdateListFragment projectActivityUpdateListFragment = (ProjectActivityUpdateListFragment) mViewPagerAdapter.getItem(0);
+        projectActivityUpdateListFragment.addProjectActivityUpdateModel(projectActivityUpdateModel);
+    }
+
     public void reloadProjectActivityMonitoringList(final ProjectActivityModel projectActivityModel) {
         ProjectActivityMonitoringListFragment projectActivityMonitoringListFragment = (ProjectActivityMonitoringListFragment) mViewPagerAdapter.getItem(1);
         projectActivityMonitoringListFragment.reloadProjectActivityMonitoringListRequest(projectActivityModel);
+    }
+
+    public void addProjectActivityMonitoringModel(final ProjectActivityMonitoringModel projectActivityMonitoringModel) {
+        ProjectActivityMonitoringListFragment projectActivityMonitoringListFragment = (ProjectActivityMonitoringListFragment) mViewPagerAdapter.getItem(1);
+        projectActivityMonitoringListFragment.addProjectActivityMonitoringModel(projectActivityMonitoringModel);
     }
 
     protected class ViewPagerAdapter extends FragmentPagerAdapter {

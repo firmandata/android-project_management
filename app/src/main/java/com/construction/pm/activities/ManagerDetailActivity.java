@@ -177,7 +177,7 @@ public class ManagerDetailActivity extends AppCompatActivity implements
                             }
                             if (projectActivityUpdateModel != null) {
                                 reloadProjectActivityGet(mProjectActivityModel);
-                                mManagerDetailLayout.reloadProjectActivityUpdateList(mProjectActivityModel);
+                                mManagerDetailLayout.addProjectActivityUpdateModel(projectActivityUpdateModel);
                             }
                         }
                     }

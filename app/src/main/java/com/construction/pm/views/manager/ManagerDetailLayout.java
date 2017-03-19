@@ -161,9 +161,19 @@ public class ManagerDetailLayout implements ManagerDetailFragment.ManagerDetailF
             mManagerDetailFragment.reloadProjectActivityUpdateList(projectActivityModel);
     }
 
+    public void addProjectActivityUpdateModel(final ProjectActivityUpdateModel projectActivityUpdateModel) {
+        if (mManagerDetailFragment != null)
+            mManagerDetailFragment.addProjectActivityUpdateModel(projectActivityUpdateModel);
+    }
+
     public void reloadProjectActivityMonitoringList(final ProjectActivityModel projectActivityModel) {
         if (mManagerDetailFragment != null)
             mManagerDetailFragment.reloadProjectActivityMonitoringList(projectActivityModel);
+    }
+
+    public void addProjectActivityMonitoringModel(final ProjectActivityMonitoringModel projectActivityMonitoringModel) {
+        if (mManagerDetailFragment != null)
+            mManagerDetailFragment.addProjectActivityMonitoringModel(projectActivityMonitoringModel);
     }
 
     @Override

@@ -114,8 +114,16 @@ public class ManagerDetailFragment extends Fragment implements ManagerDetailView
         mManagerDetailView.reloadProjectActivityUpdateList(projectActivityModel);
     }
 
+    public void addProjectActivityUpdateModel(final ProjectActivityUpdateModel projectActivityUpdateModel) {
+        mManagerDetailView.addProjectActivityUpdateModel(projectActivityUpdateModel);
+    }
+
     public void reloadProjectActivityMonitoringList(final ProjectActivityModel projectActivityModel) {
         mManagerDetailView.reloadProjectActivityMonitoringList(projectActivityModel);
+    }
+
+    public void addProjectActivityMonitoringModel(final ProjectActivityMonitoringModel projectActivityMonitoringModel) {
+        mManagerDetailView.addProjectActivityMonitoringModel(projectActivityMonitoringModel);
     }
 
     @Override
