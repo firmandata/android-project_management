@@ -20,51 +20,51 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 
 import com.construction.pm.R;
-import com.construction.pm.activities.fragments.ProjectActivityUpdateFormFragment;
+import com.construction.pm.activities.fragments.ProjectActivityMonitoringFormFragment;
+import com.construction.pm.models.ProjectActivityModel;
 import com.construction.pm.models.ProjectActivityMonitoringModel;
-import com.construction.pm.models.ProjectActivityUpdateModel;
 import com.construction.pm.utils.ViewUtil;
 
-public class ProjectActivityUpdateFormLayout {
+public class ProjectActivityMonitoringFormLayout {
     protected Context mContext;
     protected Handler mFragmentHandler;
     protected FragmentManager mFragmentManager;
 
     protected String mFragmentTagSelected;
-    protected static final String FRAGMENT_TAG_PROJECT_ACTIVITY_UPDATE_FORM = "FRAGMENT_PROJECT_ACTIVITY_UPDATE_FORM";
+    protected static final String FRAGMENT_TAG_PROJECT_ACTIVITY_MONITORING_FORM = "FRAGMENT_PROJECT_ACTIVITY_MONITORING_FORM";
 
-    protected ProjectActivityUpdateFormFragment mProjectActivityUpdateFormFragment;
+    protected ProjectActivityMonitoringFormFragment mProjectActivityMonitoringFormFragment;
 
-    protected CoordinatorLayout mProjectActivityUpdateFormLayout;
+    protected CoordinatorLayout mProjectActivityMonitoringFormLayout;
     protected ProgressDialog mProgressDialog;
     protected AppBarLayout mAppBarLayout;
     protected ActionBar mActionBar;
     protected Toolbar mToolbar;
 
-    protected ProjectActivityUpdateFormLayoutListener mProjectActivityUpdateFormLayoutListener;
+    protected ProjectActivityMonitoringFormLayoutListener mProjectActivityMonitoringFormLayoutListener;
 
-    protected ProjectActivityUpdateFormLayout(final Context context) {
+    protected ProjectActivityMonitoringFormLayout(final Context context) {
         mContext = context;
     }
 
-    public ProjectActivityUpdateFormLayout(final Context context, final CoordinatorLayout projectActivityUpdateFormLayout) {
+    public ProjectActivityMonitoringFormLayout(final Context context, final CoordinatorLayout projectActivityMonitoringFormLayout) {
         this(context);
 
-        initializeView(projectActivityUpdateFormLayout);
+        initializeView(projectActivityMonitoringFormLayout);
     }
 
-    public static ProjectActivityUpdateFormLayout buildProjectActivityUpdateFormLayout(final Context context, final int layoutId, final ViewGroup viewGroup) {
-        return new ProjectActivityUpdateFormLayout(context, (CoordinatorLayout) LayoutInflater.from(context).inflate(layoutId, viewGroup));
+    public static ProjectActivityMonitoringFormLayout buildProjectActivityMonitoringFormLayout(final Context context, final int layoutId, final ViewGroup viewGroup) {
+        return new ProjectActivityMonitoringFormLayout(context, (CoordinatorLayout) LayoutInflater.from(context).inflate(layoutId, viewGroup));
     }
 
-    public static ProjectActivityUpdateFormLayout buildProjectActivityUpdateFormLayout(final Context context, final ViewGroup viewGroup) {
-        return buildProjectActivityUpdateFormLayout(context, R.layout.project_activity_update_form_layout, viewGroup);
+    public static ProjectActivityMonitoringFormLayout buildProjectActivityMonitoringFormLayout(final Context context, final ViewGroup viewGroup) {
+        return buildProjectActivityMonitoringFormLayout(context, R.layout.project_activity_monitoring_form_layout, viewGroup);
     }
 
-    protected void initializeView(final CoordinatorLayout projectActivityUpdateFormLayout) {
-        mProjectActivityUpdateFormLayout = projectActivityUpdateFormLayout;
-        mAppBarLayout = (AppBarLayout) mProjectActivityUpdateFormLayout.findViewById(R.id.contentAppBar);
-        mToolbar = (Toolbar) mProjectActivityUpdateFormLayout.findViewById(R.id.contentToolbar);
+    protected void initializeView(final CoordinatorLayout projectActivityMonitoringFormLayout) {
+        mProjectActivityMonitoringFormLayout = projectActivityMonitoringFormLayout;
+        mAppBarLayout = (AppBarLayout) mProjectActivityMonitoringFormLayout.findViewById(R.id.contentAppBar);
+        mToolbar = (Toolbar) mProjectActivityMonitoringFormLayout.findViewById(R.id.contentToolbar);
 
         mProgressDialog = new ProgressDialog(mContext);
         mProgressDialog.setCancelable(false);
@@ -72,7 +72,7 @@ public class ProjectActivityUpdateFormLayout {
     }
 
     public CoordinatorLayout getLayout() {
-        return mProjectActivityUpdateFormLayout;
+        return mProjectActivityMonitoringFormLayout;
     }
 
     public void progressDialogShow(final String progressMessage) {
@@ -92,41 +92,41 @@ public class ProjectActivityUpdateFormLayout {
         alertDialog.setIcon(iconId);
         alertDialog.setTitle(alertTitle);
         alertDialog.setMessage(alertMessage);
-        alertDialog.setPositiveButton(ViewUtil.getResourceString(mContext, R.string.project_activity_update_form_layout_alert_button), onClickListener);
+        alertDialog.setPositiveButton(ViewUtil.getResourceString(mContext, R.string.project_activity_monitoring_form_layout_alert_button), onClickListener);
         alertDialog.show();
     }
 
     public void alertDialogErrorShow(final String errorMessage) {
-        alertDialogShow(ViewUtil.getResourceString(mContext, R.string.project_activity_update_form_layout_alert_title_error), errorMessage, R.drawable.cancel_2_24, null);
+        alertDialogShow(ViewUtil.getResourceString(mContext, R.string.project_activity_monitoring_form_layout_alert_title_error), errorMessage, R.drawable.cancel_2_24, null);
     }
 
     public void loadLayoutToActivity(final AppCompatActivity activity) {
         mFragmentHandler = new Handler();
         mFragmentManager = activity.getSupportFragmentManager();
 
-        activity.setContentView(mProjectActivityUpdateFormLayout);
+        activity.setContentView(mProjectActivityMonitoringFormLayout);
 
         activity.setSupportActionBar(mToolbar);
         mActionBar = activity.getSupportActionBar();
         if (mActionBar != null) {
-            mActionBar.setTitle(R.string.project_activity_update_form_layout_title);
+            mActionBar.setTitle(R.string.project_activity_monitoring_form_layout_title);
             mActionBar.setDisplayHomeAsUpEnabled(true);
             mActionBar.setDisplayShowHomeEnabled(true);
             mActionBar.setDisplayUseLogoEnabled(false);
         }
     }
 
-    public void createProjectActivityUpdateSaveMenu(final Menu menu) {
-        MenuItem menuItemUpdateActivity = menu.add(R.string.project_activity_update_form_layout_menu_update_activity);
-        menuItemUpdateActivity.setIcon(R.drawable.checkmark_24);
+    public void createProjectActivityMonitoringSaveMenu(final Menu menu) {
+        MenuItem menuItemMonitoringActivity = menu.add(R.string.project_activity_monitoring_form_layout_menu_monitoring_activity);
+        menuItemMonitoringActivity.setIcon(R.drawable.checkmark_24);
         if (Build.VERSION.SDK_INT > 10) {
-            menuItemUpdateActivity.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+            menuItemMonitoringActivity.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
         }
-        menuItemUpdateActivity.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+        menuItemMonitoringActivity.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                if (mProjectActivityUpdateFormLayoutListener != null)
-                    mProjectActivityUpdateFormLayoutListener.onProjectActivityUpdateFormLayoutUpdateMenuClick();
+                if (mProjectActivityMonitoringFormLayoutListener != null)
+                    mProjectActivityMonitoringFormLayoutListener.onProjectActivityMonitoringFormLayoutMonitoringMenuClick();
                 return true;
             }
         });
@@ -139,8 +139,8 @@ public class ProjectActivityUpdateFormLayout {
         mAppBarLayout.removeView(mToolbar);
     }
 
-    public boolean isProjectActivityUpdateFormFragmentShow() {
-        return mFragmentTagSelected.equals(FRAGMENT_TAG_PROJECT_ACTIVITY_UPDATE_FORM);
+    public boolean isProjectActivityMonitoringFormFragmentShow() {
+        return mFragmentTagSelected.equals(FRAGMENT_TAG_PROJECT_ACTIVITY_MONITORING_FORM);
     }
 
     protected void loadFragment(final Fragment fragment, final String title, final String subtitle, final String tag) {
@@ -174,26 +174,26 @@ public class ProjectActivityUpdateFormLayout {
         });
     }
 
-    public ProjectActivityUpdateFormFragment showProjectActivityUpdateFormFragment(final ProjectActivityMonitoringModel projectActivityMonitoringModel, final ProjectActivityUpdateModel projectActivityUpdateModel) {
-        mProjectActivityUpdateFormFragment = ProjectActivityUpdateFormFragment.newInstance(projectActivityMonitoringModel, projectActivityUpdateModel);
+    public ProjectActivityMonitoringFormFragment showProjectActivityMonitoringFormFragment(final ProjectActivityModel projectActivityModel, final ProjectActivityMonitoringModel projectActivityMonitoringModel) {
+        mProjectActivityMonitoringFormFragment = ProjectActivityMonitoringFormFragment.newInstance(projectActivityModel, projectActivityMonitoringModel);
 
-        loadFragment(mProjectActivityUpdateFormFragment, null, null, FRAGMENT_TAG_PROJECT_ACTIVITY_UPDATE_FORM);
+        loadFragment(mProjectActivityMonitoringFormFragment, null, null, FRAGMENT_TAG_PROJECT_ACTIVITY_MONITORING_FORM);
 
-        return mProjectActivityUpdateFormFragment;
+        return mProjectActivityMonitoringFormFragment;
     }
 
-    public ProjectActivityUpdateModel getProjectActivityUpdateModel() {
-        if (mProjectActivityUpdateFormFragment == null)
+    public ProjectActivityMonitoringModel getProjectActivityMonitoringModel() {
+        if (mProjectActivityMonitoringFormFragment == null)
             return null;
 
-        return mProjectActivityUpdateFormFragment.getProjectActivityUpdateModel();
+        return mProjectActivityMonitoringFormFragment.getProjectActivityMonitoringModel();
     }
 
-    public void setProjectActivityMonitoringDetailLayoutListener(final ProjectActivityUpdateFormLayoutListener projectActivityUpdateFormLayoutListener) {
-        mProjectActivityUpdateFormLayoutListener = projectActivityUpdateFormLayoutListener;
+    public void setProjectActivityMonitoringDetailLayoutListener(final ProjectActivityMonitoringFormLayoutListener projectActivityMonitoringFormLayoutListener) {
+        mProjectActivityMonitoringFormLayoutListener = projectActivityMonitoringFormLayoutListener;
     }
 
-    public interface ProjectActivityUpdateFormLayoutListener {
-        void onProjectActivityUpdateFormLayoutUpdateMenuClick();
+    public interface ProjectActivityMonitoringFormLayoutListener {
+        void onProjectActivityMonitoringFormLayoutMonitoringMenuClick();
     }
 }

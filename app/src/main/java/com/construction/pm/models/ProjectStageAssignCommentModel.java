@@ -234,4 +234,27 @@ public class ProjectStageAssignCommentModel {
 
         return jsonObject;
     }
+
+    public ProjectStageAssignCommentModel duplicate() {
+        ProjectStageAssignCommentModel projectStageAssignCommentModel = new ProjectStageAssignCommentModel();
+
+        projectStageAssignCommentModel.setProjectStageAssignCommentId(getProjectStageAssignCommentId());
+        projectStageAssignCommentModel.setProjectStageAssignmentId(getProjectStageAssignmentId());
+        projectStageAssignCommentModel.setCommentDate(getCommentDate());
+        projectStageAssignCommentModel.setComment(getComment());
+        projectStageAssignCommentModel.setPhotoId(getPhotoId());
+        projectStageAssignCommentModel.setPhotoAdditional1Id(getPhotoAdditional1Id());
+        projectStageAssignCommentModel.setPhotoAdditional2Id(getPhotoAdditional2Id());
+        projectStageAssignCommentModel.setPhotoAdditional3Id(getPhotoAdditional3Id());
+        projectStageAssignCommentModel.setPhotoAdditional4Id(getPhotoAdditional4Id());
+        projectStageAssignCommentModel.setPhotoAdditional5Id(getPhotoAdditional5Id());
+        projectStageAssignCommentModel.setCreatorId(getCreatorId());
+        projectStageAssignCommentModel.setCreateDate(getCreateDate());
+        projectStageAssignCommentModel.setLastUserId(getLastUserId());
+        projectStageAssignCommentModel.setLastUpdate(getLastUpdate());
+        projectStageAssignCommentModel.setProjectStageId(getProjectStageId());
+        projectStageAssignCommentModel.setProjectMemberId(getProjectMemberId());
+
+        return projectStageAssignCommentModel;
+    }
 }

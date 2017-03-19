@@ -5,13 +5,11 @@ import android.support.v7.widget.AppCompatTextView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.RelativeLayout;
 
 import com.construction.pm.R;
 import com.construction.pm.models.ActivityStatusEnum;
-import com.construction.pm.utils.StringUtil;
 import com.construction.pm.utils.ViewUtil;
 
 import java.util.ArrayList;
@@ -102,7 +100,7 @@ public class SpinnerActivityStatusAdapter extends BaseAdapter {
             mViewItem = itemView;
 
             mActivityStatusText = (AppCompatTextView) mViewItem.findViewById(R.id.activityStatusText);
-            mActivityStatusText.setText(ViewUtil.getResourceString(mContext, R.string.project_activity_update_form_activity_status_blank));
+            mActivityStatusText.setText(ViewUtil.getResourceString(mContext, R.string.project_activity_activity_status_blank));
         }
 
         public void setActivityStatus(final ActivityStatusEnum activityStatusEnum) {

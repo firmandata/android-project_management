@@ -6,9 +6,16 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import com.construction.pm.asynctask.ManagerProjectActivityGetAsyncTask;
+import com.construction.pm.asynctask.param.ManagerProjectActivityGetAsyncTaskParam;
+import com.construction.pm.asynctask.result.ManagerProjectActivityGetAsyncTaskResult;
 import com.construction.pm.models.ProjectActivityModel;
 import com.construction.pm.models.ProjectActivityMonitoringModel;
 import com.construction.pm.models.ProjectActivityUpdateModel;
+import com.construction.pm.models.system.SessionLoginModel;
+import com.construction.pm.models.system.SettingUserModel;
+import com.construction.pm.persistence.SessionPersistent;
+import com.construction.pm.persistence.SettingPersistent;
 import com.construction.pm.utils.ConstantUtil;
 import com.construction.pm.views.manager.ManagerDetailLayout;
 
@@ -168,13 +175,72 @@ public class ManagerDetailActivity extends AppCompatActivity implements
                                 projectActivityUpdateModel = ProjectActivityUpdateModel.build(jsonObject);
                             } catch (org.json.JSONException ex) {
                             }
-                            if (projectActivityUpdateModel != null)
+                            if (projectActivityUpdateModel != null) {
+                                reloadProjectActivityGet(mProjectActivityModel);
                                 mManagerDetailLayout.reloadProjectActivityUpdateList(mProjectActivityModel);
+                            }
                         }
                     }
                 }
             }
         }
+    }
+
+    public void reloadProjectActivityGet(final ProjectActivityModel projectActivityModel) {
+        // -- Get SettingUserModel from SettingPersistent --
+        SettingPersistent settingPersistent = new SettingPersistent(this);
+        SettingUserModel settingUserModel = settingPersistent.getSettingUserModel();
+
+        // -- Get SessionLoginModel from SessionPersistent --
+        SessionPersistent sessionPersistent = new SessionPersistent(this);
+        SessionLoginModel sessionLoginModel = sessionPersistent.getSessionLoginModel();
+
+        // -- Prepare ManagerProjectActivityGetAsyncTask --
+        ManagerProjectActivityGetAsyncTask managerProjectActivityGetAsyncTask = new ManagerProjectActivityGetAsyncTask() {
+            @Override
+            public void onPreExecute() {
+                mAsyncTaskList.add(this);
+            }
+
+            @Override
+            public void onPostExecute(ManagerProjectActivityGetAsyncTaskResult projectActivityGetHandleTaskResult) {
+                mAsyncTaskList.remove(this);
+
+                if (projectActivityGetHandleTaskResult != null) {
+                    ProjectActivityModel projectActivityModelNew = projectActivityGetHandleTaskResult.getProjectActivityModel();
+                    if (projectActivityModelNew != null) {
+                        onProjectActivityGetReloadSuccess(projectActivityModelNew);
+                    } else
+                        onProjectActivityGetReloadFailed(projectActivityModel, projectActivityGetHandleTaskResult.getMessage());
+                }
+            }
+
+            @Override
+            protected void onProgressUpdate(String... messages) {
+                if (messages != null) {
+                    if (messages.length > 0) {
+                        onProjectActivityGetReloadProgress(projectActivityModel, messages[0]);
+                    }
+                }
+            }
+        };
+
+        // -- Do ManagerProjectActivityGetAsyncTask --
+        managerProjectActivityGetAsyncTask.execute(new ManagerProjectActivityGetAsyncTaskParam(this, settingUserModel, sessionLoginModel.getProjectMemberModel(), projectActivityModel.getProjectActivityId()));
+    }
+
+    public void onProjectActivityGetReloadProgress(final ProjectActivityModel projectActivityModel, final String progressMessage) {
+
+    }
+
+    public void onProjectActivityGetReloadSuccess(final ProjectActivityModel projectActivityModel) {
+        mProjectActivityModel = projectActivityModel;
+
+        mManagerDetailLayout.setProjectActivityModel(mProjectActivityModel);
+    }
+
+    public void onProjectActivityGetReloadFailed(final ProjectActivityModel projectActivityModel, final String errorMessage) {
+
     }
 
     @Override

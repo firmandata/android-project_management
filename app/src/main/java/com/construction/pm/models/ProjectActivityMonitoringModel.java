@@ -272,4 +272,30 @@ public class ProjectActivityMonitoringModel {
 
         return jsonObject;
     }
+
+    public ProjectActivityMonitoringModel duplicate() {
+        ProjectActivityMonitoringModel projectActivityMonitoringModel = new ProjectActivityMonitoringModel();
+
+        projectActivityMonitoringModel.setProjectActivityMonitoringId(getProjectActivityMonitoringId());
+        projectActivityMonitoringModel.setProjectActivityId(getProjectActivityId());
+        projectActivityMonitoringModel.setProjectMemberId(getProjectMemberId());
+        projectActivityMonitoringModel.setMonitoringDate(getMonitoringDate());
+        projectActivityMonitoringModel.setActualStartDate(getActualStartDate());
+        projectActivityMonitoringModel.setActualEndDate(getActualEndDate());
+        projectActivityMonitoringModel.setActivityStatus(getActivityStatus());
+        projectActivityMonitoringModel.setPercentComplete(getPercentComplete());
+        projectActivityMonitoringModel.setComment(getComment());
+        projectActivityMonitoringModel.setPhotoId(getPhotoId());
+        projectActivityMonitoringModel.setPhotoAdditional1Id(getPhotoAdditional1Id());
+        projectActivityMonitoringModel.setPhotoAdditional2Id(getPhotoAdditional2Id());
+        projectActivityMonitoringModel.setPhotoAdditional3Id(getPhotoAdditional3Id());
+        projectActivityMonitoringModel.setPhotoAdditional4Id(getPhotoAdditional4Id());
+        projectActivityMonitoringModel.setPhotoAdditional5Id(getPhotoAdditional5Id());
+        projectActivityMonitoringModel.setCreatorId(getCreatorId());
+        projectActivityMonitoringModel.setCreateDate(getCreateDate());
+        projectActivityMonitoringModel.setLastUserId(getLastUserId());
+        projectActivityMonitoringModel.setLastUpdate(getLastUpdate());
+
+        return projectActivityMonitoringModel;
+    }
 }

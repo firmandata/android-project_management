@@ -90,6 +90,9 @@
     <string name="manager_activity_list_handle_task_begin">Getting activities &#8230;</string>
     <string name="manager_activity_list_handle_task_success">Getting activities finished.</string>
 
+    <string name="manager_activity_get_handle_task_begin">Getting activity &#8230;</string>
+    <string name="manager_activity_get_handle_task_success">Getting activity finished.</string>
+
     <string name="manager_activity_monitoring_list_handle_task_begin">Getting monitoring activities &#8230;</string>
     <string name="manager_activity_monitoring_list_handle_task_success">Getting monitoring activities finished.</string>
 
@@ -273,12 +276,22 @@
     <string name="project_activity_monitoring_detail_title">Monitoring Detail</string>
     <string name="project_activity_monitoring_detail_menu_update_activity">Update Activity</string>
 
-    <string name="project_activity_update_form_layout_menu_update_activity">Update</string>
+    <string name="project_activity_activity_status_blank">-- Activity Status --</string>
 
-    <string name="project_activity_update_form_title">Update Form</string>
-    <string name="project_activity_update_form_view_alert_button">OK</string>
-    <string name="project_activity_update_form_view_alert_title_error">Failed</string>
-    <string name="project_activity_update_form_activity_status_blank">-- Activity Status --</string>
+    <string name="project_activity_update_form_layout_menu_update_activity">Save</string>
+    <string name="project_activity_update_form_layout_title">Update</string>
+    <string name="project_activity_update_form_layout_alert_button">OK</string>
+    <string name="project_activity_update_form_layout_alert_title_error">Failed</string>
+
+    <string name="project_activity_monitoring_form_layout_menu_monitoring_activity">Save</string>
+    <string name="project_activity_monitoring_form_layout_title">Monitoring</string>
+    <string name="project_activity_monitoring_form_layout_alert_button">OK</string>
+    <string name="project_activity_monitoring_form_layout_alert_title_error">Failed</string>
+
+    <string name="project_stage_assign_comment_form_layout_menu_monitoring_activity">Save</string>
+    <string name="project_stage_assign_comment_form_layout_title">Comment</string>
+    <string name="project_stage_assign_comment_form_layout_alert_button">OK</string>
+    <string name="project_stage_assign_comment_form_layout_alert_title_error">Failed</string>
 
     <string name="service_notification_title">Project Management</string>
     <string name="service_notification_subtitle">$s1 new notifications</string>

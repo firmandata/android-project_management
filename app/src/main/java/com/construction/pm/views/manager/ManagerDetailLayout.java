@@ -93,7 +93,7 @@ public class ManagerDetailLayout implements ManagerDetailFragment.ManagerDetailF
             mActionBar.setDisplayUseLogoEnabled(false);
         }
 
-        mProjectActivityDetailView.setProjectActivityModel(projectActivityModel);
+        setProjectActivityModel(projectActivityModel);
 
         if (mManagerDetailLayoutListener != null)
             mManagerDetailLayoutListener.onManagerDetailRequest(projectActivityModel);
@@ -105,10 +105,14 @@ public class ManagerDetailLayout implements ManagerDetailFragment.ManagerDetailF
 
         mAppBarLayout.removeView(mToolbar);
 
-        mProjectActivityDetailView.setProjectActivityModel(projectActivityModel);
+        setProjectActivityModel(projectActivityModel);
 
         if (mManagerDetailLayoutListener != null)
             mManagerDetailLayoutListener.onManagerDetailRequest(projectActivityModel);
+    }
+
+    public void setProjectActivityModel(final ProjectActivityModel projectActivityModel) {
+        mProjectActivityDetailView.setProjectActivityModel(projectActivityModel);
     }
 
     public boolean isManagerFragmentShow() {

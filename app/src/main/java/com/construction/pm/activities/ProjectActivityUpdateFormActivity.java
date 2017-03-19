@@ -182,7 +182,7 @@ public class ProjectActivityUpdateFormActivity extends AppCompatActivity impleme
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        mProjectActivityUpdateFormLayout.createProjectActivityUpdateMenu(menu);
+        mProjectActivityUpdateFormLayout.createProjectActivityUpdateSaveMenu(menu);
         return true;
     }
 

@@ -98,6 +98,70 @@ public class ManagerCachePersistent extends NetworkCachePersistent {
         return projectActivityModels;
     }
 
+    public long setProjectActivityModel(final ProjectActivityModel projectActivityModel, final Integer projectActivityId, final Integer projectMemberId) throws PersistenceError {
+        long networkCacheId = 0;
+
+        String contentKey = String.valueOf(projectMemberId);
+        if (projectActivityId != null)
+            contentKey += "_" + String.valueOf(projectActivityId);
+        String content = null;
+
+        // -- Get ProjectActivityModel content --
+        try {
+            org.json.JSONObject jsonObject = projectActivityModel.build();
+            content = jsonObject.toString(0);
+        } catch (org.json.JSONException ex) {
+        } catch (Exception ex) {
+        }
+
+        if (content != null) {
+            try {
+                SQLiteDatabase sqLiteDatabase = mSQLitePersistent.getWritableDatabase();
+
+                // -- Save content to cache --
+                networkCacheId = saveNetworkCacheContent(sqLiteDatabase, NetworkCachePersistentType.MANAGER_PROJECT_ACTIVITY_DETAIL, contentKey, content, projectMemberId);
+            } catch (SQLException ex) {
+                throw new PersistenceError(0, ex.getMessage(), ex);
+            } catch (Exception ex) {
+                throw new PersistenceError(0, ex.getMessage(), ex);
+            }
+        }
+
+        return networkCacheId;
+    }
+
+    public ProjectActivityModel getProjectActivityModel(final Integer projectActivityId, final Integer projectMemberId) throws PersistenceError {
+        ProjectActivityModel projectActivityModel = null;
+
+        String contentKey = String.valueOf(projectMemberId);
+        if (projectActivityId != null)
+            contentKey += "_" + String.valueOf(projectActivityId);
+        String content = null;
+
+        try {
+            SQLiteDatabase sqLiteDatabase = mSQLitePersistent.getReadableDatabase();
+
+            // -- Get content from cache --
+            content = getNetworkCacheContent(sqLiteDatabase, NetworkCachePersistentType.MANAGER_PROJECT_ACTIVITY_DETAIL, contentKey, projectMemberId);
+        } catch (SQLException ex) {
+            throw new PersistenceError(0, ex.getMessage(), ex);
+        } catch (Exception ex) {
+            throw new PersistenceError(0, ex.getMessage(), ex);
+        }
+
+        // -- Generate ProjectActivityModel from content
+        if (content != null) {
+            try {
+                org.json.JSONObject jsonObject = new org.json.JSONObject(content);
+                projectActivityModel = ProjectActivityModel.build(jsonObject);
+            } catch (org.json.JSONException ex) {
+            } catch (Exception ex) {
+            }
+        }
+
+        return projectActivityModel;
+    }
+
     public long setProjectActivityMonitoringModels(final ProjectActivityMonitoringModel[] projectActivityMonitoringModels, final Integer projectActivityId, final Integer projectMemberId) throws PersistenceError {
         long networkCacheId = 0;
 
