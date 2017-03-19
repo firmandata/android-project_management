@@ -97,6 +97,22 @@ public class ProjectActivityMonitoringDetailLayout {
         });
     }
 
+    public void createProjectActivityMonitoringEditMenu(final Menu menu) {
+        MenuItem menuItemUpdateActivity = menu.add(R.string.project_activity_monitoring_detail_menu_monitoring_edit);
+        menuItemUpdateActivity.setIcon(R.drawable.pencil_24);
+        if (Build.VERSION.SDK_INT > 10) {
+            menuItemUpdateActivity.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        }
+        menuItemUpdateActivity.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                if (mProjectActivityMonitoringDetailLayoutListener != null)
+                    mProjectActivityMonitoringDetailLayoutListener.onProjectActivityMonitoringDetailActivityMonitoringEditClick();
+                return true;
+            }
+        });
+    }
+
     public void loadLayoutToFragment(final Fragment fragment) {
         mFragmentHandler = new Handler();
         mFragmentManager = fragment.getChildFragmentManager();
@@ -152,5 +168,6 @@ public class ProjectActivityMonitoringDetailLayout {
 
     public interface ProjectActivityMonitoringDetailLayoutListener {
         void onProjectActivityMonitoringDetailActivityUpdateClick();
+        void onProjectActivityMonitoringDetailActivityMonitoringEditClick();
     }
 }

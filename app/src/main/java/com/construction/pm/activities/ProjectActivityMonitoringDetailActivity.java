@@ -19,9 +19,11 @@ public class ProjectActivityMonitoringDetailActivity extends AppCompatActivity i
 
     public static final String INTENT_PARAM_PROJECT_ACTIVITY_MONITORING_MODEL = "PROJECT_ACTIVITY_MONITORING_MODEL";
     public static final String INTENT_PARAM_SHOW_MENU_PROJECT_ACTIVITY_UPDATE = "SHOW_MENU_PROJECT_ACTIVITY_UPDATE";
+    public static final String INTENT_PARAM_SHOW_MENU_PROJECT_ACTIVITY_MONITORING_EDIT = "SHOW_MENU_PROJECT_ACTIVITY_MONITORING_EDIT";
 
     protected ProjectActivityMonitoringModel mProjectActivityMonitoringModel;
     protected boolean mShowMenuProjectActivityUpdate;
+    protected boolean mShowMenuProjectActivityMonitoringEdit;
     protected List<AsyncTask> mAsyncTaskList;
 
     protected ProjectActivityMonitoringDetailLayout mProjectActivityMonitoringDetailLayout;
@@ -60,6 +62,9 @@ public class ProjectActivityMonitoringDetailActivity extends AppCompatActivity i
             // -- Get ShowMenuProjectActivityUpdate parameter --
             mShowMenuProjectActivityUpdate = bundle.getBoolean(INTENT_PARAM_SHOW_MENU_PROJECT_ACTIVITY_UPDATE);
 
+            // -- Get ShowMenuProjectActivityMonitoringEdit parameter --
+            mShowMenuProjectActivityMonitoringEdit = bundle.getBoolean(INTENT_PARAM_SHOW_MENU_PROJECT_ACTIVITY_MONITORING_EDIT);
+
             // -- Get ProjectActivityMonitoringModel parameter --
             String projectActivityMonitoringModelJson = bundle.getString(INTENT_PARAM_PROJECT_ACTIVITY_MONITORING_MODEL);
             if (projectActivityMonitoringModelJson != null) {
@@ -88,6 +93,8 @@ public class ProjectActivityMonitoringDetailActivity extends AppCompatActivity i
     public boolean onCreateOptionsMenu(Menu menu) {
         if (mShowMenuProjectActivityUpdate)
             mProjectActivityMonitoringDetailLayout.createProjectActivityUpdateMenu(menu);
+        if (mShowMenuProjectActivityMonitoringEdit)
+            mProjectActivityMonitoringDetailLayout.createProjectActivityMonitoringEditMenu(menu);
         return true;
     }
 
@@ -105,6 +112,24 @@ public class ProjectActivityMonitoringDetailActivity extends AppCompatActivity i
         Intent intent = new Intent();
         intent.putExtra(ConstantUtil.INTENT_RESULT_PROJECT_ACTIVITY_MONITORING_MODEL, projectActivityMonitoringModelJson);
         setResult(ConstantUtil.INTENT_REQUEST_PROJECT_ACTIVITY_MONITORING_DETAIL_RESULT_UPDATE, intent);
+
+        finish();
+    }
+
+    @Override
+    public void onProjectActivityMonitoringDetailActivityMonitoringEditClick() {
+        String projectActivityMonitoringModelJson = null;
+        if (mProjectActivityMonitoringModel != null) {
+            try {
+                org.json.JSONObject jsonObject = mProjectActivityMonitoringModel.build();
+                projectActivityMonitoringModelJson = jsonObject.toString(0);
+            } catch (org.json.JSONException e) {
+            }
+        }
+
+        Intent intent = new Intent();
+        intent.putExtra(ConstantUtil.INTENT_RESULT_PROJECT_ACTIVITY_MONITORING_MODEL, projectActivityMonitoringModelJson);
+        setResult(ConstantUtil.INTENT_REQUEST_PROJECT_ACTIVITY_MONITORING_DETAIL_RESULT_EDIT, intent);
 
         finish();
     }

@@ -89,17 +89,7 @@ public class InspectorDetailActivity extends AppCompatActivity implements
 
     @Override
     public void onProjectActivityMonitoringAddMenuClick() {
-        // -- Redirect to ProjectActivityMonitoringFormActivity --
-        Intent intent = new Intent(this, ProjectActivityMonitoringFormActivity.class);
-
-        try {
-            org.json.JSONObject projectActivityModelJsonObject = mProjectActivityModel.build();
-            String projectActivityModelJson = projectActivityModelJsonObject.toString(0);
-            intent.putExtra(ProjectActivityMonitoringFormActivity.INTENT_PARAM_PROJECT_ACTIVITY_MODEL, projectActivityModelJson);
-        } catch (org.json.JSONException ex) {
-        }
-
-        startActivityForResult(intent, ConstantUtil.INTENT_REQUEST_PROJECT_ACTIVITY_MONITORING_FORM);
+        showProjectActivityMonitoringFormActivity(mProjectActivityModel);
     }
 
     @Override
@@ -110,20 +100,25 @@ public class InspectorDetailActivity extends AppCompatActivity implements
         if (data != null)
             bundle = data.getExtras();
 
-        if (requestCode == ConstantUtil.INTENT_REQUEST_PROJECT_ACTIVITY_MONITORING_FORM) {
-            if (resultCode == ConstantUtil.INTENT_REQUEST_PROJECT_ACTIVITY_MONITORING_FORM_RESULT_SAVED) {
-                if (bundle != null) {
-                    if (bundle.containsKey(ConstantUtil.INTENT_RESULT_PROJECT_ACTIVITY_MONITORING_MODEL)) {
-                        String projectActivityMonitoringModelJson = bundle.getString(ConstantUtil.INTENT_RESULT_PROJECT_ACTIVITY_MONITORING_MODEL);
-                        if (projectActivityMonitoringModelJson != null) {
-                            ProjectActivityMonitoringModel projectActivityMonitoringModel = null;
-                            try {
-                                org.json.JSONObject jsonObject = new org.json.JSONObject(projectActivityMonitoringModelJson);
-                                projectActivityMonitoringModel = ProjectActivityMonitoringModel.build(jsonObject);
-                            } catch (org.json.JSONException ex) {
-                            }
-                            if (projectActivityMonitoringModel != null)
+        if (        requestCode == ConstantUtil.INTENT_REQUEST_PROJECT_ACTIVITY_MONITORING_FORM
+                ||  requestCode == ConstantUtil.INTENT_REQUEST_PROJECT_ACTIVITY_MONITORING_DETAIL) {
+            if (bundle != null) {
+                if (bundle.containsKey(ConstantUtil.INTENT_RESULT_PROJECT_ACTIVITY_MONITORING_MODEL)) {
+                    String projectActivityMonitoringModelJson = bundle.getString(ConstantUtil.INTENT_RESULT_PROJECT_ACTIVITY_MONITORING_MODEL);
+                    if (projectActivityMonitoringModelJson != null) {
+                        ProjectActivityMonitoringModel projectActivityMonitoringModel = null;
+                        try {
+                            org.json.JSONObject jsonObject = new org.json.JSONObject(projectActivityMonitoringModelJson);
+                            projectActivityMonitoringModel = ProjectActivityMonitoringModel.build(jsonObject);
+                        } catch (org.json.JSONException ex) {
+                        }
+
+                        if (projectActivityMonitoringModel != null) {
+                            if (resultCode == ConstantUtil.INTENT_REQUEST_PROJECT_ACTIVITY_MONITORING_FORM_RESULT_SAVED) {
                                 mInspectorDetailLayout.addProjectActivityMonitoringModel(projectActivityMonitoringModel);
+                            } else if (resultCode == ConstantUtil.INTENT_REQUEST_PROJECT_ACTIVITY_MONITORING_DETAIL_RESULT_EDIT) {
+                                showProjectActivityMonitoringFormActivity(projectActivityMonitoringModel);
+                            }
                         }
                     }
                 }
@@ -131,10 +126,39 @@ public class InspectorDetailActivity extends AppCompatActivity implements
         }
     }
 
+    public void showProjectActivityMonitoringFormActivity(final ProjectActivityModel projectActivityModel) {
+        // -- Redirect to ProjectActivityMonitoringFormActivity --
+        Intent intent = new Intent(this, ProjectActivityMonitoringFormActivity.class);
+
+        try {
+            org.json.JSONObject projectActivityModelJsonObject = projectActivityModel.build();
+            String projectActivityModelJson = projectActivityModelJsonObject.toString(0);
+            intent.putExtra(ProjectActivityMonitoringFormActivity.INTENT_PARAM_PROJECT_ACTIVITY_MODEL, projectActivityModelJson);
+        } catch (org.json.JSONException ex) {
+        }
+
+        startActivityForResult(intent, ConstantUtil.INTENT_REQUEST_PROJECT_ACTIVITY_MONITORING_FORM);
+    }
+
+    public void showProjectActivityMonitoringFormActivity(final ProjectActivityMonitoringModel projectActivityMonitoringModel) {
+        // -- Redirect to ProjectActivityMonitoringFormActivity --
+        Intent intent = new Intent(this, ProjectActivityMonitoringFormActivity.class);
+
+        try {
+            org.json.JSONObject projectActivityMonitoringModelJsonObject = projectActivityMonitoringModel.build();
+            String projectActivityMonitoringModelJson = projectActivityMonitoringModelJsonObject.toString(0);
+            intent.putExtra(ProjectActivityMonitoringFormActivity.INTENT_PARAM_PROJECT_ACTIVITY_MONITORING_MODEL, projectActivityMonitoringModelJson);
+        } catch (org.json.JSONException ex) {
+        }
+
+        startActivityForResult(intent, ConstantUtil.INTENT_REQUEST_PROJECT_ACTIVITY_MONITORING_FORM);
+    }
+
     @Override
     public void onProjectActivityMonitoringListItemClick(ProjectActivityMonitoringModel projectActivityMonitoringModel) {
         // -- Redirect to ProjectActivityMonitoringDetailActivity --
         Intent intent = new Intent(this, ProjectActivityMonitoringDetailActivity.class);
+        intent.putExtra(ProjectActivityMonitoringDetailActivity.INTENT_PARAM_SHOW_MENU_PROJECT_ACTIVITY_MONITORING_EDIT, true);
 
         try {
             org.json.JSONObject projectActivityMonitoringModelJsonObject = projectActivityMonitoringModel.build();
@@ -145,7 +169,7 @@ public class InspectorDetailActivity extends AppCompatActivity implements
 
         }
 
-        startActivity(intent);
+        startActivityForResult(intent, ConstantUtil.INTENT_REQUEST_PROJECT_ACTIVITY_MONITORING_DETAIL);
     }
 
     @Override

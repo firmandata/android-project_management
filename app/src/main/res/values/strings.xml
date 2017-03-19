@@ -277,6 +277,7 @@
 
     <string name="project_activity_monitoring_detail_title">Monitoring Detail</string>
     <string name="project_activity_monitoring_detail_menu_update_activity">Update Activity</string>
+    <string name="project_activity_monitoring_detail_menu_monitoring_edit">Edit</string>
 
     <string name="project_activity_activity_status_blank">-- Activity Status --</string>
 
