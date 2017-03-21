@@ -206,6 +206,22 @@ public class ProjectActivityListFragment extends Fragment implements ProjectActi
         super.onDestroy();
     }
 
+    public void addProjectActivityModels(final ProjectActivityModel[] projectActivityModels) {
+        mProjectActivityListView.addProjectActivityModels(projectActivityModels);
+    }
+
+    public void removeProjectActivityModels(final ProjectActivityModel[] projectActivityModels) {
+        mProjectActivityListView.removeProjectActivityModels(projectActivityModels);
+    }
+
+    public ProjectActivityModel[] getProjectActivityModels() {
+        return mProjectActivityListView.getProjectActivityModels();
+    }
+
+    public StatusTaskEnum getStatusTask() {
+        return mProjectActivityListView.getStatusTask();
+    }
+
     public void setProjectActivityListFragmentListener(final ProjectActivityListFragmentListener projectActivityListFragmentListener) {
         mProjectActivityListFragmentListener = projectActivityListFragmentListener;
     }

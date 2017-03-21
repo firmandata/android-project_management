@@ -144,6 +144,43 @@ public class ManagerLayout implements ProjectActivityListFragment.ProjectActivit
         mViewPagerAdapter.notifyDataSetChanged();
     }
 
+    public void replaceLayoutData(final ProjectActivityModel[] projectActivityModels) {
+        for (int position = 0; position < mViewPagerAdapter.getCount(); position++) {
+            ProjectActivityListFragment projectActivityListFragment = (ProjectActivityListFragment) mViewPagerAdapter.getItem(position);
+            ProjectActivityModel[] fragmentProjectActivityModels = projectActivityListFragment.getProjectActivityModels();
+            StatusTaskEnum fragmentStatusTask = projectActivityListFragment.getStatusTask();
+            if (fragmentStatusTask == null)
+                continue;
+
+            for (ProjectActivityModel projectActivityModel : projectActivityModels) {
+                Integer projectActivityId = projectActivityModel.getProjectActivityId();
+                if (projectActivityId == null)
+                    continue;
+                StatusTaskEnum statusTask = projectActivityModel.getStatusTask();
+                if (statusTask == null)
+                    continue;
+
+                if (statusTask.equals(fragmentStatusTask)) {
+                    projectActivityListFragment.addProjectActivityModels(new ProjectActivityModel[] { projectActivityModel });
+                } else {
+                    for (ProjectActivityModel oldProjectActivityModel : fragmentProjectActivityModels) {
+                        Integer oldProjectActivityId = oldProjectActivityModel.getProjectActivityId();
+                        if (oldProjectActivityId == null)
+                            continue;
+                        StatusTaskEnum oldStatusTask = oldProjectActivityModel.getStatusTask();
+                        if (oldStatusTask == null)
+                            continue;
+                        if (projectActivityId.equals(oldProjectActivityId)) {
+                            if (!statusTask.equals(oldStatusTask)) {
+                                projectActivityListFragment.removeProjectActivityModels(new ProjectActivityModel[] { oldProjectActivityModel });
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     @Override
     public void onProjectActivityClick(ProjectActivityModel projectActivityModel) {
         if (mManagerLayoutListener != null)

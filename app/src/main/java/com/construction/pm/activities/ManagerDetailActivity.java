@@ -27,6 +27,7 @@ public class ManagerDetailActivity extends AppCompatActivity implements
     public static final String INTENT_PARAM_PROJECT_ACTIVITY_MODEL = "PROJECT_ACTIVITY_MODEL";
 
     protected ProjectActivityModel mProjectActivityModel;
+    protected boolean mProjectActivityModelChanged;
     protected List<AsyncTask> mAsyncTaskList;
 
     protected ManagerDetailLayout mManagerDetailLayout;
@@ -74,8 +75,10 @@ public class ManagerDetailActivity extends AppCompatActivity implements
             case android.R.id.home:
                 if (!mManagerDetailLayout.isManagerFragmentShow())
                     mManagerDetailLayout.showManagerDetailFragment(mProjectActivityModel);
-                else
+                else {
+                    handleFinish();
                     finish();
+                }
                 return true;
         }
         return super.onOptionsItemSelected(menuItem);
@@ -235,6 +238,7 @@ public class ManagerDetailActivity extends AppCompatActivity implements
 
     public void onProjectActivityGetReloadSuccess(final ProjectActivityModel projectActivityModel) {
         mProjectActivityModel = projectActivityModel;
+        mProjectActivityModelChanged = true;
 
         mManagerDetailLayout.setProjectActivityModel(mProjectActivityModel);
     }
@@ -250,7 +254,26 @@ public class ManagerDetailActivity extends AppCompatActivity implements
             return;
         }
 
+        handleFinish();
         super.onBackPressed();
+    }
+
+    protected void handleFinish() {
+        // -- Set result callback --
+        Intent intent = new Intent();
+        if (mProjectActivityModelChanged) {
+            String projectActivityModelJson = null;
+            if (mProjectActivityModel != null) {
+                try {
+                    org.json.JSONObject jsonObject = mProjectActivityModel.build();
+                    projectActivityModelJson = jsonObject.toString(0);
+                } catch (org.json.JSONException e) {
+                }
+            }
+            intent.putExtra(ConstantUtil.INTENT_RESULT_PROJECT_ACTIVITY_MODEL, projectActivityModelJson);
+            setResult(ConstantUtil.INTENT_REQUEST_MANAGER_DETAIL_ACTIVITY_RESULT_CHANGED, intent);
+        } else
+            setResult(RESULT_OK, intent);
     }
 
     @Override

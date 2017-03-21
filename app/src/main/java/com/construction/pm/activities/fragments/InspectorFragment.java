@@ -18,6 +18,7 @@ import com.construction.pm.models.system.SessionLoginModel;
 import com.construction.pm.models.system.SettingUserModel;
 import com.construction.pm.persistence.SessionPersistent;
 import com.construction.pm.persistence.SettingPersistent;
+import com.construction.pm.utils.ConstantUtil;
 import com.construction.pm.views.inspector.InspectorLayout;
 
 import java.util.ArrayList;
@@ -62,6 +63,37 @@ public class InspectorFragment extends Fragment implements InspectorLayout.Inspe
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        Bundle bundle = null;
+        if (data != null)
+            bundle = data.getExtras();
+
+        if (requestCode == ConstantUtil.INTENT_REQUEST_INSPECTOR_DETAIL_ACTIVITY) {
+            if (resultCode == ConstantUtil.INTENT_REQUEST_INSPECTOR_DETAIL_ACTIVITY_RESULT_CHANGED) {
+                // -- Get ProjectActivityModel --
+                ProjectActivityModel projectActivityModel = null;
+                if (bundle != null) {
+                    if (bundle.containsKey(ConstantUtil.INTENT_RESULT_PROJECT_ACTIVITY_MODEL)) {
+                        String projectActivityModelJson = bundle.getString(ConstantUtil.INTENT_RESULT_PROJECT_ACTIVITY_MODEL);
+                        if (projectActivityModelJson != null) {
+                            try {
+                                org.json.JSONObject jsonObject = new org.json.JSONObject(projectActivityModelJson);
+                                projectActivityModel = ProjectActivityModel.build(jsonObject);
+                            } catch (org.json.JSONException ex) {
+                            }
+                        }
+                    }
+                }
+                if (projectActivityModel != null) {
+                    mInspectorLayout.replaceLayoutData(new ProjectActivityModel[] { projectActivityModel });
+                }
+            }
+        }
     }
 
     @Override
@@ -122,7 +154,7 @@ public class InspectorFragment extends Fragment implements InspectorLayout.Inspe
 
         }
 
-        startActivity(intent);
+        startActivityForResult(intent, ConstantUtil.INTENT_REQUEST_INSPECTOR_DETAIL_ACTIVITY);
     }
 
     protected void onProjectActivityListRequestProgress(final String progressMessage) {

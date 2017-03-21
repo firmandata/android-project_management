@@ -19,6 +19,10 @@ import com.construction.pm.models.StatusTaskEnum;
 import com.construction.pm.utils.DateTimeUtil;
 import com.construction.pm.utils.StringUtil;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class ProjectActivityListView {
     protected Context mContext;
 
@@ -67,7 +71,7 @@ public class ProjectActivityListView {
         mRvProjectActivityList.addOnItemTouchListener(new RecyclerItemTouchListener(mContext, mRvProjectActivityList, new RecyclerItemTouchListener.ItemClickListener() {
             @Override
             public void onClick(View view, int position) {
-                ProjectActivityModel projectActivityModel = mProjectActivityListAdapter.getItem(position);
+                ProjectActivityModel projectActivityModel = mProjectActivityListAdapter.getProjectActivityModel(position);
                 if (projectActivityModel != null) {
                     if (mProjectActivityListListener != null)
                         mProjectActivityListListener.onProjectActivityItemClick(projectActivityModel);
@@ -94,8 +98,24 @@ public class ProjectActivityListView {
         mProjectActivityListAdapter.setProjectActivityModels(projectActivityModels);
     }
 
+    public void addProjectActivityModels(final ProjectActivityModel[] projectActivityModels) {
+        mProjectActivityListAdapter.addProjectActivityModels(projectActivityModels);
+    }
+
+    public void removeProjectActivityModels(final ProjectActivityModel[] projectActivityModels) {
+        mProjectActivityListAdapter.removeProjectActivityModels(projectActivityModels);
+    }
+
+    public ProjectActivityModel[] getProjectActivityModels() {
+        return mProjectActivityListAdapter.getProjectActivityModels();
+    }
+
     public void setStatusTaskEnum(final StatusTaskEnum statusTaskEnum) {
         mStatusTaskEnum = statusTaskEnum;
+    }
+
+    public StatusTaskEnum getStatusTask() {
+        return mStatusTaskEnum;
     }
 
     public void startRefreshAnimation() {
@@ -125,30 +145,118 @@ public class ProjectActivityListView {
 
     protected class ProjectActivityListAdapter extends RecyclerView.Adapter<ProjectActivityListViewHolder> {
 
-        protected ProjectActivityModel[] mProjectActivityModels;
+        protected List<ProjectActivityModel> mProjectActivityModelList;
 
         public ProjectActivityListAdapter() {
-
+            mProjectActivityModelList = new ArrayList<ProjectActivityModel>();
         }
 
         public ProjectActivityListAdapter(final ProjectActivityModel[] projectActivityModels) {
             this();
-            mProjectActivityModels = projectActivityModels;
+            mProjectActivityModelList = new ArrayList<ProjectActivityModel>(Arrays.asList(projectActivityModels));
         }
 
         public void setProjectActivityModels(final ProjectActivityModel[] projectActivityModels) {
-            mProjectActivityModels = projectActivityModels;
-
+            mProjectActivityModelList = new ArrayList<ProjectActivityModel>(Arrays.asList(projectActivityModels));
             notifyDataSetChanged();
         }
 
-        public ProjectActivityModel getItem(final int position) {
-            if (mProjectActivityModels == null)
-                return null;
-            if ((position + 1) > mProjectActivityModels.length)
+        public void addProjectActivityModels(final ProjectActivityModel[] projectActivityModels) {
+            List<ProjectActivityModel> newProjectActivityModelList = new ArrayList<ProjectActivityModel>();
+            for (ProjectActivityModel newProjectActivityModel : projectActivityModels) {
+                int position = getPosition(newProjectActivityModel);
+                if (position >= 0) {
+                    // -- replace item --
+                    setProjectActivityModel(position, newProjectActivityModel);
+                } else {
+                    // -- new items --
+                    newProjectActivityModelList.add(newProjectActivityModel);
+                }
+            }
+            if (newProjectActivityModelList.size() > 0) {
+                mProjectActivityModelList.addAll(0, newProjectActivityModelList);
+                notifyItemRangeInserted(0, newProjectActivityModelList.size());
+            }
+        }
+
+        public void setProjectActivityModel(final int position, final ProjectActivityModel projectActivityModel) {
+            if ((position + 1) > mProjectActivityModelList.size())
+                return;
+
+            mProjectActivityModelList.set(position, projectActivityModel);
+            notifyItemChanged(position);
+        }
+
+        public void removeProjectActivityModels(final ProjectActivityModel[] projectActivityModels) {
+            for (ProjectActivityModel projectActivityModel : projectActivityModels) {
+                removeProjectActivityModel(projectActivityModel);
+            }
+        }
+
+        public void removeProjectActivityModel(final ProjectActivityModel projectActivityModel) {
+            int position = getPosition(projectActivityModel);
+            if (position >= 0) {
+                mProjectActivityModelList.remove(position);
+                notifyItemRemoved(position);
+            }
+        }
+
+        public ProjectActivityModel[] getProjectActivityModels() {
+            ProjectActivityModel[] projectActivityModels = new ProjectActivityModel[mProjectActivityModelList.size()];
+            mProjectActivityModelList.toArray(projectActivityModels);
+            return projectActivityModels;
+        }
+
+        public ProjectActivityModel getProjectActivityModel(final int position) {
+            if ((position + 1) > mProjectActivityModelList.size())
                 return null;
 
-            return mProjectActivityModels[position];
+            return mProjectActivityModelList.get(position);
+        }
+
+        public int getPosition(final ProjectActivityModel projectActivityModel) {
+            if (projectActivityModel == null)
+                return -1;
+
+            boolean isPositionFound;
+            int position;
+
+            // -- Search by object --
+            isPositionFound = false;
+            position = 0;
+            for (ProjectActivityModel projectActivityModelExist : mProjectActivityModelList) {
+                if (projectActivityModelExist.equals(projectActivityModel)) {
+                    isPositionFound = true;
+                    break;
+                }
+                position++;
+            }
+
+            if (isPositionFound)
+                return position;
+
+            // -- Search by id --
+            Integer searchProjectActivityId = projectActivityModel.getProjectActivityId();
+            if (searchProjectActivityId == null)
+                return -1;
+
+            isPositionFound = false;
+            position = 0;
+            for (ProjectActivityModel projectActivityModelExist : mProjectActivityModelList) {
+                Integer existProjectActivityId = projectActivityModelExist.getProjectActivityId();
+                if (existProjectActivityId != null) {
+                    if (existProjectActivityId.equals(searchProjectActivityId)) {
+                        isPositionFound = true;
+                        break;
+                    }
+                }
+                position++;
+            }
+
+            if (isPositionFound)
+                return position;
+
+            return -1;
         }
 
         @Override
@@ -159,21 +267,16 @@ public class ProjectActivityListView {
 
         @Override
         public void onBindViewHolder(ProjectActivityListViewHolder holder, int position) {
-            if (mProjectActivityModels == null)
-                return;
-            if ((position + 1) > mProjectActivityModels.length)
+            if ((position + 1) > mProjectActivityModelList.size())
                 return;
 
-            ProjectActivityModel projectActivityModel = mProjectActivityModels[position];
+            ProjectActivityModel projectActivityModel = mProjectActivityModelList.get(position);
             holder.setProjectActivityModel(projectActivityModel);
         }
 
         @Override
         public int getItemCount() {
-            if (mProjectActivityModels == null)
-                return 0;
-
-            return mProjectActivityModels.length;
+            return mProjectActivityModelList.size();
         }
     }
 

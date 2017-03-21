@@ -135,7 +135,10 @@ public class ProjectActivityMonitoringListView {
         }
 
         public void setProjectActivityMonitoringModels(final ProjectActivityMonitoringModel[] projectActivityMonitoringModels) {
-            mProjectActivityMonitoringModelList = new ArrayList<ProjectActivityMonitoringModel>(Arrays.asList(projectActivityMonitoringModels));
+            if (projectActivityMonitoringModels != null)
+                mProjectActivityMonitoringModelList = new ArrayList<ProjectActivityMonitoringModel>(Arrays.asList(projectActivityMonitoringModels));
+            else
+                mProjectActivityMonitoringModelList = new ArrayList<ProjectActivityMonitoringModel>();
             notifyDataSetChanged();
         }
 
