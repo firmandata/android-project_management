@@ -1,7 +1,6 @@
-package com.construction.pm.views.camera;
+package com.construction.pm.views;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
@@ -12,18 +11,18 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.construction.pm.R;
-import com.construction.pm.activities.fragmentdialogs.PhotoCameraAspectRatioFragment;
+import com.construction.pm.activities.fragmentdialogs.CameraAspectRatioDialogFragment;
 import com.google.android.cameraview.AspectRatio;
 import com.google.android.cameraview.CameraView;
 
 import java.util.Set;
 
-public class PhotoCameraLayout extends CameraView.Callback implements PhotoCameraAspectRatioFragment.PhotoCameraAspectRatioListener {
+public class CameraLayout extends CameraView.Callback implements CameraAspectRatioDialogFragment.CameraAspectRatioListener {
 
     protected Context mContext;
     protected FragmentManager mFragmentManager;
 
-    protected static final String FRAGMENT_TAG_PHOTO_CAMERA_ASPECT_RATIO = "FRAGMENT_PHOTO_CAMERA_ASPECT_RATIO";
+    protected static final String FRAGMENT_TAG_CAMERA_ASPECT_RATIO = "FRAGMENT_CAMERA_ASPECT_RATIO";
 
     protected static final int[] FLASH_OPTIONS = {
         CameraView.FLASH_AUTO,
@@ -37,39 +36,39 @@ public class PhotoCameraLayout extends CameraView.Callback implements PhotoCamer
         R.drawable.ic_flash_on,
     };
 
-    protected RelativeLayout mPhotoCameraLayout;
+    protected RelativeLayout mCameraLayout;
 
     protected CameraView mCameraView;
 
     protected int mCameraFlashCurrent;
 
-    protected PhotoCameraListener mPhotoCameraListener;
+    protected CameraLayoutListener mCameraLayoutListener;
 
-    protected PhotoCameraLayout(final Context context) {
+    protected CameraLayout(final Context context) {
         mContext = context;
     }
 
-    public PhotoCameraLayout(final Context context, final RelativeLayout photoCameraLayout) {
+    public CameraLayout(final Context context, final RelativeLayout cameraLayout) {
         this(context);
 
-        initializeView(photoCameraLayout);
+        initializeView(cameraLayout);
     }
 
-    public static PhotoCameraLayout buildPhotoCameraLayout(final Context context, final int layoutId, final ViewGroup viewGroup) {
-        return new PhotoCameraLayout(context, (RelativeLayout) LayoutInflater.from(context).inflate(layoutId, viewGroup));
+    public static CameraLayout buildCameraLayout(final Context context, final int layoutId, final ViewGroup viewGroup) {
+        return new CameraLayout(context, (RelativeLayout) LayoutInflater.from(context).inflate(layoutId, viewGroup));
     }
 
-    public static PhotoCameraLayout buildPhotoCameraLayout(final Context context, final ViewGroup viewGroup) {
-        return buildPhotoCameraLayout(context, R.layout.file_photo_camera_layout, viewGroup);
+    public static CameraLayout buildCameraLayout(final Context context, final ViewGroup viewGroup) {
+        return buildCameraLayout(context, R.layout.camera_layout, viewGroup);
     }
 
-    protected void initializeView(final RelativeLayout photoCameraLayout) {
-        mPhotoCameraLayout = photoCameraLayout;
+    protected void initializeView(final RelativeLayout cameraLayout) {
+        mCameraLayout = cameraLayout;
 
-        mCameraView = (CameraView) mPhotoCameraLayout.findViewById(R.id.cameraView);
+        mCameraView = (CameraView) mCameraLayout.findViewById(R.id.cameraView);
         mCameraView.addCallback(this);
 
-        FloatingActionButton takePicture = (FloatingActionButton) mPhotoCameraLayout.findViewById(R.id.takePicture);
+        FloatingActionButton takePicture = (FloatingActionButton) mCameraLayout.findViewById(R.id.takePicture);
         takePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -79,7 +78,7 @@ public class PhotoCameraLayout extends CameraView.Callback implements PhotoCamer
             }
         });
 
-        FloatingActionButton cameraSwitch = (FloatingActionButton) mPhotoCameraLayout.findViewById(R.id.cameraSwitch);
+        FloatingActionButton cameraSwitch = (FloatingActionButton) mCameraLayout.findViewById(R.id.cameraSwitch);
         cameraSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -90,22 +89,22 @@ public class PhotoCameraLayout extends CameraView.Callback implements PhotoCamer
             }
         });
 
-        FloatingActionButton cameraAspectRatio = (FloatingActionButton) mPhotoCameraLayout.findViewById(R.id.cameraAspectRatio);
+        FloatingActionButton cameraAspectRatio = (FloatingActionButton) mCameraLayout.findViewById(R.id.cameraAspectRatio);
         cameraAspectRatio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mCameraView != null) {
                     final Set<AspectRatio> ratios = mCameraView.getSupportedAspectRatios();
                     final AspectRatio currentRatio = mCameraView.getAspectRatio();
-                    PhotoCameraAspectRatioFragment photoCameraAspectRatioFragment = PhotoCameraAspectRatioFragment.newInstance(ratios, currentRatio, PhotoCameraLayout.this);
+                    CameraAspectRatioDialogFragment cameraAspectRatioDialogFragment = CameraAspectRatioDialogFragment.newInstance(ratios, currentRatio, CameraLayout.this);
                     if (mFragmentManager != null) {
-                        photoCameraAspectRatioFragment.show(mFragmentManager, FRAGMENT_TAG_PHOTO_CAMERA_ASPECT_RATIO);
+                        cameraAspectRatioDialogFragment.show(mFragmentManager, FRAGMENT_TAG_CAMERA_ASPECT_RATIO);
                     }
                 }
             }
         });
 
-        final FloatingActionButton cameraFlash = (FloatingActionButton) mPhotoCameraLayout.findViewById(R.id.cameraFlash);
+        final FloatingActionButton cameraFlash = (FloatingActionButton) mCameraLayout.findViewById(R.id.cameraFlash);
         cameraFlash.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -119,13 +118,13 @@ public class PhotoCameraLayout extends CameraView.Callback implements PhotoCamer
     }
 
     public RelativeLayout getLayout() {
-        return mPhotoCameraLayout;
+        return mCameraLayout;
     }
 
     public void loadLayoutToActivity(final AppCompatActivity activity) {
         mFragmentManager = activity.getSupportFragmentManager();
 
-        activity.setContentView(mPhotoCameraLayout);
+        activity.setContentView(mCameraLayout);
 
         ActionBar actionBar = activity.getSupportActionBar();
         if (actionBar != null) {
@@ -145,20 +144,20 @@ public class PhotoCameraLayout extends CameraView.Callback implements PhotoCamer
 
     @Override
     public void onCameraOpened(CameraView cameraView) {
-        if (mPhotoCameraListener != null)
-            mPhotoCameraListener.onCameraOpened();
+        if (mCameraLayoutListener != null)
+            mCameraLayoutListener.onCameraOpened();
     }
 
     @Override
     public void onCameraClosed(CameraView cameraView) {
-        if (mPhotoCameraListener != null)
-            mPhotoCameraListener.onCameraClosed();
+        if (mCameraLayoutListener != null)
+            mCameraLayoutListener.onCameraClosed();
     }
 
     @Override
     public void onPictureTaken(CameraView cameraView, final byte[] data) {
-        if (mPhotoCameraListener != null)
-            mPhotoCameraListener.onCameraTakenPicture(data);
+        if (mCameraLayoutListener != null)
+            mCameraLayoutListener.onCameraTakenPicture(data);
     }
 
     @Override
@@ -169,11 +168,11 @@ public class PhotoCameraLayout extends CameraView.Callback implements PhotoCamer
         }
     }
 
-    public void setPhotoCameraListener(final PhotoCameraListener photoCameraListener) {
-        mPhotoCameraListener = photoCameraListener;
+    public void setCameraListener(final CameraLayoutListener cameraListener) {
+        mCameraLayoutListener = cameraListener;
     }
 
-    public interface PhotoCameraListener {
+    public interface CameraLayoutListener {
         void onCameraOpened();
         void onCameraTakenPicture(byte[] data);
         void onCameraClosed();

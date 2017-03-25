@@ -17,7 +17,7 @@ import com.google.android.cameraview.AspectRatio;
 
 import java.util.Set;
 
-public class PhotoCameraAspectRatioFragment extends DialogFragment {
+public class CameraAspectRatioDialogFragment extends DialogFragment {
 
     public static final String PARAM_ASPECT_RATIOS = "AspectRatios";
     public static final String PARAM_ASPECT_RATIO_CURRENT = "AspectRatioCurrent";
@@ -26,17 +26,17 @@ public class PhotoCameraAspectRatioFragment extends DialogFragment {
     protected AspectRatio mAspectRatioCurrent;
     protected CameraAspectRatioAdapter mCameraAspectRatioAdapter;
 
-    protected PhotoCameraAspectRatioListener mPhotoCameraAspectRatioListener;
+    protected CameraAspectRatioListener mCameraAspectRatioListener;
 
-    public static PhotoCameraAspectRatioFragment newInstance(Set<AspectRatio> aspectRatios, AspectRatio currentAspectRatio, final PhotoCameraAspectRatioListener photoCameraAspectRatioListener) {
+    public static CameraAspectRatioDialogFragment newInstance(Set<AspectRatio> aspectRatios, AspectRatio currentAspectRatio, final CameraAspectRatioListener cameraAspectRatioListener) {
         final Bundle bundle = new Bundle();
         bundle.putParcelableArray(PARAM_ASPECT_RATIOS, aspectRatios.toArray(new AspectRatio[aspectRatios.size()]));
         bundle.putParcelable(PARAM_ASPECT_RATIO_CURRENT, currentAspectRatio);
 
-        final PhotoCameraAspectRatioFragment photoCameraAspectRatioFragment = new PhotoCameraAspectRatioFragment();
-        photoCameraAspectRatioFragment.setArguments(bundle);
-        photoCameraAspectRatioFragment.setPhotoCameraAspectRatioListener(photoCameraAspectRatioListener);
-        return photoCameraAspectRatioFragment;
+        final CameraAspectRatioDialogFragment cameraAspectRatioDialogFragment = new CameraAspectRatioDialogFragment();
+        cameraAspectRatioDialogFragment.setArguments(bundle);
+        cameraAspectRatioDialogFragment.setCameraAspectRatioListener(cameraAspectRatioListener);
+        return cameraAspectRatioDialogFragment;
     }
 
     @NonNull
@@ -60,7 +60,7 @@ public class PhotoCameraAspectRatioFragment extends DialogFragment {
         alertDialogBuilder.setAdapter(mCameraAspectRatioAdapter, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int position) {
-                mPhotoCameraAspectRatioListener.onCameraAspectRatioSelected(mAspectRatios[position]);
+                mCameraAspectRatioListener.onCameraAspectRatioSelected(mAspectRatios[position]);
             }
         });
 
@@ -140,11 +140,11 @@ public class PhotoCameraAspectRatioFragment extends DialogFragment {
         }
     }
 
-    public void setPhotoCameraAspectRatioListener(final PhotoCameraAspectRatioListener photoCameraAspectRatioListener) {
-        mPhotoCameraAspectRatioListener = photoCameraAspectRatioListener;
+    public void setCameraAspectRatioListener(final CameraAspectRatioListener cameraAspectRatioListener) {
+        mCameraAspectRatioListener = cameraAspectRatioListener;
     }
 
-    public interface PhotoCameraAspectRatioListener {
+    public interface CameraAspectRatioListener {
         void onCameraAspectRatioSelected(AspectRatio aspectRatio);
     }
 }

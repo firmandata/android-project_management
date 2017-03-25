@@ -117,7 +117,7 @@
             android:launchMode="singleTask" />
 
         <activity
-            android:name=".activities.PhotoCameraActivity"
+            android:name=".activities.CameraActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 

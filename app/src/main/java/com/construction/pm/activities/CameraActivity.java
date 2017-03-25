@@ -20,7 +20,7 @@ import com.construction.pm.R;
 import com.construction.pm.activities.fragmentdialogs.PermissionConfirmationDialogFragment;
 import com.construction.pm.utils.ConstantUtil;
 import com.construction.pm.utils.ViewUtil;
-import com.construction.pm.views.camera.PhotoCameraLayout;
+import com.construction.pm.views.CameraLayout;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -29,15 +29,15 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PhotoCameraActivity extends AppCompatActivity implements PhotoCameraLayout.PhotoCameraListener {
+public class CameraActivity extends AppCompatActivity implements CameraLayout.CameraLayoutListener {
 
     protected List<AsyncTask> mAsyncTaskList;
 
-    protected PhotoCameraLayout mPhotoCameraLayout;
+    protected CameraLayout mCameraLayout;
 
     protected Handler mBackgroundHandler;
 
-    private static final String FRAGMENT_TAG_PERMISSION_CONFIRMATION_DIALOG = "FRAGMENT_PERMISSION_CONFIRMATION_DIALOG";
+    public static final String FRAGMENT_TAG_PERMISSION_CONFIRMATION_DIALOG = "FRAGMENT_PERMISSION_CONFIRMATION_DIALOG";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,12 +49,12 @@ public class PhotoCameraActivity extends AppCompatActivity implements PhotoCamer
         // -- Handle intent request parameters --
         newIntentHandle(getIntent().getExtras());
 
-        // -- Prepare PhotoCameraLayout --
-        mPhotoCameraLayout = PhotoCameraLayout.buildPhotoCameraLayout(this, null);
-        mPhotoCameraLayout.setPhotoCameraListener(this);
+        // -- Prepare CameraLayout --
+        mCameraLayout = CameraLayout.buildCameraLayout(this, null);
+        mCameraLayout.setCameraListener(this);
 
         // -- Load to Activity --
-        mPhotoCameraLayout.loadLayoutToActivity(this);
+        mCameraLayout.loadLayoutToActivity(this);
 
         // -- Handle page request by parameters --
         requestPageHandle(getIntent().getExtras());
@@ -92,7 +92,7 @@ public class PhotoCameraActivity extends AppCompatActivity implements PhotoCamer
 
     @Override
     public void onCameraTakenPicture(final byte[] data) {
-        Log.d("PhotoCameraActivity", "onPictureTaken " + data.length);
+        Log.d("CameraActivity", "onPictureTaken " + data.length);
 
         Toast.makeText(this, R.string.camera_picture_taken, Toast.LENGTH_SHORT).show();
 
@@ -106,7 +106,7 @@ public class PhotoCameraActivity extends AppCompatActivity implements PhotoCamer
                     os.write(data);
                     os.close();
                 } catch (IOException e) {
-                    Log.w("PhotoCameraActivity", "Cannot write to " + file, e);
+                    Log.w("CameraActivity", "Cannot write to " + file, e);
                 } finally {
                     if (os != null) {
                         try {
@@ -129,8 +129,8 @@ public class PhotoCameraActivity extends AppCompatActivity implements PhotoCamer
     protected void onResume() {
         super.onResume();
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-            if (mPhotoCameraLayout != null)
-                mPhotoCameraLayout.cameraStart();
+            if (mCameraLayout != null)
+                mCameraLayout.cameraStart();
         } else if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
             PermissionConfirmationDialogFragment
                     .newInstance(R.string.camera_permission_confirmation,
@@ -145,8 +145,8 @@ public class PhotoCameraActivity extends AppCompatActivity implements PhotoCamer
 
     @Override
     protected void onPause() {
-        if (mPhotoCameraLayout != null)
-            mPhotoCameraLayout.cameraStop();
+        if (mCameraLayout != null)
+            mCameraLayout.cameraStop();
 
         super.onPause();
     }

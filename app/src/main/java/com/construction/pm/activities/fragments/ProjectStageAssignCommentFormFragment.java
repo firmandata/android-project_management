@@ -9,7 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.construction.pm.activities.PhotoCameraActivity;
+import com.construction.pm.activities.CameraActivity;
 import com.construction.pm.models.ProjectStageAssignCommentModel;
 import com.construction.pm.models.ProjectStageAssignmentModel;
 import com.construction.pm.views.project_stage.ProjectStageAssignCommentFormView;
@@ -107,8 +107,8 @@ public class ProjectStageAssignCommentFormFragment extends Fragment implements P
 
     @Override
     public void onRequestCamera() {
-        // -- Redirect to PhotoCameraActivity --
-        Intent intent = new Intent(this.getContext(), PhotoCameraActivity.class);
+        // -- Redirect to CameraActivity --
+        Intent intent = new Intent(this.getContext(), CameraActivity.class);
         startActivity(intent);
     }
 
