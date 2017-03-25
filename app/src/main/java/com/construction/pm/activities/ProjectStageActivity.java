@@ -25,6 +25,7 @@ import com.construction.pm.models.system.SettingUserModel;
 import com.construction.pm.persistence.SessionPersistent;
 import com.construction.pm.persistence.SettingPersistent;
 import com.construction.pm.utils.ConstantUtil;
+import com.construction.pm.utils.ImageUtil;
 import com.construction.pm.utils.ViewUtil;
 import com.construction.pm.views.listeners.ImageRequestClickListener;
 import com.construction.pm.views.listeners.ImageRequestListener;
@@ -277,7 +278,7 @@ public class ProjectStageActivity extends AppCompatActivity implements
                     FileModel fileModel = fileRequestAsyncTaskResult.getFileModel();
                     if (fileModel != null) {
                         if (fileModel.getFileData() != null)
-                            ViewUtil.setImageThumbnailView(ProjectStageActivity.this, imageView, fileModel.getFileData());
+                            ImageUtil.setImageThumbnailView(ProjectStageActivity.this, imageView, fileModel.getFileData());
                     }
                 }
             }
@@ -296,7 +297,7 @@ public class ProjectStageActivity extends AppCompatActivity implements
                     FileModel fileModel = fileRequestAsyncTaskResult.getFileModel();
                     if (fileModel != null) {
                         if (fileModel.getFileData() != null)
-                            ViewUtil.setImageThumbnailView(ProjectStageActivity.this, imageView, fileModel.getFileData());
+                            ImageUtil.setImageThumbnailView(ProjectStageActivity.this, imageView, fileModel.getFileData());
                     }
                 }
 

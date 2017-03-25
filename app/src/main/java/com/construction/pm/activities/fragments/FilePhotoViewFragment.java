@@ -16,6 +16,7 @@ import com.construction.pm.asynctask.result.FileGetAsyncTaskResult;
 import com.construction.pm.models.FileModel;
 import com.construction.pm.models.system.SettingUserModel;
 import com.construction.pm.persistence.SettingPersistent;
+import com.construction.pm.utils.ImageUtil;
 import com.construction.pm.utils.ViewUtil;
 import com.construction.pm.views.file.FilePhotoView;
 import com.construction.pm.views.file.TouchImageView;
@@ -109,7 +110,7 @@ public class FilePhotoViewFragment extends Fragment implements ImageRequestListe
                     FileModel fileModel = fileRequestAsyncTaskResult.getFileModel();
                     if (fileModel != null) {
                         if (fileModel.getFileData() != null)
-                            ViewUtil.setImageView(getContext(), touchImageView, fileModel.getFileData());
+                            ImageUtil.setImageView(getContext(), touchImageView, fileModel.getFileData());
                     }
                 }
             }
@@ -128,7 +129,7 @@ public class FilePhotoViewFragment extends Fragment implements ImageRequestListe
                     FileModel fileModel = fileRequestAsyncTaskResult.getFileModel();
                     if (fileModel != null) {
                         if (fileModel.getFileData() != null)
-                            ViewUtil.setImageView(getContext(), touchImageView, fileModel.getFileData());
+                            ImageUtil.setImageView(getContext(), touchImageView, fileModel.getFileData());
                     }
                 }
 

@@ -20,6 +20,7 @@ import com.construction.pm.models.FileModel;
 import com.construction.pm.models.ProjectActivityMonitoringModel;
 import com.construction.pm.models.system.SettingUserModel;
 import com.construction.pm.persistence.SettingPersistent;
+import com.construction.pm.utils.ImageUtil;
 import com.construction.pm.utils.ViewUtil;
 import com.construction.pm.views.listeners.ImageRequestClickListener;
 import com.construction.pm.views.listeners.ImageRequestListener;
@@ -121,7 +122,7 @@ public class ProjectActivityMonitoringDetailFragment extends Fragment implements
                     FileModel fileModel = fileRequestAsyncTaskResult.getFileModel();
                     if (fileModel != null) {
                         if (fileModel.getFileData() != null)
-                            ViewUtil.setImageThumbnailView(getContext(), imageView, fileModel.getFileData());
+                            ImageUtil.setImageThumbnailView(getContext(), imageView, fileModel.getFileData());
                     }
                 }
             }
@@ -140,7 +141,7 @@ public class ProjectActivityMonitoringDetailFragment extends Fragment implements
                     FileModel fileModel = fileRequestAsyncTaskResult.getFileModel();
                     if (fileModel != null) {
                         if (fileModel.getFileData() != null)
-                            ViewUtil.setImageThumbnailView(getContext(), imageView, fileModel.getFileData());
+                            ImageUtil.setImageThumbnailView(getContext(), imageView, fileModel.getFileData());
                     }
                 }
 

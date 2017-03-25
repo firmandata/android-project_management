@@ -2,8 +2,6 @@ package com.construction.pm.utils;
 
 import android.content.Context;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -17,7 +15,6 @@ import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -183,55 +180,5 @@ public class ViewUtil {
     public static int getScreenHeight(final Context context) {
         Point point = getScreenPoint(context);
         return point.y;
-    }
-
-    public static void setImageThumbnailView(final Context context, final ImageView imageView, final byte[] byteArray) {
-        int width = imageView.getWidth();
-        int height = imageView.getHeight();
-        if (width == 0 || height == 0) {
-            Point point = getScreenPoint(context);
-            if (width == 0)
-                width = point.x;
-            if (height == 0)
-                height = point.y;
-        }
-
-        Bitmap bitmap = getThumbnail(byteArray, width, height);
-        if (bitmap != null) {
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            imageView.setImageBitmap(bitmap);
-        }
-    }
-
-    public static void setImageView(final Context context, final ImageView imageView, final byte[] byteArray) {
-        int width = imageView.getWidth();
-        int height = imageView.getHeight();
-        if (width == 0 || height == 0) {
-            Point point = getScreenPoint(context);
-            if (width == 0)
-                width = point.x;
-            if (height == 0)
-                height = point.y;
-        }
-
-        Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
-        if (bitmap != null) {
-            imageView.setImageBitmap(Bitmap.createScaledBitmap(bitmap, width, height, false));
-        }
-    }
-
-    public static Bitmap getThumbnail(final byte[] byteArray, final int width, final int height) {
-        BitmapFactory.Options bitmapFactoryOption = new BitmapFactory.Options();
-        bitmapFactoryOption.inJustDecodeBounds = true;
-        BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length, bitmapFactoryOption);
-
-        int scale = 1;
-        while (bitmapFactoryOption.outWidth / scale / 2 >= width && bitmapFactoryOption.outHeight / scale / 2 >= height) {
-            scale *= 2;
-        }
-
-        BitmapFactory.Options bitmapFactoryOptionScaled = new BitmapFactory.Options();
-        bitmapFactoryOptionScaled.inSampleSize = scale;
-        return BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length, bitmapFactoryOptionScaled);
     }
 }

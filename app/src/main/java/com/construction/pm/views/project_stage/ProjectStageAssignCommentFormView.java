@@ -2,7 +2,9 @@ package com.construction.pm.views.project_stage;
 
 import android.content.Context;
 import android.support.v7.widget.AppCompatEditText;
+import android.support.v7.widget.AppCompatImageView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
@@ -15,9 +17,12 @@ public class ProjectStageAssignCommentFormView {
 
     protected RelativeLayout mProjectStageAssignCommentFormView;
 
+    protected AppCompatImageView mPhotoId;
     protected AppCompatEditText mComment;
 
     protected ProjectStageAssignCommentModel mProjectStageAssignCommentModel;
+
+    protected ProjectStageAssignCommentFormListener mProjectStageAssignCommentFormListener;
 
     public ProjectStageAssignCommentFormView(final Context context) {
         mContext = context;
@@ -41,6 +46,14 @@ public class ProjectStageAssignCommentFormView {
         mProjectStageAssignCommentFormView = projectActivityDetailView;
 
         mComment = (AppCompatEditText) mProjectStageAssignCommentFormView.findViewById(R.id.comment);
+        mPhotoId = (AppCompatImageView) mProjectStageAssignCommentFormView.findViewById(R.id.photoId);
+        mPhotoId.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mProjectStageAssignCommentFormListener != null)
+                    mProjectStageAssignCommentFormListener.onRequestCamera();
+            }
+        });
     }
 
     public RelativeLayout getView() {
@@ -71,5 +84,13 @@ public class ProjectStageAssignCommentFormView {
         mProjectStageAssignCommentModel.setComment(mComment.getText().toString());
 
         return mProjectStageAssignCommentModel;
+    }
+
+    public void setProjectStageAssignCommentFormListener(final ProjectStageAssignCommentFormListener projectStageAssignCommentFormListener) {
+        mProjectStageAssignCommentFormListener = projectStageAssignCommentFormListener;
+    }
+
+    public interface ProjectStageAssignCommentFormListener {
+        void onRequestCamera();
     }
 }

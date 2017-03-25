@@ -1,6 +1,7 @@
 package com.construction.pm.activities.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.construction.pm.activities.CameraActivity;
 import com.construction.pm.models.ProjectStageAssignCommentModel;
 import com.construction.pm.models.ProjectStageAssignmentModel;
 import com.construction.pm.views.project_stage.ProjectStageAssignCommentFormView;
@@ -15,7 +17,7 @@ import com.construction.pm.views.project_stage.ProjectStageAssignCommentFormView
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProjectStageAssignCommentFormFragment extends Fragment {
+public class ProjectStageAssignCommentFormFragment extends Fragment implements ProjectStageAssignCommentFormView.ProjectStageAssignCommentFormListener {
     public static final String PARAM_PROJECT_STAGE_ASSIGNMENT_MODEL = "PROJECT_STAGE_ASSIGNMENT_MODEL";
     public static final String PARAM_PROJECT_STAGE_ASSIGN_COMMENT_MODEL = "PROJECT_STAGE_ASSIGN_COMMENT_MODEL";
 
@@ -87,6 +89,7 @@ public class ProjectStageAssignCommentFormFragment extends Fragment {
 
         // -- Prepare ProjectStageAssignCommentFormView --
         mProjectStageAssignCommentFormView = ProjectStageAssignCommentFormView.buildProjectStageAssignCommentFormView(getContext(), null);
+        mProjectStageAssignCommentFormView.setProjectStageAssignCommentFormListener(this);
         mProjectStageAssignCommentFormView.setProjectStageAssignmentModel(projectStageAssignmentModel);
         mProjectStageAssignCommentFormView.setProjectStageAssignCommentModel(projectStageAssignCommentModel);
     }
@@ -100,6 +103,13 @@ public class ProjectStageAssignCommentFormFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+    }
+
+    @Override
+    public void onRequestCamera() {
+        // -- Redirect to CameraActivity --
+        Intent intent = new Intent(this.getContext(), CameraActivity.class);
+        startActivity(intent);
     }
 
     @Override
