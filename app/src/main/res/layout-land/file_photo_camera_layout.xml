@@ -1,21 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:baselineAligned="false"
-    android:orientation="horizontal">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <include
-        layout="@layout/file_photo_camera_view"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"/>
-
-    <include
-        layout="@layout/file_photo_camera_control_view"
-        android:layout_width="0dp"
+    <com.google.android.cameraview.CameraView
+        android:id="@+id/cameraView"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"/>
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:adjustViewBounds="true"/>
 
-</LinearLayout>
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:padding="@dimen/element_gap">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/cameraSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            app:srcCompat="@drawable/ic_switch_camera" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/cameraAspectRatio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/cameraSwitch"
+            android:layout_marginTop="@dimen/element_gap"
+            app:srcCompat="@drawable/ic_aspect_ratio" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/takePicture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            app:srcCompat="@drawable/ic_camera"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/cameraFlash"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            app:srcCompat="@drawable/ic_flash_auto"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>
