@@ -241,9 +241,10 @@
     <string name="file_layout_title">File</string>
     <string name="file_photo_detail_title">Photo</string>
 
-    <string name="camera_permission_confirmation">This app demonstrates the usage of CameraView. In order to do that, it needs permission to access camera.</string>
-    <string name="camera_permission_not_granted">Camera app cannot do anything without camera permission.</string>
-    <string name="camera_permission_request_error">Error on requesting camera permission.</string>
+    <string name="request_permission_confirmation">This app needs permission to access hardware.</string>
+    <string name="request_permission_not_granted">This app cannot running very well without hardware permission.</string>
+    <string name="request_permission_request_error">Error on requesting hardware permission.</string>
+
     <string name="camera_picture_taken">Picture taken</string>
     <string name="camera_aspect_ratio">Aspect ratio</string>
     <string name="camera_switch_flash">Switch flash</string>
@@ -251,6 +252,11 @@
     <string name="camera_flash_auto">Flash auto</string>
     <string name="camera_flash_off">Flash off</string>
     <string name="camera_flash_on">Flash on</string>
+
+    <string name="gps_request_enable_title">Request GPS enable</string>
+    <string name="gps_request_enable_message">Your Locations Settings is set to \'Off\'.\nPlease enable GPS to use this app.</string>
+    <string name="gps_request_enable_ok">GPS Setting</string>
+    <string name="gps_request_enable_cancel">Cancel</string>
 
     <string name="inspector_layout_title">Monitoring</string>
     <string name="inspector_layout_tab_in_progress">In Progress</string>

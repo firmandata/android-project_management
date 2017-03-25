@@ -42,17 +42,14 @@ public class PermissionConfirmationDialogFragment extends DialogFragment {
                                 if (permissions == null) {
                                     throw new IllegalArgumentException();
                                 }
-                                ActivityCompat.requestPermissions(getActivity(),
-                                        permissions, args.getInt(PARAM_REQUEST_CODE));
+                                ActivityCompat.requestPermissions(getActivity(), permissions, args.getInt(PARAM_REQUEST_CODE));
                             }
                         })
                 .setNegativeButton(android.R.string.cancel,
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                Toast.makeText(getActivity(),
-                                        args.getInt(PARAM_NOT_GRANTED_MESSAGE),
-                                        Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), args.getInt(PARAM_NOT_GRANTED_MESSAGE), Toast.LENGTH_SHORT).show();
                             }
                         })
                 .create();
