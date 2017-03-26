@@ -145,7 +145,14 @@ public class ProjectActivityMonitoringFormActivity extends AppCompatActivity imp
             };
 
             // -- Do InspectorProjectActivityMonitoringSaveAsyncTask --
-            inspectorProjectActivityMonitoringSaveAsyncTask.execute(new InspectorProjectActivityMonitoringSaveAsyncTaskParam(this, settingUserModel, projectActivityMonitoringModel, sessionLoginModel.getProjectMemberModel()));
+            InspectorProjectActivityMonitoringSaveAsyncTaskParam inspectorProjectActivityMonitoringSaveAsyncTaskParam = new InspectorProjectActivityMonitoringSaveAsyncTaskParam(this, settingUserModel, projectActivityMonitoringModel, sessionLoginModel.getProjectMemberModel());
+            inspectorProjectActivityMonitoringSaveAsyncTaskParam.setPhoto(mProjectActivityMonitoringFormLayout.getPhoto(0));
+            inspectorProjectActivityMonitoringSaveAsyncTaskParam.setPhotoAdditional1(mProjectActivityMonitoringFormLayout.getPhoto(1));
+            inspectorProjectActivityMonitoringSaveAsyncTaskParam.setPhotoAdditional2(mProjectActivityMonitoringFormLayout.getPhoto(2));
+            inspectorProjectActivityMonitoringSaveAsyncTaskParam.setPhotoAdditional3(mProjectActivityMonitoringFormLayout.getPhoto(3));
+            inspectorProjectActivityMonitoringSaveAsyncTaskParam.setPhotoAdditional4(mProjectActivityMonitoringFormLayout.getPhoto(4));
+            inspectorProjectActivityMonitoringSaveAsyncTaskParam.setPhotoAdditional5(mProjectActivityMonitoringFormLayout.getPhoto(5));
+            inspectorProjectActivityMonitoringSaveAsyncTask.execute(inspectorProjectActivityMonitoringSaveAsyncTaskParam);
         }
     }
 

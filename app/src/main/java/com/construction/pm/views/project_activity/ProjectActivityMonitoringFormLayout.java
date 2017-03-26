@@ -23,6 +23,7 @@ import com.construction.pm.R;
 import com.construction.pm.activities.fragments.ProjectActivityMonitoringFormFragment;
 import com.construction.pm.models.ProjectActivityModel;
 import com.construction.pm.models.ProjectActivityMonitoringModel;
+import com.construction.pm.networks.webapi.WebApiParam;
 import com.construction.pm.utils.ViewUtil;
 
 public class ProjectActivityMonitoringFormLayout {
@@ -187,6 +188,13 @@ public class ProjectActivityMonitoringFormLayout {
             return null;
 
         return mProjectActivityMonitoringFormFragment.getProjectActivityMonitoringModel();
+    }
+
+    public WebApiParam.WebApiParamFile getPhoto(final int position) {
+        if (mProjectActivityMonitoringFormFragment == null)
+            return null;
+
+        return mProjectActivityMonitoringFormFragment.getPhoto(position);
     }
 
     public void setProjectActivityMonitoringFormLayoutListener(final ProjectActivityMonitoringFormLayoutListener projectActivityMonitoringFormLayoutListener) {
