@@ -2,6 +2,7 @@ package com.construction.pm.views.project_stage;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatImageView;
 import android.view.LayoutInflater;
@@ -53,7 +54,18 @@ public class ProjectStageAssignCommentFormView {
 
         mComment = (AppCompatEditText) mProjectStageAssignCommentFormView.findViewById(R.id.comment);
         mPhotoId = (AppCompatImageView) mProjectStageAssignCommentFormView.findViewById(R.id.photoId);
-        mPhotoId.setOnClickListener(new View.OnClickListener() {
+
+        FloatingActionButton takeCamera = (FloatingActionButton) mProjectStageAssignCommentFormView.findViewById(R.id.takeCamera);
+        takeCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mProjectStageAssignCommentFormListener != null)
+                    mProjectStageAssignCommentFormListener.onRequestCamera();
+            }
+        });
+
+        FloatingActionButton takeGallery = (FloatingActionButton) mProjectStageAssignCommentFormView.findViewById(R.id.takeGallery);
+        takeGallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mProjectStageAssignCommentFormListener != null)

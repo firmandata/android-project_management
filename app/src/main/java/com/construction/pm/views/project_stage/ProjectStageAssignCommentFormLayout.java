@@ -10,6 +10,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -66,6 +67,7 @@ public class ProjectStageAssignCommentFormLayout {
 
     protected void initializeView(final CoordinatorLayout projectStageAssignCommentFormLayout) {
         mProjectStageAssignCommentFormLayout = projectStageAssignCommentFormLayout;
+
         mAppBarLayout = (AppBarLayout) mProjectStageAssignCommentFormLayout.findViewById(R.id.contentAppBar);
         mToolbar = (Toolbar) mProjectStageAssignCommentFormLayout.findViewById(R.id.contentToolbar);
 

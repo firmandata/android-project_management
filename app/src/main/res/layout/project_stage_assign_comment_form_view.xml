@@ -1,22 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <RelativeLayout
         android:id="@+id/photoIdContainer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/commentContainer">
 
         <android.support.v7.widget.AppCompatImageView
             android:id="@+id/photoId"
             android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/logo_96"
+            android:scaleType="center" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/takeCamera"
+            app:srcCompat="@drawable/ic_camera"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/logo_96" />
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_margin="@dimen/gap" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/takeGallery"
+            app:srcCompat="@drawable/ic_gallery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/takeCamera"
+            android:layout_toStartOf="@+id/takeCamera"
+            android:layout_alignTop="@+id/takeCamera" />
 
     </RelativeLayout>
 
@@ -26,24 +47,24 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@id/photoIdContainer">
+        android:layout_alignParentBottom="true">
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/commentLabel"
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/commentLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:text="@string/project_activity_monitoring_comment" />
+            android:layout_alignParentStart="true">
 
-        <android.support.v7.widget.AppCompatEditText
-            android:id="@+id/comment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/commentLabel"
-            android:text="TextView"
-            android:singleLine="false" />
+            <android.support.v7.widget.AppCompatEditText
+                android:id="@+id/comment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/project_activity_monitoring_comment"
+                android:singleLine="false" />
+
+        </android.support.design.widget.TextInputLayout>
 
     </RelativeLayout>
 
