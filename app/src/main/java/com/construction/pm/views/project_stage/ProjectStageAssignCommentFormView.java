@@ -15,6 +15,7 @@ import com.construction.pm.models.ProjectStageAssignCommentModel;
 import com.construction.pm.models.ProjectStageAssignmentModel;
 import com.construction.pm.networks.webapi.WebApiParam;
 import com.construction.pm.utils.ImageUtil;
+import com.construction.pm.views.listeners.ImageRequestListener;
 
 import java.io.File;
 
@@ -30,6 +31,7 @@ public class ProjectStageAssignCommentFormView {
     protected File mPhotoFile;
 
     protected ProjectStageAssignCommentFormListener mProjectStageAssignCommentFormListener;
+    protected ImageRequestListener mImageRequestListener;
 
     public ProjectStageAssignCommentFormView(final Context context) {
         mContext = context;
@@ -91,6 +93,10 @@ public class ProjectStageAssignCommentFormView {
             return;
 
         mProjectStageAssignCommentModel = projectStageAssignCommentModel.duplicate();
+        if (mImageRequestListener != null) {
+            if (mProjectStageAssignCommentModel.getPhotoId() != null)
+                mImageRequestListener.onImageRequest(mPhotoId, mProjectStageAssignCommentModel.getPhotoId());
+        }
 
         mComment.setText(projectStageAssignCommentModel.getComment());
     }
@@ -110,6 +116,10 @@ public class ProjectStageAssignCommentFormView {
         webApiParamFile.setFileName(mPhotoFile.getName());
         webApiParamFile.setFileData(ImageUtil.getImageData(mPhotoFile, Bitmap.CompressFormat.JPEG, 30));
         return webApiParamFile;
+    }
+
+    public void setImageRequestListener(final ImageRequestListener imageRequestListener) {
+        mImageRequestListener = imageRequestListener;
     }
 
     public ProjectStageAssignCommentModel getProjectStageAssignCommentModel() {

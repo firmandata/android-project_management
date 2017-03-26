@@ -7,7 +7,7 @@ import android.view.MenuItem;
 
 import com.construction.pm.views.file.FileLayout;
 
-public class FileViewActivity extends AppCompatActivity  implements FileLayout.FileLayoutListener {
+public class FileViewActivity extends AppCompatActivity implements FileLayout.FileLayoutListener {
 
     public static final String INTENT_PARAM_FILE_ID = "FILE_ID";
 
