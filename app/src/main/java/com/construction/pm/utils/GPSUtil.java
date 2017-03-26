@@ -2,6 +2,7 @@ package com.construction.pm.utils;
 
 import android.media.ExifInterface;
 
+import java.io.File;
 import java.io.IOException;
 
 public class GPSUtil {
@@ -70,13 +71,17 @@ public class GPSUtil {
     }
 
     public static boolean setGeoLocationToExif(final String fileLocation, final double latitude, final double longitude) {
+        File file = new File(fileLocation);
+        if (!file.exists())
+            return false;
+
         try {
-            ExifInterface exif = new ExifInterface(fileLocation);
-            exif.setAttribute(ExifInterface.TAG_GPS_LATITUDE, convertLatLong(latitude));
-            exif.setAttribute(ExifInterface.TAG_GPS_LATITUDE_REF, latitudeRef(latitude));
-            exif.setAttribute(ExifInterface.TAG_GPS_LONGITUDE, convertLatLong(longitude));
-            exif.setAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF, longitudeRef(longitude));
-            exif.saveAttributes();
+            ExifInterface exifInterface = new ExifInterface(fileLocation);
+            exifInterface.setAttribute(ExifInterface.TAG_GPS_LATITUDE, convertLatLong(latitude));
+            exifInterface.setAttribute(ExifInterface.TAG_GPS_LATITUDE_REF, latitudeRef(latitude));
+            exifInterface.setAttribute(ExifInterface.TAG_GPS_LONGITUDE, convertLatLong(longitude));
+            exifInterface.setAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF, longitudeRef(longitude));
+            exifInterface.saveAttributes();
 
             return true;
         } catch (IOException ioException) {

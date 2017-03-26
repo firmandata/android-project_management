@@ -1,6 +1,7 @@
 package com.construction.pm.views.project_stage;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatImageView;
 import android.view.LayoutInflater;
@@ -11,6 +12,10 @@ import android.widget.RelativeLayout;
 import com.construction.pm.R;
 import com.construction.pm.models.ProjectStageAssignCommentModel;
 import com.construction.pm.models.ProjectStageAssignmentModel;
+import com.construction.pm.networks.webapi.WebApiParam;
+import com.construction.pm.utils.ImageUtil;
+
+import java.io.File;
 
 public class ProjectStageAssignCommentFormView {
     protected Context mContext;
@@ -21,6 +26,7 @@ public class ProjectStageAssignCommentFormView {
     protected AppCompatEditText mComment;
 
     protected ProjectStageAssignCommentModel mProjectStageAssignCommentModel;
+    protected File mPhotoFile;
 
     protected ProjectStageAssignCommentFormListener mProjectStageAssignCommentFormListener;
 
@@ -77,6 +83,23 @@ public class ProjectStageAssignCommentFormView {
         mComment.setText(projectStageAssignCommentModel.getComment());
     }
 
+    public void setPhotoId(final File file) {
+        mPhotoFile = file;
+
+        ImageUtil.setImageThumbnailView(mContext, mPhotoId, file.getAbsolutePath());
+    }
+
+    public WebApiParam.WebApiParamFile getPhotoId() {
+        if (mPhotoFile == null)
+            return null;
+
+        WebApiParam.WebApiParamFile webApiParamFile = new WebApiParam.WebApiParamFile();
+        webApiParamFile.setMimeType("image/jpeg");
+        webApiParamFile.setFileName(mPhotoFile.getName());
+        webApiParamFile.setFileData(ImageUtil.getImageData(mPhotoFile, Bitmap.CompressFormat.JPEG, 30));
+        return webApiParamFile;
+    }
+
     public ProjectStageAssignCommentModel getProjectStageAssignCommentModel() {
         if (mProjectStageAssignCommentModel == null)
             mProjectStageAssignCommentModel = new ProjectStageAssignCommentModel();
@@ -92,5 +115,6 @@ public class ProjectStageAssignCommentFormView {
 
     public interface ProjectStageAssignCommentFormListener {
         void onRequestCamera();
+        void onRequestGallery();
     }
 }

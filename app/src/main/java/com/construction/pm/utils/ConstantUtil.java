@@ -12,6 +12,7 @@ public class ConstantUtil {
     public static final String INTENT_RESULT_PROJECT_ACTIVITY_MONITORING_MODEL = "PROJECT_ACTIVITY_MONITORING_MODEL";
     public static final String INTENT_RESULT_PROJECT_ACTIVITY_UPDATE_MODEL = "PROJECT_ACTIVITY_UPDATE_MODEL";
     public static final String INTENT_RESULT_PROJECT_STAGE_ASSIGN_COMMENT_MODEL = "PROJECT_STAGE_ASSIGN_COMMENT_MODEL";
+    public static final String INTENT_RESULT_FILE_PATH = "FILE_PATH";
 
     public static final int INTENT_REQUEST_PERMISSION = 50;
 
@@ -35,4 +36,10 @@ public class ConstantUtil {
 
     public static final int INTENT_REQUEST_MANAGER_DETAIL_ACTIVITY = 700;
     public static final int INTENT_REQUEST_MANAGER_DETAIL_ACTIVITY_RESULT_CHANGED = 701;
+
+    public static final int INTENT_REQUEST_CAMERA_ACTIVITY = 800;
+    public static final int INTENT_REQUEST_CAMERA_ACTIVITY_RESULT_FILE = 801;
+
+    public static final int INTENT_REQUEST_GALLERY_ACTIVITY = 900;
+    public static final int INTENT_REQUEST_GALLERY_ACTIVITY_RESULT_FILE = 901;
 }

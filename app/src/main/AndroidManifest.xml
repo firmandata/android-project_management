@@ -121,6 +121,12 @@
         <activity
             android:name=".activities.CameraActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity
+            android:name=".activities.GalleryActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTask" />
     </application>
 
 </manifest>

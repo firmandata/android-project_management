@@ -15,6 +15,7 @@ import com.construction.pm.models.ProjectStageAssignCommentModel;
 import com.construction.pm.models.ProjectStageAssignmentModel;
 import com.construction.pm.models.system.SessionLoginModel;
 import com.construction.pm.models.system.SettingUserModel;
+import com.construction.pm.networks.webapi.WebApiParam;
 import com.construction.pm.persistence.SessionPersistent;
 import com.construction.pm.persistence.SettingPersistent;
 import com.construction.pm.utils.ConstantUtil;
@@ -105,6 +106,8 @@ public class ProjectStageAssignCommentFormActivity extends AppCompatActivity imp
         if (projectStageAssignCommentModel == null)
             return;
 
+        WebApiParam.WebApiParamFile photoId = mProjectStageAssignCommentFormLayout.getPhotoId();
+
         // -- Get SettingUserModel from SettingPersistent --
         SettingPersistent settingPersistent = new SettingPersistent(this);
         SettingUserModel settingUserModel = settingPersistent.getSettingUserModel();
@@ -145,7 +148,9 @@ public class ProjectStageAssignCommentFormActivity extends AppCompatActivity imp
             };
 
             // -- Do ProjectStageAssignCommentSaveAsyncTask --
-            projectStageAssignCommentSaveAsyncTask.execute(new ProjectStageAssignCommentSaveAsyncTaskParam(this, settingUserModel, projectStageAssignCommentModel, sessionLoginModel.getProjectMemberModel()));
+            ProjectStageAssignCommentSaveAsyncTaskParam projectStageAssignCommentSaveAsyncTaskParam = new ProjectStageAssignCommentSaveAsyncTaskParam(this, settingUserModel, projectStageAssignCommentModel, sessionLoginModel.getProjectMemberModel());
+            projectStageAssignCommentSaveAsyncTaskParam.setPhoto(photoId);
+            projectStageAssignCommentSaveAsyncTask.execute(projectStageAssignCommentSaveAsyncTaskParam);
         }
     }
 

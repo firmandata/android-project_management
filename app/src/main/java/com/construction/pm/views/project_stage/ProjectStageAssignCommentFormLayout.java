@@ -23,7 +23,10 @@ import com.construction.pm.R;
 import com.construction.pm.activities.fragments.ProjectStageAssignCommentFormFragment;
 import com.construction.pm.models.ProjectStageAssignCommentModel;
 import com.construction.pm.models.ProjectStageAssignmentModel;
+import com.construction.pm.networks.webapi.WebApiParam;
 import com.construction.pm.utils.ViewUtil;
+
+import java.io.File;
 
 public class ProjectStageAssignCommentFormLayout {
     protected Context mContext;
@@ -187,6 +190,13 @@ public class ProjectStageAssignCommentFormLayout {
             return null;
 
         return mProjectStageAssignCommentFormFragment.getProjectStageAssignCommentModel();
+    }
+
+    public WebApiParam.WebApiParamFile getPhotoId() {
+        if (mProjectStageAssignCommentFormFragment == null)
+            return null;
+
+        return mProjectStageAssignCommentFormFragment.getPhotoId();
     }
 
     public void setProjectStageAssignCommentFormLayoutListener(final ProjectStageAssignCommentFormLayoutListener projectStageAssignCommentFormLayoutListener) {

@@ -1,10 +1,12 @@
 package com.construction.pm.views;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +17,9 @@ import com.construction.pm.activities.fragmentdialogs.CameraAspectRatioDialogFra
 import com.google.android.cameraview.AspectRatio;
 import com.google.android.cameraview.CameraView;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 public class CameraLayout extends CameraView.Callback implements CameraAspectRatioDialogFragment.CameraAspectRatioListener {
@@ -24,28 +29,21 @@ public class CameraLayout extends CameraView.Callback implements CameraAspectRat
 
     protected static final String FRAGMENT_TAG_CAMERA_ASPECT_RATIO = "FRAGMENT_CAMERA_ASPECT_RATIO";
 
-    protected static final int[] FLASH_OPTIONS = {
-        CameraView.FLASH_AUTO,
-        CameraView.FLASH_OFF,
-        CameraView.FLASH_ON,
-    };
-
-    protected static final int[] FLASH_ICONS = {
-        R.drawable.ic_flash_auto,
-        R.drawable.ic_flash_off,
-        R.drawable.ic_flash_on,
-    };
-
+    protected SparseIntArray mFlashOptions;
     protected RelativeLayout mCameraLayout;
 
     protected CameraView mCameraView;
-
-    protected int mCameraFlashCurrent;
+    protected ProgressDialog mProgressDialog;
 
     protected CameraLayoutListener mCameraLayoutListener;
 
     protected CameraLayout(final Context context) {
         mContext = context;
+
+        mFlashOptions = new SparseIntArray();
+        mFlashOptions.put(CameraView.FLASH_AUTO, R.drawable.ic_flash_auto);
+        mFlashOptions.put(CameraView.FLASH_OFF, R.drawable.ic_flash_off);
+        mFlashOptions.put(CameraView.FLASH_ON, R.drawable.ic_flash_on);
     }
 
     public CameraLayout(final Context context, final RelativeLayout cameraLayout) {
@@ -108,17 +106,42 @@ public class CameraLayout extends CameraView.Callback implements CameraAspectRat
         cameraFlash.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mCameraView != null) {
-                    mCameraFlashCurrent = (mCameraFlashCurrent + 1) % FLASH_OPTIONS.length;
-                    cameraFlash.setImageResource(FLASH_ICONS[mCameraFlashCurrent]);
-                    mCameraView.setFlash(FLASH_OPTIONS[mCameraFlashCurrent]);
+                if (mCameraView != null && mFlashOptions != null) {
+                    if (mFlashOptions.size() > 0) {
+                        int flashCurrentOption = mCameraView.getFlash();
+                        int flashOptionIndex = (mFlashOptions.indexOfKey(flashCurrentOption) + 1) % mFlashOptions.size();
+                        @CameraView.Flash int flashOptionKey = mFlashOptions.keyAt(flashOptionIndex);
+                        int flashOptionValue = mFlashOptions.valueAt(flashOptionIndex);
+
+                        try {
+                            mCameraView.setFlash(flashOptionKey);
+                            cameraFlash.setImageResource(flashOptionValue);
+                        } catch (Exception exception) {
+                        }
+                    }
                 }
             }
         });
+
+        mProgressDialog = new ProgressDialog(mContext);
+        mProgressDialog.setCancelable(true);
+        mProgressDialog.setCanceledOnTouchOutside(true);
     }
 
     public RelativeLayout getLayout() {
         return mCameraLayout;
+    }
+
+    public void progressDialogShow(final String progressMessage) {
+        mProgressDialog.setMessage(progressMessage);
+        if (!mProgressDialog.isShowing())
+            mProgressDialog.show();
+    }
+
+    public void progressDialogDismiss() {
+        mProgressDialog.setMessage(null);
+        if (mProgressDialog.isShowing())
+            mProgressDialog.dismiss();
     }
 
     public void loadLayoutToActivity(final AppCompatActivity activity) {
@@ -163,8 +186,13 @@ public class CameraLayout extends CameraView.Callback implements CameraAspectRat
     @Override
     public void onCameraAspectRatioSelected(AspectRatio aspectRatio) {
         if (mCameraView != null) {
-            if (aspectRatio != null)
-                mCameraView.setAspectRatio(aspectRatio);
+            if (aspectRatio != null) {
+                try {
+                    mCameraView.setAspectRatio(aspectRatio);
+                } catch (Exception exception) {
+
+                }
+            }
         }
     }
 

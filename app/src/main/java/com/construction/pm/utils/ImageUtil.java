@@ -9,6 +9,8 @@ import android.net.Uri;
 import android.os.Environment;
 import android.widget.ImageView;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
@@ -33,16 +35,26 @@ public class ImageUtil {
 
     public static void setImageThumbnailView(final Context context, final ImageView imageView, final byte[] byteArray) {
         int width = imageView.getWidth();
-        int height = imageView.getHeight();
-        if (width == 0 || height == 0) {
+        if (width == 0) {
             Point point = ViewUtil.getScreenPoint(context);
-            if (width == 0)
-                width = point.x;
-            if (height == 0)
-                height = point.y;
+            width = point.x;
         }
 
-        Bitmap bitmap = getImageThumbnail(byteArray, width, height);
+        Bitmap bitmap = getImageThumbnail(byteArray, width);
+        if (bitmap != null) {
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            imageView.setImageBitmap(bitmap);
+        }
+    }
+
+    public static void setImageThumbnailView(final Context context, final ImageView imageView, final String fileLocation) {
+        int width = imageView.getWidth();
+        if (width == 0) {
+            Point point = ViewUtil.getScreenPoint(context);
+            width = point.x;
+        }
+
+        Bitmap bitmap = getImageThumbnail(fileLocation, width);
         if (bitmap != null) {
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             imageView.setImageBitmap(bitmap);
@@ -51,22 +63,29 @@ public class ImageUtil {
 
     public static void setImageView(final Context context, final ImageView imageView, final byte[] byteArray) {
         int width = imageView.getWidth();
-        int height = imageView.getHeight();
-        if (width == 0 || height == 0) {
+        if (width == 0) {
             Point point = ViewUtil.getScreenPoint(context);
-            if (width == 0)
-                width = point.x;
-            if (height == 0)
-                height = point.y;
+            width = point.x;
         }
 
         Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
         if (bitmap != null) {
+            float aspectRatio = bitmap.getWidth() / (float) bitmap.getHeight();
+            // int width = Math.round(height * aspectRatio); // based on height
+            int height = Math.round(width / aspectRatio); // based on width
             imageView.setImageBitmap(Bitmap.createScaledBitmap(bitmap, width, height, false));
         }
     }
 
-    public static Bitmap getImageThumbnail(final String fileLocation, final int width, final int height) {
+    protected static Bitmap getImageThumbnail(final String fileLocation, final int width) {
+        Bitmap bitmap = BitmapFactory.decodeFile(fileLocation);
+        if (bitmap == null)
+            return null;
+
+        float aspectRatio = bitmap.getWidth() / (float) bitmap.getHeight();
+        // int width = Math.round(height * aspectRatio); // based on height
+        int height = Math.round(width / aspectRatio); // based on width
+
         BitmapFactory.Options bitmapFactoryOption = new BitmapFactory.Options();
         bitmapFactoryOption.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(fileLocation, bitmapFactoryOption);
@@ -83,7 +102,15 @@ public class ImageUtil {
         return BitmapFactory.decodeFile(fileLocation, bitmapFactoryOptionScaled);
     }
 
-    public static Bitmap getImageThumbnail(final byte[] byteArray, final int width, final int height) {
+    protected static Bitmap getImageThumbnail(final byte[] byteArray, final int width) {
+        Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+        if (bitmap == null)
+            return null;
+
+        float aspectRatio = bitmap.getWidth() / (float) bitmap.getHeight();
+        // int width = Math.round(height * aspectRatio); // based on height
+        int height = Math.round(width / aspectRatio); // based on width
+
         BitmapFactory.Options bitmapFactoryOption = new BitmapFactory.Options();
         bitmapFactoryOption.inJustDecodeBounds = true;
         BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length, bitmapFactoryOption);
@@ -114,5 +141,40 @@ public class ImageUtil {
         context.sendBroadcast(intent);
 
         return true;
+    }
+
+    public static Bitmap compressImage(final Bitmap bitmap, final Bitmap.CompressFormat compressFormat, final int quality) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        if (bitmap.compress(compressFormat, quality, byteArrayOutputStream)) {
+            return BitmapFactory.decodeStream(new ByteArrayInputStream(byteArrayOutputStream.toByteArray()));
+        }
+        return null;
+    }
+
+    public static byte[] getImageData(final File file) {
+        return getImageData(file.getAbsolutePath());
+    }
+
+    public static byte[] getImageData(final File file, final Bitmap.CompressFormat compressFormat, final int quality) {
+        return getImageData(file.getAbsolutePath(), compressFormat, quality);
+    }
+
+    public static byte[] getImageData(final String fileLocation) {
+        return getImageData(fileLocation, Bitmap.CompressFormat.PNG, 100);
+    }
+
+    public static byte[] getImageData(final String fileLocation, final Bitmap.CompressFormat compressFormat, final int quality) {
+        return getImageData(BitmapFactory.decodeFile(fileLocation), compressFormat, quality);
+    }
+
+    public static byte[] getImageData(final Bitmap bitmap) {
+        return getImageData(bitmap, Bitmap.CompressFormat.PNG, 100);
+    }
+
+    public static byte[] getImageData(final Bitmap bitmap, final Bitmap.CompressFormat compressFormat, final int quality) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        if (bitmap.compress(compressFormat, quality, byteArrayOutputStream))
+            return byteArrayOutputStream.toByteArray();
+        return null;
     }
 }

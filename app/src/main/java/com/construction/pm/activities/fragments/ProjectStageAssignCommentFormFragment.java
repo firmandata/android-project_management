@@ -10,10 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.construction.pm.activities.CameraActivity;
+import com.construction.pm.activities.GalleryActivity;
 import com.construction.pm.models.ProjectStageAssignCommentModel;
 import com.construction.pm.models.ProjectStageAssignmentModel;
+import com.construction.pm.networks.webapi.WebApiParam;
+import com.construction.pm.utils.ConstantUtil;
 import com.construction.pm.views.project_stage.ProjectStageAssignCommentFormView;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -109,7 +113,38 @@ public class ProjectStageAssignCommentFormFragment extends Fragment implements P
     public void onRequestCamera() {
         // -- Redirect to CameraActivity --
         Intent intent = new Intent(this.getContext(), CameraActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, ConstantUtil.INTENT_REQUEST_CAMERA_ACTIVITY);
+    }
+
+    @Override
+    public void onRequestGallery() {
+        // -- Redirect to GalleryActivity --
+        Intent intent = new Intent(this.getContext(), GalleryActivity.class);
+        startActivityForResult(intent, ConstantUtil.INTENT_REQUEST_GALLERY_ACTIVITY);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        Bundle bundle = null;
+        if (data != null)
+            bundle = data.getExtras();
+
+        if (requestCode == ConstantUtil.INTENT_REQUEST_CAMERA_ACTIVITY || requestCode == ConstantUtil.INTENT_REQUEST_GALLERY_ACTIVITY) {
+            if (resultCode == ConstantUtil.INTENT_REQUEST_CAMERA_ACTIVITY_RESULT_FILE || resultCode == ConstantUtil.INTENT_REQUEST_GALLERY_ACTIVITY_RESULT_FILE) {
+                if (bundle != null) {
+                    if (bundle.containsKey(ConstantUtil.INTENT_RESULT_FILE_PATH)) {
+                        String filePath = bundle.getString(ConstantUtil.INTENT_RESULT_FILE_PATH);
+                        if (filePath != null) {
+                            File file = new File(filePath);
+                            if (file.exists())
+                                mProjectStageAssignCommentFormView.setPhotoId(file);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -129,5 +164,9 @@ public class ProjectStageAssignCommentFormFragment extends Fragment implements P
 
     public ProjectStageAssignCommentModel getProjectStageAssignCommentModel() {
         return mProjectStageAssignCommentFormView.getProjectStageAssignCommentModel();
+    }
+
+    public WebApiParam.WebApiParamFile getPhotoId() {
+        return mProjectStageAssignCommentFormView.getPhotoId();
     }
 }

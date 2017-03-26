@@ -9,7 +9,6 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.media.ExifInterface;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,7 +21,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.construction.pm.R;
@@ -41,14 +39,18 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class CameraActivity extends AppCompatActivity implements CameraLayout.CameraLayoutListener {
+public class CameraActivity extends AppCompatActivity implements
+        CameraLayout.CameraLayoutListener,
+        LocationListener {
 
     protected List<AsyncTask> mAsyncTaskList;
 
     protected CameraLayout mCameraLayout;
+    protected boolean isCameraTaken;
 
     protected LocationManager mLocationManager;
-    protected LocationUpdateListener mLocationUpdateListener;
+    protected Location mLocation;
+
     protected Handler mBackgroundHandler;
 
     public static final String FRAGMENT_TAG_PERMISSION_CONFIRMATION_DIALOG = "FRAGMENT_PERMISSION_CONFIRMATION_DIALOG";
@@ -59,7 +61,6 @@ public class CameraActivity extends AppCompatActivity implements CameraLayout.Ca
 
         // -- Get the location manager --
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        mLocationUpdateListener = new LocationUpdateListener(this);
 
         // -- Handle AsyncTask --
         mAsyncTaskList = new ArrayList<AsyncTask>();
@@ -104,67 +105,6 @@ public class CameraActivity extends AppCompatActivity implements CameraLayout.Ca
     }
 
     @Override
-    public void onCameraOpened() {
-
-    }
-
-    @Override
-    public void onCameraTakenPicture(final byte[] data) {
-        Log.d("CameraActivity", "onPictureTaken " + data.length);
-
-        Toast.makeText(this, R.string.camera_picture_taken, Toast.LENGTH_SHORT).show();
-
-        getBackgroundHandler().post(new Runnable() {
-            @Override
-            public void run() {
-                String imageFileName = "PICTURE_" + DateTimeUtil.ToStringFormat(Calendar.getInstance(), "yyyyMMdd_HHmmss") + ".jpg";
-
-//                File file = null;
-//                File storageDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-//                try {
-//                    file = File.createTempFile(imageFileName, ".jpg", storageDirectory);
-//                } catch (IOException ioException) {
-//                }
-
-//                File file = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), imageFileName);
-                File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), imageFileName);
-                OutputStream os = null;
-                try {
-                    os = new FileOutputStream(file);
-                    os.write(data);
-                    os.close();
-                } catch (IOException e) {
-                    Log.w("CameraActivity", "Cannot write to " + file, e);
-                } finally {
-                    if (os != null) {
-                        try {
-                            os.close();
-                        } catch (IOException e) {
-                            // Ignore
-                        }
-                    }
-                }
-
-                // -- Set image location --
-                if (mLocationUpdateListener != null) {
-                    Double latitude = mLocationUpdateListener.getLatitude();
-                    Double longitude = mLocationUpdateListener.getLongitude();
-                    if (latitude != null && longitude != null)
-                        GPSUtil.setGeoLocationToExif(file.getAbsolutePath(), latitude, longitude);
-                }
-
-                // -- Share image to gallery --
-                ImageUtil.addImageToGallery(CameraActivity.this, file.getAbsolutePath());
-            }
-        });
-    }
-
-    @Override
-    public void onCameraClosed() {
-
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
 
@@ -173,8 +113,10 @@ public class CameraActivity extends AppCompatActivity implements CameraLayout.Ca
 
         // -- Camera handler --
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-            if (mCameraLayout != null)
-                mCameraLayout.cameraStart();
+            if (!isCameraTaken) {
+                if (mCameraLayout != null)
+                    mCameraLayout.cameraStart();
+            }
         } else {
             // -- Register camera permission --
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA))
@@ -184,7 +126,7 @@ public class CameraActivity extends AppCompatActivity implements CameraLayout.Ca
         }
 
         // -- GPS handler --
-        if (isLocationEnabled()) {
+        if (isGPSEnabled()) {
             if (    ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                 &&  ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 Criteria criteria = new Criteria();
@@ -197,7 +139,7 @@ public class CameraActivity extends AppCompatActivity implements CameraLayout.Ca
                 if (provider != null) {
                     int minTime = 1 * 60 * 1000; // 1 minute
                     int minDistance = 10; // 10 meters
-                    mLocationManager.requestLocationUpdates(provider, minTime, minDistance, mLocationUpdateListener);
+                    mLocationManager.requestLocationUpdates(provider, minTime, minDistance, this);
                 }
             } else {
                 // -- Register GPS Access Fine permission --
@@ -213,7 +155,7 @@ public class CameraActivity extends AppCompatActivity implements CameraLayout.Ca
                     showRequestPermissionList.add(Manifest.permission.ACCESS_COARSE_LOCATION);
             }
         } else {
-            showGPSDeviceRequestDialog();
+            showGPSEnableRequestDialog();
         }
 
         // -- Request permission handler --
@@ -240,7 +182,8 @@ public class CameraActivity extends AppCompatActivity implements CameraLayout.Ca
 
         if (mLocationManager != null) {
             try {
-                mLocationManager.removeUpdates(mLocationUpdateListener);
+                mLocationManager.removeUpdates(this);
+                mLocation = null;
             } catch (SecurityException securityException) {
             }
         }
@@ -270,6 +213,11 @@ public class CameraActivity extends AppCompatActivity implements CameraLayout.Ca
 
     @Override
     protected void onDestroy() {
+        for (AsyncTask asyncTask : mAsyncTaskList) {
+            if (asyncTask.getStatus() != AsyncTask.Status.FINISHED)
+                asyncTask.cancel(true);
+        }
+
         super.onDestroy();
 
         if (mBackgroundHandler != null) {
@@ -282,24 +230,97 @@ public class CameraActivity extends AppCompatActivity implements CameraLayout.Ca
         }
     }
 
+
+    // --------------------
+    // -- Camera Handler --
+    // --------------------
+
+    @Override
+    public void onCameraOpened() {
+
+    }
+
+    @Override
+    public void onCameraTakenPicture(final byte[] data) {
+        getBackgroundHandler().post(new Runnable() {
+            @Override
+            public void run() {
+                String imageFileName = "PICTURE_" + DateTimeUtil.ToStringFormat(Calendar.getInstance(), "yyyyMMdd_HHmmss") + ".jpg";
+
+//                File filePath = StorageUtil.getSDCardDirectory(CameraActivity.this, Environment.DIRECTORY_PICTURES); // Save to Physical SDCard, can't access to gallery
+//                File filePath = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), imageFileName); // Save to application directory, can't access to gallery
+//                File filePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES); // Save to public directory, can access to gallery
+                File filePath = new File(Environment.getExternalStorageDirectory(), Environment.DIRECTORY_PICTURES); // Save to internal storage, can access to gallery
+                if (!filePath.exists()) {
+                    filePath.mkdirs();
+                }
+
+                File file = new File(filePath, imageFileName);
+                OutputStream outputStream = null;
+                try {
+                    outputStream = new FileOutputStream(file);
+                    outputStream.write(data);
+                    outputStream.close();
+                } catch (IOException e) {
+
+                } finally {
+                    if (outputStream != null) {
+                        try {
+                            outputStream.close();
+                        } catch (IOException e) {
+                            // Ignore
+                        }
+                    }
+                }
+
+                onCameraTakenFile(file);
+            }
+        });
+    }
+
+    @Override
+    public void onCameraClosed() {
+
+    }
+
+    public void onCameraTakenFile(final File file) {
+        // -- Set image location --
+        if (isGPSEnabled() && mLocation != null) {
+            GPSUtil.setGeoLocationToExif(file.getAbsolutePath(), mLocation.getLatitude(), mLocation.getLongitude());
+        }
+
+        // -- Share image to gallery --
+        ImageUtil.addImageToGallery(CameraActivity.this, file.getAbsolutePath());
+
+        isCameraTaken = true;
+        mCameraLayout.cameraStop();
+
+        Intent intent = new Intent();
+        intent.putExtra(ConstantUtil.INTENT_RESULT_FILE_PATH, file.getAbsolutePath());
+        setResult(ConstantUtil.INTENT_REQUEST_CAMERA_ACTIVITY_RESULT_FILE, intent);
+
+        finish();
+    }
+
     protected Handler getBackgroundHandler() {
         if (mBackgroundHandler == null) {
-            HandlerThread thread = new HandlerThread("background");
+            HandlerThread thread = new HandlerThread("cameraTakenAsFile");
             thread.start();
             mBackgroundHandler = new Handler(thread.getLooper());
         }
         return mBackgroundHandler;
     }
 
+
     // -----------------
     // -- GPS Handler --
     // -----------------
 
-    protected boolean isLocationEnabled() {
+    protected boolean isGPSEnabled() {
         return mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
 
-    protected void showGPSDeviceRequestDialog() {
+    protected void showGPSEnableRequestDialog() {
         final AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setTitle(R.string.gps_request_enable_title)
             .setMessage(R.string.gps_request_enable_message)
@@ -318,47 +339,23 @@ public class CameraActivity extends AppCompatActivity implements CameraLayout.Ca
         dialog.show();
     }
 
-    protected class LocationUpdateListener implements LocationListener {
+    @Override
+    public void onLocationChanged(Location location) {
+        mLocation = location;
+    }
 
-        protected Context mContext;
-        protected Location mLocation;
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle bundle) {
 
-        public LocationUpdateListener(final Context context) {
-            mContext = context;
-        }
+    }
 
-        @Override
-        public void onLocationChanged(Location location) {
-            mLocation = location;
-        }
+    @Override
+    public void onProviderEnabled(String s) {
 
-        @Override
-        public void onStatusChanged(String s, int i, Bundle bundle) {
+    }
 
-        }
+    @Override
+    public void onProviderDisabled(String s) {
 
-        @Override
-        public void onProviderEnabled(String s) {
-
-        }
-
-        @Override
-        public void onProviderDisabled(String s) {
-
-        }
-
-        public Double getLatitude() {
-            if (mLocation == null)
-                return null;
-
-            return mLocation.getLatitude();
-        }
-
-        public Double getLongitude() {
-            if (mLocation == null)
-                return null;
-
-            return mLocation.getLongitude();
-        }
     }
 }
