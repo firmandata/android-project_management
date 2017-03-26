@@ -57,7 +57,7 @@ public class ProjectStageAssignCommentFormView {
             @Override
             public void onClick(View view) {
                 if (mProjectStageAssignCommentFormListener != null)
-                    mProjectStageAssignCommentFormListener.onRequestCamera();
+                    mProjectStageAssignCommentFormListener.onRequestGallery();
             }
         });
     }

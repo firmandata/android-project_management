@@ -129,6 +129,7 @@ public class CameraActivity extends AppCompatActivity implements
         if (isGPSEnabled()) {
             if (    ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                 &&  ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                // -- Get best GPS provider --
                 Criteria criteria = new Criteria();
                 criteria.setAccuracy(Criteria.ACCURACY_FINE);
                 criteria.setAltitudeRequired(false);
@@ -137,9 +138,13 @@ public class CameraActivity extends AppCompatActivity implements
                 criteria.setPowerRequirement(Criteria.POWER_LOW);
                 String provider = mLocationManager.getBestProvider(criteria, true);
                 if (provider != null) {
+                    // -- Request update location --
                     int minTime = 1 * 60 * 1000; // 1 minute
                     int minDistance = 10; // 10 meters
                     mLocationManager.requestLocationUpdates(provider, minTime, minDistance, this);
+
+                    // -- Get last know location --
+                    mLocation = mLocationManager.getLastKnownLocation(provider);
                 }
             } else {
                 // -- Register GPS Access Fine permission --

@@ -1,10 +1,12 @@
 package com.construction.pm.activities;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.construction.pm.utils.ConstantUtil;
 import com.construction.pm.views.GalleryLayout;
 
 import java.util.ArrayList;
@@ -19,17 +21,12 @@ public class GalleryActivity extends AppCompatActivity implements GalleryLayout.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
 
         // -- Handle AsyncTask --
         mAsyncTaskList = new ArrayList<AsyncTask>();
 
         // -- Handle intent request parameters --
-        newIntentHandle(intent.getExtras());
+        newIntentHandle(getIntent().getExtras());
 
         // -- Prepare GalleryLayout --
         mGalleryLayout = GalleryLayout.buildGalleryLayout(this, null);
@@ -37,6 +34,19 @@ public class GalleryActivity extends AppCompatActivity implements GalleryLayout.
 
         // -- Load to Activity --
         mGalleryLayout.loadLayoutToActivity(this);
+
+        // -- Handle page request by parameters --
+        requestPageHandle(getIntent().getExtras());
+
+        onGalleryRequest();
+    }
+
+    @Override
+    public void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        // -- Handle intent request parameters --
+        newIntentHandle(intent.getExtras());
 
         // -- Handle page request by parameters --
         requestPageHandle(intent.getExtras());
@@ -59,6 +69,20 @@ public class GalleryActivity extends AppCompatActivity implements GalleryLayout.
     @Override
     protected void onResume() {
         super.onResume();
+    }
+
+    @Override
+    public void onGalleryRequest() {
+
+    }
+
+    @Override
+    public void onImageClick(String filePath) {
+        Intent intent = new Intent();
+        intent.putExtra(ConstantUtil.INTENT_RESULT_FILE_PATH, filePath);
+        setResult(ConstantUtil.INTENT_REQUEST_GALLERY_ACTIVITY_RESULT_FILE, intent);
+
+        finish();
     }
 
     @Override
