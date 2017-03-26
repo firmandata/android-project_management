@@ -106,8 +106,6 @@ public class ProjectStageAssignCommentFormActivity extends AppCompatActivity imp
         if (projectStageAssignCommentModel == null)
             return;
 
-        WebApiParam.WebApiParamFile photoId = mProjectStageAssignCommentFormLayout.getPhotoId();
-
         // -- Get SettingUserModel from SettingPersistent --
         SettingPersistent settingPersistent = new SettingPersistent(this);
         SettingUserModel settingUserModel = settingPersistent.getSettingUserModel();
@@ -149,7 +147,12 @@ public class ProjectStageAssignCommentFormActivity extends AppCompatActivity imp
 
             // -- Do ProjectStageAssignCommentSaveAsyncTask --
             ProjectStageAssignCommentSaveAsyncTaskParam projectStageAssignCommentSaveAsyncTaskParam = new ProjectStageAssignCommentSaveAsyncTaskParam(this, settingUserModel, projectStageAssignCommentModel, sessionLoginModel.getProjectMemberModel());
-            projectStageAssignCommentSaveAsyncTaskParam.setPhoto(photoId);
+            projectStageAssignCommentSaveAsyncTaskParam.setPhoto(mProjectStageAssignCommentFormLayout.getPhoto(0));
+            projectStageAssignCommentSaveAsyncTaskParam.setPhotoAdditional1(mProjectStageAssignCommentFormLayout.getPhoto(1));
+            projectStageAssignCommentSaveAsyncTaskParam.setPhotoAdditional2(mProjectStageAssignCommentFormLayout.getPhoto(2));
+            projectStageAssignCommentSaveAsyncTaskParam.setPhotoAdditional3(mProjectStageAssignCommentFormLayout.getPhoto(3));
+            projectStageAssignCommentSaveAsyncTaskParam.setPhotoAdditional4(mProjectStageAssignCommentFormLayout.getPhoto(4));
+            projectStageAssignCommentSaveAsyncTaskParam.setPhotoAdditional5(mProjectStageAssignCommentFormLayout.getPhoto(5));
             projectStageAssignCommentSaveAsyncTask.execute(projectStageAssignCommentSaveAsyncTaskParam);
         }
     }

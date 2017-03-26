@@ -235,7 +235,7 @@ public class ProjectStageAssignCommentFormFragment extends Fragment implements
         return mProjectStageAssignCommentFormView.getProjectStageAssignCommentModel();
     }
 
-    public WebApiParam.WebApiParamFile getPhotoId() {
-        return mProjectStageAssignCommentFormView.getPhotoId();
+    public WebApiParam.WebApiParamFile getPhoto(final int position) {
+        return mProjectStageAssignCommentFormView.getPhoto(position);
     }
 }

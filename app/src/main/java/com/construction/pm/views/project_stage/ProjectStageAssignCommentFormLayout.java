@@ -10,7 +10,6 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -26,8 +25,6 @@ import com.construction.pm.models.ProjectStageAssignCommentModel;
 import com.construction.pm.models.ProjectStageAssignmentModel;
 import com.construction.pm.networks.webapi.WebApiParam;
 import com.construction.pm.utils.ViewUtil;
-
-import java.io.File;
 
 public class ProjectStageAssignCommentFormLayout {
     protected Context mContext;
@@ -194,11 +191,11 @@ public class ProjectStageAssignCommentFormLayout {
         return mProjectStageAssignCommentFormFragment.getProjectStageAssignCommentModel();
     }
 
-    public WebApiParam.WebApiParamFile getPhotoId() {
+    public WebApiParam.WebApiParamFile getPhoto(final int position) {
         if (mProjectStageAssignCommentFormFragment == null)
             return null;
 
-        return mProjectStageAssignCommentFormFragment.getPhotoId();
+        return mProjectStageAssignCommentFormFragment.getPhoto(position);
     }
 
     public void setProjectStageAssignCommentFormLayoutListener(final ProjectStageAssignCommentFormLayoutListener projectStageAssignCommentFormLayoutListener) {
