@@ -10,7 +10,6 @@ import android.support.v7.widget.AppCompatImageView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.construction.pm.R;
@@ -187,7 +186,7 @@ public class ProjectStageAssignCommentFormView {
         protected AppCompatImageView generateImageView() {
             AppCompatImageView imageView = new AppCompatImageView(mContext);
             imageView.setScaleType(AppCompatImageView.ScaleType.CENTER);
-            imageView.setImageResource(R.drawable.ic_gallery);
+            imageView.setImageResource(R.drawable.ic_gallery_24);
             imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
             return imageView;
         }

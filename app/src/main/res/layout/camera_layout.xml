@@ -24,7 +24,7 @@
             android:id="@+id/cameraAspectRatio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_aspect_ratio"
+            app:srcCompat="@drawable/ic_aspect_ratio_24"
             android:layout_margin="@dimen/gap"
             android:layout_alignParentTop="true" />
 
@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="false"
             android:layout_alignParentStart="false"
-            app:srcCompat="@drawable/ic_switch_camera"
+            app:srcCompat="@drawable/ic_switch_camera_24"
             android:layout_below="@+id/cameraAspectRatio"
             android:layout_alignStart="@+id/cameraAspectRatio"
             android:layout_alignLeft="@+id/cameraAspectRatio"
@@ -45,7 +45,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            app:srcCompat="@drawable/ic_camera"
+            app:srcCompat="@drawable/ic_camera_24"
             android:layout_alignTop="@+id/cameraSwitch" />
 
         <android.support.design.widget.FloatingActionButton
@@ -54,7 +54,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            app:srcCompat="@drawable/ic_flash_auto"
+            app:srcCompat="@drawable/ic_flash_auto_24"
             android:layout_alignTop="@+id/cameraSwitch"
             android:layout_marginRight="@dimen/gap"
             android:layout_marginEnd="@dimen/gap"/>

@@ -17,9 +17,6 @@ import com.construction.pm.activities.fragmentdialogs.CameraAspectRatioDialogFra
 import com.google.android.cameraview.AspectRatio;
 import com.google.android.cameraview.CameraView;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Set;
 
 public class CameraLayout extends CameraView.Callback implements CameraAspectRatioDialogFragment.CameraAspectRatioListener {
@@ -41,9 +38,9 @@ public class CameraLayout extends CameraView.Callback implements CameraAspectRat
         mContext = context;
 
         mFlashOptions = new SparseIntArray();
-        mFlashOptions.put(CameraView.FLASH_AUTO, R.drawable.ic_flash_auto);
-        mFlashOptions.put(CameraView.FLASH_OFF, R.drawable.ic_flash_off);
-        mFlashOptions.put(CameraView.FLASH_ON, R.drawable.ic_flash_on);
+        mFlashOptions.put(CameraView.FLASH_AUTO, R.drawable.ic_flash_auto_24);
+        mFlashOptions.put(CameraView.FLASH_OFF, R.drawable.ic_flash_off_24);
+        mFlashOptions.put(CameraView.FLASH_ON, R.drawable.ic_flash_on_24);
     }
 
     public CameraLayout(final Context context, final RelativeLayout cameraLayout) {
