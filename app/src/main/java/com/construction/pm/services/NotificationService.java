@@ -119,7 +119,7 @@ public class NotificationService extends Service implements NotificationWorker.N
 
         // -- Build notification --
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this);
-        notificationBuilder.setSmallIcon(R.mipmap.ic_launcher);
+        notificationBuilder.setSmallIcon(R.drawable.ic_stat_name);
         notificationBuilder.setSound(soundUri);
         notificationBuilder.setAutoCancel(true);
         notificationBuilder.setVibrate(new long[]{ 0, 500, 100, 500 });
@@ -183,7 +183,7 @@ public class NotificationService extends Service implements NotificationWorker.N
 
         // -- Build notification --
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this);
-        notificationBuilder.setSmallIcon(R.mipmap.ic_launcher);
+        notificationBuilder.setSmallIcon(R.drawable.ic_stat_name);
         notificationBuilder.setSound(soundUri);
         notificationBuilder.setAutoCancel(true);
         notificationBuilder.setVibrate(new long[]{ 0, 500, 100, 500 });
