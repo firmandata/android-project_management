@@ -189,8 +189,9 @@
     <string name="contract_detail_vendor_name">Vendor Name</string>
     <string name="contract_detail_contract_date">Contract Date</string>
     <string name="contract_detail_contract_start_date">Contract Start Date</string>
-    <string name="contract_detail_contract_start_date_to_end_date">To</string>
     <string name="contract_detail_contract_end_date">Contract End Date</string>
+    <string name="contract_detail_contract_duration_date">Contract Duration</string>
+    <string name="contract_detail_contract_duration_date_separator">To</string>
     <string name="contract_detail_contract_status">Contract Status</string>
 
     <string name="project_layout_title">Projects Assignment</string>
@@ -202,8 +203,9 @@
     <string name="project_detail_contract_no">Contract No</string>
     <string name="project_detail_project_name">Project Name</string>
     <string name="project_detail_project_start_date">Start Date</string>
-    <string name="project_detail_project_start_date_to_end_date">To</string>
     <string name="project_detail_project_end_date">End Date</string>
+    <string name="project_detail_project_duration">Duration</string>
+    <string name="project_detail_project_duration_separator">To</string>
     <string name="project_detail_project_description">Project Description</string>
     <string name="project_detail_project_location">Project Location</string>
     <string name="project_detail_stage_code">Stage Code</string>
@@ -221,17 +223,26 @@
     <string name="project_stage_detail_stage_next_location">Stage Next Location</string>
     <string name="project_stage_detail_stage_next_message">Stage Next Message</string>
 
+    <string name="project_plan_list_plan_title">Plan</string>
+    <string name="project_plan_list_plan_start_date">Start</string>
+    <string name="project_plan_list_plan_end_date">To</string>
+    <string name="project_plan_list_realization_title">Realization</string>
+    <string name="project_plan_list_realization_start_date">Start</string>
+    <string name="project_plan_list_realization_end_date">To</string>
+
     <string name="project_plan_layout_title">Project Plan</string>
 
     <string name="project_plan_detail_sequence_no">Sequence No</string>
     <string name="project_plan_detail_task_name">Task Name</string>
     <string name="project_plan_detail_task_weight_percentage">Task Weight Percentage</string>
     <string name="project_plan_detail_plan_start_date">Plan Start Date</string>
-    <string name="project_plan_detail_plan_start_date_to_end_date">To</string>
     <string name="project_plan_detail_plan_end_date">Plan End Date</string>
+    <string name="project_plan_detail_plan_duration_date">Plan Duration</string>
+    <string name="project_plan_detail_plan_duration_date_separator">To</string>
     <string name="project_plan_detail_realization_start_date">Realization Start Date</string>
-    <string name="project_plan_detail_realization_start_date_to_end_date">To</string>
     <string name="project_plan_detail_realization_end_date">Realization End Date</string>
+    <string name="project_plan_detail_realization_duration_date">Realization Duration</string>
+    <string name="project_plan_detail_realization_duration_date_separator">To</string>
     <string name="project_plan_detail_realization_status">Realization Status</string>
     <string name="project_plan_detail_percent_complete">Percent Complete</string>
 

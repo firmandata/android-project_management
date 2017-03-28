@@ -3,394 +3,442 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:id="@+id/rlContractNo"
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_height="match_parent" >
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/tvContractNoLabel"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:text="@string/contract_detail_contract_no" />
+            android:layout_height="match_parent"
+            android:padding="@dimen/gap">
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/tvContractNo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tvContractNoLabel"
-            android:text="TextView" />
+            <RelativeLayout
+                android:id="@+id/rlContractNo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true">
 
-    </RelativeLayout>
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/tvContractNoLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:textStyle="normal|bold"
+                    android:textColor="@color/colorAccent"
+                    android:text="@string/contract_detail_contract_no" />
 
-    <RelativeLayout
-        android:id="@+id/rlParentContractNo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/rlContractNo">
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/tvContractNo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tvContractNoLabel"
+                    android:text="TextView" />
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/tvParentContractNoLabel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:text="@string/contract_detail_contract_no_parent" />
+            </RelativeLayout>
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/tvParentContractNo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tvParentContractNoLabel"
-            android:text="TextView" />
+            <RelativeLayout
+                android:id="@+id/rlParentContractNo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@id/rlContractNo"
+                android:layout_marginTop="@dimen/gap">
 
-    </RelativeLayout>
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/tvParentContractNoLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:textStyle="normal|bold"
+                    android:textColor="@color/colorAccent"
+                    android:text="@string/contract_detail_contract_no_parent" />
 
-    <RelativeLayout
-        android:id="@+id/rlContractName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/rlParentContractNo">
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/tvParentContractNo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tvParentContractNoLabel"
+                    android:text="TextView" />
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/tvContractNameLabel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:text="@string/contract_detail_contract_name" />
+            </RelativeLayout>
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/tvContractName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tvContractNameLabel"
-            android:text="TextView" />
+            <RelativeLayout
+                android:id="@+id/rlContractName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@id/rlParentContractNo"
+                android:layout_marginTop="@dimen/gap">
 
-    </RelativeLayout>
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/tvContractNameLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:textStyle="normal|bold"
+                    android:textColor="@color/colorAccent"
+                    android:text="@string/contract_detail_contract_name" />
 
-    <RelativeLayout
-        android:id="@+id/rlContractAmount"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/rlContractName">
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/tvContractName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tvContractNameLabel"
+                    android:text="TextView" />
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/tvContractAmountLabel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:text="@string/contract_detail_contract_amount" />
+            </RelativeLayout>
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/tvContractAmount"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tvContractAmountLabel"
-            android:text="TextView" />
+            <RelativeLayout
+                android:id="@+id/rlContractAmount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@id/rlContractName"
+                android:layout_marginTop="@dimen/gap">
 
-    </RelativeLayout>
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/tvContractAmountLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:textStyle="normal|bold"
+                    android:textColor="@color/colorAccent"
+                    android:text="@string/contract_detail_contract_amount" />
 
-    <RelativeLayout
-        android:id="@+id/rlProgramNo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/rlContractAmount">
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/tvContractAmount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tvContractAmountLabel"
+                    android:text="TextView" />
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/tvProgramNoLabel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:text="@string/contract_detail_program_no" />
+            </RelativeLayout>
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/tvProgramNo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tvProgramNoLabel"
-            android:text="TextView" />
+            <RelativeLayout
+                android:id="@+id/rlProgramNo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@id/rlContractAmount"
+                android:layout_marginTop="@dimen/gap">
 
-    </RelativeLayout>
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/tvProgramNoLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:textStyle="normal|bold"
+                    android:textColor="@color/colorAccent"
+                    android:text="@string/contract_detail_program_no" />
 
-    <RelativeLayout
-        android:id="@+id/rlProgramName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/rlProgramNo">
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/tvProgramNo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tvProgramNoLabel"
+                    android:text="TextView" />
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/tvProgramNameLabel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:text="@string/contract_detail_program_name" />
+            </RelativeLayout>
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/tvProgramName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tvProgramNameLabel"
-            android:text="TextView" />
+            <RelativeLayout
+                android:id="@+id/rlProgramName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@id/rlProgramNo"
+                android:layout_marginTop="@dimen/gap">
 
-    </RelativeLayout>
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/tvProgramNameLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:textStyle="normal|bold"
+                    android:textColor="@color/colorAccent"
+                    android:text="@string/contract_detail_program_name" />
 
-    <RelativeLayout
-        android:id="@+id/rlProgramAmount"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/rlProgramName">
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/tvProgramName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tvProgramNameLabel"
+                    android:text="TextView" />
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/tvProgramAmountLabel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:text="@string/contract_detail_program_amount" />
+            </RelativeLayout>
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/tvProgramAmount"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tvProgramAmountLabel"
-            android:text="TextView" />
+            <RelativeLayout
+                android:id="@+id/rlProgramAmount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@id/rlProgramName"
+                android:layout_marginTop="@dimen/gap">
 
-    </RelativeLayout>
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/tvProgramAmountLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:textStyle="normal|bold"
+                    android:textColor="@color/colorAccent"
+                    android:text="@string/contract_detail_program_amount" />
 
-    <RelativeLayout
-        android:id="@+id/rlBudgetNo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/rlProgramAmount">
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/tvProgramAmount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tvProgramAmountLabel"
+                    android:text="TextView" />
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/tvBudgetNoLabel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:text="@string/contract_detail_budget_no" />
+            </RelativeLayout>
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/tvBudgetNo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tvBudgetNoLabel"
-            android:text="TextView" />
+            <RelativeLayout
+                android:id="@+id/rlBudgetNo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@id/rlProgramAmount"
+                android:layout_marginTop="@dimen/gap">
 
-    </RelativeLayout>
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/tvBudgetNoLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:textStyle="normal|bold"
+                    android:textColor="@color/colorAccent"
+                    android:text="@string/contract_detail_budget_no" />
 
-    <RelativeLayout
-        android:id="@+id/rlBudgetName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/rlBudgetNo">
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/tvBudgetNo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tvBudgetNoLabel"
+                    android:text="TextView" />
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/tvBudgetNameLabel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:text="@string/contract_detail_budget_name" />
+            </RelativeLayout>
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/tvBudgetName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tvBudgetNameLabel"
-            android:text="TextView" />
+            <RelativeLayout
+                android:id="@+id/rlBudgetName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@id/rlBudgetNo"
+                android:layout_marginTop="@dimen/gap">
 
-    </RelativeLayout>
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/tvBudgetNameLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:textStyle="normal|bold"
+                    android:textColor="@color/colorAccent"
+                    android:text="@string/contract_detail_budget_name" />
 
-    <RelativeLayout
-        android:id="@+id/rlVendorNo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/rlBudgetName">
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/tvBudgetName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tvBudgetNameLabel"
+                    android:text="TextView" />
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/tvVendorNoLabel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:text="@string/contract_detail_vendor_no" />
+            </RelativeLayout>
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/tvVendorNo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tvVendorNoLabel"
-            android:text="TextView" />
+            <RelativeLayout
+                android:id="@+id/rlVendorNo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@id/rlBudgetName"
+                android:layout_marginTop="@dimen/gap">
 
-    </RelativeLayout>
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/tvVendorNoLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:textStyle="normal|bold"
+                    android:textColor="@color/colorAccent"
+                    android:text="@string/contract_detail_vendor_no" />
 
-    <RelativeLayout
-        android:id="@+id/rlVendorName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/rlVendorNo">
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/tvVendorNo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tvVendorNoLabel"
+                    android:text="TextView" />
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/tvVendorNameLabel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:text="@string/contract_detail_vendor_name" />
+            </RelativeLayout>
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/tvVendorName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tvVendorNameLabel"
-            android:text="TextView" />
+            <RelativeLayout
+                android:id="@+id/rlVendorName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@id/rlVendorNo"
+                android:layout_marginTop="@dimen/gap">
 
-    </RelativeLayout>
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/tvVendorNameLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:textStyle="normal|bold"
+                    android:textColor="@color/colorAccent"
+                    android:text="@string/contract_detail_vendor_name" />
 
-    <RelativeLayout
-        android:id="@+id/rlContractDate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/rlVendorName">
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/tvVendorName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tvVendorNameLabel"
+                    android:text="TextView" />
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/tvContractDateLabel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:text="@string/contract_detail_contract_date" />
+            </RelativeLayout>
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/tvContractDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tvContractDateLabel"
-            android:text="TextView" />
+            <RelativeLayout
+                android:id="@+id/rlContractDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@id/rlVendorName"
+                android:layout_marginTop="@dimen/gap">
 
-    </RelativeLayout>
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/tvContractDateLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:textStyle="normal|bold"
+                    android:textColor="@color/colorAccent"
+                    android:text="@string/contract_detail_contract_date" />
 
-    <RelativeLayout
-        android:id="@+id/rlContractStartDate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/rlContractDate">
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/tvContractDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tvContractDateLabel"
+                    android:text="TextView" />
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/tvContractStartDateLabel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:text="@string/contract_detail_contract_start_date" />
+            </RelativeLayout>
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/tvContractStartDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tvContractStartDateLabel"
-            android:text="TextView" />
+            <RelativeLayout
+                android:id="@+id/rlContractDurationDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@id/rlContractDate"
+                android:layout_marginTop="@dimen/gap">
 
-    </RelativeLayout>
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/tvContractStartDateLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:textStyle="normal|bold"
+                    android:textColor="@color/colorAccent"
+                    android:text="@string/contract_detail_contract_duration_date" />
 
-    <RelativeLayout
-        android:id="@+id/rlContractEndDate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/rlContractStartDate">
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/tvContractStartDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tvContractStartDateLabel"
+                    android:text="TextView" />
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/tvContractEndDateLabel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:text="@string/contract_detail_contract_end_date" />
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/tvContractDurationDateSeparatorLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/tvContractStartDate"
+                    android:layout_toEndOf="@id/tvContractStartDate"
+                    android:layout_alignTop="@+id/tvContractStartDate"
+                    android:layout_marginLeft="@dimen/gap"
+                    android:layout_marginRight="@dimen/gap"
+                    android:text="@string/contract_detail_contract_duration_date_separator" />
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/tvContractEndDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tvContractEndDateLabel"
-            android:text="TextView" />
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/tvContractEndDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/tvContractDurationDateSeparatorLabel"
+                    android:layout_toEndOf="@id/tvContractDurationDateSeparatorLabel"
+                    android:layout_alignTop="@+id/tvContractDurationDateSeparatorLabel"
+                    android:text="TextView" />
 
-    </RelativeLayout>
+            </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/rlContractStatus"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/rlContractEndDate">
+            <RelativeLayout
+                android:id="@+id/rlContractStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@id/rlContractDurationDate"
+                android:layout_marginTop="@dimen/gap">
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/tvContractStatusLabel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:text="@string/contract_detail_contract_status" />
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/tvContractStatusLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:textStyle="normal|bold"
+                    android:textColor="@color/colorAccent"
+                    android:text="@string/contract_detail_contract_status" />
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/tvContractStatus"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tvContractStatusLabel"
-            android:text="TextView" />
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/tvContractStatus"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tvContractStatusLabel"
+                    android:text="TextView" />
 
-    </RelativeLayout>
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+    </android.support.v4.widget.NestedScrollView>
 
 </RelativeLayout>

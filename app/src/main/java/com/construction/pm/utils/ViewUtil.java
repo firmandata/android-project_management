@@ -2,6 +2,7 @@ package com.construction.pm.utils;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -55,19 +56,15 @@ public class ViewUtil {
     }
 
     public static int getPxFromDp(final Context context, final int dps) {
-        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-        int pixel = Math.round(dps * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+        Resources resources = context.getResources();
 
-        final float scale = context.getResources().getDisplayMetrics().density;
-        int pixel_2 = (int) (dps * scale + 0.5f);
+        int pixel = (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                dps,
+                resources.getDisplayMetrics()
+        );
 
-        return pixel_2;
-
-//        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-//        Display display = wm.getDefaultDisplay();
-//        DisplayMetrics displaymetrics = new DisplayMetrics();
-//        display.getMetrics(displaymetrics);
-//        return (int) (dps * displaymetrics.density + 0.5f);
+        return pixel;
     }
 
     public static void setBackground(final View view, final Drawable background) {

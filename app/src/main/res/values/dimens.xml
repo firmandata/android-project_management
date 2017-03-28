@@ -4,6 +4,10 @@
     <dimen name="horizontal_gap">@dimen/gap</dimen>
     <dimen name="vertical_gap">@dimen/gap</dimen>
 
+    <dimen name="gap_half">4dp</dimen>
+    <dimen name="horizontal_gap_half">@dimen/gap_half</dimen>
+    <dimen name="vertical_gap_half">@dimen/gap_half</dimen>
+
     <dimen name="element_gap">16dp</dimen>
     <dimen name="element_horizontal_gap">@dimen/element_gap</dimen>
     <dimen name="element_vertical_gap">@dimen/element_gap</dimen>

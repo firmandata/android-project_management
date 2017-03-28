@@ -103,6 +103,16 @@ public class StringUtil {
         return null;
     }
 
+    public static String numberPercentFormat(final double value) {
+        return getDecimalFormat().format(value) + "%";
+    }
+
+    public static String numberPercentFormat(final Double value) {
+        if (value != null)
+            return getDecimalFormat().format(value) + "%";
+        return null;
+    }
+
     public static String numberFormat(final int value) {
         return getDecimalFormat().format(value);
     }
@@ -110,6 +120,16 @@ public class StringUtil {
     public static String numberFormat(final Integer value) {
         if (value != null)
             return getDecimalFormat().format(value);
+        return null;
+    }
+
+    public static String numberPercentFormat(final int value) {
+        return getDecimalFormat().format(value) + "%";
+    }
+
+    public static String numberPercentFormat(final Integer value) {
+        if (value != null)
+            return getDecimalFormat().format(value) + "%";
         return null;
     }
 

@@ -3,8 +3,8 @@ package com.construction.pm.views.project_plan;
 import android.content.Context;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,6 +17,11 @@ import com.construction.pm.libraries.widgets.RecyclerItemTouchListener;
 import com.construction.pm.models.ProjectPlanModel;
 import com.construction.pm.utils.DateTimeUtil;
 import com.construction.pm.utils.StringUtil;
+import com.construction.pm.utils.ViewUtil;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class ProjectPlanListView {
     protected Context mContext;
@@ -61,6 +66,7 @@ public class ProjectPlanListView {
 
         mRvProjectPlanList = (RecyclerView) mProjectPlanListView.findViewById(R.id.projectPlanList);
         mRvProjectPlanList.setItemAnimator(new DefaultItemAnimator());
+        mRvProjectPlanList.setHasFixedSize(true);
         mRvProjectPlanList.addOnItemTouchListener(new RecyclerItemTouchListener(mContext, mRvProjectPlanList, new RecyclerItemTouchListener.ItemClickListener() {
             @Override
             public void onClick(View view, int position) {
@@ -79,9 +85,6 @@ public class ProjectPlanListView {
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(mContext);
         mRvProjectPlanList.setLayoutManager(layoutManager);
-
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL);
-        mRvProjectPlanList.addItemDecoration(dividerItemDecoration);
 
         mProjectPlanListAdapter = new ProjectPlanListAdapter();
         mRvProjectPlanList.setAdapter(mProjectPlanListAdapter);
@@ -121,30 +124,24 @@ public class ProjectPlanListView {
 
     protected class ProjectPlanListAdapter extends RecyclerView.Adapter<ProjectPlanListViewHolder> {
 
-        protected ProjectPlanModel[] mProjectPlanModels;
+        protected ProjectPlanModelView[] mProjectPlanModelViews;
 
         public ProjectPlanListAdapter() {
 
         }
 
-        public ProjectPlanListAdapter(final ProjectPlanModel[] projectPlanModels) {
-            this();
-            mProjectPlanModels = projectPlanModels;
-        }
-
         public void setProjectPlanModels(final ProjectPlanModel[] projectPlanModels) {
-            mProjectPlanModels = projectPlanModels;
-
+            mProjectPlanModelViews = getProjectPlanModelViews(projectPlanModels);
             notifyDataSetChanged();
         }
 
         public ProjectPlanModel getItem(final int position) {
-            if (mProjectPlanModels == null)
+            if (mProjectPlanModelViews == null)
                 return null;
-            if ((position + 1) > mProjectPlanModels.length)
+            if ((position + 1) > mProjectPlanModelViews.length)
                 return null;
 
-            return mProjectPlanModels[position];
+            return mProjectPlanModelViews[position].getProjectPlanModel();
         }
 
         @Override
@@ -155,26 +152,127 @@ public class ProjectPlanListView {
 
         @Override
         public void onBindViewHolder(ProjectPlanListViewHolder holder, int position) {
-            if (mProjectPlanModels == null)
+            if (mProjectPlanModelViews == null)
                 return;
-            if ((position + 1) > mProjectPlanModels.length)
+            if ((position + 1) > mProjectPlanModelViews.length)
                 return;
 
-            ProjectPlanModel projectPlanModel = mProjectPlanModels[position];
-            holder.setProjectPlanModel(projectPlanModel);
+            ProjectPlanModelView projectPlanModelView = mProjectPlanModelViews[position];
+            holder.setProjectPlanModelView(projectPlanModelView);
         }
 
         @Override
         public int getItemCount() {
-            if (mProjectPlanModels == null)
+            if (mProjectPlanModelViews == null)
                 return 0;
 
-            return mProjectPlanModels.length;
+            return mProjectPlanModelViews.length;
+        }
+
+        protected ProjectPlanModelView[] getProjectPlanModelViews(final ProjectPlanModel[] projectPlanModels) {
+            ProjectPlanModelView[] projectPlanModelViews = buildHierarchyProjectPlanModelViews(projectPlanModels, null);
+            return extractProjectPlanModelViews(projectPlanModelViews);
+        }
+
+        protected ProjectPlanModelView[] extractProjectPlanModelViews(final ProjectPlanModelView[] projectPlanModelViews) {
+            List<ProjectPlanModelView> projectPlanModelViewList = new ArrayList<ProjectPlanModelView>();
+
+            for (ProjectPlanModelView projectPlanModelView : projectPlanModelViews) {
+                projectPlanModelViewList.add(projectPlanModelView);
+                if (projectPlanModelView.getChilds() != null) {
+                    ProjectPlanModelView[] projectPlanModelViewChilds = extractProjectPlanModelViews(projectPlanModelView.getChilds());
+                    if (projectPlanModelViewChilds != null) {
+                        for (ProjectPlanModelView projectPlanModelViewChild : projectPlanModelViewChilds) {
+                            projectPlanModelViewList.add(projectPlanModelViewChild);
+                        }
+                    }
+                }
+            }
+
+            ProjectPlanModelView[] newProjectPlanModelViews = new ProjectPlanModelView[projectPlanModelViewList.size()];
+            projectPlanModelViewList.toArray(newProjectPlanModelViews);
+            return newProjectPlanModelViews;
+        }
+
+        protected ProjectPlanModelView[] buildHierarchyProjectPlanModelViews(final ProjectPlanModel[] projectPlanModels, final ProjectPlanModelView projectPlanModelViewParent) {
+            List<ProjectPlanModelView> projectPlanModelViewList = new ArrayList<ProjectPlanModelView>();
+
+            Integer projectPlanIdParentRef = null;
+            if (projectPlanModelViewParent != null)
+                projectPlanIdParentRef = projectPlanModelViewParent.getProjectPlanModel().getProjectPlanId();
+
+            for (ProjectPlanModel projectPlanModel : projectPlanModels) {
+                ProjectPlanModelView projectPlanModelView = null;
+
+                Integer parentProjectPlanId = projectPlanModel.getParentProjectPlanId();
+                if (projectPlanIdParentRef == null && parentProjectPlanId == null) {
+                    projectPlanModelView = new ProjectPlanModelView(projectPlanModel);
+                } else if (projectPlanIdParentRef != null && parentProjectPlanId != null) {
+                    if (parentProjectPlanId.equals(projectPlanIdParentRef)) {
+                        projectPlanModelView = new ProjectPlanModelView(projectPlanModel);
+                    }
+                }
+
+                if (projectPlanModelView != null) {
+                    projectPlanModelView.setParent(projectPlanModelViewParent);
+                    projectPlanModelView.setChilds(buildHierarchyProjectPlanModelViews(projectPlanModels, projectPlanModelView));
+                    projectPlanModelViewList.add(projectPlanModelView);
+                }
+            }
+
+            ProjectPlanModelView[] projectPlanModelViews = new ProjectPlanModelView[projectPlanModelViewList.size()];
+            projectPlanModelViewList.toArray(projectPlanModelViews);
+            return projectPlanModelViews;
+        }
+    }
+
+    protected class ProjectPlanModelView {
+
+        protected ProjectPlanModelView mParent;
+        protected ProjectPlanModel mProjectPlanModel;
+        protected List<ProjectPlanModelView> mChildList;
+
+        public ProjectPlanModelView(final ProjectPlanModel projectPlanModel) {
+            mProjectPlanModel = projectPlanModel;
+            mChildList = new ArrayList<ProjectPlanModelView>();
+        }
+
+        public ProjectPlanModel getProjectPlanModel() {
+            return mProjectPlanModel;
+        }
+
+        public void setParent(final ProjectPlanModelView parent) {
+            mParent = parent;
+        }
+
+        public ProjectPlanModelView getParent() {
+            return mParent;
+        }
+
+        public int getParentSize() {
+            if (mParent == null)
+                return 0;
+            return mParent.getParentSize() + 1;
+        }
+
+        public void setChilds(final ProjectPlanModelView[] childs) {
+            mChildList = new ArrayList<ProjectPlanModelView>(Arrays.asList(childs));
+        }
+
+        public void addChild(final ProjectPlanModelView child) {
+            mChildList.add(child);
+        }
+
+        public ProjectPlanModelView[] getChilds() {
+            ProjectPlanModelView[] childs = new ProjectPlanModelView[mChildList.size()];
+            mChildList.toArray(childs);
+            return childs;
         }
     }
 
     protected class ProjectPlanListViewHolder extends RecyclerView.ViewHolder {
 
+        protected CardView mContentBody;
         protected AppCompatTextView mEtTaskName;
         protected AppCompatTextView mEtPlanStartDate;
         protected AppCompatTextView mEtPlanEndDate;
@@ -187,6 +285,7 @@ public class ProjectPlanListView {
         public ProjectPlanListViewHolder(View view) {
             super(view);
 
+            mContentBody = (CardView) view.findViewById(R.id.contentBody);
             mEtTaskName = (AppCompatTextView) view.findViewById(R.id.taskName);
             mEtPlanStartDate = (AppCompatTextView) view.findViewById(R.id.planStartDate);
             mEtPlanEndDate = (AppCompatTextView) view.findViewById(R.id.planEndDate);
@@ -197,15 +296,26 @@ public class ProjectPlanListView {
             mEtPercentComplete = (AppCompatTextView) view.findViewById(R.id.percentComplete);
         }
 
-        public void setProjectPlanModel(final ProjectPlanModel projectPlanModel) {
+        public void setProjectPlanModelView(final ProjectPlanModelView projectPlanModelView) {
+            ProjectPlanModel projectPlanModel = projectPlanModelView.getProjectPlanModel();
+            if (projectPlanModel == null)
+                return;
+
             mEtTaskName.setText(projectPlanModel.getTaskName());
             mEtPlanStartDate.setText(DateTimeUtil.ToDateDisplayString(projectPlanModel.getPlanStartDate()));
             mEtPlanEndDate.setText(DateTimeUtil.ToDateDisplayString(projectPlanModel.getPlanEndDate()));
-            mEtTaskWeightPercentage.setText(StringUtil.numberFormat(projectPlanModel.getTaskWeightPercentage()));
+            mEtTaskWeightPercentage.setText(StringUtil.numberPercentFormat(projectPlanModel.getTaskWeightPercentage()));
             mEtRealizationStartDate.setText(DateTimeUtil.ToDateDisplayString(projectPlanModel.getRealizationStartDate()));
             mEtRealizationEndDate.setText(DateTimeUtil.ToDateDisplayString(projectPlanModel.getRealizationEndDate()));
             mEtRealizationStatus.setText(projectPlanModel.getRealizationStatus());
-            mEtPercentComplete.setText(StringUtil.numberFormat(projectPlanModel.getPercentComplete()));
+            mEtPercentComplete.setText(StringUtil.numberPercentFormat(projectPlanModel.getPercentComplete()));
+
+            Context context = getView().getContext();
+
+            int margin = (int) mContentBody.getCardElevation(); //(int) context.getResources().getDimension(R.dimen.gap);
+            int marginLeft = ViewUtil.getPxFromDp(context, projectPlanModelView.getParentSize() * 10) + margin;
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mContentBody.getLayoutParams();
+            layoutParams.setMargins(marginLeft, margin, margin, margin);
         }
     }
 }
