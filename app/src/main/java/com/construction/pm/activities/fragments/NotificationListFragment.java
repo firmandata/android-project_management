@@ -112,11 +112,14 @@ public class NotificationListFragment extends Fragment implements NotificationLi
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        Bundle bundle = null;
+        if (data != null)
+            bundle = data.getExtras();
+
         if (requestCode == ConstantUtil.INTENT_REQUEST_NOTIFICATION_ACTIVITY) {
             if (resultCode == RESULT_OK) {
                 // -- Get NotificationModel --
                 NotificationModel notificationModel = null;
-                Bundle bundle = data.getExtras();
                 if (bundle != null) {
                     if (bundle.containsKey(ConstantUtil.INTENT_RESULT_NOTIFICATION_MODEL)) {
                         String notificationModelJson = bundle.getString(ConstantUtil.INTENT_RESULT_NOTIFICATION_MODEL);
@@ -151,7 +154,7 @@ public class NotificationListFragment extends Fragment implements NotificationLi
             org.json.JSONObject notificationModelJsonObject = notificationModel.build();
             String notificationModelJson = notificationModelJsonObject.toString(0);
 
-            intent.putExtra(NotificationActivity.INTENT_PARAM_NOTIFICATION_MODEL, notificationModelJson);
+            intent.putExtra(ConstantUtil.INTENT_PARAM_NOTIFICATION_MODEL, notificationModelJson);
         } catch (org.json.JSONException ex) {
 
         }

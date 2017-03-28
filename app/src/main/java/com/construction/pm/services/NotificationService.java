@@ -138,30 +138,25 @@ public class NotificationService extends Service implements NotificationWorker.N
         }
 
         // -- Notification for activity response --
-        Intent notificationIntent = null;
-        if (unReadNotificationModelCount > 1) {
-            // -- Show MainActivity with notification fragment --
-            notificationIntent = new Intent(this, MainActivity.class);
-            notificationIntent.putExtra(MainActivity.INTENT_PARAM_SHOW_DEFAULT_FRAGMENT, MainActivity.INTENT_PARAM_SHOW_FRAGMENT_NOTIFICATION);
-        } else if (unReadNotificationModelCount == 1) {
-            // -- Get NotificationModel in JSON format --
-            String notificationModelJson = null;
-            try {
-                org.json.JSONObject notificationModelJsonObject = unReadNotificationModels[0].build();
-                notificationModelJson = notificationModelJsonObject.toString(0);
-            } catch (org.json.JSONException ex) {
-            }
+        Intent notificationIntent = new Intent(this, BootstrapActivity.class);
+        if (unReadNotificationModelCount > 0) {
+            notificationIntent.putExtra(ConstantUtil.INTENT_PARAM_NOTIFICATION_FROM_NOTIFICATION_SERVICE, true);
+            if (unReadNotificationModelCount == 1) {
+                // -- Get NotificationModel in JSON format --
+                String notificationModelJson = null;
+                try {
+                    org.json.JSONObject notificationModelJsonObject = unReadNotificationModels[0].build();
+                    notificationModelJson = notificationModelJsonObject.toString(0);
+                } catch (org.json.JSONException ex) {
+                }
 
-            // -- Show NotificationActivity --
-            notificationIntent = new Intent(this, NotificationActivity.class);
-            notificationIntent.putExtra(NotificationActivity.INTENT_PARAM_NOTIFICATION_FROM_NOTIFICATION_SERVICE, true);
-            if (notificationModelJson != null)
-                notificationIntent.putExtra(NotificationActivity.INTENT_PARAM_NOTIFICATION_MODEL, notificationModelJson);
+                // -- Request NotificationActivity --
+                if (notificationModelJson != null)
+                    notificationIntent.putExtra(ConstantUtil.INTENT_PARAM_NOTIFICATION_MODEL, notificationModelJson);
+            }
         }
-        if (notificationIntent != null) {
-            PendingIntent contentIntent = PendingIntent.getActivity(this, ConstantUtil.ACTIVITY_REQUEST_NOTIFICATION, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-            notificationBuilder.setContentIntent(contentIntent);
-        }
+        PendingIntent contentIntent = PendingIntent.getActivity(this, ConstantUtil.ACTIVITY_REQUEST_NOTIFICATION, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        notificationBuilder.setContentIntent(contentIntent);
 
         // -- Add as notification --
         notificationManager.notify(ConstantUtil.NOTIFICATION_ID_NOTIFICATION, notificationBuilder.build());

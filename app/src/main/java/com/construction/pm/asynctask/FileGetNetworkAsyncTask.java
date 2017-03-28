@@ -33,10 +33,10 @@ public class FileGetNetworkAsyncTask extends AsyncTask<FileGetAsyncTaskParam, In
 
         try {
             // -- Invalidate Access Token --
-            fileNetwork.invalidateAccessToken();
+            // fileNetwork.invalidateAccessToken(); // Disable for fast response
 
             // -- Invalidate Login --
-            fileNetwork.invalidateLogin();
+            // fileNetwork.invalidateLogin(); // Disable for fast response
 
             // -- Get FileModel from server --
             FileModel fileModel = fileNetwork.getFile(mFileGetAsyncTaskParam.getFileId());

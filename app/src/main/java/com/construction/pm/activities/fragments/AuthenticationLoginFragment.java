@@ -1,5 +1,6 @@
 package com.construction.pm.activities.fragments;
 
+import android.app.NotificationManager;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import com.construction.pm.asynctask.result.LoginAsyncTaskResult;
 import com.construction.pm.models.system.SessionLoginModel;
 import com.construction.pm.models.system.SettingUserModel;
 import com.construction.pm.persistence.SettingPersistent;
+import com.construction.pm.utils.ConstantUtil;
 import com.construction.pm.views.system.AuthenticationLoginView;
 
 import java.util.ArrayList;
@@ -110,6 +112,12 @@ public class AuthenticationLoginFragment extends Fragment implements
     }
 
     protected void onLoginRequestSuccess(final SessionLoginModel sessionLoginModel) {
+        // -- Prepare NotificationManager --
+        NotificationManager notificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+
+        // -- Clear current notification --
+        notificationManager.cancel(ConstantUtil.NOTIFICATION_ID_NOTIFICATION);
+
         // -- Hide progress dialog --
         mAuthenticationLoginView.progressDialogDismiss();
 

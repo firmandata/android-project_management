@@ -43,80 +43,67 @@
         <activity
             android:name=".activities.AuthenticationActivity"
             android:theme="@style/AppTheme.NoActionBar"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTask" />
+            android:configChanges="orientation|keyboardHidden|screenSize" />
 
         <activity
             android:name=".activities.MainActivity"
             android:theme="@style/AppTheme.NoActionBar"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTask"/>
+            android:configChanges="orientation|keyboardHidden|screenSize" />
 
         <activity
             android:name=".activities.NotificationActivity"
             android:theme="@style/AppTheme.NoActionBar"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTask" />
+            android:configChanges="orientation|keyboardHidden|screenSize" />
 
         <activity
             android:name=".activities.ProjectActivity"
             android:theme="@style/AppTheme.NoActionBar"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTask" />
+            android:configChanges="orientation|keyboardHidden|screenSize" />
 
         <activity
             android:name=".activities.ProjectActivityMonitoringDetailActivity"
             android:theme="@style/AppTheme.NoActionBar"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTask" />
+            android:configChanges="orientation|keyboardHidden|screenSize" />
 
         <activity
             android:name=".activities.ProjectActivityMonitoringFormActivity"
             android:theme="@style/AppTheme.NoActionBar"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTask" />
+            android:configChanges="orientation|keyboardHidden|screenSize" />
 
         <activity
             android:name=".activities.ProjectActivityUpdateFormActivity"
             android:theme="@style/AppTheme.NoActionBar"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTask" />
+            android:configChanges="orientation|keyboardHidden|screenSize" />
 
         <activity
             android:name=".activities.ProjectPlanActivity"
             android:theme="@style/AppTheme.NoActionBar"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTask" />
+            android:configChanges="orientation|keyboardHidden|screenSize" />
 
         <activity
             android:name=".activities.ProjectStageActivity"
             android:theme="@style/AppTheme.NoActionBar"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTask" />
+            android:configChanges="orientation|keyboardHidden|screenSize" />
 
         <activity
             android:name=".activities.ProjectStageAssignCommentFormActivity"
             android:theme="@style/AppTheme.NoActionBar"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTask" />
+            android:configChanges="orientation|keyboardHidden|screenSize" />
 
         <activity
             android:name=".activities.InspectorDetailActivity"
             android:theme="@style/AppTheme.NoActionBar"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTask" />
+            android:configChanges="orientation|keyboardHidden|screenSize" />
 
         <activity
             android:name=".activities.ManagerDetailActivity"
             android:theme="@style/AppTheme.NoActionBar"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTask" />
+            android:configChanges="orientation|keyboardHidden|screenSize" />
 
         <activity
             android:name=".activities.FileViewActivity"
             android:theme="@style/AppTheme.NoActionBar"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTask" />
+            android:configChanges="orientation|keyboardHidden|screenSize" />
 
         <activity
             android:name=".activities.CameraActivity"
@@ -125,8 +112,7 @@
         <activity
             android:name=".activities.GalleryActivity"
             android:theme="@style/AppTheme.NoActionBar"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTask" />
+            android:configChanges="orientation|keyboardHidden|screenSize" />
     </application>
 
 </manifest>

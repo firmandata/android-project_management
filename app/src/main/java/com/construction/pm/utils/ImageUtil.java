@@ -9,6 +9,8 @@ import android.net.Uri;
 import android.os.Environment;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -40,11 +42,16 @@ public class ImageUtil {
             width = point.x;
         }
 
-        Bitmap bitmap = getImageThumbnail(byteArray, width);
-        if (bitmap != null) {
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            imageView.setImageBitmap(bitmap);
-        }
+        Glide
+            .with(context)
+            .load(byteArray)
+            .centerCrop()
+            .into(imageView);
+//        Bitmap bitmap = getImageThumbnail(byteArray, width);
+//        if (bitmap != null) {
+//            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+//            imageView.setImageBitmap(bitmap);
+//        }
     }
 
     public static void setImageThumbnailView(final Context context, final ImageView imageView, final String fileLocation) {
@@ -54,11 +61,16 @@ public class ImageUtil {
             width = point.x;
         }
 
-        Bitmap bitmap = getImageThumbnail(fileLocation, width);
-        if (bitmap != null) {
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            imageView.setImageBitmap(bitmap);
-        }
+        Glide
+            .with(context)
+            .load(fileLocation)
+            .centerCrop()
+            .into(imageView);
+//        Bitmap bitmap = getImageThumbnail(fileLocation, width);
+//        if (bitmap != null) {
+//            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+//            imageView.setImageBitmap(bitmap);
+//        }
     }
 
     public static void setImageView(final Context context, final ImageView imageView, final byte[] byteArray) {

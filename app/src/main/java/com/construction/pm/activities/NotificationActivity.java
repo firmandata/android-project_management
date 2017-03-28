@@ -23,11 +23,6 @@ import java.util.List;
 
 public class NotificationActivity extends AppCompatActivity implements NotificationLayout.NotificationLayoutListener {
 
-    public static final String INTENT_PARAM_NOTIFICATION_MODEL = "NOTIFICATION_MODEL";
-    public static final String INTENT_PARAM_NOTIFICATION_FROM_NOTIFICATION_SERVICE = "NOTIFICATION_FROM_NOTIFICATION_SERVICE";
-
-    protected boolean mIsFromNotificationService;
-
     protected NotificationModel mNotificationModel;
     protected List<AsyncTask> mAsyncTaskList;
 
@@ -68,14 +63,9 @@ public class NotificationActivity extends AppCompatActivity implements Notificat
     protected void newIntentHandle(final Bundle bundle) {
         // -- Get parameters --
         if (bundle != null) {
-            // -- Get notification service flag parameter --
-            if (bundle.containsKey(INTENT_PARAM_NOTIFICATION_FROM_NOTIFICATION_SERVICE)) {
-                mIsFromNotificationService = bundle.getBoolean(INTENT_PARAM_NOTIFICATION_FROM_NOTIFICATION_SERVICE);
-            }
-
             // -- Get NotificationModel parameter --
-            if (bundle.containsKey(INTENT_PARAM_NOTIFICATION_MODEL)) {
-                String notificationModelJson = bundle.getString(INTENT_PARAM_NOTIFICATION_MODEL);
+            if (bundle.containsKey(ConstantUtil.INTENT_PARAM_NOTIFICATION_MODEL)) {
+                String notificationModelJson = bundle.getString(ConstantUtil.INTENT_PARAM_NOTIFICATION_MODEL);
                 if (notificationModelJson != null) {
                     try {
                         org.json.JSONObject jsonObject = new org.json.JSONObject(notificationModelJson);
@@ -192,18 +182,10 @@ public class NotificationActivity extends AppCompatActivity implements Notificat
             }
         }
 
-        if (mIsFromNotificationService) {
-            // -- Start MainActivity --
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.putExtra(MainActivity.INTENT_PARAM_SHOW_DEFAULT_FRAGMENT, MainActivity.INTENT_PARAM_SHOW_FRAGMENT_NOTIFICATION);
-            intent.putExtra(ConstantUtil.INTENT_RESULT_NOTIFICATION_MODEL, notificationModelJson);
-            startActivity(intent);
-        } else {
-            // -- Set result callback --
-            Intent intent = new Intent();
-            intent.putExtra(ConstantUtil.INTENT_RESULT_NOTIFICATION_MODEL, notificationModelJson);
-            setResult(RESULT_OK, intent);
-        }
+        // -- Set result callback --
+        Intent intent = new Intent();
+        intent.putExtra(ConstantUtil.INTENT_RESULT_NOTIFICATION_MODEL, notificationModelJson);
+        setResult(RESULT_OK, intent);
     }
 
     @Override
