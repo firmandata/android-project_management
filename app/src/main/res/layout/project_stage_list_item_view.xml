@@ -2,104 +2,143 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:clickable="true"
     android:focusable="true"
     android:background="?android:attr/selectableItemBackground"
-    android:padding="@dimen/gap">
+    android:paddingTop="@dimen/gap"
+    android:paddingLeft="@dimen/gap"
+    android:paddingRight="@dimen/gap"
+    android:paddingEnd="@dimen/gap"
+    android:paddingStart="@dimen/gap">
 
-    <LinearLayout
+    <android.support.v7.widget.CardView
+        android:id="@+id/contentBody"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        app:cardElevation="4dp"
+        app:cardCornerRadius="3dp"
+        app:contentPadding="@dimen/gap">
 
         <RelativeLayout
-            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1" >
+            android:layout_width="match_parent">
 
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/stageDate"
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:id="@+id/stageContainer"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:text="Stage Date" />
+                android:layout_alignParentStart="true">
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/stageCode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_toLeftOf="@id/stageDate"
+                    android:layout_toStartOf="@id/stageDate"
+                    android:layout_alignTop="@id/stageDate"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:textStyle="normal|bold"
+                    android:text="Code" />
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/stageDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginLeft="@dimen/gap_half"
+                    android:layout_marginStart="@dimen/gap_half"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:text="Stage Date" />
+
+            </RelativeLayout>
 
             <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/stageCode"
-                android:layout_width="wrap_content"
+                android:id="@+id/nextLabel"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_below="@+id/stageDate"
-                android:text="Code" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="2" >
-
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/tvStageNow"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
+                android:layout_below="@id/stageContainer"
+                android:layout_marginBottom="@dimen/gap_half"
+                android:paddingBottom="@dimen/gap_half"
+                android:background="@drawable/border_label"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textStyle="normal|bold"
+                android:textColor="@color/colorAccent"
+                android:layout_marginTop="@dimen/gap"
                 android:text="Next" />
 
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/stageNextCode"
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:id="@+id/stageNextContainer"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_below="@+id/tvStageNow"
-                android:text="Next Code" />
+                android:layout_below="@id/nextLabel">
 
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/stageNextPlanDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_below="@+id/stageNextCode"
-                android:text="Next Date" />
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/stageNextCode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_toLeftOf="@id/stageNextPlanDate"
+                    android:layout_toStartOf="@id/stageNextPlanDate"
+                    android:layout_alignTop="@id/stageNextPlanDate"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:text="Next Code" />
 
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/stageNextLocation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_below="@+id/stageNextPlanDate"
-                android:text="Location" />
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/stageNextPlanDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginLeft="@dimen/gap_half"
+                    android:layout_marginStart="@dimen/gap_half"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:text="Next Date" />
 
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/stageNextSubject"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_below="@+id/stageNextLocation"
-                android:text="Subject" />
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/stageNextLocation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/stageNextPlanDate"
+                    android:layout_marginTop="@dimen/gap_half"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:text="Location" />
 
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/stageNextMessage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_below="@+id/stageNextSubject"
-                android:text="Message" />
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/stageNextSubject"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/stageNextLocation"
+                    android:layout_marginTop="@dimen/gap_half"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:text="Subject" />
+
+            </RelativeLayout>
 
         </RelativeLayout>
 
-    </LinearLayout>
+    </android.support.v7.widget.CardView>
 </RelativeLayout>

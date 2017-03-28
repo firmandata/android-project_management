@@ -3,8 +3,8 @@ package com.construction.pm.views.project_stage;
 import android.content.Context;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,6 +16,11 @@ import com.construction.pm.R;
 import com.construction.pm.libraries.widgets.RecyclerItemTouchListener;
 import com.construction.pm.models.ProjectStageModel;
 import com.construction.pm.utils.DateTimeUtil;
+import com.construction.pm.utils.ViewUtil;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class ProjectStageListView {
     protected Context mContext;
@@ -60,6 +65,7 @@ public class ProjectStageListView {
 
         mRvProjectStageList = (RecyclerView) mProjectStageListView.findViewById(R.id.projectStageList);
         mRvProjectStageList.setItemAnimator(new DefaultItemAnimator());
+        mRvProjectStageList.setHasFixedSize(true);
         mRvProjectStageList.addOnItemTouchListener(new RecyclerItemTouchListener(mContext, mRvProjectStageList, new RecyclerItemTouchListener.ItemClickListener() {
             @Override
             public void onClick(View view, int position) {
@@ -78,9 +84,6 @@ public class ProjectStageListView {
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(mContext);
         mRvProjectStageList.setLayoutManager(layoutManager);
-
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL);
-        mRvProjectStageList.addItemDecoration(dividerItemDecoration);
 
         mProjectStageListAdapter = new ProjectStageListAdapter();
         mRvProjectStageList.setAdapter(mProjectStageListAdapter);
@@ -120,30 +123,24 @@ public class ProjectStageListView {
 
     protected class ProjectStageListAdapter extends RecyclerView.Adapter<ProjectStageListViewHolder> {
 
-        protected ProjectStageModel[] mProjectStageModels;
+        protected ProjectStageModelView[] mProjectStageModelViews;
 
         public ProjectStageListAdapter() {
 
         }
 
-        public ProjectStageListAdapter(final ProjectStageModel[] projectStageModels) {
-            this();
-            mProjectStageModels = projectStageModels;
-        }
-
         public void setProjectStageModels(final ProjectStageModel[] projectStageModels) {
-            mProjectStageModels = projectStageModels;
-
+            mProjectStageModelViews = getProjectStageModelViews(projectStageModels);
             notifyDataSetChanged();
         }
 
         public ProjectStageModel getItem(final int position) {
-            if (mProjectStageModels == null)
+            if (mProjectStageModelViews == null)
                 return null;
-            if ((position + 1) > mProjectStageModels.length)
+            if ((position + 1) > mProjectStageModelViews.length)
                 return null;
 
-            return mProjectStageModels[position];
+            return mProjectStageModelViews[position].getProjectStageModel();
         }
 
         @Override
@@ -154,54 +151,168 @@ public class ProjectStageListView {
 
         @Override
         public void onBindViewHolder(ProjectStageListViewHolder holder, int position) {
-            if (mProjectStageModels == null)
+            if (mProjectStageModelViews == null)
                 return;
-            if ((position + 1) > mProjectStageModels.length)
+            if ((position + 1) > mProjectStageModelViews.length)
                 return;
 
-            ProjectStageModel projectStageModel = mProjectStageModels[position];
-            holder.setProjectStageModel(projectStageModel);
+            ProjectStageModelView projectStageModelView = mProjectStageModelViews[position];
+            holder.setProjectStageModel(projectStageModelView);
         }
 
         @Override
         public int getItemCount() {
-            if (mProjectStageModels == null)
+            if (mProjectStageModelViews == null)
                 return 0;
 
-            return mProjectStageModels.length;
+            return mProjectStageModelViews.length;
+        }
+
+        protected ProjectStageModelView[] getProjectStageModelViews(final ProjectStageModel[] projectStageModels) {
+            ProjectStageModelView[] projectStageModelViews = buildHierarchyProjectStageModelViews(projectStageModels, null);
+            return extractProjectStageModelViews(projectStageModelViews);
+        }
+
+        protected ProjectStageModelView[] extractProjectStageModelViews(final ProjectStageModelView[] projectStageModelViews) {
+            List<ProjectStageModelView> projectStageModelViewList = new ArrayList<ProjectStageModelView>();
+
+            for (ProjectStageModelView projectStageModelView : projectStageModelViews) {
+                projectStageModelViewList.add(projectStageModelView);
+                if (projectStageModelView.getChilds() != null) {
+                    ProjectStageModelView[] projectStageModelViewChilds = extractProjectStageModelViews(projectStageModelView.getChilds());
+                    if (projectStageModelViewChilds != null) {
+                        for (ProjectStageModelView projectStageModelViewChild : projectStageModelViewChilds) {
+                            projectStageModelViewList.add(projectStageModelViewChild);
+                        }
+                    }
+                }
+            }
+
+            ProjectStageModelView[] newProjectStageModelViews = new ProjectStageModelView[projectStageModelViewList.size()];
+            projectStageModelViewList.toArray(newProjectStageModelViews);
+            return newProjectStageModelViews;
+        }
+
+        protected ProjectStageModelView[] buildHierarchyProjectStageModelViews(final ProjectStageModel[] projectStageModels, final ProjectStageModelView projectStageModelViewParent) {
+            List<ProjectStageModelView> projectStageModelViewList = new ArrayList<ProjectStageModelView>();
+
+            String stageFromCodeRef = null;
+            if (projectStageModelViewParent != null)
+                stageFromCodeRef = projectStageModelViewParent.getProjectStageModel().getStageCode();
+
+            for (ProjectStageModel projectStageModel : projectStageModels) {
+                ProjectStageModelView projectStageModelView = null;
+
+                String stageFromCode = projectStageModel.getStageFromCode();
+                if (stageFromCodeRef == null && stageFromCode == null) {
+                    projectStageModelView = new ProjectStageModelView(projectStageModel);
+                } else if (stageFromCodeRef != null && stageFromCode != null) {
+                    if (stageFromCode.equals(stageFromCodeRef)) {
+                        projectStageModelView = new ProjectStageModelView(projectStageModel);
+                    }
+                }
+
+                if (projectStageModelView != null) {
+                    projectStageModelView.setParent(projectStageModelViewParent);
+                    projectStageModelView.setChilds(buildHierarchyProjectStageModelViews(projectStageModels, projectStageModelView));
+                    projectStageModelViewList.add(projectStageModelView);
+                }
+            }
+
+            ProjectStageModelView[] projectStageModelViews = new ProjectStageModelView[projectStageModelViewList.size()];
+            projectStageModelViewList.toArray(projectStageModelViews);
+            return projectStageModelViews;
+        }
+    }
+
+    protected class ProjectStageModelView {
+
+        protected ProjectStageModelView mParent;
+        protected ProjectStageModel mProjectStageModel;
+        protected List<ProjectStageModelView> mChildList;
+
+        public ProjectStageModelView(final ProjectStageModel projectStageModel) {
+            mProjectStageModel = projectStageModel;
+            mChildList = new ArrayList<ProjectStageModelView>();
+        }
+
+        public ProjectStageModel getProjectStageModel() {
+            return mProjectStageModel;
+        }
+
+        public void setParent(final ProjectStageModelView parent) {
+            mParent = parent;
+        }
+
+        public ProjectStageModelView getParent() {
+            return mParent;
+        }
+
+        public int getParentSize() {
+            if (mParent == null)
+                return 0;
+            return mParent.getParentSize() + 1;
+        }
+
+        public void setChilds(final ProjectStageModelView[] childs) {
+            mChildList = new ArrayList<ProjectStageModelView>(Arrays.asList(childs));
+        }
+
+        public void addChild(final ProjectStageModelView child) {
+            mChildList.add(child);
+        }
+
+        public ProjectStageModelView[] getChilds() {
+            ProjectStageModelView[] childs = new ProjectStageModelView[mChildList.size()];
+            mChildList.toArray(childs);
+            return childs;
         }
     }
 
     protected class ProjectStageListViewHolder extends RecyclerView.ViewHolder {
 
+        protected CardView mContentBody;
         protected AppCompatTextView mEtStageDate;
         protected AppCompatTextView mEtStageCode;
         protected AppCompatTextView mEtStageNextCode;
         protected AppCompatTextView mEtStageNextPlanDate;
         protected AppCompatTextView mEtStageNextLocation;
         protected AppCompatTextView mEtStageNextSubject;
-        protected AppCompatTextView mEtStageNextMessage;
 
         public ProjectStageListViewHolder(View view) {
             super(view);
 
+            mContentBody = (CardView) view.findViewById(R.id.contentBody);
             mEtStageDate = (AppCompatTextView) view.findViewById(R.id.stageDate);
             mEtStageCode = (AppCompatTextView) view.findViewById(R.id.stageCode);
             mEtStageNextCode = (AppCompatTextView) view.findViewById(R.id.stageNextCode);
             mEtStageNextPlanDate = (AppCompatTextView) view.findViewById(R.id.stageNextPlanDate);
             mEtStageNextLocation = (AppCompatTextView) view.findViewById(R.id.stageNextLocation);
             mEtStageNextSubject = (AppCompatTextView) view.findViewById(R.id.stageNextSubject);
-            mEtStageNextMessage = (AppCompatTextView) view.findViewById(R.id.stageNextMessage);
+
+            int margin = (int) mContentBody.getCardElevation();
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mContentBody.getLayoutParams();
+            layoutParams.setMargins(margin, margin, margin, margin);
         }
 
-        public void setProjectStageModel(final ProjectStageModel projectStageModel) {
+        public void setProjectStageModel(final ProjectStageModelView projectStageModelView) {
+            ProjectStageModel projectStageModel = projectStageModelView.getProjectStageModel();
+            if (projectStageModel == null)
+                return;
+
             mEtStageDate.setText(DateTimeUtil.ToDateDisplayString(projectStageModel.getStageDate()));
             mEtStageCode.setText(projectStageModel.getStageCode());
             mEtStageNextCode.setText(projectStageModel.getStageNextCode());
             mEtStageNextPlanDate.setText(DateTimeUtil.ToDateDisplayString(projectStageModel.getStageNextPlanDate()));
             mEtStageNextLocation.setText(projectStageModel.getStageNextLocation());
             mEtStageNextSubject.setText(projectStageModel.getStageNextSubject());
-            mEtStageNextMessage.setText(projectStageModel.getStageNextMessage());
+
+            Context context = getView().getContext();
+
+            int margin = (int) mContentBody.getCardElevation(); //(int) context.getResources().getDimension(R.dimen.gap);
+            int marginLeft = ViewUtil.getPxFromDp(context, projectStageModelView.getParentSize() * 10) + margin;
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mContentBody.getLayoutParams();
+            layoutParams.setMargins(marginLeft, margin, margin, margin);
         }
     }
 }

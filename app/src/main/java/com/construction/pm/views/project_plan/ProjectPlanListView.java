@@ -294,6 +294,10 @@ public class ProjectPlanListView {
             mEtRealizationEndDate = (AppCompatTextView) view.findViewById(R.id.realizationEndDate);
             mEtRealizationStatus = (AppCompatTextView) view.findViewById(R.id.realizationStatus);
             mEtPercentComplete = (AppCompatTextView) view.findViewById(R.id.percentComplete);
+
+            int margin = (int) mContentBody.getCardElevation();
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mContentBody.getLayoutParams();
+            layoutParams.setMargins(margin, margin, margin, margin);
         }
 
         public void setProjectPlanModelView(final ProjectPlanModelView projectPlanModelView) {
