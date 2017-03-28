@@ -103,7 +103,7 @@ public class ProjectStageLayout implements ProjectStageAssignCommentListView.Pro
 
     public void createProjectStageAssignCommentAddMenu(final Menu menu) {
         MenuItem menuItemUpdateActivity = menu.add(R.string.project_stage_layout_menu_comment_add);
-        menuItemUpdateActivity.setIcon(R.drawable.plus_24);
+        menuItemUpdateActivity.setIcon(R.drawable.ic_create_new_dark_24);
         if (Build.VERSION.SDK_INT > 10) {
             menuItemUpdateActivity.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
         }

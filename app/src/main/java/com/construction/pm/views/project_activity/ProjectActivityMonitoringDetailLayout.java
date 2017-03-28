@@ -83,7 +83,7 @@ public class ProjectActivityMonitoringDetailLayout {
 
     public void createProjectActivityUpdateMenu(final Menu menu) {
         MenuItem menuItemUpdateActivity = menu.add(R.string.project_activity_monitoring_detail_menu_update_activity);
-        menuItemUpdateActivity.setIcon(R.drawable.plus_24);
+        menuItemUpdateActivity.setIcon(R.drawable.ic_create_new_dark_24);
         if (Build.VERSION.SDK_INT > 10) {
             menuItemUpdateActivity.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
         }
@@ -99,7 +99,7 @@ public class ProjectActivityMonitoringDetailLayout {
 
     public void createProjectActivityMonitoringEditMenu(final Menu menu) {
         MenuItem menuItemUpdateActivity = menu.add(R.string.project_activity_monitoring_detail_menu_monitoring_edit);
-        menuItemUpdateActivity.setIcon(R.drawable.pencil_24);
+        menuItemUpdateActivity.setIcon(R.drawable.ic_edit_dark_24);
         if (Build.VERSION.SDK_INT > 10) {
             menuItemUpdateActivity.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
         }

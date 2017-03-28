@@ -38,9 +38,9 @@ public class CameraLayout extends CameraView.Callback implements CameraAspectRat
         mContext = context;
 
         mFlashOptions = new SparseIntArray();
-        mFlashOptions.put(CameraView.FLASH_AUTO, R.drawable.ic_flash_auto_24);
-        mFlashOptions.put(CameraView.FLASH_OFF, R.drawable.ic_flash_off_24);
-        mFlashOptions.put(CameraView.FLASH_ON, R.drawable.ic_flash_on_24);
+        mFlashOptions.put(CameraView.FLASH_AUTO, R.drawable.ic_flash_auto_dark_24);
+        mFlashOptions.put(CameraView.FLASH_OFF, R.drawable.ic_flash_off_dark_24);
+        mFlashOptions.put(CameraView.FLASH_ON, R.drawable.ic_flash_on_dark_24);
     }
 
     public CameraLayout(final Context context, final RelativeLayout cameraLayout) {

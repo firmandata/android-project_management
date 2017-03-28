@@ -59,6 +59,7 @@ public class ProjectListView {
 
         mRvProjectList = (RecyclerView) mProjectListView.findViewById(R.id.projectList);
         mRvProjectList.setItemAnimator(new DefaultItemAnimator());
+        mRvProjectList.setHasFixedSize(true);
         mRvProjectList.addOnItemTouchListener(new RecyclerItemTouchListener(mContext, mRvProjectList, new RecyclerItemTouchListener.ItemClickListener() {
             @Override
             public void onClick(View view, int position) {

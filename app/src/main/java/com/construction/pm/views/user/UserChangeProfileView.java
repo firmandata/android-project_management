@@ -146,11 +146,11 @@ public class UserChangeProfileView {
     }
 
     public void alertDialogErrorShow(final String errorMessage) {
-        alertDialogShow(ViewUtil.getResourceString(mContext, R.string.user_change_profile_view_alert_title_error), errorMessage, R.drawable.cancel_2_24, null);
+        alertDialogShow(ViewUtil.getResourceString(mContext, R.string.user_change_profile_view_alert_title_error), errorMessage, R.drawable.ic_error_dark_24, null);
     }
 
     public void alertDialogFirstSuccess(final String successMessage) {
-        alertDialogShow(ViewUtil.getResourceString(mContext, R.string.user_change_profile_view_alert_title_success), successMessage, R.drawable.checked_user_24, null);
+        alertDialogShow(ViewUtil.getResourceString(mContext, R.string.user_change_profile_view_alert_title_success), successMessage, R.drawable.ic_checked_user_dark_24, null);
     }
 
     public void setUserChangeProfileListener(final UserChangeProfileListener userChangeProfileListener) {

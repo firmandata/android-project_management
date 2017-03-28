@@ -99,7 +99,7 @@ public class ProjectStageAssignCommentFormLayout {
     }
 
     public void alertDialogErrorShow(final String errorMessage) {
-        alertDialogShow(ViewUtil.getResourceString(mContext, R.string.project_stage_assign_comment_form_layout_alert_title_error), errorMessage, R.drawable.cancel_2_24, null);
+        alertDialogShow(ViewUtil.getResourceString(mContext, R.string.project_stage_assign_comment_form_layout_alert_title_error), errorMessage, R.drawable.ic_error_dark_24, null);
     }
 
     public void loadLayoutToActivity(final AppCompatActivity activity) {
@@ -120,7 +120,7 @@ public class ProjectStageAssignCommentFormLayout {
 
     public void createProjectStageAssignCommentSaveMenu(final Menu menu) {
         MenuItem menuItemMonitoringActivity = menu.add(R.string.project_stage_assign_comment_form_layout_menu_monitoring_activity);
-        menuItemMonitoringActivity.setIcon(R.drawable.checkmark_24);
+        menuItemMonitoringActivity.setIcon(R.drawable.ic_checkmark_dark_24);
         if (Build.VERSION.SDK_INT > 10) {
             menuItemMonitoringActivity.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
         }

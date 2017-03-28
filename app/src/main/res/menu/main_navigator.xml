@@ -3,28 +3,28 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/navigator_menu_home"
-            android:icon="@drawable/home_24"
+            android:icon="@drawable/ic_home_dark_24"
             android:title="@string/menu_home_title" />
         <item
             android:id="@+id/navigator_menu_notification"
-            android:icon="@drawable/home_24"
+            android:icon="@drawable/ic_notification_dark_24"
             android:title="@string/menu_inbox_title" />
         <item
             android:id="@+id/navigator_menu_project_list"
-            android:icon="@drawable/home_24"
+            android:icon="@drawable/ic_project_dark_24"
             android:title="@string/menu_project_title" />
         <item
             android:id="@+id/navigator_menu_inspector"
-            android:icon="@drawable/home_24"
+            android:icon="@drawable/ic_inspector_dark_24"
             android:title="@string/menu_inspector_title" />
         <item
             android:id="@+id/navigator_menu_manager"
-            android:icon="@drawable/home_24"
+            android:icon="@drawable/ic_manager_dark_24"
             android:title="@string/menu_manager_title" />
 
         <item
             android:id="@+id/navigator_menu_request_report"
-            android:icon="@drawable/home_24"
+            android:icon="@drawable/ic_request_report_dark_24"
             android:title="@string/menu_request_report_title" />
     </group>
 
@@ -33,15 +33,15 @@
             <group android:checkableBehavior="single">
                 <item
                     android:id="@+id/navigator_menu_profile"
-                    android:icon="@drawable/home_24"
+                    android:icon="@drawable/ic_profile_dark_24"
                     android:title="@string/menu_profile_title" />
                 <item
                     android:id="@+id/navigator_menu_change_password"
-                    android:icon="@drawable/home_24"
+                    android:icon="@drawable/ic_change_password_dark_24"
                     android:title="@string/menu_change_password_title" />
                 <item
                     android:id="@+id/navigator_menu_logout"
-                    android:icon="@drawable/home_24"
+                    android:icon="@drawable/ic_logout_dark_24"
                     android:title="@string/menu_logout_title" />
             </group>
         </menu>

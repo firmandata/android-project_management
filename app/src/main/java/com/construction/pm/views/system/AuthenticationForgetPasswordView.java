@@ -116,11 +116,11 @@ public class AuthenticationForgetPasswordView {
     }
 
     public void alertDialogSuccessShow(final String successMessage) {
-        alertDialogShow(ViewUtil.getResourceString(mContext, R.string.system_authentication_forget_password_view_alert_title_success), successMessage, R.drawable.checkmark_24, null);
+        alertDialogShow(ViewUtil.getResourceString(mContext, R.string.system_authentication_forget_password_view_alert_title_success), successMessage, R.drawable.ic_checkmark_dark_24, null);
     }
 
     public void alertDialogErrorShow(final String errorMessage) {
-        alertDialogShow(ViewUtil.getResourceString(mContext, R.string.system_authentication_forget_password_view_alert_title_error), errorMessage, R.drawable.cancel_2_24, null);
+        alertDialogShow(ViewUtil.getResourceString(mContext, R.string.system_authentication_forget_password_view_alert_title_error), errorMessage, R.drawable.ic_error_dark_24, null);
     }
 
     public void setForgetPasswordListener(final ForgetPasswordListener forgetPasswordListener) {

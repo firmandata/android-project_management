@@ -217,7 +217,7 @@ public class ProjectActivityMonitoringFormView {
         protected AppCompatImageView generateImageView() {
             AppCompatImageView imageView = new AppCompatImageView(mContext);
             imageView.setScaleType(AppCompatImageView.ScaleType.CENTER);
-            imageView.setImageResource(R.drawable.ic_gallery_24);
+            imageView.setImageResource(R.drawable.ic_gallery_dark_24);
             imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
             return imageView;
         }

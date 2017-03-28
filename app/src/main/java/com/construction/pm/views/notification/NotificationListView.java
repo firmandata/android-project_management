@@ -65,6 +65,7 @@ public class NotificationListView {
 
         mRvNotificationList = (RecyclerView) mNotificationListView.findViewById(R.id.notificationList);
         mRvNotificationList.setItemAnimator(new DefaultItemAnimator());
+        mRvNotificationList.setHasFixedSize(true);
         mRvNotificationList.addOnItemTouchListener(new RecyclerItemTouchListener(mContext, mRvNotificationList, new RecyclerItemTouchListener.ItemClickListener() {
             @Override
             public void onClick(View view, int position) {

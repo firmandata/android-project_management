@@ -4,7 +4,8 @@
     android:layout_height="wrap_content"
     android:clickable="true"
     android:focusable="true"
-    android:background="?android:attr/selectableItemBackground">
+    android:background="?android:attr/selectableItemBackground"
+    android:padding="@dimen/gap">
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/notificationDate"
@@ -13,7 +14,10 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:text="Notification Date" />
+        android:text="Notification Date"
+        android:textStyle="normal|bold"
+        android:ellipsize="end"
+        android:singleLine="true" />
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/notificationMessage"
@@ -22,5 +26,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/notificationDate"
-        android:text="Notification Description" />
+        android:text="Notification Description"
+        android:layout_marginTop="@dimen/gap"
+        android:ellipsize="end"
+        android:singleLine="true" />
 </RelativeLayout>

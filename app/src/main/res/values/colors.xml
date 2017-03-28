@@ -59,6 +59,7 @@
     <color name="shadow_start">#00000000</color>
     <color name="shadow_end">#60000000</color>
 
-    <color name="logo_background">#fff31e</color>
+    <color name="baseColorIconDark">#FF999999</color>
+    <color name="baseColorIconLight">#FFFFFFFF</color>
 
 </resources>

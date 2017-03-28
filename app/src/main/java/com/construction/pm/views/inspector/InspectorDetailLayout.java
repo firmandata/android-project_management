@@ -96,7 +96,7 @@ public class InspectorDetailLayout implements ProjectActivityMonitoringListFragm
 
     public void createProjectActivityMonitoringAddMenu(final Menu menu) {
         MenuItem menuItemUpdateActivity = menu.add(R.string.inspector_detail_layout_menu_monitoring_add);
-        menuItemUpdateActivity.setIcon(R.drawable.plus_24);
+        menuItemUpdateActivity.setIcon(R.drawable.ic_create_new_dark_24);
         if (Build.VERSION.SDK_INT > 10) {
             menuItemUpdateActivity.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
         }

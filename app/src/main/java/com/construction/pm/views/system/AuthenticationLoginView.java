@@ -149,11 +149,11 @@ public class AuthenticationLoginView {
     }
 
     public void alertDialogErrorShow(final String errorMessage) {
-        alertDialogShow(ViewUtil.getResourceString(mContext, R.string.system_authentication_login_view_alert_title_error), errorMessage, R.drawable.cancel_2_24, null);
+        alertDialogShow(ViewUtil.getResourceString(mContext, R.string.system_authentication_login_view_alert_title_error), errorMessage, R.drawable.ic_error_dark_24, null);
     }
 
     public void alertDialogFirstLoginShow() {
-        alertDialogShow(ViewUtil.getResourceString(mContext, R.string.system_authentication_login_view_alert_first_login_title), ViewUtil.getResourceString(mContext, R.string.system_authentication_login_view_alert_first_login_message), R.drawable.checked_user_24, null);
+        alertDialogShow(ViewUtil.getResourceString(mContext, R.string.system_authentication_login_view_alert_first_login_title), ViewUtil.getResourceString(mContext, R.string.system_authentication_login_view_alert_first_login_message), R.drawable.ic_checked_user_dark_24, null);
     }
 
     public void setLoginListener(final LoginListener loginListener) {

@@ -4,7 +4,8 @@
     android:layout_height="wrap_content"
     android:clickable="true"
     android:focusable="true"
-    android:background="?android:attr/selectableItemBackground">
+    android:background="?android:attr/selectableItemBackground"
+    android:padding="@dimen/gap">
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/contractNo"
@@ -14,7 +15,10 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_toLeftOf="@+id/stageCode"
-        android:layout_toStartOf="@+id/stageCode" />
+        android:layout_toStartOf="@+id/stageCode"
+        android:textStyle="normal|bold"
+        android:singleLine="true"
+        android:ellipsize="end" />
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/projectName"
@@ -25,7 +29,10 @@
         android:layout_below="@+id/contractNo"
         android:layout_alignParentBottom="false"
         android:layout_toLeftOf="@+id/stageCode"
-        android:layout_toStartOf="@+id/stageCode" />
+        android:layout_toStartOf="@+id/stageCode"
+        android:layout_marginTop="@dimen/gap"
+        android:ellipsize="end"
+        android:singleLine="true" />
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/stageCode"
@@ -35,5 +42,9 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_alignBottom="@+id/projectName"
-        android:gravity="center" />
+        android:gravity="center"
+        android:layout_marginStart="@dimen/gap"
+        android:layout_marginLeft="@dimen/gap"
+        android:ellipsize="end"
+        android:singleLine="true" />
 </RelativeLayout>
