@@ -10,6 +10,11 @@ import android.os.Environment;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
+import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.Target;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -79,14 +84,39 @@ public class ImageUtil {
             Point point = ViewUtil.getScreenPoint(context);
             width = point.x;
         }
+        final int widthFixed = width;
 
-        Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
-        if (bitmap != null) {
-            float aspectRatio = bitmap.getWidth() / (float) bitmap.getHeight();
-            // int width = Math.round(height * aspectRatio); // based on height
-            int height = Math.round(width / aspectRatio); // based on width
-            imageView.setImageBitmap(Bitmap.createScaledBitmap(bitmap, width, height, false));
-        }
+        Glide
+            .with(context)
+            .load(byteArray)
+            .asBitmap()
+            .transform(new BitmapTransformation(context) {
+                @Override
+                protected Bitmap transform(BitmapPool pool, Bitmap toTransform, int outWidth, int outHeight) {
+                    float aspectRatio = toTransform.getWidth() / (float) toTransform.getHeight();
+                    int height = Math.round(widthFixed / aspectRatio); // based on width
+                    return Bitmap.createScaledBitmap(toTransform, widthFixed, height, true);
+                }
+
+                @Override
+                public String getId() {
+                    return "com.construction.pm";
+                }
+            })
+            .into(new SimpleTarget<Bitmap>() {
+                @Override
+                public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                    imageView.setImageBitmap(resource);
+                }
+            });
+
+//        Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+//        if (bitmap != null) {
+//            float aspectRatio = bitmap.getWidth() / (float) bitmap.getHeight();
+//            // int width = Math.round(height * aspectRatio); // based on height
+//            int height = Math.round(width / aspectRatio); // based on width
+//            imageView.setImageBitmap(Bitmap.createScaledBitmap(bitmap, width, height, false));
+//        }
     }
 
     protected static Bitmap getImageThumbnail(final String fileLocation, final int width) {
