@@ -3,9 +3,9 @@ package com.construction.pm.views.system;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatButton;
-import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -23,8 +23,8 @@ public class AuthenticationLoginView {
     protected RelativeLayout mAuthenticationLoginView;
     protected ProgressDialog mProgressDialog;
 
-    protected AppCompatEditText mEtLogin;
-    protected AppCompatEditText mEtPassword;
+    protected TextInputEditText mEtLogin;
+    protected TextInputEditText mEtPassword;
 
     protected LoginListener mLoginListener;
     protected LoginForgetPasswordListener mLoginForgetPasswordListener;
@@ -50,8 +50,8 @@ public class AuthenticationLoginView {
     protected void initializeView(final RelativeLayout authenticationLoginView) {
         mAuthenticationLoginView = authenticationLoginView;
 
-        mEtLogin = (AppCompatEditText) mAuthenticationLoginView.findViewById(R.id.login);
-        mEtPassword = (AppCompatEditText) mAuthenticationLoginView.findViewById(R.id.password);
+        mEtLogin = (TextInputEditText) mAuthenticationLoginView.findViewById(R.id.login);
+        mEtPassword = (TextInputEditText) mAuthenticationLoginView.findViewById(R.id.password);
 
         AppCompatButton btnLogin = (AppCompatButton) mAuthenticationLoginView.findViewById(R.id.loginButton);
         btnLogin.setOnClickListener(new View.OnClickListener() {

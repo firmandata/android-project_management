@@ -3,9 +3,9 @@ package com.construction.pm.views.project_stage;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TextInputEditText;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatImageView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,7 +30,7 @@ public class ProjectStageAssignCommentFormView {
 
     protected ViewPager mViewPager;
     protected ViewPagerAdapter mViewPagerAdapter;
-    protected AppCompatEditText mComment;
+    protected TextInputEditText mComment;
 
     protected ProjectStageAssignCommentModel mProjectStageAssignCommentModel;
 
@@ -58,7 +58,7 @@ public class ProjectStageAssignCommentFormView {
     protected void initializeView(final RelativeLayout projectActivityDetailView) {
         mProjectStageAssignCommentFormView = projectActivityDetailView;
 
-        mComment = (AppCompatEditText) mProjectStageAssignCommentFormView.findViewById(R.id.comment);
+        mComment = (TextInputEditText) mProjectStageAssignCommentFormView.findViewById(R.id.comment);
         mViewPager = (ViewPager) mProjectStageAssignCommentFormView.findViewById(R.id.photoPager);
 
         mViewPagerAdapter = new ViewPagerAdapter(mContext);

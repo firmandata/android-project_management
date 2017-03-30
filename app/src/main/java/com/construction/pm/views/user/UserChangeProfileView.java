@@ -3,9 +3,9 @@ package com.construction.pm.views.user;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatButton;
-import android.support.v7.widget.AppCompatEditText;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,10 +23,10 @@ public class UserChangeProfileView {
     protected ProgressDialog mProgressDialog;
 
     protected ProjectMemberModel mProjectMemberModel;
-    protected AppCompatEditText mEtEmail;
-    protected AppCompatEditText mEtMemberName;
-    protected AppCompatEditText mEtPhoneNumber;
-    protected AppCompatEditText mEtDescription;
+    protected TextInputEditText mEtEmail;
+    protected TextInputEditText mEtMemberName;
+    protected TextInputEditText mEtPhoneNumber;
+    protected TextInputEditText mEtDescription;
 
     protected UserChangeProfileListener mUserChangeProfileListener;
 
@@ -51,10 +51,10 @@ public class UserChangeProfileView {
     protected void initializeView(final RelativeLayout authenticationChangeView) {
         mUserChangeProfileView = authenticationChangeView;
 
-        mEtEmail = (AppCompatEditText) mUserChangeProfileView.findViewById(R.id.email);
-        mEtMemberName = (AppCompatEditText) mUserChangeProfileView.findViewById(R.id.memberName);
-        mEtPhoneNumber = (AppCompatEditText) mUserChangeProfileView.findViewById(R.id.phoneNumber);
-        mEtDescription = (AppCompatEditText) mUserChangeProfileView.findViewById(R.id.description);
+        mEtEmail = (TextInputEditText) mUserChangeProfileView.findViewById(R.id.email);
+        mEtMemberName = (TextInputEditText) mUserChangeProfileView.findViewById(R.id.memberName);
+        mEtPhoneNumber = (TextInputEditText) mUserChangeProfileView.findViewById(R.id.phoneNumber);
+        mEtDescription = (TextInputEditText) mUserChangeProfileView.findViewById(R.id.description);
 
         AppCompatButton btnChangeProfile = (AppCompatButton) mUserChangeProfileView.findViewById(R.id.changeProfileButton);
         btnChangeProfile.setOnClickListener(new View.OnClickListener() {

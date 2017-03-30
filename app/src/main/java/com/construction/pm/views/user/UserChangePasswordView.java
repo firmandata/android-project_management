@@ -3,9 +3,9 @@ package com.construction.pm.views.user;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatButton;
-import android.support.v7.widget.AppCompatEditText;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,9 +21,9 @@ public class UserChangePasswordView {
     protected RelativeLayout mUserChangePasswordView;
     protected ProgressDialog mProgressDialog;
 
-    protected AppCompatEditText mEtPasswordOld;
-    protected AppCompatEditText mEtPasswordNew;
-    protected AppCompatEditText mEtPasswordNewConfirm;
+    protected TextInputEditText mEtPasswordOld;
+    protected TextInputEditText mEtPasswordNew;
+    protected TextInputEditText mEtPasswordNewConfirm;
 
     protected UserChangePasswordListener mUserUserChangePasswordListener;
 
@@ -48,9 +48,9 @@ public class UserChangePasswordView {
     protected void initializeView(final RelativeLayout userChangePasswordView) {
         mUserChangePasswordView = userChangePasswordView;
 
-        mEtPasswordOld = (AppCompatEditText) mUserChangePasswordView.findViewById(R.id.passwordOld);
-        mEtPasswordNew = (AppCompatEditText) mUserChangePasswordView.findViewById(R.id.passwordNew);
-        mEtPasswordNewConfirm = (AppCompatEditText) mUserChangePasswordView.findViewById(R.id.passwordNewConfirm);
+        mEtPasswordOld = (TextInputEditText) mUserChangePasswordView.findViewById(R.id.passwordOld);
+        mEtPasswordNew = (TextInputEditText) mUserChangePasswordView.findViewById(R.id.passwordNew);
+        mEtPasswordNewConfirm = (TextInputEditText) mUserChangePasswordView.findViewById(R.id.passwordNewConfirm);
 
         AppCompatButton btnChangePassword = (AppCompatButton) mUserChangePasswordView.findViewById(R.id.changePasswordButton);
         btnChangePassword.setOnClickListener(new View.OnClickListener() {

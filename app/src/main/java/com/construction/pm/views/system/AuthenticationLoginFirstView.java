@@ -3,9 +3,9 @@ package com.construction.pm.views.system;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatButton;
-import android.support.v7.widget.AppCompatEditText;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,8 +21,8 @@ public class AuthenticationLoginFirstView {
     protected RelativeLayout mAuthenticationLoginFirstView;
     protected ProgressDialog mProgressDialog;
 
-    protected AppCompatEditText mEtPasswordNew;
-    protected AppCompatEditText mEtPasswordNewConfirm;
+    protected TextInputEditText mEtPasswordNew;
+    protected TextInputEditText mEtPasswordNewConfirm;
 
     protected AuthenticationLoginFirstListener mAuthenticationLoginFirstListener;
 
@@ -47,8 +47,8 @@ public class AuthenticationLoginFirstView {
     protected void initializeView(final RelativeLayout authenticationLoginFirstView) {
         mAuthenticationLoginFirstView = authenticationLoginFirstView;
 
-        mEtPasswordNew = (AppCompatEditText) mAuthenticationLoginFirstView.findViewById(R.id.passwordNew);
-        mEtPasswordNewConfirm = (AppCompatEditText) mAuthenticationLoginFirstView.findViewById(R.id.passwordNewConfirm);
+        mEtPasswordNew = (TextInputEditText) mAuthenticationLoginFirstView.findViewById(R.id.passwordNew);
+        mEtPasswordNewConfirm = (TextInputEditText) mAuthenticationLoginFirstView.findViewById(R.id.passwordNewConfirm);
 
         AppCompatButton btnFirstPassword = (AppCompatButton) mAuthenticationLoginFirstView.findViewById(R.id.newPasswordButton);
         btnFirstPassword.setOnClickListener(new View.OnClickListener() {

@@ -3,9 +3,9 @@ package com.construction.pm.views.system;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatButton;
-import android.support.v7.widget.AppCompatEditText;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +22,7 @@ public class AuthenticationForgetPasswordView {
     protected RelativeLayout mAuthenticationForgetPasswordView;
     protected ProgressDialog mProgressDialog;
 
-    protected AppCompatEditText mEtLogin;
+    protected TextInputEditText mEtLogin;
 
     protected ForgetPasswordListener mForgetPasswordListener;
 
@@ -47,7 +47,7 @@ public class AuthenticationForgetPasswordView {
     protected void initializeView(final RelativeLayout authenticationLoginView) {
         mAuthenticationForgetPasswordView = authenticationLoginView;
 
-        mEtLogin = (AppCompatEditText) mAuthenticationForgetPasswordView.findViewById(R.id.login);
+        mEtLogin = (TextInputEditText) mAuthenticationForgetPasswordView.findViewById(R.id.login);
 
         AppCompatButton btnReset = (AppCompatButton) mAuthenticationForgetPasswordView.findViewById(R.id.resetButton);
         btnReset.setOnClickListener(new View.OnClickListener() {

@@ -12,7 +12,7 @@
         android:layout_alignParentStart="true"
         android:layout_marginBottom="@dimen/form_element_vertical_gap">
 
-        <android.support.v7.widget.AppCompatEditText
+        <android.support.design.widget.TextInputEditText
             android:id="@+id/passwordNew"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -32,7 +32,7 @@
         android:layout_alignParentStart="true"
         android:layout_marginBottom="@dimen/form_element_vertical_gap">
 
-        <android.support.v7.widget.AppCompatEditText
+        <android.support.design.widget.TextInputEditText
             android:id="@+id/passwordNewConfirm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
