@@ -24,6 +24,7 @@ import com.construction.pm.networks.webapi.WebApiParam;
 import com.construction.pm.persistence.SettingPersistent;
 import com.construction.pm.utils.ConstantUtil;
 import com.construction.pm.utils.ImageUtil;
+import com.construction.pm.views.listeners.ImageRequestDuplicateListener;
 import com.construction.pm.views.listeners.ImageRequestListener;
 import com.construction.pm.views.project_activity.ProjectActivityMonitoringFormView;
 
@@ -33,7 +34,7 @@ import java.util.List;
 
 public class ProjectActivityMonitoringFormFragment extends Fragment implements
         ProjectActivityMonitoringFormView.ProjectActivityMonitoringFormListener,
-        ImageRequestListener {
+        ImageRequestDuplicateListener {
     public static final String PARAM_PROJECT_ACTIVITY_MODEL = "PROJECT_ACTIVITY_MODEL";
     public static final String PARAM_PROJECT_ACTIVITY_MONITORING_MODEL = "PROJECT_ACTIVITY_MONITORING_MODEL";
 
@@ -106,7 +107,7 @@ public class ProjectActivityMonitoringFormFragment extends Fragment implements
         // -- Prepare ProjectActivityMonitoringFormView --
         mProjectActivityMonitoringFormView = ProjectActivityMonitoringFormView.buildProjectActivityMonitoringFormView(getContext(), null);
         mProjectActivityMonitoringFormView.setProjectActivityMonitoringFormListener(this);
-        mProjectActivityMonitoringFormView.setImageRequestListener(this);
+        mProjectActivityMonitoringFormView.setImageRequestDuplicateListener(this);
         mProjectActivityMonitoringFormView.setProjectActivityModel(projectActivityModel);
         mProjectActivityMonitoringFormView.setProjectActivityMonitoringModel(projectActivityMonitoringModel);
     }
@@ -161,7 +162,7 @@ public class ProjectActivityMonitoringFormFragment extends Fragment implements
     }
 
     @Override
-    public void onImageRequest(final ImageView imageView, final Integer fileId) {
+    public void onImageRequestDuplicate(final ImageView imageView, final ImageView duplicateImageView, final Integer fileId) {
         // -- Get SettingUserModel from SettingPersistent --
         SettingPersistent settingPersistent = new SettingPersistent(getContext());
         final SettingUserModel settingUserModel = settingPersistent.getSettingUserModel();
@@ -180,8 +181,11 @@ public class ProjectActivityMonitoringFormFragment extends Fragment implements
                 if (fileRequestAsyncTaskResult != null) {
                     FileModel fileModel = fileRequestAsyncTaskResult.getFileModel();
                     if (fileModel != null) {
-                        if (fileModel.getFileData() != null)
+                        if (fileModel.getFileData() != null) {
                             ImageUtil.setImageThumbnailView(getContext(), imageView, fileModel.getFileData());
+                            if (duplicateImageView != null)
+                                ImageUtil.setImageThumbnailView(getContext(), duplicateImageView, fileModel.getFileData());
+                        }
                     }
                 }
             }
@@ -199,8 +203,11 @@ public class ProjectActivityMonitoringFormFragment extends Fragment implements
                 if (fileRequestAsyncTaskResult != null) {
                     FileModel fileModel = fileRequestAsyncTaskResult.getFileModel();
                     if (fileModel != null) {
-                        if (fileModel.getFileData() != null)
+                        if (fileModel.getFileData() != null) {
                             ImageUtil.setImageThumbnailView(getContext(), imageView, fileModel.getFileData());
+                            if (duplicateImageView != null)
+                                ImageUtil.setImageThumbnailView(getContext(), duplicateImageView, fileModel.getFileData());
+                        }
                     }
                 }
 

@@ -23,6 +23,7 @@ import com.construction.pm.R;
 import com.construction.pm.activities.fragments.ProjectActivityUpdateFormFragment;
 import com.construction.pm.models.ProjectActivityMonitoringModel;
 import com.construction.pm.models.ProjectActivityUpdateModel;
+import com.construction.pm.utils.DateTimeUtil;
 import com.construction.pm.utils.ViewUtil;
 
 public class ProjectActivityUpdateFormLayout {
@@ -118,7 +119,7 @@ public class ProjectActivityUpdateFormLayout {
 
     public void createProjectActivityUpdateSaveMenu(final Menu menu) {
         MenuItem menuItemUpdateActivity = menu.add(R.string.project_activity_update_form_layout_menu_update_activity);
-        menuItemUpdateActivity.setIcon(R.drawable.ic_checkmark_dark_24);
+        menuItemUpdateActivity.setIcon(R.drawable.ic_checkmark_light_24);
         if (Build.VERSION.SDK_INT > 10) {
             menuItemUpdateActivity.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
         }
@@ -177,7 +178,19 @@ public class ProjectActivityUpdateFormLayout {
     public ProjectActivityUpdateFormFragment showProjectActivityUpdateFormFragment(final ProjectActivityMonitoringModel projectActivityMonitoringModel, final ProjectActivityUpdateModel projectActivityUpdateModel) {
         mProjectActivityUpdateFormFragment = ProjectActivityUpdateFormFragment.newInstance(projectActivityMonitoringModel, projectActivityUpdateModel);
 
-        loadFragment(mProjectActivityUpdateFormFragment, null, null, FRAGMENT_TAG_PROJECT_ACTIVITY_UPDATE_FORM);
+        String subTitle = null;
+        if (projectActivityUpdateModel != null) {
+            if (projectActivityUpdateModel.getUpdateDate() != null)
+                subTitle = DateTimeUtil.ToDateTimeDisplayString(projectActivityUpdateModel.getUpdateDate());
+        }
+        if (subTitle == null) {
+            if (projectActivityMonitoringModel != null) {
+                if (projectActivityMonitoringModel.getMonitoringDate() != null)
+                    subTitle = DateTimeUtil.ToDateTimeDisplayString(projectActivityMonitoringModel.getMonitoringDate());
+            }
+        }
+
+        loadFragment(mProjectActivityUpdateFormFragment, null, subTitle, FRAGMENT_TAG_PROJECT_ACTIVITY_UPDATE_FORM);
 
         return mProjectActivityUpdateFormFragment;
     }

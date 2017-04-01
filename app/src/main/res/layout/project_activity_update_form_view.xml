@@ -1,16 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="@dimen/gap">
+
+    <RelativeLayout
+        android:id="@+id/photoIdContainer"
+        android:layout_width="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_height="300dp">
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/photoTab"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="@dimen/gap_half"
+            app:tabGravity="center"
+            app:tabMode="scrollable" />
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/photoPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_above="@id/photoTab" />
+
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/actualStartDateContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/photoIdContainer"
+        android:layout_marginTop="@dimen/form_element_vertical_gap">
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/actualStartDateLabel"
@@ -19,7 +52,9 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:text="@string/project_activity_monitoring_actual_start_date" />
+            android:textColor="@color/colorAccent"
+            android:textStyle="normal|bold"
+            android:text="@string/project_activity_update_actual_start_date" />
 
         <com.construction.pm.libraries.widgets.DatePickerView
             android:id="@+id/actualStartDate"
@@ -35,7 +70,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@id/actualStartDateContainer">
+        android:layout_below="@id/actualStartDateContainer"
+        android:layout_marginTop="@dimen/form_element_vertical_gap">
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/actualEndDateLabel"
@@ -44,7 +80,9 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:text="@string/project_activity_monitoring_actual_end_date" />
+            android:textColor="@color/colorAccent"
+            android:textStyle="normal|bold"
+            android:text="@string/project_activity_update_actual_end_date" />
 
         <com.construction.pm.libraries.widgets.DatePickerView
             android:id="@+id/actualEndDate"
@@ -60,7 +98,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@id/actualEndDateContainer">
+        android:layout_below="@id/actualEndDateContainer"
+        android:layout_marginTop="@dimen/form_element_vertical_gap">
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/activityStatusLabel"
@@ -69,7 +108,9 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:text="@string/project_activity_monitoring_activity_status" />
+            android:textStyle="normal|bold"
+            android:textColor="@color/colorAccent"
+            android:text="@string/project_activity_update_activity_status" />
 
         <android.support.v7.widget.AppCompatSpinner
             android:id="@+id/activityStatus"
@@ -86,8 +127,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@id/activityStatusContainer"
-        android:layout_alignRight="@+id/activityStatusContainer"
-        android:layout_alignEnd="@+id/activityStatusContainer">
+        android:layout_marginTop="@dimen/form_element_vertical_gap">
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/percentCompleteLabel"
@@ -96,15 +136,18 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:text="@string/project_activity_monitoring_percent_complete" />
+            android:textColor="@color/colorAccent"
+            android:textStyle="normal|bold"
+            android:text="@string/project_activity_update_percent_complete" />
 
         <SeekBar
             android:id="@+id/percentComplete"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/percentCompleteLabel"
-            android:max="100"
-            style="@style/Widget.AppCompat.SeekBar" />
+            android:max="1000"
+            style="@style/Widget.AppCompat.SeekBar"
+            android:layout_marginTop="@dimen/vertical_gap" />
 
     </RelativeLayout>
 
@@ -114,7 +157,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@id/percentCompleteContainer">
+        android:layout_below="@id/percentCompleteContainer"
+        android:layout_marginTop="@dimen/form_element_vertical_gap">
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/commentLabel"
@@ -123,14 +167,16 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:text="@string/project_activity_monitoring_comment" />
+            android:textStyle="normal|bold"
+            android:textColor="@color/colorAccent"
+            android:text="@string/project_activity_update_comment" />
 
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/comment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/commentLabel"
-            android:text="TextView"
+            android:hint="@string/project_activity_update_comment"
             android:singleLine="false" />
 
     </RelativeLayout>

@@ -307,10 +307,10 @@
     <string name="project_activity_monitoring_list_actual_start_date">Start</string>
     <string name="project_activity_monitoring_list_actual_end_date">To</string>
 
-    <string name="project_activity_monitoring_actual_start_date">Actual Start Date</string>
-    <string name="project_activity_monitoring_actual_end_date">Actual End Date</string>
-    <string name="project_activity_monitoring_activity_status">Activity Status</string>
-    <string name="project_activity_monitoring_percent_complete">Percent Complete</string>
+    <string name="project_activity_monitoring_actual_start_date">Start Date</string>
+    <string name="project_activity_monitoring_actual_end_date">End Date</string>
+    <string name="project_activity_monitoring_activity_status">Status</string>
+    <string name="project_activity_monitoring_percent_complete">Percentage ($s1)</string>
     <string name="project_activity_monitoring_comment">Comment</string>
 
     <string name="project_activity_monitoring_detail_title">Monitoring Detail</string>
@@ -337,6 +337,12 @@
     <string name="project_activity_update_form_layout_title">Update</string>
     <string name="project_activity_update_form_layout_alert_button">OK</string>
     <string name="project_activity_update_form_layout_alert_title_error">Failed</string>
+
+    <string name="project_activity_update_actual_start_date">Start Date</string>
+    <string name="project_activity_update_actual_end_date">End Date</string>
+    <string name="project_activity_update_activity_status">Status</string>
+    <string name="project_activity_update_percent_complete">Percentage ($s1)</string>
+    <string name="project_activity_update_comment">Comment</string>
 
     <string name="project_activity_monitoring_form_layout_menu_monitoring_activity">Save</string>
     <string name="project_activity_monitoring_form_layout_title">Monitoring</string>

@@ -24,6 +24,7 @@ import com.construction.pm.activities.fragments.ProjectActivityMonitoringFormFra
 import com.construction.pm.models.ProjectActivityModel;
 import com.construction.pm.models.ProjectActivityMonitoringModel;
 import com.construction.pm.networks.webapi.WebApiParam;
+import com.construction.pm.utils.DateTimeUtil;
 import com.construction.pm.utils.ViewUtil;
 
 public class ProjectActivityMonitoringFormLayout {
@@ -119,7 +120,7 @@ public class ProjectActivityMonitoringFormLayout {
 
     public void createProjectActivityMonitoringSaveMenu(final Menu menu) {
         MenuItem menuItemMonitoringActivity = menu.add(R.string.project_activity_monitoring_form_layout_menu_monitoring_activity);
-        menuItemMonitoringActivity.setIcon(R.drawable.ic_checkmark_dark_24);
+        menuItemMonitoringActivity.setIcon(R.drawable.ic_checkmark_light_24);
         if (Build.VERSION.SDK_INT > 10) {
             menuItemMonitoringActivity.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
         }
@@ -178,7 +179,13 @@ public class ProjectActivityMonitoringFormLayout {
     public ProjectActivityMonitoringFormFragment showProjectActivityMonitoringFormFragment(final ProjectActivityModel projectActivityModel, final ProjectActivityMonitoringModel projectActivityMonitoringModel) {
         mProjectActivityMonitoringFormFragment = ProjectActivityMonitoringFormFragment.newInstance(projectActivityModel, projectActivityMonitoringModel);
 
-        loadFragment(mProjectActivityMonitoringFormFragment, null, null, FRAGMENT_TAG_PROJECT_ACTIVITY_MONITORING_FORM);
+        String subTitle = null;
+        if (projectActivityMonitoringModel != null) {
+            if (projectActivityMonitoringModel.getMonitoringDate() != null)
+                subTitle = DateTimeUtil.ToDateTimeDisplayString(projectActivityMonitoringModel.getMonitoringDate());
+        }
+
+        loadFragment(mProjectActivityMonitoringFormFragment, null, subTitle, FRAGMENT_TAG_PROJECT_ACTIVITY_MONITORING_FORM);
 
         return mProjectActivityMonitoringFormFragment;
     }
