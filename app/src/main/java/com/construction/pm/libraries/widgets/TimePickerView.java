@@ -2,6 +2,7 @@ package com.construction.pm.libraries.widgets;
 
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.InputType;
@@ -20,7 +21,7 @@ public class TimePickerView extends RelativeLayout {
 
     private Context mContext;
     private AppCompatEditText mEditText;
-    private AppCompatButton mButton;
+    private FloatingActionButton mButton;
 
     private TimePickerDialog mTimePickerDialog;
     private Calendar mCalendar;
@@ -53,8 +54,8 @@ public class TimePickerView extends RelativeLayout {
         mEditText.setInputType(InputType.TYPE_CLASS_DATETIME | InputType.TYPE_DATETIME_VARIATION_TIME);
         mEditText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
 
-        mButton = new AppCompatButton(mContext);
-        mButton.setText(ViewUtil.getResourceString(mContext, R.string.time_picker_button));
+        mButton = new FloatingActionButton(mContext);
+        mButton.setImageResource(R.drawable.ic_timer_light_24dp);
         mButton.setId(ViewUtil.generateViewId());
 
         LayoutParams editTextLayout = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);

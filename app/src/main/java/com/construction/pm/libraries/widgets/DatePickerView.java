@@ -2,6 +2,7 @@ package com.construction.pm.libraries.widgets;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.InputType;
@@ -21,7 +22,7 @@ public class DatePickerView extends RelativeLayout {
 
     private Context mContext;
     private AppCompatEditText mEditText;
-    private AppCompatButton mButton;
+    private FloatingActionButton mButton;
 
     private DatePickerDialog mDatePickerDialog;
     private Calendar mCalendar;
@@ -70,8 +71,8 @@ public class DatePickerView extends RelativeLayout {
         mEditText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
         mEditText.setHint(mDisplayDateFormat);
 
-        mButton = new AppCompatButton(mContext);
-        mButton.setText(ViewUtil.getResourceString(mContext, R.string.date_picker_button));
+        mButton = new FloatingActionButton(mContext);
+        mButton.setImageResource(R.drawable.ic_today_light_24dp);
         mButton.setId(ViewUtil.generateViewId());
 
         LayoutParams editTextLayout = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
