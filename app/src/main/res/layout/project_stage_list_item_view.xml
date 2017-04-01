@@ -16,8 +16,6 @@
         android:id="@+id/contentBody"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardElevation="4dp"
-        app:cardCornerRadius="3dp"
         app:contentPadding="@dimen/gap">
 
         <RelativeLayout

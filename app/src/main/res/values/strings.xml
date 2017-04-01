@@ -284,6 +284,13 @@
     <string name="manager_detail_layout_tab_update">Update</string>
     <string name="manager_detail_layout_tab_monitoring">Monitoring</string>
 
+    <string name="project_activity_list_plan_title">Plan</string>
+    <string name="project_activity_list_plan_start_date">Start</string>
+    <string name="project_activity_list_plan_end_date">To</string>
+    <string name="project_activity_list_actual_title">Actual</string>
+    <string name="project_activity_list_actual_start_date">Start</string>
+    <string name="project_activity_list_actual_end_date">To</string>
+
     <string name="project_activity_task_name">Task Name</string>
     <string name="project_activity_plan_start_date">Plan Start Date</string>
     <string name="project_activity_plan_end_date">Plan End Date</string>

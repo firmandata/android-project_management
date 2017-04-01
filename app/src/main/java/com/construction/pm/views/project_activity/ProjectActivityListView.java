@@ -309,7 +309,7 @@ public class ProjectActivityListView {
             mEtActualStartDate.setText(DateTimeUtil.ToDateDisplayString(projectActivityModel.getActualStartDate()));
             mEtActualEndDate.setText(DateTimeUtil.ToDateDisplayString(projectActivityModel.getActualEndDate()));
             mEtActivityStatus.setText(projectActivityModel.getActivityStatus());
-            mEtPercentComplete.setText(StringUtil.numberFormat(projectActivityModel.getPercentComplete()));
+            mEtPercentComplete.setText(StringUtil.numberPercentFormat(projectActivityModel.getPercentComplete()));
         }
     }
 }
