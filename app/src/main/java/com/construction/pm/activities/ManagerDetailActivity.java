@@ -91,7 +91,7 @@ public class ManagerDetailActivity extends AppCompatActivity implements
 
     @Override
     public void onProjectActivityUpdateListItemClick(ProjectActivityUpdateModel projectActivityUpdateModel) {
-        showProjectActivityUpdateFormActivity(projectActivityUpdateModel);
+        showProjectActivityUpdateDetailActivity(projectActivityUpdateModel);
     }
 
     @Override
@@ -124,6 +124,20 @@ public class ManagerDetailActivity extends AppCompatActivity implements
         }
 
         startActivityForResult(intent, ConstantUtil.INTENT_REQUEST_PROJECT_ACTIVITY_UPDATE_FORM);
+    }
+
+    protected void showProjectActivityUpdateDetailActivity(final ProjectActivityUpdateModel projectActivityUpdateModel) {
+        // -- Redirect to ProjectActivityUpdateDetailActivity --
+        Intent intent = new Intent(this, ProjectActivityUpdateDetailActivity.class);
+
+        try {
+            org.json.JSONObject projectActivityUpdateModelJsonObject = projectActivityUpdateModel.build();
+            String projectActivityUpdateModelJson = projectActivityUpdateModelJsonObject.toString(0);
+            intent.putExtra(ProjectActivityUpdateDetailActivity.INTENT_PARAM_PROJECT_ACTIVITY_UPDATE_MODEL, projectActivityUpdateModelJson);
+        } catch (org.json.JSONException ex) {
+        }
+
+        startActivityForResult(intent, ConstantUtil.INTENT_REQUEST_PROJECT_ACTIVITY_UPDATE_DETAIL);
     }
 
     protected void showProjectActivityUpdateFormActivity(final ProjectActivityUpdateModel projectActivityUpdateModel) {
@@ -162,6 +176,24 @@ public class ManagerDetailActivity extends AppCompatActivity implements
                             }
                             if (projectActivityMonitoringModel != null)
                                 showProjectActivityUpdateFormActivity(projectActivityMonitoringModel);
+                        }
+                    }
+                }
+            }
+        } else if (requestCode == ConstantUtil.INTENT_REQUEST_PROJECT_ACTIVITY_UPDATE_DETAIL) {
+            if (resultCode == ConstantUtil.INTENT_REQUEST_PROJECT_ACTIVITY_UPDATE_DETAIL_RESULT_EDIT) {
+                if (bundle != null) {
+                    if (bundle.containsKey(ConstantUtil.INTENT_RESULT_PROJECT_ACTIVITY_UPDATE_MODEL)) {
+                        String projectActivityUpdateModelJson = bundle.getString(ConstantUtil.INTENT_RESULT_PROJECT_ACTIVITY_UPDATE_MODEL);
+                        if (projectActivityUpdateModelJson != null) {
+                            ProjectActivityUpdateModel projectActivityUpdateModel = null;
+                            try {
+                                org.json.JSONObject jsonObject = new org.json.JSONObject(projectActivityUpdateModelJson);
+                                projectActivityUpdateModel = ProjectActivityUpdateModel.build(jsonObject);
+                            } catch (org.json.JSONException ex) {
+                            }
+                            if (projectActivityUpdateModel != null)
+                                showProjectActivityUpdateFormActivity(projectActivityUpdateModel);
                         }
                     }
                 }

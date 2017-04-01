@@ -24,7 +24,6 @@ import com.construction.pm.models.system.SettingUserModel;
 import com.construction.pm.persistence.SessionPersistent;
 import com.construction.pm.persistence.SettingPersistent;
 import com.construction.pm.utils.ImageUtil;
-import com.construction.pm.utils.ViewUtil;
 import com.construction.pm.views.listeners.ImageRequestListener;
 import com.construction.pm.views.project_activity.ProjectActivityMonitoringListView;
 
@@ -135,11 +134,11 @@ public class ProjectActivityMonitoringListFragment extends Fragment implements
                 mAsyncTaskList.remove(this);
 
                 if (inspectorProjectActivityMonitoringListAsyncTask != null) {
-                    onProjectListRequestSuccess(inspectorProjectActivityMonitoringListAsyncTask.getProjectActivityMonitoringModels());
+                    onProjectActivityMonitoringListRequestSuccess(inspectorProjectActivityMonitoringListAsyncTask.getProjectActivityMonitoringModels());
                     if (inspectorProjectActivityMonitoringListAsyncTask.getMessage() != null)
-                        onProjectListRequestMessage(inspectorProjectActivityMonitoringListAsyncTask.getMessage());
+                        onProjectActivityMonitoringListRequestMessage(inspectorProjectActivityMonitoringListAsyncTask.getMessage());
                 } else {
-                    onProjectListRequestMessage(null);
+                    onProjectActivityMonitoringListRequestMessage(null);
                 }
             }
 
@@ -147,7 +146,7 @@ public class ProjectActivityMonitoringListFragment extends Fragment implements
             protected void onProgressUpdate(String... messages) {
                 if (messages != null) {
                     if (messages.length > 0) {
-                        onProjectListRequestProgress(messages[0]);
+                        onProjectActivityMonitoringListRequestProgress(messages[0]);
                     }
                 }
             }
@@ -218,15 +217,15 @@ public class ProjectActivityMonitoringListFragment extends Fragment implements
         fileGetCacheAsyncTask.execute(new FileGetAsyncTaskParam(getContext(), settingUserModel, fileId));
     }
 
-    protected void onProjectListRequestProgress(final String progressMessage) {
+    protected void onProjectActivityMonitoringListRequestProgress(final String progressMessage) {
 
     }
 
-    protected void onProjectListRequestSuccess(final ProjectActivityMonitoringModel[] projectActivityMonitoringModels) {
+    protected void onProjectActivityMonitoringListRequestSuccess(final ProjectActivityMonitoringModel[] projectActivityMonitoringModels) {
         mProjectActivityMonitoringListView.setProjectActivityMonitoringModels(projectActivityMonitoringModels);
     }
 
-    protected void onProjectListRequestMessage(final String message) {
+    protected void onProjectActivityMonitoringListRequestMessage(final String message) {
 
     }
 

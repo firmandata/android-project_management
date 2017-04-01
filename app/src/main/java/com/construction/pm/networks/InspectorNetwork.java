@@ -131,6 +131,63 @@ public class InspectorNetwork extends AuthenticationNetwork {
         return projectActivityMonitoringModels;
     }
 
+    public ProjectActivityMonitoringModel getProjectActivityMonitoring(final Integer projectActivityMonitoringId, final Integer projectActivityId, final Integer projectMemberId) throws WebApiError {
+        // -- Get SessionLoginModel --
+        SessionLoginModel sessionLoginModel = getSessionLoginModel();
+        AccessTokenModel accessTokenModel = sessionLoginModel.getAccessTokenModel();
+
+        // -- Prepare WebApiParam headerParam parameters --
+        WebApiParam headerParam = new WebApiParam();
+        if (accessTokenModel != null)
+            headerParam.add("Authorization", "Bearer " + accessTokenModel.getAccessToken());
+
+        // -- Prepare WebApiParam formData parameters --
+        WebApiParam formData = new WebApiParam();
+        formData.add("project_activity_id", projectActivityId);
+        formData.add("project_member_id", projectMemberId);
+
+        // -- Request get ProjectActivityMonitoringModels --
+        WebApiResponse webApiResponse = mWebApiRequest.post("/rest/project/getListProjectActivityMonitoringByActivityMember", headerParam, null, formData);
+
+        // -- Throw WebApiError if existing --
+        WebApiError webApiError = webApiResponse.getWebApiError();
+        if (webApiError != null)
+            throw webApiError;
+
+        // -- Get request result --
+        org.json.JSONObject jsonObject = webApiResponse.getSuccessJsonObject();
+        if (jsonObject == null)
+            throw new WebApiError(webApiResponse, 0, ViewUtil.getResourceString(mContext, R.string.network_unknown_response_expected));
+
+        // -- Fetch result --
+        ProjectActivityMonitoringModel projectActivityMonitoringModel = null;
+        try {
+            if (!jsonObject.isNull("result")) {
+                org.json.JSONObject jsonResult = jsonObject.getJSONObject("result");
+                if (!jsonResult.isNull("projectActivityMonitoringByActivity")) {
+                    org.json.JSONArray jsonResultProjectActivityMonitoringArray = jsonResult.getJSONArray("projectActivityMonitoringByActivity");
+                    for (int resultProjectActivityMonitoringIdx = 0; resultProjectActivityMonitoringIdx < jsonResultProjectActivityMonitoringArray.length(); resultProjectActivityMonitoringIdx++) {
+                        org.json.JSONObject jsonResultProjectActivityMonitoring = jsonResultProjectActivityMonitoringArray.getJSONObject(resultProjectActivityMonitoringIdx);
+                        ProjectActivityMonitoringModel tempProjectActivityMonitoringModel = ProjectActivityMonitoringModel.build(jsonResultProjectActivityMonitoring);
+                        if (tempProjectActivityMonitoringModel != null) {
+                            Integer tempProjectActivityMonitoringId = tempProjectActivityMonitoringModel.getProjectActivityMonitoringId();
+                            if (tempProjectActivityMonitoringId != null) {
+                                if (tempProjectActivityMonitoringId.equals(projectActivityMonitoringId)) {
+                                    projectActivityMonitoringModel = tempProjectActivityMonitoringModel;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (JSONException jsonException) {
+            throw new WebApiError(webApiResponse, 0, jsonException.getMessage(), jsonException);
+        }
+
+        return projectActivityMonitoringModel;
+    }
+
     public ProjectActivityMonitoringResponseModel saveProjectActivityMonitoring(
             final ProjectActivityMonitoringModel projectActivityMonitoringModel,
             final WebApiParam.WebApiParamFile photo,

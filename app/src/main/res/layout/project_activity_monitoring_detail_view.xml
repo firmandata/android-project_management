@@ -94,7 +94,7 @@
             android:layout_marginEnd="@dimen/gap_half"
             android:ellipsize="end"
             android:singleLine="true"
-            android:text="@string/project_activity_monitoring_actual_duration_start_date" />
+            android:text="@string/project_activity_monitoring_detail_actual_duration_start_date" />
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/actualStartDate"
@@ -120,7 +120,7 @@
             android:layout_marginEnd="@dimen/gap_half"
             android:ellipsize="end"
             android:singleLine="true"
-            android:text="@string/project_activity_monitoring_actual_duration_end_date" />
+            android:text="@string/project_activity_monitoring_detail_actual_duration_end_date" />
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/actualEndDate"

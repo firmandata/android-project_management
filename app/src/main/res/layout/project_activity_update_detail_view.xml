@@ -1,6 +1,373 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/gap">
 
-</LinearLayout>
+    <RelativeLayout
+        android:id="@+id/monitoringPhotoIdContainer"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/monitoringPhotoTab"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="@dimen/gap_half"
+            app:tabGravity="center"
+            app:tabMode="scrollable" />
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/monitoringPhotoPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_above="@id/monitoringPhotoTab" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/updateContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/monitoringPhotoIdContainer"
+        android:layout_marginTop="@dimen/gap">
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/updateLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="@dimen/gap_half"
+            android:paddingBottom="@dimen/gap_half"
+            android:background="@drawable/border_label"
+            android:textStyle="normal|bold"
+            android:textColor="@color/colorAccent"
+            android:text="@string/project_activity_update_detail_update_label" />
+
+        <RelativeLayout
+            android:id="@+id/updateUpdateContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@id/updateLabel">
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/updatePercentComplete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginLeft="@dimen/gap_half"
+                android:layout_marginStart="@dimen/gap_half"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textStyle="normal|bold"
+                android:text="TextView" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/updateUpdateDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignTop="@id/updatePercentComplete"
+                android:layout_toLeftOf="@id/updatePercentComplete"
+                android:layout_toStartOf="@id/updatePercentComplete"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="TextView" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/updateActualDateContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@id/updateUpdateContainer"
+            android:layout_marginTop="@dimen/gap_half">
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/updateActualStartDateLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginRight="@dimen/gap_half"
+                android:layout_marginEnd="@dimen/gap_half"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="@string/project_activity_update_detail_update_actual_duration_start_date" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/updateActualStartDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/updateActualStartDateLabel"
+                android:layout_toRightOf="@id/updateActualStartDateLabel"
+                android:layout_toEndOf="@id/updateActualStartDateLabel"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="TextView" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/updateActualEndDateLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/updateActualStartDate"
+                android:layout_toRightOf="@id/updateActualStartDate"
+                android:layout_toEndOf="@id/updateActualStartDate"
+                android:layout_marginLeft="@dimen/gap_half"
+                android:layout_marginStart="@dimen/gap_half"
+                android:layout_marginRight="@dimen/gap_half"
+                android:layout_marginEnd="@dimen/gap_half"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="@string/project_activity_update_detail_update_actual_duration_end_date" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/updateActualEndDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/updateActualEndDateLabel"
+                android:layout_toRightOf="@id/updateActualEndDateLabel"
+                android:layout_toEndOf="@id/updateActualEndDateLabel"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="TextView" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/updateCommentContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@id/updateActualDateContainer"
+            android:layout_marginTop="@dimen/gap_half">
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/updateComment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:text="TextView" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/updateActivityStatusContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@id/updateCommentContainer"
+            android:layout_marginTop="@dimen/gap_half">
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/updateActivityStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:gravity="center_horizontal"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textStyle="normal|bold"
+                android:text="TextView" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/monitoringContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/updateContainer"
+        android:layout_marginTop="@dimen/gap">
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/monitoringLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="@dimen/gap_half"
+            android:paddingBottom="@dimen/gap_half"
+            android:background="@drawable/border_label"
+            android:textStyle="normal|bold"
+            android:textColor="@color/colorAccent"
+            android:text="@string/project_activity_update_detail_monitoring_label" />
+
+        <RelativeLayout
+            android:id="@+id/monitoringMonitoringContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@id/monitoringLabel">
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/monitoringPercentComplete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginLeft="@dimen/gap_half"
+                android:layout_marginStart="@dimen/gap_half"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textStyle="normal|bold"
+                android:text="TextView" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/monitoringMonitoringDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignTop="@id/monitoringPercentComplete"
+                android:layout_toLeftOf="@id/monitoringPercentComplete"
+                android:layout_toStartOf="@id/monitoringPercentComplete"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="TextView" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/monitoringActualDateContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@id/monitoringMonitoringContainer"
+            android:layout_marginTop="@dimen/gap_half">
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/monitoringActualStartDateLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginRight="@dimen/gap_half"
+                android:layout_marginEnd="@dimen/gap_half"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="@string/project_activity_update_detail_monitoring_actual_duration_start_date" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/monitoringActualStartDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/monitoringActualStartDateLabel"
+                android:layout_toRightOf="@id/monitoringActualStartDateLabel"
+                android:layout_toEndOf="@id/monitoringActualStartDateLabel"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="TextView" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/monitoringActualEndDateLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/monitoringActualStartDate"
+                android:layout_toRightOf="@id/monitoringActualStartDate"
+                android:layout_toEndOf="@id/monitoringActualStartDate"
+                android:layout_marginLeft="@dimen/gap_half"
+                android:layout_marginStart="@dimen/gap_half"
+                android:layout_marginRight="@dimen/gap_half"
+                android:layout_marginEnd="@dimen/gap_half"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="@string/project_activity_update_detail_monitoring_actual_duration_end_date" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/monitoringActualEndDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/monitoringActualEndDateLabel"
+                android:layout_toRightOf="@id/monitoringActualEndDateLabel"
+                android:layout_toEndOf="@id/monitoringActualEndDateLabel"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="TextView" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/monitoringCommentContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@id/monitoringActualDateContainer"
+            android:layout_marginTop="@dimen/gap_half">
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/monitoringComment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:text="TextView" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/monitoringActivityStatusContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@id/monitoringCommentContainer"
+            android:layout_marginTop="@dimen/gap_half">
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/monitoringActivityStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:gravity="center_horizontal"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textStyle="normal|bold"
+                android:text="TextView" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

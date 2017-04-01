@@ -90,6 +90,9 @@
     <string name="inspector_activity_monitoring_list_handle_task_begin">Getting monitoring activities &#8230;</string>
     <string name="inspector_activity_monitoring_list_handle_task_success">Getting monitoring activities finished.</string>
 
+    <string name="inspector_activity_monitoring_detail_handle_task_begin">Getting monitoring activity &#8230;</string>
+    <string name="inspector_activity_monitoring_detail_handle_task_success">Getting monitoring activity finished.</string>
+
     <string name="manager_activity_list_handle_task_begin">Getting activities &#8230;</string>
     <string name="manager_activity_list_handle_task_success">Getting activities finished.</string>
 
@@ -302,8 +305,6 @@
     <string name="project_activity_monitoring_list_actual_start_date">Start</string>
     <string name="project_activity_monitoring_list_actual_end_date">To</string>
 
-    <string name="project_activity_monitoring_actual_duration_start_date">Start</string>
-    <string name="project_activity_monitoring_actual_duration_end_date">To</string>
     <string name="project_activity_monitoring_actual_start_date">Actual Start Date</string>
     <string name="project_activity_monitoring_actual_end_date">Actual End Date</string>
     <string name="project_activity_monitoring_activity_status">Activity Status</string>
@@ -313,14 +314,22 @@
     <string name="project_activity_monitoring_detail_title">Monitoring Detail</string>
     <string name="project_activity_monitoring_detail_menu_update_activity">Update Activity</string>
     <string name="project_activity_monitoring_detail_menu_monitoring_edit">Edit</string>
+    <string name="project_activity_monitoring_detail_actual_duration_start_date">Start</string>
+    <string name="project_activity_monitoring_detail_actual_duration_end_date">To</string>
 
     <string name="project_activity_activity_status_blank">-- Activity Status --</string>
 
     <string name="project_activity_update_list_actual_start_date">Start</string>
     <string name="project_activity_update_list_actual_duration_date_separator">To</string>
 
-    <string name="project_activity_update_detail_title">Comment Detail</string>
+    <string name="project_activity_update_detail_title">Update Detail</string>
     <string name="project_activity_update_detail_menu_edit">Edit</string>
+    <string name="project_activity_update_detail_monitoring_label">Monitoring</string>
+    <string name="project_activity_update_detail_monitoring_actual_duration_start_date">Start</string>
+    <string name="project_activity_update_detail_monitoring_actual_duration_end_date">To</string>
+    <string name="project_activity_update_detail_update_label">Update</string>
+    <string name="project_activity_update_detail_update_actual_duration_start_date">Start</string>
+    <string name="project_activity_update_detail_update_actual_duration_end_date">To</string>
 
     <string name="project_activity_update_form_layout_menu_update_activity">Save</string>
     <string name="project_activity_update_form_layout_title">Update</string>
