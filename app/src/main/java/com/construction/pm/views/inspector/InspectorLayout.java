@@ -136,6 +136,7 @@ public class InspectorLayout implements ProjectActivityListFragment.ProjectActiv
         completedProjectActivityModelList.toArray(completedProjectActivityModels);
 
         mViewPagerAdapter.clearFragments();
+        mViewPagerAdapter.addFragment(ProjectActivityListFragment.newInstance(projectActivityModels, null, this), ViewUtil.getResourceString(mContext, R.string.inspector_layout_tab_all));
         mViewPagerAdapter.addFragment(ProjectActivityListFragment.newInstance(inProgressProjectActivityModels, StatusTaskEnum.IN_PROGRESS, this), ViewUtil.getResourceString(mContext, R.string.inspector_layout_tab_in_progress));
         mViewPagerAdapter.addFragment(ProjectActivityListFragment.newInstance(comingDueProjectActivityModels, StatusTaskEnum.COMING_DUE, this), ViewUtil.getResourceString(mContext, R.string.inspector_layout_tab_coming_due));
         mViewPagerAdapter.addFragment(ProjectActivityListFragment.newInstance(shouldHaveStartedProjectActivityModels, StatusTaskEnum.SHOULD_HAVE_STARTED, this), ViewUtil.getResourceString(mContext, R.string.inspector_layout_tab_should_have_started));
@@ -149,8 +150,6 @@ public class InspectorLayout implements ProjectActivityListFragment.ProjectActiv
             ProjectActivityListFragment projectActivityListFragment = (ProjectActivityListFragment) mViewPagerAdapter.getItem(position);
             ProjectActivityModel[] fragmentProjectActivityModels = projectActivityListFragment.getProjectActivityModels();
             StatusTaskEnum fragmentStatusTask = projectActivityListFragment.getStatusTask();
-            if (fragmentStatusTask == null)
-                continue;
 
             for (ProjectActivityModel projectActivityModel : projectActivityModels) {
                 Integer projectActivityId = projectActivityModel.getProjectActivityId();
@@ -159,6 +158,8 @@ public class InspectorLayout implements ProjectActivityListFragment.ProjectActiv
                 StatusTaskEnum statusTask = projectActivityModel.getStatusTask();
                 if (statusTask == null)
                     continue;
+                if (fragmentStatusTask == null)
+                    fragmentStatusTask = statusTask;
 
                 if (statusTask.equals(fragmentStatusTask)) {
                     projectActivityListFragment.addProjectActivityModels(new ProjectActivityModel[] { projectActivityModel });

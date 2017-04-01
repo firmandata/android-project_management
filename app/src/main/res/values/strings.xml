@@ -267,6 +267,7 @@
     <string name="gps_request_enable_cancel">Cancel</string>
 
     <string name="inspector_layout_title">Monitoring</string>
+    <string name="inspector_layout_tab_all">All</string>
     <string name="inspector_layout_tab_in_progress">In Progress</string>
     <string name="inspector_layout_tab_coming_due">Coming Due</string>
     <string name="inspector_layout_tab_should_have_started">Should Have Started</string>
@@ -278,6 +279,7 @@
     <string name="inspector_detail_layout_monitoring_list">Monitoring Results</string>
 
     <string name="manager_layout_title">Update Task Progress</string>
+    <string name="manager_layout_tab_all">All</string>
     <string name="manager_layout_tab_in_progress">In Progress</string>
     <string name="manager_layout_tab_coming_due">Coming Due</string>
     <string name="manager_layout_tab_should_have_started">Should Have Started</string>

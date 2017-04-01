@@ -287,6 +287,7 @@ public class ProjectActivityListView {
         protected AppCompatTextView mEtActualEndDate;
         protected AppCompatTextView mEtActivityStatus;
         protected AppCompatTextView mEtPercentComplete;
+        protected AppCompatTextView mEtStatusTask;
 
         public ProjectActivityListViewHolder(View view) {
             super(view);
@@ -298,6 +299,7 @@ public class ProjectActivityListView {
             mEtActualEndDate = (AppCompatTextView) view.findViewById(R.id.actualEndDate);
             mEtActivityStatus = (AppCompatTextView) view.findViewById(R.id.activityStatus);
             mEtPercentComplete = (AppCompatTextView) view.findViewById(R.id.percentComplete);
+            mEtStatusTask = (AppCompatTextView) view.findViewById(R.id.statusTask);
         }
 
         public void setProjectActivityModel(final ProjectActivityModel projectActivityModel) {
@@ -308,6 +310,8 @@ public class ProjectActivityListView {
             mEtActualEndDate.setText(DateTimeUtil.ToDateDisplayString(projectActivityModel.getActualEndDate()));
             mEtActivityStatus.setText(projectActivityModel.getActivityStatus());
             mEtPercentComplete.setText(StringUtil.numberPercentFormat(projectActivityModel.getPercentComplete()));
+            if (projectActivityModel.getStatusTask() != null)
+                mEtStatusTask.setText(projectActivityModel.getStatusTask().getValue());
         }
     }
 }
