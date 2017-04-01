@@ -58,6 +58,7 @@ public class ProjectActivityUpdateListView {
         mProjectActivityUpdateList = (RecyclerView) mProjectActivityUpdateListView.findViewById(R.id.projectActivityUpdateList);
         mProjectActivityUpdateList.setItemAnimator(new DefaultItemAnimator());
         mProjectActivityUpdateList.setNestedScrollingEnabled(false);
+        mProjectActivityUpdateList.setHasFixedSize(true);
         mProjectActivityUpdateList.addOnItemTouchListener(new RecyclerItemTouchListener(mContext, mProjectActivityUpdateList, new RecyclerItemTouchListener.ItemClickListener() {
             @Override
             public void onClick(View view, int position) {
@@ -257,7 +258,7 @@ public class ProjectActivityUpdateListView {
             mActualStartDate.setText(DateTimeUtil.ToDateDisplayString(projectActivityUpdateModel.getActualStartDate()));
             mActualEndDate.setText(DateTimeUtil.ToDateDisplayString(projectActivityUpdateModel.getActualEndDate()));
             mActivityStatus.setText(projectActivityUpdateModel.getActivityStatus());
-            mPercentComplete.setText(StringUtil.numberFormat(projectActivityUpdateModel.getPercentComplete()));
+            mPercentComplete.setText(StringUtil.numberPercentFormat(projectActivityUpdateModel.getPercentComplete()));
             mComment.setText(projectActivityUpdateModel.getComment());
         }
     }

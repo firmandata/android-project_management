@@ -5,7 +5,38 @@
     android:layout_height="wrap_content"
     android:clickable="true"
     android:focusable="true"
-    android:background="?android:attr/selectableItemBackground">
+    android:background="?android:attr/selectableItemBackground"
+    android:padding="@dimen/gap">
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/activityStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginLeft="@dimen/gap_half"
+        android:layout_marginStart="@dimen/gap_half"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:textStyle="normal|bold"
+        android:text="TextView" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/percentComplete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/activityStatus"
+        android:layout_alignLeft="@id/activityStatus"
+        android:layout_alignStart="@id/activityStatus"
+        android:layout_alignRight="@id/activityStatus"
+        android:layout_alignEnd="@id/activityStatus"
+        android:layout_marginTop="@dimen/gap_half"
+        android:gravity="center_horizontal"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:textStyle="normal|bold"
+        android:text="TextView" />
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/updateDate"
@@ -13,42 +44,62 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_alignTop="@id/activityStatus"
+        android:layout_toLeftOf="@id/activityStatus"
+        android:layout_toStartOf="@id/activityStatus"
+        android:ellipsize="end"
+        android:singleLine="true"
         android:text="TextView" />
 
     <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/actualStartDate"
-        android:layout_width="match_parent"
+        android:id="@+id/actualStartDateLabel"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@id/updateDate"
+        android:layout_marginTop="@dimen/gap_half"
+        android:layout_marginRight="@dimen/gap_half"
+        android:layout_marginEnd="@dimen/gap_half"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="@string/project_activity_update_list_actual_start_date" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/actualStartDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/actualStartDateLabel"
+        android:layout_toRightOf="@id/actualStartDateLabel"
+        android:layout_toEndOf="@id/actualStartDateLabel"
+        android:ellipsize="end"
+        android:singleLine="true"
         android:text="TextView" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/actualDurationDateSeparatorLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/actualStartDate"
+        android:layout_toRightOf="@id/actualStartDate"
+        android:layout_toEndOf="@id/actualStartDate"
+        android:layout_marginRight="@dimen/gap_half"
+        android:layout_marginEnd="@dimen/gap_half"
+        android:layout_marginLeft="@dimen/gap_half"
+        android:layout_marginStart="@dimen/gap_half"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="@string/project_activity_update_list_actual_duration_date_separator" />
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/actualEndDate"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/actualStartDate"
-        android:text="TextView" />
-
-    <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/activityStatus"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/actualEndDate"
-        android:text="TextView" />
-
-    <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/percentComplete"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/activityStatus"
+        android:layout_alignTop="@id/actualDurationDateSeparatorLabel"
+        android:layout_toRightOf="@id/actualDurationDateSeparatorLabel"
+        android:layout_toEndOf="@id/actualDurationDateSeparatorLabel"
+        android:ellipsize="end"
+        android:singleLine="true"
         android:text="TextView" />
 
     <android.support.v7.widget.AppCompatTextView
@@ -57,7 +108,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@id/percentComplete"
+        android:layout_below="@id/actualStartDate"
+        android:layout_marginTop="@dimen/gap_half"
         android:text="TextView" />
 
 </RelativeLayout>

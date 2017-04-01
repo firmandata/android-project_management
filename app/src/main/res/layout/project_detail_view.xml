@@ -103,8 +103,8 @@
                     android:layout_toRightOf="@id/tvProjectStartDate"
                     android:layout_toEndOf="@id/tvProjectStartDate"
                     android:layout_alignTop="@+id/tvProjectStartDate"
-                    android:layout_marginLeft="@dimen/gap"
-                    android:layout_marginRight="@dimen/gap"
+                    android:layout_marginLeft="@dimen/gap_half"
+                    android:layout_marginRight="@dimen/gap_half"
                     android:text="@string/project_detail_project_duration_separator" />
 
                 <android.support.v7.widget.AppCompatTextView

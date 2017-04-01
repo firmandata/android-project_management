@@ -17,7 +17,6 @@ public class ProjectPlanDetailView {
 
     protected RelativeLayout mProjectPlanDetailView;
 
-    protected AppCompatTextView mSequenceNo;
     protected AppCompatTextView mTaskName;
     protected AppCompatTextView mTaskWeightPercentage;
     protected AppCompatTextView mPlanStartDate;
@@ -48,7 +47,6 @@ public class ProjectPlanDetailView {
     protected void initializeView(final RelativeLayout projectPlanDetailView) {
         mProjectPlanDetailView = projectPlanDetailView;
 
-        mSequenceNo = (AppCompatTextView) mProjectPlanDetailView.findViewById(R.id.sequenceNo);
         mTaskName = (AppCompatTextView) mProjectPlanDetailView.findViewById(R.id.taskName);
         mTaskWeightPercentage = (AppCompatTextView) mProjectPlanDetailView.findViewById(R.id.taskWeightPercentage);
         mPlanStartDate = (AppCompatTextView) mProjectPlanDetailView.findViewById(R.id.planStartDate);
@@ -67,14 +65,13 @@ public class ProjectPlanDetailView {
         if (projectPlanModel == null)
             return;
 
-        mSequenceNo.setText(StringUtil.numberFormat(projectPlanModel.getSequenceNo()));
         mTaskName.setText(projectPlanModel.getTaskName());
-        mTaskWeightPercentage.setText(StringUtil.numberFormat(projectPlanModel.getTaskWeightPercentage()));
+        mTaskWeightPercentage.setText(StringUtil.numberPercentFormat(projectPlanModel.getTaskWeightPercentage()));
         mPlanStartDate.setText(DateTimeUtil.ToDateDisplayString(projectPlanModel.getPlanStartDate()));
         mPlanEndDate.setText(DateTimeUtil.ToDateDisplayString(projectPlanModel.getPlanEndDate()));
         mRealizationStartDate.setText(DateTimeUtil.ToDateDisplayString(projectPlanModel.getRealizationStartDate()));
         mRealizationEndDate.setText(DateTimeUtil.ToDateDisplayString(projectPlanModel.getRealizationEndDate()));
         mRealizationStatus.setText(projectPlanModel.getRealizationStatus());
-        mPercentComplete.setText(StringUtil.numberFormat(projectPlanModel.getPercentComplete()));
+        mPercentComplete.setText(StringUtil.numberPercentFormat(projectPlanModel.getPercentComplete()));
     }
 }

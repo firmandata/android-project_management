@@ -231,20 +231,15 @@
     <string name="project_plan_list_realization_end_date">To</string>
 
     <string name="project_plan_layout_title">Project Plan</string>
+    <string name="project_plan_layout_project_plan_assignment_title">Assignment To :</string>
+    <string name="project_plan_layout_project_activity_update_title">Update Histories :</string>
 
-    <string name="project_plan_detail_sequence_no">Sequence No</string>
-    <string name="project_plan_detail_task_name">Task Name</string>
-    <string name="project_plan_detail_task_weight_percentage">Task Weight Percentage</string>
-    <string name="project_plan_detail_plan_start_date">Plan Start Date</string>
-    <string name="project_plan_detail_plan_end_date">Plan End Date</string>
-    <string name="project_plan_detail_plan_duration_date">Plan Duration</string>
+    <string name="project_plan_detail_plan_title">Plan</string>
+    <string name="project_plan_detail_plan_start_date">Start</string>
     <string name="project_plan_detail_plan_duration_date_separator">To</string>
-    <string name="project_plan_detail_realization_start_date">Realization Start Date</string>
-    <string name="project_plan_detail_realization_end_date">Realization End Date</string>
-    <string name="project_plan_detail_realization_duration_date">Realization Duration</string>
+    <string name="project_plan_detail_realization_title">Realization</string>
+    <string name="project_plan_detail_realization_start_date">Start</string>
     <string name="project_plan_detail_realization_duration_date_separator">To</string>
-    <string name="project_plan_detail_realization_status">Realization Status</string>
-    <string name="project_plan_detail_percent_complete">Percent Complete</string>
 
     <string name="notification_layout_title">Notification</string>
     <string name="notification_detail_title">Notification</string>
@@ -313,6 +308,9 @@
     <string name="project_activity_monitoring_detail_menu_monitoring_edit">Edit</string>
 
     <string name="project_activity_activity_status_blank">-- Activity Status --</string>
+
+    <string name="project_activity_update_list_actual_start_date">Start</string>
+    <string name="project_activity_update_list_actual_duration_date_separator">To</string>
 
     <string name="project_activity_update_form_layout_menu_update_activity">Save</string>
     <string name="project_activity_update_form_layout_title">Update</string>

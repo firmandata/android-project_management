@@ -25,31 +25,85 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/contentBody"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="wrap_content">
 
             <include
                 android:id="@+id/project_plan_detail_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
                 layout="@layout/project_plan_detail_view" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/projectPlanAssignmentListLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@id/project_plan_detail_view"
+                android:layout_marginTop="@dimen/gap"
+                android:layout_marginBottom="@dimen/gap_half"
+                android:layout_marginLeft="@dimen/gap"
+                android:layout_marginStart="@dimen/gap"
+                android:layout_marginEnd="@dimen/gap"
+                android:layout_marginRight="@dimen/gap"
+                android:paddingBottom="@dimen/gap_half"
+                android:background="@drawable/border_label"
+                android:textStyle="normal|bold"
+                android:textColor="@color/colorAccent"
+                android:text="@string/project_plan_layout_project_plan_assignment_title" />
 
             <include
                 android:id="@+id/project_plan_assignment_list_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@id/projectPlanAssignmentListLabel"
+                android:layout_marginLeft="@dimen/gap"
+                android:layout_marginStart="@dimen/gap"
+                android:layout_marginRight="@dimen/gap"
+                android:layout_marginEnd="@dimen/gap"
                 layout="@layout/project_plan_assignment_list_view" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/projectActivityUpdateListLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@id/project_plan_assignment_list_view"
+                android:layout_marginTop="@dimen/gap"
+                android:layout_marginBottom="@dimen/gap_half"
+                android:layout_marginLeft="@dimen/gap"
+                android:layout_marginStart="@dimen/gap"
+                android:layout_marginEnd="@dimen/gap"
+                android:layout_marginRight="@dimen/gap"
+                android:paddingBottom="@dimen/gap_half"
+                android:background="@drawable/border_label"
+                android:textStyle="normal|bold"
+                android:textColor="@color/colorAccent"
+                android:text="@string/project_plan_layout_project_activity_update_title" />
 
             <include
                 android:id="@+id/project_activity_update_list_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@id/projectActivityUpdateListLabel"
+                android:layout_marginLeft="@dimen/gap"
+                android:layout_marginStart="@dimen/gap"
+                android:layout_marginRight="@dimen/gap"
+                android:layout_marginEnd="@dimen/gap"
                 layout="@layout/project_activity_update_list_view" />
 
-        </LinearLayout>
+        </RelativeLayout>
 
     </android.support.v4.widget.NestedScrollView>
 

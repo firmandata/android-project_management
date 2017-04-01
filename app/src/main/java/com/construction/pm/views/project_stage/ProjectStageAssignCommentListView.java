@@ -1,6 +1,7 @@
 package com.construction.pm.views.project_stage;
 
 import android.content.Context;
+import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
@@ -9,7 +10,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.construction.pm.R;
@@ -256,7 +256,7 @@ public class ProjectStageAssignCommentListView {
 
         protected AppCompatTextView mCommentDate;
         protected AppCompatTextView mComment;
-        protected ImageView mPhotoId;
+        protected AppCompatImageView mPhotoId;
         protected FilePhotoListView mFilePhotoListView;
 
         protected ImageRequestListener mImageRequestListener;
@@ -267,7 +267,7 @@ public class ProjectStageAssignCommentListView {
 
             mCommentDate = (AppCompatTextView) view.findViewById(R.id.commentDate);
             mComment = (AppCompatTextView) view.findViewById(R.id.comment);
-            mPhotoId = (ImageView) view.findViewById(R.id.photoId);
+            mPhotoId = (AppCompatImageView) view.findViewById(R.id.photoId);
             mFilePhotoListView = new FilePhotoListView(view.getContext(), (RelativeLayout) view.findViewById(R.id.file_photo_list_view));
         }
 

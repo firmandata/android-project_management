@@ -2,10 +2,11 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="@dimen/gap">
 
     <RelativeLayout
-        android:id="@+id/sequenceNoContainer"
+        android:id="@+id/taskContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -13,228 +14,174 @@
         android:layout_alignParentStart="true">
 
         <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/sequenceNoLabel"
-            android:layout_width="match_parent"
+            android:id="@+id/taskWeightPercentage"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:text="@string/project_plan_detail_sequence_no" />
-
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/sequenceNo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/sequenceNoLabel"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:text="TextView" />
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/taskNameContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/sequenceNoContainer">
-
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/taskNameLabel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:text="@string/project_plan_detail_task_name" />
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/taskName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/taskNameLabel"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_toLeftOf="@id/taskWeightPercentage"
+            android:layout_toStartOf="@id/taskWeightPercentage"
+            android:layout_alignTop="@id/taskWeightPercentage"
             android:text="TextView" />
 
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/taskWeightPercentageContainer"
+        android:id="@+id/planContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@id/taskNameContainer">
+        android:layout_below="@id/taskContainer"
+        android:layout_marginTop="@dimen/gap">
 
         <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/taskWeightPercentageLabel"
+            android:id="@+id/planLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:text="@string/project_plan_detail_task_weight_percentage" />
-
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/taskWeightPercentage"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/taskWeightPercentageLabel"
-            android:text="TextView" />
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/planStartDateContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/taskWeightPercentageContainer">
+            android:layout_marginBottom="@dimen/gap_half"
+            android:paddingBottom="@dimen/gap_half"
+            android:background="@drawable/border_label"
+            android:textStyle="normal|bold"
+            android:textColor="@color/colorAccent"
+            android:text="@string/project_plan_detail_plan_title" />
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/planStartDateLabel"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
+            android:layout_below="@id/planLabel"
+            android:layout_marginRight="@dimen/gap_half"
+            android:layout_marginEnd="@dimen/gap_half"
             android:text="@string/project_plan_detail_plan_start_date" />
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/planStartDate"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/planStartDateLabel"
+            android:layout_toRightOf="@id/planStartDateLabel"
+            android:layout_toEndOf="@id/planStartDateLabel"
+            android:layout_alignTop="@id/planStartDateLabel"
             android:text="TextView" />
 
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/planEndDateContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/planStartDateContainer">
-
         <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/planEndDateLabel"
-            android:layout_width="match_parent"
+            android:id="@+id/planDurationDateSeparatorLabel"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:text="@string/project_plan_detail_plan_end_date" />
+            android:layout_toRightOf="@id/planStartDate"
+            android:layout_toEndOf="@id/planStartDate"
+            android:layout_alignTop="@id/planStartDate"
+            android:layout_marginLeft="@dimen/gap_half"
+            android:layout_marginStart="@dimen/gap_half"
+            android:layout_marginRight="@dimen/gap_half"
+            android:layout_marginEnd="@dimen/gap_half"
+            android:text="@string/project_plan_detail_plan_duration_date_separator" />
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/planEndDate"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/planEndDateLabel"
+            android:layout_toRightOf="@id/planDurationDateSeparatorLabel"
+            android:layout_toEndOf="@id/planDurationDateSeparatorLabel"
+            android:layout_alignTop="@id/planDurationDateSeparatorLabel"
             android:text="TextView" />
 
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/realizationStartDateContainer"
+        android:id="@+id/realizationContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@id/planEndDateContainer">
+        android:layout_below="@id/planContainer"
+        android:layout_marginTop="@dimen/gap">
 
         <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/realizationStartDateLabel"
+            android:id="@+id/realizationLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
+            android:layout_marginBottom="@dimen/gap_half"
+            android:paddingBottom="@dimen/gap_half"
+            android:background="@drawable/border_label"
+            android:textStyle="normal|bold"
+            android:textColor="@color/colorAccent"
+            android:text="@string/project_plan_detail_realization_title" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/percentComplete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignTop="@id/realizationLabel"
+            android:textStyle="normal|bold"
+            android:text="TextView" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/realizationStartDateLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/realizationLabel"
+            android:layout_marginRight="@dimen/gap_half"
+            android:layout_marginEnd="@dimen/gap_half"
             android:text="@string/project_plan_detail_realization_start_date" />
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/realizationStartDate"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/realizationStartDateLabel"
+            android:layout_toRightOf="@id/realizationStartDateLabel"
+            android:layout_toEndOf="@id/realizationStartDateLabel"
+            android:layout_alignTop="@id/realizationStartDateLabel"
             android:text="TextView" />
 
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/realizationEndDateContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/realizationStartDateContainer">
-
         <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/realizationEndDateLabel"
-            android:layout_width="match_parent"
+            android:id="@+id/realizationDurationDateSeparatorLabel"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:text="@string/project_plan_detail_realization_end_date" />
+            android:layout_toRightOf="@id/realizationStartDate"
+            android:layout_toEndOf="@id/realizationStartDate"
+            android:layout_alignTop="@id/realizationStartDate"
+            android:layout_marginLeft="@dimen/gap_half"
+            android:layout_marginStart="@dimen/gap_half"
+            android:layout_marginRight="@dimen/gap_half"
+            android:layout_marginEnd="@dimen/gap_half"
+            android:text="@string/project_plan_detail_realization_duration_date_separator" />
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/realizationEndDate"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/realizationEndDateLabel"
+            android:layout_toRightOf="@id/realizationDurationDateSeparatorLabel"
+            android:layout_toEndOf="@id/realizationDurationDateSeparatorLabel"
+            android:layout_alignTop="@id/realizationDurationDateSeparatorLabel"
             android:text="TextView" />
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/realizationStatusContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/realizationEndDateContainer">
-
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/realizationStatusLabel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:text="@string/project_plan_detail_realization_status" />
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/realizationStatus"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/realizationStatusLabel"
-            android:text="TextView" />
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/percentCompleteContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/realizationStatusContainer">
-
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/percentCompleteLabel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:text="@string/project_plan_detail_percent_complete" />
-
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/percentComplete"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/percentCompleteLabel"
-            android:text="TextView" />
+            android:layout_below="@id/realizationStartDateLabel"
+            android:textStyle="normal|bold"
+            android:gravity="center"
+            android:text="TextView"
+            android:layout_marginTop="@dimen/gap_half" />
 
     </RelativeLayout>
 
