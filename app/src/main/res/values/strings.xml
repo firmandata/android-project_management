@@ -213,15 +213,12 @@
 
     <string name="project_stage_layout_title">Project Stage</string>
     <string name="project_stage_layout_menu_comment_add">Add Comment</string>
+    <string name="project_stage_layout_project_stage_assignment_title">Assignment To :</string>
+    <string name="project_stage_layout_project_stage_assign_comment_title">Comments :</string>
 
-    <string name="project_stage_detail_stage_date">Stage Date</string>
-    <string name="project_stage_detail_stage_code">Stage Code</string>
-    <string name="project_stage_detail_stage_code_from">From Stage Code</string>
-    <string name="project_stage_detail_stage_next_code">Next Stage Code</string>
-    <string name="project_stage_detail_stage_next_plan_date">Stage Next Plan Date</string>
-    <string name="project_stage_detail_stage_next_subject">Stage Next Subject</string>
-    <string name="project_stage_detail_stage_next_location">Stage Next Location</string>
-    <string name="project_stage_detail_stage_next_message">Stage Next Message</string>
+    <string name="project_stage_detail_stage_before_label">Before</string>
+    <string name="project_stage_detail_stage_now_label">Now</string>
+    <string name="project_stage_detail_stage_next_label">Next</string>
 
     <string name="project_plan_list_plan_title">Plan</string>
     <string name="project_plan_list_plan_start_date">Start</string>

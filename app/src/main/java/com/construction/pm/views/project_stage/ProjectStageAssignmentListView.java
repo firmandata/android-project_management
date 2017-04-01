@@ -46,6 +46,7 @@ public class ProjectStageAssignmentListView {
 
         mProjectStageAssignmentList = (RecyclerView) mProjectStageAssignmentListView.findViewById(R.id.projectStageAssignmentList);
         mProjectStageAssignmentList.setItemAnimator(new DefaultItemAnimator());
+        mProjectStageAssignmentList.setHasFixedSize(true);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
         mProjectStageAssignmentList.setLayoutManager(layoutManager);

@@ -58,6 +58,7 @@ public class ProjectStageAssignCommentListView {
         mProjectStageAssignCommentList = (RecyclerView) mProjectStageAssignCommentListView.findViewById(R.id.projectStageAssignCommentList);
         mProjectStageAssignCommentList.setItemAnimator(new DefaultItemAnimator());
         mProjectStageAssignCommentList.setNestedScrollingEnabled(false);
+        mProjectStageAssignCommentList.setHasFixedSize(true);
         mProjectStageAssignCommentList.addOnItemTouchListener(new RecyclerItemTouchListener(mContext, mProjectStageAssignCommentList, new RecyclerItemTouchListener.ItemClickListener() {
             @Override
             public void onClick(View view, int position) {

@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="200dp"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="@dimen/gap">
 
     <android.support.v7.widget.AppCompatImageView
         android:id="@+id/photoId"
         android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        app:srcCompat="@drawable/ic_image_dark_24"
-        android:layout_height="48dp" />
+        app:srcCompat="@drawable/ic_image_dark_24" />
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/memberCode"
@@ -31,7 +32,7 @@
         android:layout_below="@id/memberCode"
         android:layout_alignLeft="@id/memberCode"
         android:layout_alignStart="@id/memberCode"
-        android:text="TextView"
-        android:layout_marginTop="@dimen/gap_half" />
+        android:layout_marginTop="@dimen/gap_half"
+        android:text="TextView" />
 
 </RelativeLayout>
