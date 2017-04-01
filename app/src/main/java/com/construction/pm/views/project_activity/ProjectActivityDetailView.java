@@ -24,7 +24,6 @@ public class ProjectActivityDetailView {
     protected AppCompatTextView mActualEndDate;
     protected AppCompatTextView mActivityStatus;
     protected AppCompatTextView mPercentComplete;
-    protected AppCompatTextView mStatusTask;
 
     public ProjectActivityDetailView(final Context context) {
         mContext = context;
@@ -54,7 +53,6 @@ public class ProjectActivityDetailView {
         mActualEndDate = (AppCompatTextView) mProjectActivityDetailView.findViewById(R.id.actualEndDate);
         mActivityStatus = (AppCompatTextView) mProjectActivityDetailView.findViewById(R.id.activityStatus);
         mPercentComplete = (AppCompatTextView) mProjectActivityDetailView.findViewById(R.id.percentComplete);
-        mStatusTask = (AppCompatTextView) mProjectActivityDetailView.findViewById(R.id.statusTask);
     }
 
     public RelativeLayout getView() {
@@ -71,8 +69,6 @@ public class ProjectActivityDetailView {
         mActualStartDate.setText(DateTimeUtil.ToDateDisplayString(projectActivityModel.getActualStartDate()));
         mActualEndDate.setText(DateTimeUtil.ToDateDisplayString(projectActivityModel.getActualEndDate()));
         mActivityStatus.setText(projectActivityModel.getActivityStatus());
-        mPercentComplete.setText(StringUtil.numberFormat(projectActivityModel.getPercentComplete()));
-        if (projectActivityModel.getStatusTask() != null)
-            mStatusTask.setText(projectActivityModel.getStatusTask().getValue());
+        mPercentComplete.setText(StringUtil.numberPercentFormat(projectActivityModel.getPercentComplete()));
     }
 }

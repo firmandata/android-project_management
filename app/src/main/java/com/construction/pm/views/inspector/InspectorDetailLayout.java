@@ -96,7 +96,7 @@ public class InspectorDetailLayout implements ProjectActivityMonitoringListFragm
 
     public void createProjectActivityMonitoringAddMenu(final Menu menu) {
         MenuItem menuItemUpdateActivity = menu.add(R.string.inspector_detail_layout_menu_monitoring_add);
-        menuItemUpdateActivity.setIcon(R.drawable.ic_create_new_dark_24);
+        menuItemUpdateActivity.setIcon(R.drawable.ic_create_new_light_24);
         if (Build.VERSION.SDK_INT > 10) {
             menuItemUpdateActivity.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
         }
@@ -166,7 +166,11 @@ public class InspectorDetailLayout implements ProjectActivityMonitoringListFragm
         if (mProjectActivityMonitoringListFragment == null)
             mProjectActivityMonitoringListFragment = ProjectActivityMonitoringListFragment.newInstance(projectActivityModel, this);
 
-        loadFragment(mProjectActivityMonitoringListFragment, projectActivityModel.getTaskName(), projectActivityModel.getActivityStatus(), FRAGMENT_TAG_PROJECT_ACTIVITY_MONITORING_LIST);
+        String statusTask = null;
+        if (projectActivityModel.getStatusTask() != null)
+            statusTask = projectActivityModel.getStatusTask().getValue();
+
+        loadFragment(mProjectActivityMonitoringListFragment, projectActivityModel.getTaskName(), statusTask, FRAGMENT_TAG_PROJECT_ACTIVITY_MONITORING_LIST);
 
         return mProjectActivityMonitoringListFragment;
     }

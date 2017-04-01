@@ -68,6 +68,7 @@ public class ProjectActivityListView {
 
         mRvProjectActivityList = (RecyclerView) mProjectActivityListView.findViewById(R.id.projectActivityList);
         mRvProjectActivityList.setItemAnimator(new DefaultItemAnimator());
+        mRvProjectActivityList.setHasFixedSize(true);
         mRvProjectActivityList.addOnItemTouchListener(new RecyclerItemTouchListener(mContext, mRvProjectActivityList, new RecyclerItemTouchListener.ItemClickListener() {
             @Override
             public void onClick(View view, int position) {
@@ -86,9 +87,6 @@ public class ProjectActivityListView {
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(mContext);
         mRvProjectActivityList.setLayoutManager(layoutManager);
-
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL);
-        mRvProjectActivityList.addItemDecoration(dividerItemDecoration);
 
         mProjectActivityListAdapter = new ProjectActivityListAdapter();
         mRvProjectActivityList.setAdapter(mProjectActivityListAdapter);

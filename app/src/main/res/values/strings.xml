@@ -272,6 +272,7 @@
 
     <string name="inspector_detail_layout_title">Activity</string>
     <string name="inspector_detail_layout_menu_monitoring_add">Add Monitoring</string>
+    <string name="inspector_detail_layout_monitoring_list">Monitoring Results</string>
 
     <string name="manager_layout_title">Update Task Progress</string>
     <string name="manager_layout_tab_in_progress">In Progress</string>
@@ -291,14 +292,12 @@
     <string name="project_activity_list_actual_start_date">Start</string>
     <string name="project_activity_list_actual_end_date">To</string>
 
-    <string name="project_activity_task_name">Task Name</string>
-    <string name="project_activity_plan_start_date">Plan Start Date</string>
-    <string name="project_activity_plan_end_date">Plan End Date</string>
-    <string name="project_activity_actual_start_date">Actual Start Date</string>
-    <string name="project_activity_actual_end_date">Actual End Date</string>
-    <string name="project_activity_activity_status">Activity Status</string>
-    <string name="project_activity_percent_complete">Percent Complete</string>
-    <string name="project_activity_status_task">Status Task</string>
+    <string name="project_activity_detail_plan_title">Plan</string>
+    <string name="project_activity_detail_plan_start_date">Start</string>
+    <string name="project_activity_detail_plan_duration_date_separator">To</string>
+    <string name="project_activity_detail_actual_title">Actual</string>
+    <string name="project_activity_detail_actual_start_date">Start</string>
+    <string name="project_activity_detail_actual_duration_date_separator">To</string>
 
     <string name="project_activity_monitoring_monitoring_date">Monitoring Date</string>
     <string name="project_activity_monitoring_actual_start_date">Actual Start Date</string>

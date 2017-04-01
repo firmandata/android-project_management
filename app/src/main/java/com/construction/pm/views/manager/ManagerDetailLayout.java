@@ -153,7 +153,11 @@ public class ManagerDetailLayout implements ManagerDetailFragment.ManagerDetailF
         if (mManagerDetailFragment == null)
             mManagerDetailFragment = ManagerDetailFragment.newInstance(projectActivityModel, this);
 
-        loadFragment(mManagerDetailFragment, projectActivityModel.getTaskName(), projectActivityModel.getActivityStatus(), FRAGMENT_TAG_MANAGER_DETAIL);
+        String statusTask = null;
+        if (projectActivityModel.getStatusTask() != null)
+            statusTask = projectActivityModel.getStatusTask().getValue();
+
+        loadFragment(mManagerDetailFragment, projectActivityModel.getTaskName(), statusTask, FRAGMENT_TAG_MANAGER_DETAIL);
     }
 
     public void reloadProjectActivityUpdateList(final ProjectActivityModel projectActivityModel) {
