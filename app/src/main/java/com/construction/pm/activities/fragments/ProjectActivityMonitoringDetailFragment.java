@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.construction.pm.R;
 import com.construction.pm.activities.FileViewActivity;
 import com.construction.pm.asynctask.FileGetCacheAsyncTask;
 import com.construction.pm.asynctask.FileGetNetworkAsyncTask;
@@ -21,16 +20,15 @@ import com.construction.pm.models.ProjectActivityMonitoringModel;
 import com.construction.pm.models.system.SettingUserModel;
 import com.construction.pm.persistence.SettingPersistent;
 import com.construction.pm.utils.ImageUtil;
-import com.construction.pm.utils.ViewUtil;
 import com.construction.pm.views.listeners.ImageRequestClickListener;
-import com.construction.pm.views.listeners.ImageRequestListener;
+import com.construction.pm.views.listeners.ImageRequestDuplicateListener;
 import com.construction.pm.views.project_activity.ProjectActivityMonitoringDetailView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProjectActivityMonitoringDetailFragment extends Fragment implements
-        ImageRequestListener,
+        ImageRequestDuplicateListener,
         ImageRequestClickListener {
 
     public static final String PARAM_PROJECT_ACTIVITY_MONITORING_MODEL = "PROJECT_ACTIVITY_MONITORING_MODEL";
@@ -85,7 +83,7 @@ public class ProjectActivityMonitoringDetailFragment extends Fragment implements
 
         // -- Prepare ProjectActivityMonitoringDetailView --
         mProjectActivityMonitoringDetailView = ProjectActivityMonitoringDetailView.buildProjectActivityMonitoringDetailView(getContext(), null);
-        mProjectActivityMonitoringDetailView.setImageRequestListener(this);
+        mProjectActivityMonitoringDetailView.setImageRequestDuplicateListener(this);
         mProjectActivityMonitoringDetailView.setImageRequestClickListener(this);
         mProjectActivityMonitoringDetailView.setProjectActivityMonitoringModel(projectActivityMonitoringModel);
     }
@@ -102,7 +100,7 @@ public class ProjectActivityMonitoringDetailFragment extends Fragment implements
     }
 
     @Override
-    public void onImageRequest(final ImageView imageView, final Integer fileId) {
+    public void onImageRequestDuplicate(final ImageView imageView, final ImageView duplicateImageView, final Integer fileId) {
         // -- Get SettingUserModel from SettingPersistent --
         SettingPersistent settingPersistent = new SettingPersistent(getContext());
         final SettingUserModel settingUserModel = settingPersistent.getSettingUserModel();
@@ -121,8 +119,11 @@ public class ProjectActivityMonitoringDetailFragment extends Fragment implements
                 if (fileRequestAsyncTaskResult != null) {
                     FileModel fileModel = fileRequestAsyncTaskResult.getFileModel();
                     if (fileModel != null) {
-                        if (fileModel.getFileData() != null)
+                        if (fileModel.getFileData() != null) {
                             ImageUtil.setImageThumbnailView(getContext(), imageView, fileModel.getFileData());
+                            if (duplicateImageView != null)
+                                ImageUtil.setImageThumbnailView(getContext(), duplicateImageView, fileModel.getFileData());
+                        }
                     }
                 }
             }
@@ -140,8 +141,11 @@ public class ProjectActivityMonitoringDetailFragment extends Fragment implements
                 if (fileRequestAsyncTaskResult != null) {
                     FileModel fileModel = fileRequestAsyncTaskResult.getFileModel();
                     if (fileModel != null) {
-                        if (fileModel.getFileData() != null)
+                        if (fileModel.getFileData() != null) {
                             ImageUtil.setImageThumbnailView(getContext(), imageView, fileModel.getFileData());
+                            if (duplicateImageView != null)
+                                ImageUtil.setImageThumbnailView(getContext(), duplicateImageView, fileModel.getFileData());
+                        }
                     }
                 }
 

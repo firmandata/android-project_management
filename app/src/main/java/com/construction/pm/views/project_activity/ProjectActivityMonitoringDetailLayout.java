@@ -83,7 +83,7 @@ public class ProjectActivityMonitoringDetailLayout {
 
     public void createProjectActivityUpdateMenu(final Menu menu) {
         MenuItem menuItemUpdateActivity = menu.add(R.string.project_activity_monitoring_detail_menu_update_activity);
-        menuItemUpdateActivity.setIcon(R.drawable.ic_create_new_dark_24);
+        menuItemUpdateActivity.setIcon(R.drawable.ic_create_new_light_24);
         if (Build.VERSION.SDK_INT > 10) {
             menuItemUpdateActivity.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
         }
@@ -99,7 +99,7 @@ public class ProjectActivityMonitoringDetailLayout {
 
     public void createProjectActivityMonitoringEditMenu(final Menu menu) {
         MenuItem menuItemUpdateActivity = menu.add(R.string.project_activity_monitoring_detail_menu_monitoring_edit);
-        menuItemUpdateActivity.setIcon(R.drawable.ic_edit_dark_24);
+        menuItemUpdateActivity.setIcon(R.drawable.ic_edit_light_24);
         if (Build.VERSION.SDK_INT > 10) {
             menuItemUpdateActivity.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
         }
@@ -157,7 +157,7 @@ public class ProjectActivityMonitoringDetailLayout {
     public ProjectActivityMonitoringDetailFragment showProjectActivityMonitoringDetailFragment(final ProjectActivityMonitoringModel projectActivityMonitoringModel) {
         ProjectActivityMonitoringDetailFragment projectActivityMonitoringDetailFragment = ProjectActivityMonitoringDetailFragment.newInstance(projectActivityMonitoringModel);
 
-        loadFragment(projectActivityMonitoringDetailFragment, DateTimeUtil.ToDateTimeDisplayString(projectActivityMonitoringModel.getMonitoringDate()), StringUtil.numberFormat(projectActivityMonitoringModel.getPercentComplete()), FRAGMENT_TAG_PROJECT_ACTIVITY_MONITORING_DETAIL);
+        loadFragment(projectActivityMonitoringDetailFragment, DateTimeUtil.ToDateTimeDisplayString(projectActivityMonitoringModel.getMonitoringDate()), StringUtil.numberPercentFormat(projectActivityMonitoringModel.getPercentComplete()), FRAGMENT_TAG_PROJECT_ACTIVITY_MONITORING_DETAIL);
 
         return projectActivityMonitoringDetailFragment;
     }
