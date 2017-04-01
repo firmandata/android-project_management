@@ -36,8 +36,7 @@ import java.util.List;
 
 public class ProjectStageActivity extends AppCompatActivity implements
         ProjectStageLayout.ProjectStageLayoutListener,
-        ImageRequestListener,
-        ImageRequestClickListener {
+        ImageRequestListener {
 
     public static final String INTENT_PARAM_PROJECT_STAGE_MODEL = "PROJECT_STAGE_MODEL";
 
@@ -62,7 +61,6 @@ public class ProjectStageActivity extends AppCompatActivity implements
         mProjectStageLayout = ProjectStageLayout.buildProjectStageLayout(this, null);
         mProjectStageLayout.setProjectStageLayoutListener(this);
         mProjectStageLayout.setImageRequestListener(this);
-        mProjectStageLayout.setImageRequestClickListener(this);
 
         // -- Load to Activity --
         mProjectStageLayout.loadLayoutToActivity(this, mProjectStageModel);
@@ -310,14 +308,6 @@ public class ProjectStageActivity extends AppCompatActivity implements
 
         // -- Do FileGetCacheAsyncTask --
         fileGetCacheAsyncTask.execute(new FileGetAsyncTaskParam(this, settingUserModel, fileId));
-    }
-
-    @Override
-    public void onImageRequestClick(Integer fileId) {
-        // -- Redirect to FileViewActivity --
-        Intent intent = new Intent(this, FileViewActivity.class);
-        intent.putExtra(FileViewActivity.INTENT_PARAM_FILE_ID, fileId);
-        startActivity(intent);
     }
 
     @Override

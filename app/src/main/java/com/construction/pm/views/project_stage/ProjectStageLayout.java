@@ -153,10 +153,6 @@ public class ProjectStageLayout implements ProjectStageAssignCommentListView.Pro
         mProjectStageAssignCommentListView.setImageRequestListener(imageRequestListener);
     }
 
-    public void setImageRequestClickListener(final ImageRequestClickListener imageRequestClickListener) {
-        mProjectStageAssignCommentListView.setImageRequestClickListener(imageRequestClickListener);
-    }
-
     public void setProjectStageLayoutListener(final ProjectStageLayoutListener projectStageLayoutListener) {
         mProjectStageLayoutListener = projectStageLayoutListener;
     }
