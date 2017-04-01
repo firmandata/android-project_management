@@ -76,6 +76,11 @@
             android:configChanges="orientation|keyboardHidden|screenSize" />
 
         <activity
+            android:name=".activities.ProjectActivityUpdateDetailActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
+
+        <activity
             android:name=".activities.ProjectPlanActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:configChanges="orientation|keyboardHidden|screenSize" />
@@ -87,6 +92,11 @@
 
         <activity
             android:name=".activities.ProjectStageAssignCommentFormActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
+
+        <activity
+            android:name=".activities.ProjectStageAssignCommentDetailActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:configChanges="orientation|keyboardHidden|screenSize" />
 

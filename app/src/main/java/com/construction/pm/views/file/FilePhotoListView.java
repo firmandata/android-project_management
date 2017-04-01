@@ -1,6 +1,7 @@
 package com.construction.pm.views.file;
 
 import android.content.Context;
+import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,7 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.construction.pm.R;
@@ -245,7 +245,7 @@ public class FilePhotoListView {
 
     protected class FilePhotoListViewHolder extends RecyclerView.ViewHolder {
 
-        protected ImageView mPhotoId;
+        protected AppCompatImageView mPhotoId;
 
         protected ImageRequestListener mImageRequestListener;
         protected ImageRequestClickListener mImageRequestClickListener;
@@ -253,7 +253,7 @@ public class FilePhotoListView {
         public FilePhotoListViewHolder(View view) {
             super(view);
 
-            mPhotoId = (ImageView) view.findViewById(R.id.photoId);
+            mPhotoId = (AppCompatImageView) view.findViewById(R.id.photoId);
         }
 
         public void setFileId(final Integer fileId) {

@@ -202,6 +202,20 @@ public class ProjectStageActivity extends AppCompatActivity implements
     @Override
     public void onProjectStageAssignCommentItemClick(ProjectStageAssignCommentModel projectStageAssignCommentModel) {
         // -- Redirect to ProjectStageAssignCommentFormActivity --
+        Intent intent = new Intent(this, ProjectStageAssignCommentDetailActivity.class);
+
+        try {
+            org.json.JSONObject projectStageAssignCommentModelJsonObject = projectStageAssignCommentModel.build();
+            String projectStageAssignCommentModelJson = projectStageAssignCommentModelJsonObject.toString(0);
+            intent.putExtra(ProjectStageAssignCommentDetailActivity.INTENT_PARAM_PROJECT_STAGE_ASSIGN_COMMENT_MODEL, projectStageAssignCommentModelJson);
+        } catch (org.json.JSONException ex) {
+        }
+
+        startActivityForResult(intent, ConstantUtil.INTENT_REQUEST_PROJECT_STAGE_ASSIGN_COMMENT_DETAIL);
+    }
+
+    protected void showProjectStageAssignCommentForm(ProjectStageAssignCommentModel projectStageAssignCommentModel) {
+        // -- Redirect to ProjectStageAssignCommentFormActivity --
         Intent intent = new Intent(this, ProjectStageAssignCommentFormActivity.class);
 
         try {
@@ -236,6 +250,24 @@ public class ProjectStageActivity extends AppCompatActivity implements
                             }
                             if (projectStageAssignCommentModel != null)
                                 mProjectStageLayout.addProjectStageAssignCommentModel(projectStageAssignCommentModel);
+                        }
+                    }
+                }
+            }
+        } else if (requestCode == ConstantUtil.INTENT_REQUEST_PROJECT_STAGE_ASSIGN_COMMENT_DETAIL) {
+            if (resultCode == ConstantUtil.INTENT_REQUEST_PROJECT_STAGE_ASSIGN_COMMENT_DETAIL_RESULT_EDIT) {
+                if (bundle != null) {
+                    if (bundle.containsKey(ConstantUtil.INTENT_RESULT_PROJECT_STAGE_ASSIGN_COMMENT_MODEL)) {
+                        String projectStageAssignCommentModelJson = bundle.getString(ConstantUtil.INTENT_RESULT_PROJECT_STAGE_ASSIGN_COMMENT_MODEL);
+                        if (projectStageAssignCommentModelJson != null) {
+                            ProjectStageAssignCommentModel projectStageAssignCommentModel = null;
+                            try {
+                                org.json.JSONObject jsonObject = new org.json.JSONObject(projectStageAssignCommentModelJson);
+                                projectStageAssignCommentModel = ProjectStageAssignCommentModel.build(jsonObject);
+                            } catch (org.json.JSONException ex) {
+                            }
+                            if (projectStageAssignCommentModel != null)
+                                showProjectStageAssignCommentForm(projectStageAssignCommentModel);
                         }
                     }
                 }

@@ -1,11 +1,11 @@
 package com.construction.pm.views.project_activity;
 
 import android.content.Context;
+import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.construction.pm.R;
@@ -27,7 +27,7 @@ public class ProjectActivityMonitoringDetailView {
     protected AppCompatTextView mActivityStatus;
     protected AppCompatTextView mPercentComplete;
     protected AppCompatTextView mComment;
-    protected ImageView mPhotoId;
+    protected AppCompatImageView mPhotoId;
     protected FilePhotoListView mFilePhotoListView;
 
     protected ImageRequestListener mImageRequestListener;
@@ -60,7 +60,7 @@ public class ProjectActivityMonitoringDetailView {
         mActivityStatus = (AppCompatTextView) mProjectActivityMonitoringDetailView.findViewById(R.id.activityStatus);
         mPercentComplete = (AppCompatTextView) mProjectActivityMonitoringDetailView.findViewById(R.id.percentComplete);
         mComment = (AppCompatTextView) mProjectActivityMonitoringDetailView.findViewById(R.id.comment);
-        mPhotoId = (ImageView) mProjectActivityMonitoringDetailView.findViewById(R.id.photoId);
+        mPhotoId = (AppCompatImageView) mProjectActivityMonitoringDetailView.findViewById(R.id.photoId);
         mFilePhotoListView = new FilePhotoListView(mContext, (RelativeLayout) mProjectActivityMonitoringDetailView.findViewById(R.id.file_photo_list_view));
     }
 

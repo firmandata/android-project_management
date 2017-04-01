@@ -309,6 +309,9 @@
     <string name="project_activity_update_list_actual_start_date">Start</string>
     <string name="project_activity_update_list_actual_duration_date_separator">To</string>
 
+    <string name="project_activity_update_detail_title">Comment Detail</string>
+    <string name="project_activity_update_detail_menu_edit">Edit</string>
+
     <string name="project_activity_update_form_layout_menu_update_activity">Save</string>
     <string name="project_activity_update_form_layout_title">Update</string>
     <string name="project_activity_update_form_layout_alert_button">OK</string>
@@ -318,6 +321,9 @@
     <string name="project_activity_monitoring_form_layout_title">Monitoring</string>
     <string name="project_activity_monitoring_form_layout_alert_button">OK</string>
     <string name="project_activity_monitoring_form_layout_alert_title_error">Failed</string>
+
+    <string name="project_stage_assign_comment_detail_title">Comment Detail</string>
+    <string name="project_stage_assign_comment_detail_menu_edit">Edit</string>
 
     <string name="project_stage_assign_comment_form_layout_menu_monitoring_activity">Save</string>
     <string name="project_stage_assign_comment_form_layout_title">Comment</string>

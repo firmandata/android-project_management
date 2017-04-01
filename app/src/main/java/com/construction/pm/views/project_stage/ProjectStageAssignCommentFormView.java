@@ -3,6 +3,7 @@ package com.construction.pm.views.project_stage;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TabLayout;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -10,6 +11,7 @@ import android.support.v7.widget.AppCompatImageView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.construction.pm.R;
@@ -17,6 +19,9 @@ import com.construction.pm.models.ProjectStageAssignCommentModel;
 import com.construction.pm.models.ProjectStageAssignmentModel;
 import com.construction.pm.networks.webapi.WebApiParam;
 import com.construction.pm.utils.ImageUtil;
+import com.construction.pm.utils.StringUtil;
+import com.construction.pm.utils.ViewUtil;
+import com.construction.pm.views.listeners.ImageRequestDuplicateListener;
 import com.construction.pm.views.listeners.ImageRequestListener;
 
 import java.io.File;
@@ -30,12 +35,13 @@ public class ProjectStageAssignCommentFormView {
 
     protected ViewPager mViewPager;
     protected ViewPagerAdapter mViewPagerAdapter;
+    protected TabLayout mTabLayout;
     protected TextInputEditText mComment;
 
     protected ProjectStageAssignCommentModel mProjectStageAssignCommentModel;
 
     protected ProjectStageAssignCommentFormListener mProjectStageAssignCommentFormListener;
-    protected ImageRequestListener mImageRequestListener;
+    protected ImageRequestDuplicateListener mImageRequestDuplicateListener;
 
     public ProjectStageAssignCommentFormView(final Context context) {
         mContext = context;
@@ -60,9 +66,25 @@ public class ProjectStageAssignCommentFormView {
 
         mComment = (TextInputEditText) mProjectStageAssignCommentFormView.findViewById(R.id.comment);
         mViewPager = (ViewPager) mProjectStageAssignCommentFormView.findViewById(R.id.photoPager);
+        mTabLayout = (TabLayout) mProjectStageAssignCommentFormView.findViewById(R.id.photoTab);
 
         mViewPagerAdapter = new ViewPagerAdapter(mContext);
         mViewPager.setAdapter(mViewPagerAdapter);
+
+        mTabLayout.setupWithViewPager(mViewPager);
+        for (int photoIdx = 0; photoIdx < 6; photoIdx++) {
+            int photoSize = ViewUtil.getPxFromDp(mContext, 48);
+
+            AppCompatImageView photoImage = new AppCompatImageView(mContext);
+            photoImage.setImageResource(R.drawable.ic_image_dark_24);
+            photoImage.setLayoutParams(new ViewGroup.LayoutParams(photoSize, photoSize));
+
+            if (mTabLayout != null) {
+                TabLayout.Tab tab = mTabLayout.getTabAt(photoIdx);
+                if (tab != null)
+                    tab.setCustomView(photoImage);
+            }
+        }
 
         FloatingActionButton takeCamera = (FloatingActionButton) mProjectStageAssignCommentFormView.findViewById(R.id.takeCamera);
         takeCamera.setOnClickListener(new View.OnClickListener() {
@@ -100,28 +122,45 @@ public class ProjectStageAssignCommentFormView {
             return;
 
         mProjectStageAssignCommentModel = projectStageAssignCommentModel.duplicate();
-        if (mImageRequestListener != null) {
-            if (mProjectStageAssignCommentModel.getPhotoId() != null)
-                mImageRequestListener.onImageRequest(mViewPagerAdapter.getItem(0), mProjectStageAssignCommentModel.getPhotoId());
-            if (mProjectStageAssignCommentModel.getPhotoAdditional1Id() != null)
-                mImageRequestListener.onImageRequest(mViewPagerAdapter.getItem(1), mProjectStageAssignCommentModel.getPhotoAdditional1Id());
-            if (mProjectStageAssignCommentModel.getPhotoAdditional2Id() != null)
-                mImageRequestListener.onImageRequest(mViewPagerAdapter.getItem(2), mProjectStageAssignCommentModel.getPhotoAdditional2Id());
-            if (mProjectStageAssignCommentModel.getPhotoAdditional3Id() != null)
-                mImageRequestListener.onImageRequest(mViewPagerAdapter.getItem(3), mProjectStageAssignCommentModel.getPhotoAdditional3Id());
-            if (mProjectStageAssignCommentModel.getPhotoAdditional4Id() != null)
-                mImageRequestListener.onImageRequest(mViewPagerAdapter.getItem(4), mProjectStageAssignCommentModel.getPhotoAdditional4Id());
-            if (mProjectStageAssignCommentModel.getPhotoAdditional5Id() != null)
-                mImageRequestListener.onImageRequest(mViewPagerAdapter.getItem(5), mProjectStageAssignCommentModel.getPhotoAdditional5Id());
-        }
+        if (mProjectStageAssignCommentModel.getPhotoId() != null)
+            requestImagePosition(0, mProjectStageAssignCommentModel.getPhotoId());
+        if (mProjectStageAssignCommentModel.getPhotoAdditional1Id() != null)
+            requestImagePosition(1, mProjectStageAssignCommentModel.getPhotoAdditional1Id());
+        if (mProjectStageAssignCommentModel.getPhotoAdditional2Id() != null)
+            requestImagePosition(2, mProjectStageAssignCommentModel.getPhotoAdditional2Id());
+        if (mProjectStageAssignCommentModel.getPhotoAdditional3Id() != null)
+            requestImagePosition(3, mProjectStageAssignCommentModel.getPhotoAdditional3Id());
+        if (mProjectStageAssignCommentModel.getPhotoAdditional4Id() != null)
+            requestImagePosition(4, mProjectStageAssignCommentModel.getPhotoAdditional4Id());
+        if (mProjectStageAssignCommentModel.getPhotoAdditional5Id() != null)
+            requestImagePosition(5, mProjectStageAssignCommentModel.getPhotoAdditional5Id());
 
         mComment.setText(projectStageAssignCommentModel.getComment());
+    }
+
+    protected void requestImagePosition(final int position, final Integer fileId) {
+        if (mImageRequestDuplicateListener != null) {
+            AppCompatImageView contentImageView = mViewPagerAdapter.getItem(position);
+
+            AppCompatImageView tabImageView = null;
+            TabLayout.Tab tab = mTabLayout.getTabAt(position);
+            if (tab != null)
+                tabImageView = (AppCompatImageView) tab.getCustomView();
+
+            mImageRequestDuplicateListener.onImageRequestDuplicate(contentImageView, tabImageView, fileId);
+        }
     }
 
     public void setPhotoId(final File file) {
         int position = mViewPager.getCurrentItem();
 
         ImageUtil.setImageThumbnailView(mContext, mViewPagerAdapter.getItem(position), file.getAbsolutePath());
+
+        TabLayout.Tab tab = mTabLayout.getTabAt(position);
+        if (tab != null) {
+            AppCompatImageView imageView = (AppCompatImageView) tab.getCustomView();
+            ImageUtil.setImageThumbnailView(mContext, imageView, file.getAbsolutePath());
+        }
 
         mViewPagerAdapter.setItemFile(position, file);
     }
@@ -138,8 +177,8 @@ public class ProjectStageAssignCommentFormView {
         return webApiParamFile;
     }
 
-    public void setImageRequestListener(final ImageRequestListener imageRequestListener) {
-        mImageRequestListener = imageRequestListener;
+    public void setImageRequestDuplicateListener(final ImageRequestDuplicateListener imageRequestDuplicateListener) {
+        mImageRequestDuplicateListener = imageRequestDuplicateListener;
     }
 
     public ProjectStageAssignCommentModel getProjectStageAssignCommentModel() {
@@ -210,6 +249,11 @@ public class ProjectStageAssignCommentFormView {
                 return null;
 
             return mImageViewList.get(position);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return null;
         }
 
         @Override

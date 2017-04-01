@@ -24,6 +24,8 @@ import com.construction.pm.activities.fragments.ProjectStageAssignCommentFormFra
 import com.construction.pm.models.ProjectStageAssignCommentModel;
 import com.construction.pm.models.ProjectStageAssignmentModel;
 import com.construction.pm.networks.webapi.WebApiParam;
+import com.construction.pm.utils.DateTimeUtil;
+import com.construction.pm.utils.StringUtil;
 import com.construction.pm.utils.ViewUtil;
 
 public class ProjectStageAssignCommentFormLayout {
@@ -120,7 +122,7 @@ public class ProjectStageAssignCommentFormLayout {
 
     public void createProjectStageAssignCommentSaveMenu(final Menu menu) {
         MenuItem menuItemMonitoringActivity = menu.add(R.string.project_stage_assign_comment_form_layout_menu_monitoring_activity);
-        menuItemMonitoringActivity.setIcon(R.drawable.ic_checkmark_dark_24);
+        menuItemMonitoringActivity.setIcon(R.drawable.ic_checkmark_light_24);
         if (Build.VERSION.SDK_INT > 10) {
             menuItemMonitoringActivity.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
         }
@@ -179,7 +181,12 @@ public class ProjectStageAssignCommentFormLayout {
     public ProjectStageAssignCommentFormFragment showProjectStageAssignCommentFormFragment(final ProjectStageAssignmentModel projectStageAssignmentModel, final ProjectStageAssignCommentModel projectStageAssignCommentModel) {
         mProjectStageAssignCommentFormFragment = ProjectStageAssignCommentFormFragment.newInstance(projectStageAssignmentModel, projectStageAssignCommentModel);
 
-        loadFragment(mProjectStageAssignCommentFormFragment, null, null, FRAGMENT_TAG_PROJECT_STAGE_ASSIGN_COMMENT_FORM);
+        String subTitle = null;
+        if (projectStageAssignCommentModel != null) {
+            if (projectStageAssignCommentModel.getCommentDate() != null)
+                subTitle = DateTimeUtil.ToDateTimeDisplayString(projectStageAssignCommentModel.getCommentDate());
+        }
+        loadFragment(mProjectStageAssignCommentFormFragment, null, subTitle, FRAGMENT_TAG_PROJECT_STAGE_ASSIGN_COMMENT_FORM);
 
         return mProjectStageAssignCommentFormFragment;
     }
