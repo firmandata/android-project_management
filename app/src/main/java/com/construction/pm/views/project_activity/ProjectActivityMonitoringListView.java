@@ -1,6 +1,7 @@
 package com.construction.pm.views.project_activity;
 
 import android.content.Context;
+import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
@@ -61,6 +62,7 @@ public class ProjectActivityMonitoringListView {
         mProjectActivityMonitoringList = (RecyclerView) mProjectActivityMonitoringListView.findViewById(R.id.projectActivityMonitoringList);
         mProjectActivityMonitoringList.setItemAnimator(new DefaultItemAnimator());
         mProjectActivityMonitoringList.setNestedScrollingEnabled(false);
+        mProjectActivityMonitoringList.setHasFixedSize(true);
         mProjectActivityMonitoringList.addOnItemTouchListener(new RecyclerItemTouchListener(mContext, mProjectActivityMonitoringList, new RecyclerItemTouchListener.ItemClickListener() {
             @Override
             public void onClick(View view, int position) {
@@ -248,7 +250,7 @@ public class ProjectActivityMonitoringListView {
 
     protected class ProjectActivityMonitoringListViewHolder extends RecyclerView.ViewHolder {
 
-        protected ImageView mPhotoId;
+        protected AppCompatImageView mPhotoId;
         protected AppCompatTextView mMonitoringDate;
         protected AppCompatTextView mActualStartDate;
         protected AppCompatTextView mActualEndDate;
@@ -261,7 +263,7 @@ public class ProjectActivityMonitoringListView {
         public ProjectActivityMonitoringListViewHolder(View view) {
             super(view);
 
-            mPhotoId = (ImageView) view.findViewById(R.id.photoId);
+            mPhotoId = (AppCompatImageView) view.findViewById(R.id.photoId);
             mMonitoringDate = (AppCompatTextView) view.findViewById(R.id.monitoringDate);
             mActualStartDate = (AppCompatTextView) view.findViewById(R.id.actualStartDate);
             mActualEndDate = (AppCompatTextView) view.findViewById(R.id.actualEndDate);
@@ -279,7 +281,7 @@ public class ProjectActivityMonitoringListView {
             mActualStartDate.setText(DateTimeUtil.ToDateDisplayString(projectActivityMonitoringModel.getActualStartDate()));
             mActualEndDate.setText(DateTimeUtil.ToDateDisplayString(projectActivityMonitoringModel.getActualEndDate()));
             mActivityStatus.setText(projectActivityMonitoringModel.getActivityStatus());
-            mPercentComplete.setText(StringUtil.numberFormat(projectActivityMonitoringModel.getPercentComplete()));
+            mPercentComplete.setText(StringUtil.numberPercentFormat(projectActivityMonitoringModel.getPercentComplete()));
             mComment.setText(projectActivityMonitoringModel.getComment());
         }
 

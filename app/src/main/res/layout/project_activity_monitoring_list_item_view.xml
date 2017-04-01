@@ -6,65 +6,120 @@
     android:layout_height="wrap_content"
     android:clickable="true"
     android:focusable="true"
-    android:background="?android:attr/selectableItemBackground">
+    android:background="?android:attr/selectableItemBackground"
+    android:padding="@dimen/gap">
 
-    <ImageView
-        android:id="@+id/photoId"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        app:srcCompat="@drawable/ic_image_dark_24" />
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/percentComplete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:textStyle="normal|bold"
+        android:text="TextView" />
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/monitoringDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_toLeftOf="@id/percentComplete"
+        android:layout_toStartOf="@id/percentComplete"
+        android:layout_alignTop="@id/percentComplete"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="TextView" />
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/photoId"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_below="@id/monitoringDate"
+        android:layout_marginTop="@dimen/gap_half"
+        android:layout_marginRight="@dimen/gap_half"
+        android:layout_marginEnd="@dimen/gap_half"
+        android:ellipsize="end"
+        android:singleLine="true"
+        app:srcCompat="@drawable/ic_image_dark_24" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/actualStartDateLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/photoId"
         android:layout_toRightOf="@+id/photoId"
         android:layout_toEndOf="@+id/photoId"
-        android:text="TextView" />
+        android:layout_marginRight="@dimen/gap_half"
+        android:layout_marginEnd="@dimen/gap_half"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="@string/project_activity_monitoring_list_actual_start_date" />
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/actualStartDate"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/monitoringDate"
-        android:layout_toRightOf="@+id/photoId"
-        android:layout_toEndOf="@+id/photoId"
+        android:layout_alignTop="@id/actualStartDateLabel"
+        android:layout_toRightOf="@+id/actualStartDateLabel"
+        android:layout_toEndOf="@+id/actualStartDateLabel"
+        android:ellipsize="end"
+        android:singleLine="true"
         android:text="TextView" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/actualEndDateLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/actualStartDate"
+        android:layout_toEndOf="@id/actualStartDate"
+        android:layout_alignTop="@id/actualStartDate"
+        android:layout_marginLeft="@dimen/gap_half"
+        android:layout_marginStart="@dimen/gap_half"
+        android:layout_marginRight="@dimen/gap_half"
+        android:layout_marginEnd="@dimen/gap_half"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="@string/project_activity_monitoring_list_actual_end_date" />
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/actualEndDate"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/actualStartDate"
-        android:layout_toRightOf="@+id/photoId"
-        android:layout_toEndOf="@+id/photoId"
-        android:text="TextView" />
-
-    <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/activityStatus"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/actualEndDate"
-        android:layout_toRightOf="@+id/photoId"
-        android:layout_toEndOf="@+id/photoId"
-        android:text="TextView" />
-
-    <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/percentComplete"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/activityStatus"
-        android:layout_toRightOf="@+id/photoId"
-        android:layout_toEndOf="@+id/photoId"
+        android:layout_toRightOf="@id/actualEndDateLabel"
+        android:layout_toEndOf="@id/actualEndDateLabel"
+        android:layout_alignTop="@id/actualEndDateLabel"
+        android:ellipsize="end"
+        android:singleLine="true"
         android:text="TextView" />
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/comment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/percentComplete"
-        android:layout_toRightOf="@+id/photoId"
-        android:layout_toEndOf="@+id/photoId"
+        android:layout_below="@id/actualStartDateLabel"
+        android:layout_alignLeft="@id/actualStartDateLabel"
+        android:layout_alignStart="@id/actualStartDateLabel"
+        android:layout_marginTop="@dimen/gap_half"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="TextView" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/activityStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/comment"
+        android:layout_alignLeft="@id/comment"
+        android:layout_alignStart="@id/comment"
+        android:layout_marginTop="@dimen/gap_half"
+        android:gravity="center_horizontal"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:textStyle="normal|bold"
         android:text="TextView" />
 
 </RelativeLayout>

@@ -13,7 +13,8 @@
         android:id="@+id/contentBody"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:contentPadding="@dimen/gap">
+        app:contentPadding="@dimen/gap"
+        android:layout_margin="@dimen/cardview_default_elevation">
 
         <RelativeLayout
             android:layout_height="match_parent"

@@ -299,6 +299,9 @@
     <string name="project_activity_detail_actual_start_date">Start</string>
     <string name="project_activity_detail_actual_duration_date_separator">To</string>
 
+    <string name="project_activity_monitoring_list_actual_start_date">Start</string>
+    <string name="project_activity_monitoring_list_actual_end_date">To</string>
+
     <string name="project_activity_monitoring_monitoring_date">Monitoring Date</string>
     <string name="project_activity_monitoring_actual_start_date">Actual Start Date</string>
     <string name="project_activity_monitoring_actual_end_date">Actual End Date</string>
