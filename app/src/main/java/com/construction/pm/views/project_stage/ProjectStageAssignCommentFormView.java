@@ -66,6 +66,7 @@ public class ProjectStageAssignCommentFormView {
 
         mComment = (TextInputEditText) mProjectStageAssignCommentFormView.findViewById(R.id.comment);
         mViewPager = (ViewPager) mProjectStageAssignCommentFormView.findViewById(R.id.photoPager);
+        mViewPager.setOffscreenPageLimit(6);
         mTabLayout = (TabLayout) mProjectStageAssignCommentFormView.findViewById(R.id.photoTab);
 
         mViewPagerAdapter = new ViewPagerAdapter(mContext);

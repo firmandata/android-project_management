@@ -66,6 +66,7 @@ public class ProjectActivityMonitoringDetailView {
         mProjectActivityMonitoringDetailView = projectActivityMonitoringDetailView;
 
         mViewPager = (ViewPager) mProjectActivityMonitoringDetailView.findViewById(R.id.photoPager);
+        mViewPager.setOffscreenPageLimit(6);
         mTabLayout = (TabLayout) mProjectActivityMonitoringDetailView.findViewById(R.id.photoTab);
 
         mViewPagerAdapter = new ViewPagerAdapter(mContext);

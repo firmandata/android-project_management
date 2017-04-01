@@ -60,6 +60,7 @@ public class ManagerDetailView implements
         mManagerDetailView = managerDetailView;
         mTabLayout = (TabLayout) mManagerDetailView.findViewById(R.id.contentTab);
         mViewPager = (ViewPager) mManagerDetailView.findViewById(R.id.contentBody);
+        mViewPager.setOffscreenPageLimit(2);
     }
 
     public LinearLayout getView() {

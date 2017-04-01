@@ -65,6 +65,7 @@ public class ProjectLayout {
         mToolbar = (Toolbar) mProjectLayout.findViewById(R.id.contentToolbar);
         mTabLayout = (TabLayout) mProjectLayout.findViewById(R.id.contentTab);
         mViewPager = (ViewPager) mProjectLayout.findViewById(R.id.contentBody);
+        mViewPager.setOffscreenPageLimit(4);
     }
 
     public CoordinatorLayout getLayout() {

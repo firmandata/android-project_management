@@ -59,6 +59,7 @@ public class ProjectStageAssignCommentDetailView {
 
         mComment = (AppCompatTextView) mProjectStageAssignCommentDetailView.findViewById(R.id.comment);
         mViewPager = (ViewPager) mProjectStageAssignCommentDetailView.findViewById(R.id.photoPager);
+        mViewPager.setOffscreenPageLimit(6);
         mTabLayout = (TabLayout) mProjectStageAssignCommentDetailView.findViewById(R.id.photoTab);
 
         mViewPagerAdapter = new ViewPagerAdapter(mContext);

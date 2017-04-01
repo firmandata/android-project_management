@@ -59,6 +59,7 @@ public class InspectorLayout implements ProjectActivityListFragment.ProjectActiv
         mToolbar = (Toolbar) mInspectorLayout.findViewById(R.id.contentToolbar);
         mTabLayout = (TabLayout) mInspectorLayout.findViewById(R.id.contentTab);
         mViewPager = (ViewPager) mInspectorLayout.findViewById(R.id.contentBody);
+        mViewPager.setOffscreenPageLimit(6);
     }
 
     public CoordinatorLayout getLayout() {

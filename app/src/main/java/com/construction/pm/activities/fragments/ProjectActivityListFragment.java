@@ -113,8 +113,7 @@ public class ProjectActivityListFragment extends Fragment implements ProjectActi
         mProjectActivityListView = ProjectActivityListView.buildProjectActivityListView(getContext(), null);
         mProjectActivityListView.setProjectActivityListListener(this);
         mProjectActivityListView.setStatusTaskEnum(statusTaskEnum);
-        if (projectActivityModels != null)
-            mProjectActivityListView.setProjectActivityModels(projectActivityModels);
+        mProjectActivityListView.setProjectActivityModels(projectActivityModels);
     }
 
     @Override

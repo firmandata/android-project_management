@@ -59,6 +59,7 @@ public class ManagerLayout implements ProjectActivityListFragment.ProjectActivit
         mToolbar = (Toolbar) mManagerLayout.findViewById(R.id.contentToolbar);
         mTabLayout = (TabLayout) mManagerLayout.findViewById(R.id.contentTab);
         mViewPager = (ViewPager) mManagerLayout.findViewById(R.id.contentBody);
+        mViewPager.setOffscreenPageLimit(6);
     }
 
     public CoordinatorLayout getLayout() {

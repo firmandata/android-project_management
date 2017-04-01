@@ -155,7 +155,10 @@ public class ProjectActivityListView {
         }
 
         public void setProjectActivityModels(final ProjectActivityModel[] projectActivityModels) {
-            mProjectActivityModelList = new ArrayList<ProjectActivityModel>(Arrays.asList(projectActivityModels));
+            if (projectActivityModels == null)
+                mProjectActivityModelList = new ArrayList<ProjectActivityModel>();
+            else
+                mProjectActivityModelList = new ArrayList<ProjectActivityModel>(Arrays.asList(projectActivityModels));
             notifyDataSetChanged();
         }
 
