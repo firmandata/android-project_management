@@ -152,6 +152,14 @@ public class ProjectActivityMonitoringFormView {
         if (projectActivityModel == null)
             return;
 
+        mActualStartDate.setDate(projectActivityModel.getActualStartDate());
+        mActualEndDate.setDate(projectActivityModel.getActualEndDate());
+        mActivityStatus.setSelection(mSpinnerActivityStatusAdapter.getPositionByItem(ActivityStatusEnum.fromString(projectActivityModel.getActivityStatus())));
+        if (projectActivityModel.getPercentComplete() != null) {
+            Double percentComplete = projectActivityModel.getPercentComplete() * 10;
+            mPercentComplete.setProgress(percentComplete.intValue());
+        }
+
         mProjectActivityMonitoringModel = new ProjectActivityMonitoringModel();
         mProjectActivityMonitoringModel.setProjectActivityId(projectActivityModel.getProjectActivityId());
     }
