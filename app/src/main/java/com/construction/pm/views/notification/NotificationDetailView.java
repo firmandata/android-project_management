@@ -24,10 +24,12 @@ public class NotificationDetailView {
     protected AppCompatTextView mTvNotificationMessage;
     protected LinearLayout mButtonContainer;
     protected AppCompatButton mBtnProjectStage;
-    protected AppCompatButton mBtnProjectActivity;
+    protected AppCompatButton mBtnManagerProjectActivity;
+    protected AppCompatButton mBtnInspectorProjectActivity;
 
     protected ProjectStageModel mProjectStageModel;
-    protected ProjectActivityModel mProjectActivityModel;
+    protected ProjectActivityModel mManagerProjectActivityModel;
+    protected ProjectActivityModel mInspectorProjectActivityModel;
 
     protected NotificationDetailListener mNotificationDetailListener;
 
@@ -57,7 +59,8 @@ public class NotificationDetailView {
 
         mButtonContainer = (LinearLayout) mNotificationDetailView.findViewById(R.id.buttonContainer);
         mBtnProjectStage = (AppCompatButton) mButtonContainer.findViewById(R.id.projectStage);
-        mBtnProjectActivity = (AppCompatButton) mButtonContainer.findViewById(R.id.projectActivity);
+        mBtnManagerProjectActivity = (AppCompatButton) mButtonContainer.findViewById(R.id.managerProjectActivity);
+        mBtnInspectorProjectActivity = (AppCompatButton) mButtonContainer.findViewById(R.id.inspectorProjectActivity);
 
         mBtnProjectStage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,18 +72,29 @@ public class NotificationDetailView {
             }
         });
 
-        mBtnProjectActivity.setOnClickListener(new View.OnClickListener() {
+        mBtnManagerProjectActivity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mProjectActivityModel != null) {
+                if (mManagerProjectActivityModel != null) {
                     if (mNotificationDetailListener != null)
-                        mNotificationDetailListener.onProjectActivityClick(mProjectActivityModel);
+                        mNotificationDetailListener.onManagerProjectActivityClick(mManagerProjectActivityModel);
+                }
+            }
+        });
+
+        mBtnInspectorProjectActivity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mInspectorProjectActivityModel != null) {
+                    if (mNotificationDetailListener != null)
+                        mNotificationDetailListener.onInspectorProjectActivityClick(mInspectorProjectActivityModel);
                 }
             }
         });
 
         ButtonUtil.setButtonInfo(mContext, mBtnProjectStage);
-        ButtonUtil.setButtonInfo(mContext, mBtnProjectActivity);
+        ButtonUtil.setButtonInfo(mContext, mBtnManagerProjectActivity);
+        ButtonUtil.setButtonInfo(mContext, mBtnInspectorProjectActivity);
     }
 
     public RelativeLayout getView() {
@@ -96,8 +110,10 @@ public class NotificationDetailView {
 
         if (notificationModel.getProjectStageId() == null)
             mButtonContainer.removeView(mBtnProjectStage);
-        if (notificationModel.getProjectActivityId() == null)
-            mButtonContainer.removeView(mBtnProjectActivity);
+        if (notificationModel.getProjectActivityId() == null) {
+            mButtonContainer.removeView(mBtnManagerProjectActivity);
+            mButtonContainer.removeView(mBtnInspectorProjectActivity);
+        }
 
         if (mNotificationDetailListener != null) {
             if (notificationModel.getProjectStageId() != null)
@@ -109,10 +125,20 @@ public class NotificationDetailView {
 
     public void setProjectStageModel(final ProjectStageModel projectStageModel) {
         mProjectStageModel = projectStageModel;
+        if (mProjectStageModel == null)
+            mButtonContainer.removeView(mBtnProjectStage);
     }
 
-    public void setProjectActivityModel(final ProjectActivityModel projectActivityModel) {
-        mProjectActivityModel = projectActivityModel;
+    public void setManagerProjectActivityModel(final ProjectActivityModel projectActivityModel) {
+        mManagerProjectActivityModel = projectActivityModel;
+        if (mManagerProjectActivityModel == null)
+            mButtonContainer.removeView(mBtnManagerProjectActivity);
+    }
+
+    public void setInspectorProjectActivityModel(final ProjectActivityModel projectActivityModel) {
+        mInspectorProjectActivityModel = projectActivityModel;
+        if (mInspectorProjectActivityModel == null)
+            mButtonContainer.removeView(mBtnInspectorProjectActivity);
     }
 
     public void setNotificationDetailListener(final NotificationDetailListener notificationDetailListener) {
@@ -123,6 +149,7 @@ public class NotificationDetailView {
         void onRequestProjectStage(Integer projectStageId);
         void onRequestProjectActivity(Integer projectActivityId);
         void onProjectStageClick(ProjectStageModel projectStageModel);
-        void onProjectActivityClick(ProjectActivityModel projectActivityModel);
+        void onManagerProjectActivityClick(ProjectActivityModel projectActivityModel);
+        void onInspectorProjectActivityClick(ProjectActivityModel projectActivityModel);
     }
 }

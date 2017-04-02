@@ -9,9 +9,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.construction.pm.activities.InspectorDetailActivity;
+import com.construction.pm.activities.ManagerDetailActivity;
 import com.construction.pm.activities.ProjectStageActivity;
+import com.construction.pm.asynctask.InspectorProjectActivityGetAsyncTask;
+import com.construction.pm.asynctask.ManagerProjectActivityGetAsyncTask;
 import com.construction.pm.asynctask.ProjectStageGetAsyncTask;
+import com.construction.pm.asynctask.param.InspectorProjectActivityGetAsyncTaskParam;
+import com.construction.pm.asynctask.param.ManagerProjectActivityGetAsyncTaskParam;
 import com.construction.pm.asynctask.param.ProjectStageGetAsyncTaskParam;
+import com.construction.pm.asynctask.result.InspectorProjectActivityGetAsyncTaskResult;
+import com.construction.pm.asynctask.result.ManagerProjectActivityGetAsyncTaskResult;
 import com.construction.pm.asynctask.result.ProjectStageGetAsyncTaskResult;
 import com.construction.pm.models.NotificationModel;
 import com.construction.pm.models.ProjectActivityModel;
@@ -20,6 +28,7 @@ import com.construction.pm.models.system.SessionLoginModel;
 import com.construction.pm.models.system.SettingUserModel;
 import com.construction.pm.persistence.SessionPersistent;
 import com.construction.pm.persistence.SettingPersistent;
+import com.construction.pm.utils.ConstantUtil;
 import com.construction.pm.views.notification.NotificationDetailView;
 
 import java.util.ArrayList;
@@ -123,6 +132,8 @@ public class NotificationDetailFragment extends Fragment implements Notification
 
                 if (projectHandleTaskResult != null) {
                     mNotificationDetailView.setProjectStageModel(projectHandleTaskResult.getProjectStageModel());
+                } else {
+                    mNotificationDetailView.setProjectStageModel(null);
                 }
             }
 
@@ -138,7 +149,67 @@ public class NotificationDetailFragment extends Fragment implements Notification
 
     @Override
     public void onRequestProjectActivity(Integer projectActivityId) {
-        
+        // -- Get SettingUserModel from SettingPersistent --
+        SettingPersistent settingPersistent = new SettingPersistent(getContext());
+        SettingUserModel settingUserModel = settingPersistent.getSettingUserModel();
+
+        // -- Get SessionLoginModel from SessionPersistent --
+        SessionPersistent sessionPersistent = new SessionPersistent(getContext());
+        SessionLoginModel sessionLoginModel = sessionPersistent.getSessionLoginModel();
+
+        // -- Prepare ManagerProjectActivityGetAsyncTask --
+        ManagerProjectActivityGetAsyncTask managerProjectActivityGetAsyncTask = new ManagerProjectActivityGetAsyncTask() {
+            @Override
+            public void onPreExecute() {
+                mAsyncTaskList.add(this);
+            }
+
+            @Override
+            public void onPostExecute(ManagerProjectActivityGetAsyncTaskResult projectActivityGetHandleTaskResult) {
+                mAsyncTaskList.remove(this);
+
+                if (projectActivityGetHandleTaskResult != null) {
+                    mNotificationDetailView.setManagerProjectActivityModel(projectActivityGetHandleTaskResult.getProjectActivityModel());
+                } else {
+                    mNotificationDetailView.setManagerProjectActivityModel(null);
+                }
+            }
+
+            @Override
+            protected void onProgressUpdate(String... messages) {
+
+            }
+        };
+
+        // -- Do ManagerProjectActivityGetAsyncTask --
+        managerProjectActivityGetAsyncTask.execute(new ManagerProjectActivityGetAsyncTaskParam(getContext(), settingUserModel, sessionLoginModel.getProjectMemberModel(), projectActivityId));
+
+        // -- Prepare InspectorProjectActivityGetAsyncTask --
+        InspectorProjectActivityGetAsyncTask inspectorProjectActivityGetAsyncTask = new InspectorProjectActivityGetAsyncTask() {
+            @Override
+            public void onPreExecute() {
+                mAsyncTaskList.add(this);
+            }
+
+            @Override
+            public void onPostExecute(InspectorProjectActivityGetAsyncTaskResult projectActivityGetHandleTaskResult) {
+                mAsyncTaskList.remove(this);
+
+                if (projectActivityGetHandleTaskResult != null) {
+                    mNotificationDetailView.setInspectorProjectActivityModel(projectActivityGetHandleTaskResult.getProjectActivityModel());
+                } else {
+                    mNotificationDetailView.setInspectorProjectActivityModel(null);
+                }
+            }
+
+            @Override
+            protected void onProgressUpdate(String... messages) {
+
+            }
+        };
+
+        // -- Do InspectorProjectActivityGetAsyncTask --
+        inspectorProjectActivityGetAsyncTask.execute(new InspectorProjectActivityGetAsyncTaskParam(getContext(), settingUserModel, sessionLoginModel.getProjectMemberModel(), projectActivityId));
     }
 
     @Override
@@ -158,8 +229,37 @@ public class NotificationDetailFragment extends Fragment implements Notification
     }
 
     @Override
-    public void onProjectActivityClick(ProjectActivityModel projectActivityModel) {
+    public void onManagerProjectActivityClick(ProjectActivityModel projectActivityModel) {
+        // -- Redirect to ManagerDetailActivity --
+        Intent intent = new Intent(this.getContext(), ManagerDetailActivity.class);
 
+        try {
+            org.json.JSONObject projectActivityModelJsonObject = projectActivityModel.build();
+            String projectActivityModelJson = projectActivityModelJsonObject.toString(0);
+
+            intent.putExtra(ManagerDetailActivity.INTENT_PARAM_PROJECT_ACTIVITY_MODEL, projectActivityModelJson);
+        } catch (org.json.JSONException ex) {
+
+        }
+
+        startActivity(intent);
+    }
+
+    @Override
+    public void onInspectorProjectActivityClick(ProjectActivityModel projectActivityModel) {
+        // -- Redirect to InspectorDetailActivity --
+        Intent intent = new Intent(this.getContext(), InspectorDetailActivity.class);
+
+        try {
+            org.json.JSONObject projectActivityModelJsonObject = projectActivityModel.build();
+            String projectActivityModelJson = projectActivityModelJsonObject.toString(0);
+
+            intent.putExtra(InspectorDetailActivity.INTENT_PARAM_PROJECT_ACTIVITY_MODEL, projectActivityModelJson);
+        } catch (org.json.JSONException ex) {
+
+        }
+
+        startActivity(intent);
     }
 
     @Override

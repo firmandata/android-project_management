@@ -59,11 +59,18 @@
             android:text="@string/notification_detail_project_stage"/>
 
         <android.support.v7.widget.AppCompatButton
-            android:id="@+id/projectActivity"
+            android:id="@+id/managerProjectActivity"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/notification_detail_project_activity"/>
+            android:text="@string/notification_detail_manager_project_activity"/>
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/inspectorProjectActivity"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/notification_detail_inspector_project_activity"/>
 
     </LinearLayout>
 
