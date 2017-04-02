@@ -262,6 +262,12 @@ public class ProjectActivityMonitoringFormView {
 
         ImageUtil.setImageThumbnailView(mContext, mViewPagerAdapter.getItem(position), file.getAbsolutePath());
 
+        TabLayout.Tab tab = mTabLayout.getTabAt(position);
+        if (tab != null) {
+            AppCompatImageView imageView = (AppCompatImageView) tab.getCustomView();
+            ImageUtil.setImageThumbnailView(mContext, imageView, file.getAbsolutePath());
+        }
+
         mViewPagerAdapter.setItemFile(position, file);
     }
 
