@@ -10,7 +10,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.construction.pm.R;
@@ -234,6 +233,7 @@ public class ProjectActivityMonitoringListView {
                 return;
 
             ProjectActivityMonitoringModel projectActivityMonitoringModel = mProjectActivityMonitoringModelList.get(position);
+            holder.setIsRecyclable(false);
             holder.setImageRequestListener(mImageRequestListener);
             holder.setProjectActivityMonitoringModel(projectActivityMonitoringModel);
         }
