@@ -158,6 +158,7 @@ public class ProjectPlanListView {
                 return;
 
             ProjectPlanModelView projectPlanModelView = mProjectPlanModelViews[position];
+            holder.setIsRecyclable(false);
             holder.setProjectPlanModelView(projectPlanModelView);
         }
 

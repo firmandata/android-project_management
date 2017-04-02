@@ -160,6 +160,7 @@ public class ProjectListView {
                 return;
 
             ProjectModel projectModel = mProjectModels[position];
+            holder.setIsRecyclable(false);
             holder.setProjectModel(projectModel);
         }
 

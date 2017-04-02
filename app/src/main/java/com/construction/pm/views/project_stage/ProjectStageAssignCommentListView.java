@@ -229,6 +229,7 @@ public class ProjectStageAssignCommentListView {
                 return;
 
             ProjectStageAssignCommentModel projectStageAssignCommentModel = mProjectStageAssignCommentModelList.get(position);
+            holder.setIsRecyclable(false);
             holder.setImageRequestListener(mImageRequestListener);
             holder.setProjectStageAssignCommentModel(projectStageAssignCommentModel);
         }

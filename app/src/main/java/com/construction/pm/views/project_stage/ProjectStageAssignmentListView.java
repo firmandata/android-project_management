@@ -116,6 +116,7 @@ public class ProjectStageAssignmentListView {
                 return;
 
             ProjectStageAssignmentModel projectStageAssignmentModel = mProjectStageAssignmentModels[position];
+            holder.setIsRecyclable(false);
             holder.setProjectStageAssignmentModel(projectStageAssignmentModel);
         }
 
