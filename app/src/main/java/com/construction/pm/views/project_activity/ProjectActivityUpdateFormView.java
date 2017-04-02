@@ -11,6 +11,7 @@ import android.support.v7.widget.AppCompatTextView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 
@@ -45,6 +46,8 @@ public class ProjectActivityUpdateFormView {
     protected ViewPagerAdapter mViewPagerAdapter;
     protected TabLayout mTabLayout;
     protected AppCompatEditText mComment;
+
+    protected int mPercentCompleteBeforeActivityStatusComplete;
 
     protected ProjectActivityUpdateModel mProjectActivityUpdateModel;
 
@@ -103,6 +106,28 @@ public class ProjectActivityUpdateFormView {
         mSpinnerActivityStatusAdapter = new SpinnerActivityStatusAdapter(mContext);
         mActivityStatus.setAdapter(mSpinnerActivityStatusAdapter);
 
+        mActivityStatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                ActivityStatusEnum activityStatusEnum = mSpinnerActivityStatusAdapter.getItem(i);
+                if (activityStatusEnum != null) {
+                    if (activityStatusEnum == ActivityStatusEnum.COMPLETED) {
+                        mPercentCompleteBeforeActivityStatusComplete = mPercentComplete.getProgress();
+                        mPercentComplete.setProgress(mPercentComplete.getMax());
+                    } else {
+                        mPercentComplete.setProgress(mPercentCompleteBeforeActivityStatusComplete);
+                    }
+                } else {
+                    mPercentComplete.setProgress(mPercentCompleteBeforeActivityStatusComplete);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
         updatePercentCompleteLabel();
         mPercentComplete.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -154,6 +179,8 @@ public class ProjectActivityUpdateFormView {
 
         updatePercentCompleteLabel();
 
+        mPercentCompleteBeforeActivityStatusComplete = mPercentComplete.getProgress();
+
         mProjectActivityUpdateModel = new ProjectActivityUpdateModel();
         mProjectActivityUpdateModel.setProjectActivityMonitoringId(projectActivityMonitoringModel.getProjectActivityMonitoringId());
     }
@@ -190,6 +217,8 @@ public class ProjectActivityUpdateFormView {
             mPercentComplete.setProgress(percentComplete.intValue());
         }
         mComment.setText(projectActivityUpdateModel.getComment());
+
+        mPercentCompleteBeforeActivityStatusComplete = mPercentComplete.getProgress();
 
         updatePercentCompleteLabel();
     }

@@ -13,6 +13,7 @@ import android.support.v7.widget.AppCompatTextView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 
@@ -49,6 +50,8 @@ public class ProjectActivityMonitoringFormView {
     protected ViewPagerAdapter mViewPagerAdapter;
     protected TabLayout mTabLayout;
     protected AppCompatEditText mComment;
+
+    protected int mPercentCompleteBeforeActivityStatusComplete;
 
     protected ProjectActivityMonitoringFormListener mProjectActivityMonitoringFormListener;
     protected ImageRequestDuplicateListener mImageRequestDuplicateListener;
@@ -125,6 +128,28 @@ public class ProjectActivityMonitoringFormView {
             }
         });
 
+        mActivityStatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                ActivityStatusEnum activityStatusEnum = mSpinnerActivityStatusAdapter.getItem(i);
+                if (activityStatusEnum != null) {
+                    if (activityStatusEnum == ActivityStatusEnum.COMPLETED) {
+                        mPercentCompleteBeforeActivityStatusComplete = mPercentComplete.getProgress();
+                        mPercentComplete.setProgress(mPercentComplete.getMax());
+                    } else {
+                        mPercentComplete.setProgress(mPercentCompleteBeforeActivityStatusComplete);
+                    }
+                } else {
+                    mPercentComplete.setProgress(mPercentCompleteBeforeActivityStatusComplete);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
         updatePercentCompleteLabel();
         mPercentComplete.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -160,6 +185,8 @@ public class ProjectActivityMonitoringFormView {
             mPercentComplete.setProgress(percentComplete.intValue());
         }
 
+        mPercentCompleteBeforeActivityStatusComplete = mPercentComplete.getProgress();
+
         mProjectActivityMonitoringModel = new ProjectActivityMonitoringModel();
         mProjectActivityMonitoringModel.setProjectActivityId(projectActivityModel.getProjectActivityId());
     }
@@ -190,6 +217,8 @@ public class ProjectActivityMonitoringFormView {
         if (mProjectActivityMonitoringModel.getPhotoAdditional5Id() != null)
             requestImagePosition(5, mProjectActivityMonitoringModel.getPhotoAdditional5Id());
         mComment.setText(projectActivityMonitoringModel.getComment());
+
+        mPercentCompleteBeforeActivityStatusComplete = mPercentComplete.getProgress();
 
         updatePercentCompleteLabel();
     }
