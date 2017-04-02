@@ -13,6 +13,7 @@ import android.widget.DatePicker;
 import android.widget.RelativeLayout;
 
 import com.construction.pm.R;
+import com.construction.pm.utils.ButtonUtil;
 import com.construction.pm.utils.DateTimeUtil;
 import com.construction.pm.utils.ViewUtil;
 
@@ -22,7 +23,7 @@ public class DatePickerView extends RelativeLayout {
 
     private Context mContext;
     private AppCompatEditText mEditText;
-    private FloatingActionButton mButton;
+    private AppCompatButton mButton;
 
     private DatePickerDialog mDatePickerDialog;
     private Calendar mCalendar;
@@ -71,16 +72,20 @@ public class DatePickerView extends RelativeLayout {
         mEditText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
         mEditText.setHint(mDisplayDateFormat);
 
-        mButton = new FloatingActionButton(mContext);
-        mButton.setImageResource(R.drawable.ic_today_light_24dp);
+        mButton = new AppCompatButton(mContext);
+        mButton.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.ic_today_light_24dp));
         mButton.setId(ViewUtil.generateViewId());
+        ButtonUtil.setButtonInfo(mContext, mButton);
 
-        LayoutParams editTextLayout = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        LayoutParams editTextLayout = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
         editTextLayout.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+        editTextLayout.addRule(RelativeLayout.CENTER_VERTICAL);
         editTextLayout.addRule(RelativeLayout.LEFT_OF, mButton.getId());
 
-        LayoutParams buttonLayout = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        int buttonWidth = ViewUtil.getPxFromDp(mContext, 28);
+        LayoutParams buttonLayout = new LayoutParams(buttonWidth, buttonWidth);
         buttonLayout.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        buttonLayout.addRule(RelativeLayout.CENTER_VERTICAL);
 
         mEditText.setLayoutParams(editTextLayout);
         mButton.setLayoutParams(buttonLayout);

@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.construction.pm.R;
+import com.construction.pm.utils.ButtonUtil;
 import com.construction.pm.utils.ViewUtil;
 
 public class AuthenticationLoginView {
@@ -65,6 +66,8 @@ public class AuthenticationLoginView {
                 }
             }
         });
+
+        ButtonUtil.setButtonPrimary(mContext, btnLogin);
 
         AppCompatTextView btnForgetPassword = (AppCompatTextView) mAuthenticationLoginView.findViewById(R.id.forgetPasswordButton);
         ViewUtil.setTextViewHyperlink(btnForgetPassword);

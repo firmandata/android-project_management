@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.construction.pm.R;
+import com.construction.pm.utils.ButtonUtil;
 import com.construction.pm.utils.ViewUtil;
 
 public class UserChangePasswordView {
@@ -64,6 +65,8 @@ public class UserChangePasswordView {
                 }
             }
         });
+
+        ButtonUtil.setButtonPrimary(mContext, btnChangePassword);
 
         mProgressDialog = new ProgressDialog(mContext);
         mProgressDialog.setCancelable(false);

@@ -15,6 +15,6 @@
         android:layout_alignParentTop="true"
         android:text="TextView"
         android:textColor="?android:attr/editTextColor"
-        android:textSize="14sp" />
+        android:textSize="16sp" />
 
 </RelativeLayout>

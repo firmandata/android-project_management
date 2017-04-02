@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.construction.pm.R;
+import com.construction.pm.utils.ButtonUtil;
 import com.construction.pm.utils.ViewUtil;
 
 public class AuthenticationForgetPasswordView {
@@ -61,6 +62,8 @@ public class AuthenticationForgetPasswordView {
                 }
             }
         });
+
+        ButtonUtil.setButtonPrimary(mContext, btnReset);
 
         mProgressDialog = new ProgressDialog(mContext);
         mProgressDialog.setCancelable(false);

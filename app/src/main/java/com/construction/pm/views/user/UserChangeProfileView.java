@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 
 import com.construction.pm.R;
 import com.construction.pm.models.ProjectMemberModel;
+import com.construction.pm.utils.ButtonUtil;
 import com.construction.pm.utils.ViewUtil;
 
 public class UserChangeProfileView {
@@ -68,6 +69,8 @@ public class UserChangeProfileView {
                 }
             }
         });
+
+        ButtonUtil.setButtonPrimary(mContext, btnChangeProfile);
 
         mProgressDialog = new ProgressDialog(mContext);
         mProgressDialog.setCancelable(false);
