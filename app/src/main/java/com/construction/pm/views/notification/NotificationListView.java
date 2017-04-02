@@ -243,7 +243,6 @@ public class NotificationListView {
                 return;
 
             NotificationModel notificationModel = mNotificationModelList.get(position);
-            holder.setIsRecyclable(false);
             holder.setNotificationModel(notificationModel);
         }
 

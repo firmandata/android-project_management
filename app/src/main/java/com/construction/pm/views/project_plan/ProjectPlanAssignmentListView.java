@@ -107,7 +107,6 @@ public class ProjectPlanAssignmentListView {
                 return;
 
             ProjectPlanAssignmentModel projectPlanAssignmentModel = mProjectPlanAssignmentModels[position];
-            holder.setIsRecyclable(false);
             holder.setProjectPlanAssignmentModel(projectPlanAssignmentModel);
         }
 

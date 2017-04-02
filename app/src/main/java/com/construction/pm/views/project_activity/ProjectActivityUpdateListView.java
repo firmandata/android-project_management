@@ -224,7 +224,6 @@ public class ProjectActivityUpdateListView {
                 return;
 
             ProjectActivityUpdateModel projectActivityUpdateModel = mProjectActivityUpdateModelList.get(position);
-            holder.setIsRecyclable(false);
             holder.setProjectActivityUpdateModel(projectActivityUpdateModel);
         }
 

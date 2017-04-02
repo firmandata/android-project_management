@@ -157,7 +157,6 @@ public class ProjectStageListView {
                 return;
 
             ProjectStageModelView projectStageModelView = mProjectStageModelViews[position];
-            holder.setIsRecyclable(false);
             holder.setProjectStageModel(projectStageModelView);
         }
 
