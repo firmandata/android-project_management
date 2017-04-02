@@ -323,8 +323,9 @@ public class ProjectStageActivity extends AppCompatActivity implements
 
             @Override
             public void onPostExecute(FileGetAsyncTaskResult fileRequestAsyncTaskResult) {
+                FileModel fileModel = null;
                 if (fileRequestAsyncTaskResult != null) {
-                    FileModel fileModel = fileRequestAsyncTaskResult.getFileModel();
+                    fileModel = fileRequestAsyncTaskResult.getFileModel();
                     if (fileModel != null) {
                         if (fileModel.getFileData() != null)
                             ImageUtil.setImageThumbnailView(ProjectStageActivity.this, imageView, fileModel.getFileData());
@@ -332,14 +333,14 @@ public class ProjectStageActivity extends AppCompatActivity implements
                 }
 
                 // -- Do FileGetNetworkAsyncTask --
-                fileGetNetworkAsyncTask.execute(new FileGetAsyncTaskParam(ProjectStageActivity.this, settingUserModel, fileId));
+                fileGetNetworkAsyncTask.execute(new FileGetAsyncTaskParam(ProjectStageActivity.this, settingUserModel, fileId, fileModel));
 
                 mAsyncTaskList.remove(this);
             }
         };
 
         // -- Do FileGetCacheAsyncTask --
-        fileGetCacheAsyncTask.execute(new FileGetAsyncTaskParam(this, settingUserModel, fileId));
+        fileGetCacheAsyncTask.execute(new FileGetAsyncTaskParam(this, settingUserModel, fileId, null));
     }
 
     @Override

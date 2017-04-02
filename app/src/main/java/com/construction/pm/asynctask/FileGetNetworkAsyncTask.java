@@ -21,6 +21,7 @@ public class FileGetNetworkAsyncTask extends AsyncTask<FileGetAsyncTaskParam, In
         // Get FileGetAsyncTaskParam
         mFileGetAsyncTaskParam = fileGetAsyncTaskParams[0];
         mContext = mFileGetAsyncTaskParam.getContext();
+        FileModel fileModelCache = mFileGetAsyncTaskParam.getFileModelCache();
 
         // -- Prepare FileGetAsyncTaskResult --
         FileGetAsyncTaskResult fileGetAsyncTaskResult = new FileGetAsyncTaskResult();
@@ -38,8 +39,30 @@ public class FileGetNetworkAsyncTask extends AsyncTask<FileGetAsyncTaskParam, In
             // -- Invalidate Login --
             // fileNetwork.invalidateLogin(); // Disable for fast response
 
-            // -- Get FileModel from server --
-            FileModel fileModel = fileNetwork.getFile(mFileGetAsyncTaskParam.getFileId());
+            FileModel fileModel = null;
+            if (fileModelCache != null) {
+                long lastUpdateCache = 0;
+                if (fileModelCache.getLastUpdate() != null)
+                    lastUpdateCache = fileModelCache.getLastUpdate().getTimeInMillis();
+
+                // -- Get FileModel info from server --
+                FileModel fileModelInfo = fileNetwork.getFileInfo(mFileGetAsyncTaskParam.getFileId());
+                if (fileModelInfo != null) {
+                    long lastUpdateInfo = 0;
+                    if (fileModelInfo.getLastUpdate() != null)
+                        lastUpdateInfo = fileModelInfo.getLastUpdate().getTimeInMillis();
+
+                    // -- Compare last update of cache and info --
+                    if (lastUpdateCache != lastUpdateInfo) {
+                        // -- Get FileModel file from server --
+                        fileModel = fileNetwork.getFile(mFileGetAsyncTaskParam.getFileId());
+                    }
+                }
+            } else {
+                // -- Get FileModel file from server --
+                fileModel = fileNetwork.getFile(mFileGetAsyncTaskParam.getFileId());
+            }
+
             fileGetAsyncTaskResult.setFileModel(fileModel);
 
             if (fileModel != null) {

@@ -19,6 +19,48 @@ public class FileNetwork extends AuthenticationNetwork {
         super(context, settingUserModel);
     }
 
+    public FileModel getFileInfo(final Integer fileId) throws WebApiError {
+        // -- Get SessionLoginModel --
+        SessionLoginModel sessionLoginModel = getSessionLoginModel();
+        AccessTokenModel accessTokenModel = sessionLoginModel.getAccessTokenModel();
+
+        // -- Prepare WebApiParam headerParam parameters --
+        WebApiParam headerParam = new WebApiParam();
+        if (accessTokenModel != null)
+            headerParam.add("Authorization", "Bearer " + accessTokenModel.getAccessToken());
+
+        // -- Prepare WebApiParam formData parameters --
+        WebApiParam formData = new WebApiParam();
+        formData.add("file_id", fileId);
+
+        // -- Request get FileModel --
+        WebApiResponse webApiResponse = mWebApiRequest.post("/rest/file/getFile", headerParam, null, formData);
+
+        // -- Throw WebApiError if existing --
+        WebApiError webApiError = webApiResponse.getWebApiError();
+        if (webApiError != null)
+            throw webApiError;
+
+        // -- Get request result --
+        org.json.JSONObject jsonObject = webApiResponse.getSuccessJsonObject();
+        if (jsonObject == null)
+            throw new WebApiError(webApiResponse, 0, ViewUtil.getResourceString(mContext, R.string.network_unknown_response_expected));
+
+        // -- Fetch result --
+        FileModel fileModel = null;
+        try {
+            if (!jsonObject.isNull("result")) {
+                org.json.JSONObject jsonResultObject = jsonObject.getJSONObject("result");
+                if (!jsonResultObject.isNull("file"))
+                    fileModel = FileModel.build(jsonResultObject.getJSONObject("file"));
+            }
+        } catch (JSONException jsonException) {
+            throw new WebApiError(webApiResponse, 0, jsonException.getMessage(), jsonException);
+        }
+
+        return fileModel;
+    }
+
     public FileModel getFile(final Integer fileId) throws WebApiError {
         // -- Get SessionLoginModel --
         SessionLoginModel sessionLoginModel = getSessionLoginModel();

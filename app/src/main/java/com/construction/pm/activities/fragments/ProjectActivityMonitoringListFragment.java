@@ -198,8 +198,9 @@ public class ProjectActivityMonitoringListFragment extends Fragment implements
 
             @Override
             public void onPostExecute(FileGetAsyncTaskResult fileRequestAsyncTaskResult) {
+                FileModel fileModel = null;
                 if (fileRequestAsyncTaskResult != null) {
-                    FileModel fileModel = fileRequestAsyncTaskResult.getFileModel();
+                    fileModel = fileRequestAsyncTaskResult.getFileModel();
                     if (fileModel != null) {
                         if (fileModel.getFileData() != null)
                             ImageUtil.setImageThumbnailView(getContext(), imageView, fileModel.getFileData());
@@ -207,14 +208,14 @@ public class ProjectActivityMonitoringListFragment extends Fragment implements
                 }
 
                 // -- Do FileGetNetworkAsyncTask --
-                fileGetNetworkAsyncTask.execute(new FileGetAsyncTaskParam(getContext(), settingUserModel, fileId));
+                fileGetNetworkAsyncTask.execute(new FileGetAsyncTaskParam(getContext(), settingUserModel, fileId, fileModel));
 
                 mAsyncTaskList.remove(this);
             }
         };
 
         // -- Do FileGetCacheAsyncTask --
-        fileGetCacheAsyncTask.execute(new FileGetAsyncTaskParam(getContext(), settingUserModel, fileId));
+        fileGetCacheAsyncTask.execute(new FileGetAsyncTaskParam(getContext(), settingUserModel, fileId, null));
     }
 
     protected void onProjectActivityMonitoringListRequestProgress(final String progressMessage) {

@@ -2,6 +2,7 @@ package com.construction.pm.asynctask.param;
 
 import android.content.Context;
 
+import com.construction.pm.models.FileModel;
 import com.construction.pm.models.system.SettingUserModel;
 
 public class FileGetAsyncTaskParam {
@@ -10,11 +11,13 @@ public class FileGetAsyncTaskParam {
 
     protected SettingUserModel mSettingUserModel;
     protected Integer mFileId;
+    protected FileModel mFileModelCache;
 
-    public FileGetAsyncTaskParam(final Context context, final SettingUserModel settingUserModel, final Integer fileId) {
+    public FileGetAsyncTaskParam(final Context context, final SettingUserModel settingUserModel, final Integer fileId, final FileModel fileModelCache) {
         mContext = context;
         mSettingUserModel = settingUserModel;
         mFileId = fileId;
+        mFileModelCache = fileModelCache;
     }
 
     public Context getContext() {
@@ -27,5 +30,9 @@ public class FileGetAsyncTaskParam {
 
     public Integer getFileId() {
         return mFileId;
+    }
+
+    public FileModel getFileModelCache() {
+        return mFileModelCache;
     }
 }
