@@ -199,11 +199,19 @@ public class ProjectStageListView {
             String stageFromCodeRef = null;
             if (projectStageModelViewParent != null)
                 stageFromCodeRef = projectStageModelViewParent.getProjectStageModel().getStageCode();
+            if (stageFromCodeRef != null) {
+                if (stageFromCodeRef.isEmpty())
+                    stageFromCodeRef = null;
+            }
 
             for (ProjectStageModel projectStageModel : projectStageModels) {
                 ProjectStageModelView projectStageModelView = null;
 
                 String stageFromCode = projectStageModel.getStageFromCode();
+                if (stageFromCode != null) {
+                    if (stageFromCode.isEmpty())
+                        stageFromCode = null;
+                }
                 if (stageFromCodeRef == null && stageFromCode == null) {
                     projectStageModelView = new ProjectStageModelView(projectStageModel);
                 } else if (stageFromCodeRef != null && stageFromCode != null) {
