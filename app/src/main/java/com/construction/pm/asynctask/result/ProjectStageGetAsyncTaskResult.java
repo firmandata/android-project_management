@@ -15,11 +15,11 @@ public class ProjectStageGetAsyncTaskResult {
 
     }
 
-    public void setProjectModel(final ProjectStageModel projectModel) {
-        mProjectStageModel = projectModel;
+    public void setProjectStageModel(final ProjectStageModel projectStageModel) {
+        mProjectStageModel = projectStageModel;
     }
 
-    public ProjectStageModel getProjectModel() {
+    public ProjectStageModel getProjectStageModel() {
         return mProjectStageModel;
     }
 

@@ -26,8 +26,6 @@ import com.construction.pm.persistence.SessionPersistent;
 import com.construction.pm.persistence.SettingPersistent;
 import com.construction.pm.utils.ConstantUtil;
 import com.construction.pm.utils.ImageUtil;
-import com.construction.pm.utils.ViewUtil;
-import com.construction.pm.views.listeners.ImageRequestClickListener;
 import com.construction.pm.views.listeners.ImageRequestListener;
 import com.construction.pm.views.project_stage.ProjectStageLayout;
 
@@ -123,7 +121,7 @@ public class ProjectStageActivity extends AppCompatActivity implements
                 mAsyncTaskList.remove(this);
 
                 if (projectHandleTaskResult != null) {
-                    onProjectStageRequestSuccess(projectHandleTaskResult.getProjectModel(), projectHandleTaskResult.getProjectStageAssignmentModels(), projectHandleTaskResult.getProjectStageAssignCommentModels());
+                    onProjectStageRequestSuccess(projectHandleTaskResult.getProjectStageModel(), projectHandleTaskResult.getProjectStageAssignmentModels(), projectHandleTaskResult.getProjectStageAssignCommentModels());
                     if (projectHandleTaskResult.getMessage() != null)
                         onProjectStageRequestMessage(projectHandleTaskResult.getMessage());
                 }
@@ -140,7 +138,7 @@ public class ProjectStageActivity extends AppCompatActivity implements
         };
 
         // -- Do ProjectStageGetAsyncTask --
-        projectStageGetAsyncTask.execute(new ProjectStageGetAsyncTaskParam(this, settingUserModel, projectStageModel, sessionLoginModel.getProjectMemberModel()));
+        projectStageGetAsyncTask.execute(new ProjectStageGetAsyncTaskParam(this, settingUserModel, projectStageModel.getProjectStageId(), sessionLoginModel.getProjectMemberModel()));
     }
 
     @Override

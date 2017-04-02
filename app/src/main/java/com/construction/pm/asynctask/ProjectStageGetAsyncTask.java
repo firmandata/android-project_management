@@ -39,9 +39,9 @@ public class ProjectStageGetAsyncTask extends AsyncTask<ProjectStageGetAsyncTask
 
         ProjectStageResponseModel projectStageResponseModel = null;
         try {
-            ProjectStageModel projectStageModel = mProjectStageGetAsyncTaskParam.getProjectStageModel();
+            Integer projectStageId = mProjectStageGetAsyncTaskParam.getProjectStageId();
             ProjectMemberModel projectMemberModel = mProjectStageGetAsyncTaskParam.getProjectMemberModel();
-            if (projectStageModel != null && projectMemberModel != null) {
+            if (projectStageId != null && projectMemberModel != null) {
                 try {
                     // -- Invalidate Access Token --
                     projectNetwork.invalidateAccessToken();
@@ -50,7 +50,7 @@ public class ProjectStageGetAsyncTask extends AsyncTask<ProjectStageGetAsyncTask
                     projectNetwork.invalidateLogin();
 
                     // -- Get project from server --
-                    projectStageResponseModel = projectNetwork.getProjectStage(projectStageModel.getProjectStageId());
+                    projectStageResponseModel = projectNetwork.getProjectStage(projectStageId);
 
                     // -- Save to ProjectCachePersistent --
                     try {
@@ -61,7 +61,7 @@ public class ProjectStageGetAsyncTask extends AsyncTask<ProjectStageGetAsyncTask
                     if (webApiError.isErrorConnection()) {
                         // -- Get ProjectStageResponseModel from ProjectCachePersistent --
                         try {
-                            projectStageResponseModel = projectCachePersistent.getProjectStageResponseModel(projectStageModel.getProjectStageId(), projectMemberModel.getProjectMemberId());
+                            projectStageResponseModel = projectCachePersistent.getProjectStageResponseModel(projectStageId, projectMemberModel.getProjectMemberId());
                         } catch (PersistenceError ex) {
                         }
                     } else
@@ -75,7 +75,7 @@ public class ProjectStageGetAsyncTask extends AsyncTask<ProjectStageGetAsyncTask
 
         if (projectStageResponseModel != null) {
             // -- Set result --
-            projectStageGetAsyncTaskResult.setProjectModel(projectStageResponseModel.getProjectStageModel());
+            projectStageGetAsyncTaskResult.setProjectStageModel(projectStageResponseModel.getProjectStageModel());
             projectStageGetAsyncTaskResult.setProjectStageAssignmentModels(projectStageResponseModel.getProjectStageAssignmentModels());
             projectStageGetAsyncTaskResult.setProjectStageAssignCommentModels(projectStageResponseModel.getProjectStageAssignCommentModels());
 

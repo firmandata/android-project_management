@@ -241,6 +241,8 @@
 
     <string name="notification_layout_title">Notification</string>
     <string name="notification_detail_title">Notification</string>
+    <string name="notification_detail_project_stage">Show Stage</string>
+    <string name="notification_detail_project_activity">Show Activity</string>
 
     <string name="file_layout_title">File</string>
     <string name="file_photo_detail_title">Photo</string>
