@@ -42,7 +42,7 @@
                     android:ellipsize="end"
                     android:singleLine="true"
                     android:textStyle="normal|bold"
-                    android:text="Code" />
+                    android:text="" />
 
                 <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/stageDate"
@@ -55,7 +55,7 @@
                     android:layout_marginStart="@dimen/gap_half"
                     android:ellipsize="end"
                     android:singleLine="true"
-                    android:text="Stage Date" />
+                    android:text="" />
 
             </RelativeLayout>
 
@@ -74,7 +74,7 @@
                 android:textStyle="normal|bold"
                 android:textColor="@color/colorAccent"
                 android:layout_marginTop="@dimen/gap"
-                android:text="Next" />
+                android:text="@string/project_stage_list_stage_next_label" />
 
             <RelativeLayout
                 android:id="@+id/stageNextContainer"
@@ -95,7 +95,7 @@
                     android:layout_alignTop="@id/stageNextPlanDate"
                     android:ellipsize="end"
                     android:singleLine="true"
-                    android:text="Next Code" />
+                    android:text="" />
 
                 <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/stageNextPlanDate"
@@ -108,7 +108,7 @@
                     android:layout_marginStart="@dimen/gap_half"
                     android:ellipsize="end"
                     android:singleLine="true"
-                    android:text="Next Date" />
+                    android:text="" />
 
                 <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/stageNextLocation"
@@ -120,7 +120,7 @@
                     android:layout_marginTop="@dimen/gap_half"
                     android:ellipsize="end"
                     android:singleLine="true"
-                    android:text="Location" />
+                    android:text="" />
 
                 <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/stageNextSubject"
@@ -132,7 +132,7 @@
                     android:layout_marginTop="@dimen/gap_half"
                     android:ellipsize="end"
                     android:singleLine="true"
-                    android:text="Subject" />
+                    android:text="" />
 
             </RelativeLayout>
 

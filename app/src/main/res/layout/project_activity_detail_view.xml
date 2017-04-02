@@ -20,7 +20,7 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:text="TextView" />
+            android:text="" />
 
     </RelativeLayout>
 
@@ -63,7 +63,7 @@
             android:layout_toRightOf="@id/planStartDateLabel"
             android:layout_toEndOf="@id/planStartDateLabel"
             android:layout_alignTop="@id/planStartDateLabel"
-            android:text="TextView" />
+            android:text="" />
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/planDurationDateSeparatorLabel"
@@ -85,7 +85,7 @@
             android:layout_toRightOf="@id/planDurationDateSeparatorLabel"
             android:layout_toEndOf="@id/planDurationDateSeparatorLabel"
             android:layout_alignTop="@id/planDurationDateSeparatorLabel"
-            android:text="TextView" />
+            android:text="" />
 
     </RelativeLayout>
 
@@ -123,7 +123,7 @@
             android:layout_marginLeft="@dimen/gap_half"
             android:textStyle="normal|bold"
             android:gravity="center"
-            android:text="TextView" />
+            android:text="" />
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/activityStatus"
@@ -134,7 +134,7 @@
             android:layout_alignTop="@id/percentComplete"
             android:textStyle="normal|bold"
             android:gravity="center"
-            android:text="TextView" />
+            android:text="" />
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/actualStartDateLabel"
@@ -152,7 +152,7 @@
             android:layout_toRightOf="@id/actualStartDateLabel"
             android:layout_toEndOf="@id/actualStartDateLabel"
             android:layout_alignTop="@id/actualStartDateLabel"
-            android:text="TextView" />
+            android:text="" />
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/actualDurationDateSeparatorLabel"
@@ -174,7 +174,7 @@
             android:layout_toRightOf="@id/actualDurationDateSeparatorLabel"
             android:layout_toEndOf="@id/actualDurationDateSeparatorLabel"
             android:layout_alignTop="@id/actualDurationDateSeparatorLabel"
-            android:text="TextView" />
+            android:text="" />
 
     </RelativeLayout>
 

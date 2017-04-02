@@ -25,7 +25,7 @@
         android:layout_toEndOf="@id/photoId"
         android:ellipsize="end"
         android:singleLine="true"
-        android:text="TextView" />
+        android:text="" />
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/memberName"
@@ -35,6 +35,6 @@
         android:layout_alignLeft="@id/memberCode"
         android:layout_alignStart="@id/memberCode"
         android:layout_marginTop="@dimen/gap_half"
-        android:text="TextView" />
+        android:text="" />
 
 </RelativeLayout>

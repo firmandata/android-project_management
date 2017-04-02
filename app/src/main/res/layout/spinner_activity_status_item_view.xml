@@ -13,8 +13,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:text="TextView"
         android:textColor="?android:attr/editTextColor"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:text="" />
 
 </RelativeLayout>

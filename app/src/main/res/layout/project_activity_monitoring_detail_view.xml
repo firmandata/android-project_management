@@ -57,7 +57,7 @@
             android:ellipsize="end"
             android:singleLine="true"
             android:textStyle="normal|bold"
-            android:text="TextView" />
+            android:text="" />
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/monitoringDate"
@@ -70,7 +70,7 @@
             android:layout_toStartOf="@id/percentComplete"
             android:ellipsize="end"
             android:singleLine="true"
-            android:text="TextView" />
+            android:text="" />
 
     </RelativeLayout>
 
@@ -105,7 +105,7 @@
             android:layout_toEndOf="@id/actualStartDateLabel"
             android:ellipsize="end"
             android:singleLine="true"
-            android:text="TextView" />
+            android:text="" />
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/actualEndDateLabel"
@@ -131,7 +131,7 @@
             android:layout_toEndOf="@id/actualEndDateLabel"
             android:ellipsize="end"
             android:singleLine="true"
-            android:text="TextView" />
+            android:text="" />
 
     </RelativeLayout>
 
@@ -151,7 +151,7 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:text="TextView" />
+            android:text="" />
 
     </RelativeLayout>
 
@@ -175,7 +175,7 @@
             android:ellipsize="end"
             android:singleLine="true"
             android:textStyle="normal|bold"
-            android:text="TextView" />
+            android:text="" />
 
     </RelativeLayout>
 

@@ -36,7 +36,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tvContractNoLabel"
-                    android:text="TextView" />
+                    android:text="" />
 
             </RelativeLayout>
 
@@ -65,7 +65,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tvProjectNameLabel"
-                    android:text="TextView" />
+                    android:text="" />
 
             </RelativeLayout>
 
@@ -94,7 +94,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tvProjectDurationDateLabel"
-                    android:text="TextView" />
+                    android:text="" />
 
                 <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/tvProjectDurationDateSeparatorLabel"
@@ -114,7 +114,7 @@
                     android:layout_toRightOf="@id/tvProjectDurationDateSeparatorLabel"
                     android:layout_toEndOf="@id/tvProjectDurationDateSeparatorLabel"
                     android:layout_alignTop="@+id/tvProjectDurationDateSeparatorLabel"
-                    android:text="TextView" />
+                    android:text="" />
 
             </RelativeLayout>
 
@@ -143,7 +143,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tvProjectDescriptionLabel"
-                    android:text="TextView" />
+                    android:text="" />
 
             </RelativeLayout>
 
@@ -172,7 +172,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tvProjectLocationLabel"
-                    android:text="TextView" />
+                    android:text="" />
 
             </RelativeLayout>
 
@@ -201,7 +201,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tvStageCodeLabel"
-                    android:text="TextView" />
+                    android:text="" />
 
             </RelativeLayout>
 
@@ -230,7 +230,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tvProjectStatusLabel"
-                    android:text="TextView" />
+                    android:text="" />
 
             </RelativeLayout>
 

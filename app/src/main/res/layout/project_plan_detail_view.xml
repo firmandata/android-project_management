@@ -20,7 +20,7 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:text="TextView" />
+            android:text="" />
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/taskName"
@@ -31,7 +31,7 @@
             android:layout_toLeftOf="@id/taskWeightPercentage"
             android:layout_toStartOf="@id/taskWeightPercentage"
             android:layout_alignTop="@id/taskWeightPercentage"
-            android:text="TextView" />
+            android:text="" />
 
     </RelativeLayout>
 
@@ -74,7 +74,7 @@
             android:layout_toRightOf="@id/planStartDateLabel"
             android:layout_toEndOf="@id/planStartDateLabel"
             android:layout_alignTop="@id/planStartDateLabel"
-            android:text="TextView" />
+            android:text="" />
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/planDurationDateSeparatorLabel"
@@ -96,7 +96,7 @@
             android:layout_toRightOf="@id/planDurationDateSeparatorLabel"
             android:layout_toEndOf="@id/planDurationDateSeparatorLabel"
             android:layout_alignTop="@id/planDurationDateSeparatorLabel"
-            android:text="TextView" />
+            android:text="" />
 
     </RelativeLayout>
 
@@ -131,7 +131,7 @@
             android:layout_alignParentEnd="true"
             android:layout_alignTop="@id/realizationLabel"
             android:textStyle="normal|bold"
-            android:text="TextView" />
+            android:text="" />
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/realizationStartDateLabel"
@@ -149,7 +149,7 @@
             android:layout_toRightOf="@id/realizationStartDateLabel"
             android:layout_toEndOf="@id/realizationStartDateLabel"
             android:layout_alignTop="@id/realizationStartDateLabel"
-            android:text="TextView" />
+            android:text="" />
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/realizationDurationDateSeparatorLabel"
@@ -171,7 +171,7 @@
             android:layout_toRightOf="@id/realizationDurationDateSeparatorLabel"
             android:layout_toEndOf="@id/realizationDurationDateSeparatorLabel"
             android:layout_alignTop="@id/realizationDurationDateSeparatorLabel"
-            android:text="TextView" />
+            android:text="" />
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/realizationStatus"
@@ -180,8 +180,8 @@
             android:layout_below="@id/realizationStartDateLabel"
             android:textStyle="normal|bold"
             android:gravity="center"
-            android:text="TextView"
-            android:layout_marginTop="@dimen/gap_half" />
+            android:layout_marginTop="@dimen/gap_half"
+            android:text="" />
 
     </RelativeLayout>
 

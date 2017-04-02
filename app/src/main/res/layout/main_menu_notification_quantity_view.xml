@@ -7,7 +7,7 @@
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/unreadNotificationQuantity"
-        android:text="100"
+        android:text="0"
         android:layout_height="wrap_content"
         android:layout_width="40dp"
         android:gravity="center" />

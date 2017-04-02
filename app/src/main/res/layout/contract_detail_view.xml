@@ -36,7 +36,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tvContractNoLabel"
-                    android:text="TextView" />
+                    android:text="" />
 
             </RelativeLayout>
 
@@ -65,7 +65,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tvParentContractNoLabel"
-                    android:text="TextView" />
+                    android:text="" />
 
             </RelativeLayout>
 
@@ -94,7 +94,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tvContractNameLabel"
-                    android:text="TextView" />
+                    android:text="" />
 
             </RelativeLayout>
 
@@ -123,7 +123,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tvContractAmountLabel"
-                    android:text="TextView" />
+                    android:text="" />
 
             </RelativeLayout>
 
@@ -152,7 +152,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tvProgramNoLabel"
-                    android:text="TextView" />
+                    android:text="" />
 
             </RelativeLayout>
 
@@ -181,7 +181,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tvProgramNameLabel"
-                    android:text="TextView" />
+                    android:text="" />
 
             </RelativeLayout>
 
@@ -210,7 +210,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tvProgramAmountLabel"
-                    android:text="TextView" />
+                    android:text="" />
 
             </RelativeLayout>
 
@@ -239,7 +239,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tvBudgetNoLabel"
-                    android:text="TextView" />
+                    android:text="" />
 
             </RelativeLayout>
 
@@ -268,7 +268,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tvBudgetNameLabel"
-                    android:text="TextView" />
+                    android:text="" />
 
             </RelativeLayout>
 
@@ -297,7 +297,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tvVendorNoLabel"
-                    android:text="TextView" />
+                    android:text="" />
 
             </RelativeLayout>
 
@@ -326,7 +326,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tvVendorNameLabel"
-                    android:text="TextView" />
+                    android:text="" />
 
             </RelativeLayout>
 
@@ -355,7 +355,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tvContractDateLabel"
-                    android:text="TextView" />
+                    android:text="" />
 
             </RelativeLayout>
 
@@ -384,7 +384,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tvContractStartDateLabel"
-                    android:text="TextView" />
+                    android:text="" />
 
                 <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/tvContractDurationDateSeparatorLabel"
@@ -404,7 +404,7 @@
                     android:layout_toRightOf="@id/tvContractDurationDateSeparatorLabel"
                     android:layout_toEndOf="@id/tvContractDurationDateSeparatorLabel"
                     android:layout_alignTop="@+id/tvContractDurationDateSeparatorLabel"
-                    android:text="TextView" />
+                    android:text="" />
 
             </RelativeLayout>
 
@@ -433,7 +433,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tvContractStatusLabel"
-                    android:text="TextView" />
+                    android:text="" />
 
             </RelativeLayout>
 

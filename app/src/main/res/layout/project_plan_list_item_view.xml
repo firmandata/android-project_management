@@ -35,7 +35,7 @@
                 android:layout_marginEnd="@dimen/gap_half"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:text="TextView" />
+                android:text="" />
 
             <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/taskWeightPercentage"
@@ -46,7 +46,7 @@
                 android:layout_alignParentTop="true"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:text="TextView" />
+                android:text="" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -107,7 +107,7 @@
                         android:layout_marginStart="@dimen/gap_half"
                         android:ellipsize="end"
                         android:singleLine="true"
-                        android:text="TextView" />
+                        android:text="" />
 
                     <android.support.v7.widget.AppCompatTextView
                         android:id="@+id/planEndDateLabel"
@@ -134,7 +134,7 @@
                         android:layout_marginStart="@dimen/gap_half"
                         android:ellipsize="end"
                         android:singleLine="true"
-                        android:text="TextView" />
+                        android:text="" />
 
                 </RelativeLayout>
 
@@ -142,7 +142,10 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:paddingLeft="@dimen/gap_half">
+                    android:paddingRight="0dp"
+                    android:paddingEnd="0dp"
+                    android:paddingLeft="@dimen/gap_half"
+                    android:paddingStart="@dimen/gap_half">
 
                     <android.support.v7.widget.AppCompatTextView
                         android:id="@+id/realizationLabel"
@@ -170,7 +173,7 @@
                         android:ellipsize="end"
                         android:singleLine="true"
                         android:textStyle="normal|bold"
-                        android:text="TextView" />
+                        android:text="" />
 
                     <android.support.v7.widget.AppCompatTextView
                         android:id="@+id/realizationStartDateLabel"
@@ -197,7 +200,7 @@
                         android:layout_marginStart="@dimen/gap_half"
                         android:ellipsize="end"
                         android:singleLine="true"
-                        android:text="TextView" />
+                        android:text="" />
 
                     <android.support.v7.widget.AppCompatTextView
                         android:id="@+id/realizationEndDateLabel"
@@ -224,7 +227,7 @@
                         android:layout_marginStart="@dimen/gap_half"
                         android:ellipsize="end"
                         android:singleLine="true"
-                        android:text="TextView" />
+                        android:text="" />
 
                     <android.support.v7.widget.AppCompatTextView
                         android:id="@+id/realizationStatus"
@@ -238,7 +241,7 @@
                         android:ellipsize="end"
                         android:singleLine="true"
                         android:textStyle="normal|bold"
-                        android:text="TextView" />
+                        android:text="" />
 
                 </RelativeLayout>
 

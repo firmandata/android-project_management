@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/stageFromCodeLabel"
             android:textStyle="normal|bold"
-            android:text="TextView" />
+            android:text="" />
 
     </RelativeLayout>
 
@@ -70,7 +70,7 @@
             android:layout_below="@id/stageLabel"
             android:layout_marginLeft="@dimen/gap"
             android:layout_marginStart="@dimen/gap"
-            android:text="TextView" />
+            android:text="" />
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/stageCode"
@@ -82,7 +82,7 @@
             android:layout_toStartOf="@id/stageDate"
             android:layout_alignTop="@id/stageDate"
             android:textStyle="normal|bold"
-            android:text="TextView" />
+            android:text="" />
 
     </RelativeLayout>
 
@@ -119,7 +119,7 @@
             android:layout_alignParentEnd="true"
             android:layout_marginLeft="@dimen/gap"
             android:layout_marginStart="@dimen/gap"
-            android:text="TextView" />
+            android:text="" />
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/stageNextCode"
@@ -131,7 +131,7 @@
             android:layout_toLeftOf="@id/stageNextPlanDate"
             android:layout_toStartOf="@id/stageNextPlanDate"
             android:textStyle="normal|bold"
-            android:text="TextView" />
+            android:text="" />
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/stageNextLocation"
@@ -141,7 +141,7 @@
             android:layout_alignLeft="@id/stageNextCode"
             android:layout_alignStart="@id/stageNextCode"
             android:layout_marginTop="@dimen/gap_half"
-            android:text="TextView" />
+            android:text="" />
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/stageNextSubject"
@@ -151,7 +151,7 @@
             android:layout_alignLeft="@id/stageNextLocation"
             android:layout_alignStart="@id/stageNextLocation"
             android:layout_marginTop="@dimen/gap_half"
-            android:text="TextView" />
+            android:text="" />
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/stageNextMessage"
@@ -161,7 +161,7 @@
             android:layout_alignLeft="@id/stageNextSubject"
             android:layout_alignStart="@id/stageNextSubject"
             android:layout_marginTop="@dimen/gap_half"
-            android:text="TextView" />
+            android:text="" />
 
     </RelativeLayout>
 
