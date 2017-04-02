@@ -316,6 +316,9 @@
     <string name="project_activity_monitoring_percent_complete">Percentage ($s1)</string>
     <string name="project_activity_monitoring_comment">Comment</string>
 
+    <string name="project_activity_monitoring_form_error_empty_data">No monitoring data save!</string>
+    <string name="project_activity_monitoring_form_error_require">Please fill the $s1!</string>
+
     <string name="project_activity_monitoring_detail_title">Monitoring Detail</string>
     <string name="project_activity_monitoring_detail_menu_update_activity">Update Activity</string>
     <string name="project_activity_monitoring_detail_menu_monitoring_edit">Edit</string>
@@ -347,6 +350,9 @@
     <string name="project_activity_update_percent_complete">Percentage ($s1)</string>
     <string name="project_activity_update_comment">Comment</string>
 
+    <string name="project_activity_update_form_error_empty_data">No update data save!</string>
+    <string name="project_activity_update_form_error_require">Please fill the $s1!</string>
+
     <string name="project_activity_monitoring_form_layout_menu_monitoring_activity">Save</string>
     <string name="project_activity_monitoring_form_layout_title">Monitoring</string>
     <string name="project_activity_monitoring_form_layout_alert_button">OK</string>
@@ -359,6 +365,10 @@
     <string name="project_stage_assign_comment_form_layout_title">Comment</string>
     <string name="project_stage_assign_comment_form_layout_alert_button">OK</string>
     <string name="project_stage_assign_comment_form_layout_alert_title_error">Failed</string>
+
+    <string name="project_stage_assign_comment_form_comment">Comment</string>
+    <string name="project_stage_assign_comment_form_error_empty_data">No comment data save!</string>
+    <string name="project_stage_assign_comment_form_error_require">Please fill the $s1!</string>
 
     <string name="service_notification_title">Project Management</string>
     <string name="service_notification_subtitle">$s1 new notifications</string>

@@ -127,6 +127,31 @@ public class ProjectActivityMonitoringFormLayout {
         menuItemMonitoringActivity.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
+                ProjectActivityMonitoringModel projectActivityMonitoringModel = getProjectActivityMonitoringModel();
+                if (projectActivityMonitoringModel == null) {
+                    alertDialogErrorShow(ViewUtil.getResourceString(mContext, R.string.project_activity_monitoring_form_error_empty_data));
+                    return true;
+                }
+                if (projectActivityMonitoringModel.getActualStartDate() == null) {
+                    alertDialogErrorShow(ViewUtil.getResourceString(mContext, R.string.project_activity_monitoring_form_error_require, ViewUtil.getResourceString(mContext, R.string.project_activity_monitoring_actual_start_date)));
+                    return true;
+                }
+                if (projectActivityMonitoringModel.getActivityStatus() == null) {
+                    alertDialogErrorShow(ViewUtil.getResourceString(mContext, R.string.project_activity_monitoring_form_error_require, ViewUtil.getResourceString(mContext, R.string.project_activity_monitoring_activity_status)));
+                    return true;
+                }
+                if (projectActivityMonitoringModel.getActivityStatus().isEmpty()) {
+                    alertDialogErrorShow(ViewUtil.getResourceString(mContext, R.string.project_activity_monitoring_form_error_require, ViewUtil.getResourceString(mContext, R.string.project_activity_monitoring_activity_status)));
+                    return true;
+                }
+                if (projectActivityMonitoringModel.getComment() == null) {
+                    alertDialogErrorShow(ViewUtil.getResourceString(mContext, R.string.project_activity_monitoring_form_error_require, ViewUtil.getResourceString(mContext, R.string.project_activity_monitoring_comment)));
+                    return true;
+                }
+                if (projectActivityMonitoringModel.getComment().isEmpty()) {
+                    alertDialogErrorShow(ViewUtil.getResourceString(mContext, R.string.project_activity_monitoring_form_error_require, ViewUtil.getResourceString(mContext, R.string.project_activity_monitoring_comment)));
+                    return true;
+                }
                 if (mProjectActivityMonitoringFormLayoutListener != null)
                     mProjectActivityMonitoringFormLayoutListener.onProjectActivityMonitoringFormLayoutSaveMenuClick();
                 return true;

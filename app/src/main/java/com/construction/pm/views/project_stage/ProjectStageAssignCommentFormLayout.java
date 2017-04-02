@@ -129,6 +129,19 @@ public class ProjectStageAssignCommentFormLayout {
         menuItemMonitoringActivity.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
+                ProjectStageAssignCommentModel projectStageAssignCommentModel = getProjectStageAssignCommentModel();
+                if (projectStageAssignCommentModel == null) {
+                    alertDialogErrorShow(ViewUtil.getResourceString(mContext, R.string.project_stage_assign_comment_form_error_empty_data));
+                    return true;
+                }
+                if (projectStageAssignCommentModel.getComment() == null) {
+                    alertDialogErrorShow(ViewUtil.getResourceString(mContext, R.string.project_stage_assign_comment_form_error_require, ViewUtil.getResourceString(mContext, R.string.project_stage_assign_comment_form_comment)));
+                    return true;
+                }
+                if (projectStageAssignCommentModel.getComment().isEmpty()) {
+                    alertDialogErrorShow(ViewUtil.getResourceString(mContext, R.string.project_stage_assign_comment_form_error_require, ViewUtil.getResourceString(mContext, R.string.project_stage_assign_comment_form_comment)));
+                    return true;
+                }
                 if (mProjectStageAssignCommentFormLayoutListener != null)
                     mProjectStageAssignCommentFormLayoutListener.onProjectStageAssignCommentFormLayoutSaveMenuClick();
                 return true;

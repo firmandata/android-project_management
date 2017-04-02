@@ -126,6 +126,31 @@ public class ProjectActivityUpdateFormLayout {
         menuItemUpdateActivity.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
+                ProjectActivityUpdateModel projectActivityUpdateModel = getProjectActivityUpdateModel();
+                if (projectActivityUpdateModel == null) {
+                    alertDialogErrorShow(ViewUtil.getResourceString(mContext, R.string.project_activity_update_form_error_empty_data));
+                    return true;
+                }
+                if (projectActivityUpdateModel.getActualStartDate() == null) {
+                    alertDialogErrorShow(ViewUtil.getResourceString(mContext, R.string.project_activity_update_form_error_require, ViewUtil.getResourceString(mContext, R.string.project_activity_update_actual_start_date)));
+                    return true;
+                }
+                if (projectActivityUpdateModel.getActivityStatus() == null) {
+                    alertDialogErrorShow(ViewUtil.getResourceString(mContext, R.string.project_activity_update_form_error_require, ViewUtil.getResourceString(mContext, R.string.project_activity_update_activity_status)));
+                    return true;
+                }
+                if (projectActivityUpdateModel.getActivityStatus().isEmpty()) {
+                    alertDialogErrorShow(ViewUtil.getResourceString(mContext, R.string.project_activity_update_form_error_require, ViewUtil.getResourceString(mContext, R.string.project_activity_update_activity_status)));
+                    return true;
+                }
+                if (projectActivityUpdateModel.getComment() == null) {
+                    alertDialogErrorShow(ViewUtil.getResourceString(mContext, R.string.project_activity_update_form_error_require, ViewUtil.getResourceString(mContext, R.string.project_activity_update_comment)));
+                    return true;
+                }
+                if (projectActivityUpdateModel.getComment().isEmpty()) {
+                    alertDialogErrorShow(ViewUtil.getResourceString(mContext, R.string.project_activity_update_form_error_require, ViewUtil.getResourceString(mContext, R.string.project_activity_update_comment)));
+                    return true;
+                }
                 if (mProjectActivityUpdateFormLayoutListener != null)
                     mProjectActivityUpdateFormLayoutListener.onProjectActivityUpdateFormLayoutSaveMenuClick();
                 return true;

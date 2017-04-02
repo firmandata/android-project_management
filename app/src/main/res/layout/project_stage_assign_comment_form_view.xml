@@ -80,7 +80,7 @@
                 android:id="@+id/comment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/project_activity_monitoring_comment"
+                android:hint="@string/project_stage_assign_comment_form_comment"
                 android:singleLine="false" />
 
         </android.support.design.widget.TextInputLayout>
