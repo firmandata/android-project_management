@@ -276,6 +276,8 @@ public class ProjectActivityMonitoringListView {
             if (projectActivityMonitoringModel.getPhotoId() != null) {
                 if (mImageRequestListener != null)
                     mImageRequestListener.onImageRequest(mPhotoId, projectActivityMonitoringModel.getPhotoId());
+            } else {
+                mPhotoId.setImageResource(R.drawable.ic_image_dark_24);
             }
             mMonitoringDate.setText(DateTimeUtil.ToDateTimeDisplayString(projectActivityMonitoringModel.getMonitoringDate()));
             mActualStartDate.setText(DateTimeUtil.ToDateDisplayString(projectActivityMonitoringModel.getActualStartDate()));

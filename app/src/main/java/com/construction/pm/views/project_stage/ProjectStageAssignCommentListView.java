@@ -265,6 +265,8 @@ public class ProjectStageAssignCommentListView {
             if (projectStageAssignCommentModel.getPhotoId() != null) {
                 if (mImageRequestListener != null)
                     mImageRequestListener.onImageRequest(mPhotoId, projectStageAssignCommentModel.getPhotoId());
+            } else {
+                mPhotoId.setImageResource(R.drawable.ic_image_dark_24);
             }
         }
 
