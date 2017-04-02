@@ -75,7 +75,7 @@ public class ProjectPlanGetAsyncTask extends AsyncTask<ProjectPlanGetAsyncTaskPa
 
         if (projectPlanResponseModel != null) {
             // -- Set result --
-            projectPlanGetAsyncTaskResult.setProjectModel(projectPlanResponseModel.getProjectPlanModel());
+            projectPlanGetAsyncTaskResult.setProjectPlanModel(projectPlanResponseModel.getProjectPlanModel());
             projectPlanGetAsyncTaskResult.setProjectPlanAssignmentModels(projectPlanResponseModel.getProjectPlanAssignmentModels());
             projectPlanGetAsyncTaskResult.setProjectActivityUpdateModels(projectPlanResponseModel.getProjectActivityUpdateModels());
 

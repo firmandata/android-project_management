@@ -15,11 +15,11 @@ public class ProjectPlanGetAsyncTaskResult {
 
     }
 
-    public void setProjectModel(final ProjectPlanModel projectModel) {
-        mProjectPlanModel = projectModel;
+    public void setProjectPlanModel(final ProjectPlanModel projectPlanModel) {
+        mProjectPlanModel = projectPlanModel;
     }
 
-    public ProjectPlanModel getProjectModel() {
+    public ProjectPlanModel getProjectPlanModel() {
         return mProjectPlanModel;
     }
 

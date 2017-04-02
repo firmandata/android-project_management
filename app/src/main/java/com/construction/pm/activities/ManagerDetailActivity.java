@@ -134,6 +134,7 @@ public class ManagerDetailActivity extends AppCompatActivity implements
             org.json.JSONObject projectActivityUpdateModelJsonObject = projectActivityUpdateModel.build();
             String projectActivityUpdateModelJson = projectActivityUpdateModelJsonObject.toString(0);
             intent.putExtra(ProjectActivityUpdateDetailActivity.INTENT_PARAM_PROJECT_ACTIVITY_UPDATE_MODEL, projectActivityUpdateModelJson);
+            intent.putExtra(ProjectActivityUpdateDetailActivity.INTENT_PARAM_SHOW_MENU_PROJECT_ACTIVITY_UPDATE_EDIT, true);
         } catch (org.json.JSONException ex) {
         }
 

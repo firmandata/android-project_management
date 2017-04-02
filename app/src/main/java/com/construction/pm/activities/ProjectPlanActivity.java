@@ -16,6 +16,7 @@ import com.construction.pm.models.system.SessionLoginModel;
 import com.construction.pm.models.system.SettingUserModel;
 import com.construction.pm.persistence.SessionPersistent;
 import com.construction.pm.persistence.SettingPersistent;
+import com.construction.pm.utils.ConstantUtil;
 import com.construction.pm.views.project_plan.ProjectPlanLayout;
 
 import java.util.ArrayList;
@@ -99,7 +100,7 @@ public class ProjectPlanActivity extends AppCompatActivity implements ProjectPla
                 mAsyncTaskList.remove(this);
 
                 if (projectHandleTaskResult != null) {
-                    onProjectPlanRequestSuccess(projectHandleTaskResult.getProjectModel(), projectHandleTaskResult.getProjectPlanAssignmentModels(), projectHandleTaskResult.getProjectActivityUpdateModels());
+                    onProjectPlanRequestSuccess(projectHandleTaskResult.getProjectPlanModel(), projectHandleTaskResult.getProjectPlanAssignmentModels(), projectHandleTaskResult.getProjectActivityUpdateModels());
                     if (projectHandleTaskResult.getMessage() != null)
                         onProjectPlanRequestMessage(projectHandleTaskResult.getMessage());
                 }
@@ -119,6 +120,11 @@ public class ProjectPlanActivity extends AppCompatActivity implements ProjectPla
         projectPlanGetAsyncTask.execute(new ProjectPlanGetAsyncTaskParam(this, settingUserModel, projectPlanModel, sessionLoginModel.getProjectMemberModel()));
     }
 
+    @Override
+    public void onProjectActivityUpdateListItemClick(ProjectActivityUpdateModel projectActivityUpdateModel) {
+        showProjectActivityUpdateDetailActivity(projectActivityUpdateModel);
+    }
+
     protected void onProjectPlanRequestProgress(final String progressMessage) {
 
     }
@@ -129,6 +135,121 @@ public class ProjectPlanActivity extends AppCompatActivity implements ProjectPla
 
     protected void onProjectPlanRequestMessage(final String message) {
 
+    }
+
+    protected void showProjectActivityUpdateDetailActivity(final ProjectActivityUpdateModel projectActivityUpdateModel) {
+        // -- Redirect to ProjectActivityUpdateDetailActivity --
+        Intent intent = new Intent(this, ProjectActivityUpdateDetailActivity.class);
+
+        try {
+            org.json.JSONObject projectActivityUpdateModelJsonObject = projectActivityUpdateModel.build();
+            String projectActivityUpdateModelJson = projectActivityUpdateModelJsonObject.toString(0);
+            intent.putExtra(ProjectActivityUpdateDetailActivity.INTENT_PARAM_PROJECT_ACTIVITY_UPDATE_MODEL, projectActivityUpdateModelJson);
+            intent.putExtra(ProjectActivityUpdateDetailActivity.INTENT_PARAM_SHOW_MENU_PROJECT_ACTIVITY_UPDATE_EDIT, false);
+        } catch (org.json.JSONException ex) {
+        }
+
+        startActivityForResult(intent, ConstantUtil.INTENT_REQUEST_PROJECT_ACTIVITY_UPDATE_DETAIL);
+    }
+
+    protected void showProjectActivityUpdateFormActivity(final ProjectActivityUpdateModel projectActivityUpdateModel) {
+        // -- Redirect to ProjectActivityUpdateFormActivity --
+        Intent intent = new Intent(this, ProjectActivityUpdateFormActivity.class);
+
+        try {
+            org.json.JSONObject projectActivityUpdateModelJsonObject = projectActivityUpdateModel.build();
+            String projectActivityUpdateModelJson = projectActivityUpdateModelJsonObject.toString(0);
+            intent.putExtra(ProjectActivityUpdateFormActivity.INTENT_PARAM_PROJECT_ACTIVITY_UPDATE_MODEL, projectActivityUpdateModelJson);
+        } catch (org.json.JSONException ex) {
+        }
+
+        startActivityForResult(intent, ConstantUtil.INTENT_REQUEST_PROJECT_ACTIVITY_UPDATE_FORM);
+    }
+
+    public void reloadProjectPlanModel(final ProjectPlanModel projectPlanModel) {
+        // -- Get SettingUserModel from SettingPersistent --
+        SettingPersistent settingPersistent = new SettingPersistent(this);
+        SettingUserModel settingUserModel = settingPersistent.getSettingUserModel();
+
+        // -- Get SessionLoginModel from SessionPersistent --
+        SessionPersistent sessionPersistent = new SessionPersistent(this);
+        SessionLoginModel sessionLoginModel = sessionPersistent.getSessionLoginModel();
+
+        // -- Prepare ProjectPlanGetAsyncTask --
+        ProjectPlanGetAsyncTask projectPlanGetAsyncTask = new ProjectPlanGetAsyncTask() {
+            @Override
+            public void onPreExecute() {
+                mAsyncTaskList.add(this);
+            }
+
+            @Override
+            public void onPostExecute(ProjectPlanGetAsyncTaskResult projectHandleTaskResult) {
+                mAsyncTaskList.remove(this);
+
+                if (projectHandleTaskResult != null) {
+                    ProjectPlanModel newProjectPlanModel = projectHandleTaskResult.getProjectPlanModel();
+                    if (newProjectPlanModel != null)
+                        mProjectPlanLayout.setProjectPlanModel(newProjectPlanModel);
+                }
+            }
+
+            @Override
+            protected void onProgressUpdate(String... messages) {
+
+            }
+        };
+
+        // -- Do ProjectPlanGetAsyncTask --
+        projectPlanGetAsyncTask.execute(new ProjectPlanGetAsyncTaskParam(this, settingUserModel, projectPlanModel, sessionLoginModel.getProjectMemberModel()));
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        Bundle bundle = null;
+        if (data != null)
+            bundle = data.getExtras();
+
+        if (requestCode == ConstantUtil.INTENT_REQUEST_PROJECT_ACTIVITY_UPDATE_DETAIL) {
+            if (resultCode == ConstantUtil.INTENT_REQUEST_PROJECT_ACTIVITY_UPDATE_DETAIL_RESULT_EDIT) {
+                if (bundle != null) {
+                    if (bundle.containsKey(ConstantUtil.INTENT_RESULT_PROJECT_ACTIVITY_UPDATE_MODEL)) {
+                        String projectActivityUpdateModelJson = bundle.getString(ConstantUtil.INTENT_RESULT_PROJECT_ACTIVITY_UPDATE_MODEL);
+                        if (projectActivityUpdateModelJson != null) {
+                            ProjectActivityUpdateModel projectActivityUpdateModel = null;
+                            try {
+                                org.json.JSONObject jsonObject = new org.json.JSONObject(projectActivityUpdateModelJson);
+                                projectActivityUpdateModel = ProjectActivityUpdateModel.build(jsonObject);
+                            } catch (org.json.JSONException ex) {
+                            }
+                            if (projectActivityUpdateModel != null)
+                                showProjectActivityUpdateFormActivity(projectActivityUpdateModel);
+                        }
+                    }
+                }
+            }
+        } else if (requestCode == ConstantUtil.INTENT_REQUEST_PROJECT_ACTIVITY_UPDATE_FORM) {
+            if (resultCode == ConstantUtil.INTENT_REQUEST_PROJECT_ACTIVITY_UPDATE_FORM_RESULT_SAVED) {
+                if (bundle != null) {
+                    if (bundle.containsKey(ConstantUtil.INTENT_RESULT_PROJECT_ACTIVITY_UPDATE_MODEL)) {
+                        String projectActivityUpdateModelJson = bundle.getString(ConstantUtil.INTENT_RESULT_PROJECT_ACTIVITY_UPDATE_MODEL);
+                        if (projectActivityUpdateModelJson != null) {
+                            ProjectActivityUpdateModel projectActivityUpdateModel = null;
+                            try {
+                                org.json.JSONObject jsonObject = new org.json.JSONObject(projectActivityUpdateModelJson);
+                                projectActivityUpdateModel = ProjectActivityUpdateModel.build(jsonObject);
+                            } catch (org.json.JSONException ex) {
+                            }
+                            if (projectActivityUpdateModel != null) {
+                                reloadProjectPlanModel(mProjectPlanModel);
+                                mProjectPlanLayout.addProjectActivityUpdateModel(projectActivityUpdateModel);
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     @Override

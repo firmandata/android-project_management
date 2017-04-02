@@ -18,8 +18,10 @@ public class ProjectActivityUpdateDetailActivity extends AppCompatActivity imple
         ProjectActivityUpdateDetailLayout.ProjectActivityUpdateDetailLayoutListener {
 
     public static final String INTENT_PARAM_PROJECT_ACTIVITY_UPDATE_MODEL = "PROJECT_ACTIVITY_UPDATE_MODEL";
+    public static final String INTENT_PARAM_SHOW_MENU_PROJECT_ACTIVITY_UPDATE_EDIT = "SHOW_MENU_PROJECT_ACTIVITY_UPDATE_EDIT";
 
     protected ProjectActivityUpdateModel mProjectActivityUpdateModel;
+    protected boolean mShowMenuProjectActivityUpdateEdit;
     protected List<AsyncTask> mAsyncTaskList;
 
     protected ProjectActivityUpdateDetailLayout mProjectActivityUpdateDetailLayout;
@@ -55,6 +57,9 @@ public class ProjectActivityUpdateDetailActivity extends AppCompatActivity imple
 
     protected void newIntentHandle(final Bundle bundle) {
         if (bundle != null) {
+            // -- Get ShowMenuProjectActivityUpdateEdit parameter --
+            mShowMenuProjectActivityUpdateEdit = bundle.getBoolean(INTENT_PARAM_SHOW_MENU_PROJECT_ACTIVITY_UPDATE_EDIT);
+
             // -- Get ProjectActivityUpdateModel parameter --
             String projectActivityUpdateModelJson = bundle.getString(INTENT_PARAM_PROJECT_ACTIVITY_UPDATE_MODEL);
             if (projectActivityUpdateModelJson != null) {
@@ -81,7 +86,8 @@ public class ProjectActivityUpdateDetailActivity extends AppCompatActivity imple
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        mProjectActivityUpdateDetailLayout.createProjectActivityUpdateEditMenu(menu);
+        if (mShowMenuProjectActivityUpdateEdit)
+            mProjectActivityUpdateDetailLayout.createProjectActivityUpdateEditMenu(menu);
         return true;
     }
 

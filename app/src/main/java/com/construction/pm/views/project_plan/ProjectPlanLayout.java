@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.construction.pm.R;
+import com.construction.pm.models.ProjectActivityModel;
 import com.construction.pm.models.ProjectActivityUpdateModel;
 import com.construction.pm.models.ProjectPlanAssignmentModel;
 import com.construction.pm.models.ProjectPlanModel;
@@ -21,7 +22,7 @@ import com.construction.pm.utils.DateTimeUtil;
 import com.construction.pm.utils.StringUtil;
 import com.construction.pm.views.project_activity.ProjectActivityUpdateListView;
 
-public class ProjectPlanLayout {
+public class ProjectPlanLayout implements ProjectActivityUpdateListView.ProjectActivityUpdateListListener {
     protected Context mContext;
     protected Handler mFragmentHandler;
     protected FragmentManager mFragmentManager;
@@ -62,6 +63,7 @@ public class ProjectPlanLayout {
         mProjectPlanDetailView = new ProjectPlanDetailView(mContext, (RelativeLayout) mProjectPlanLayout.findViewById(R.id.project_plan_detail_view));
         mProjectPlanAssignmentListView = new ProjectPlanAssignmentListView(mContext, (RelativeLayout) mProjectPlanLayout.findViewById(R.id.project_plan_assignment_list_view));
         mProjectActivityUpdateListView = new ProjectActivityUpdateListView(mContext, (RelativeLayout) mProjectPlanLayout.findViewById(R.id.project_activity_update_list_view));
+        mProjectActivityUpdateListView.setProjectActivityUpdateListListener(this);
     }
 
     public CoordinatorLayout getLayout() {
@@ -107,11 +109,33 @@ public class ProjectPlanLayout {
         mProjectActivityUpdateListView.setProjectActivityUpdateModels(projectActivityUpdateModels);
     }
 
+    public void setProjectPlanModel(final ProjectPlanModel projectPlanModel) {
+        if (mProjectPlanDetailView != null)
+            mProjectPlanDetailView.setProjectPlanModel(projectPlanModel);
+    }
+
+    public void addProjectActivityUpdateModel(final ProjectActivityUpdateModel projectActivityUpdateModel) {
+        if (mProjectActivityUpdateListView != null)
+            mProjectActivityUpdateListView.addProjectActivityUpdateModel(projectActivityUpdateModel);
+    }
+
     public void setProjectPlanLayoutListener(final ProjectPlanLayoutListener projectPlanLayoutListener) {
         mProjectPlanLayoutListener = projectPlanLayoutListener;
     }
 
+    @Override
+    public void onProjectActivityUpdateListRequest(ProjectActivityModel projectActivityModel) {
+
+    }
+
+    @Override
+    public void onProjectActivityUpdateListItemClick(ProjectActivityUpdateModel projectActivityUpdateModel) {
+        if (mProjectPlanLayoutListener != null)
+            mProjectPlanLayoutListener.onProjectActivityUpdateListItemClick(projectActivityUpdateModel);
+    }
+
     public interface ProjectPlanLayoutListener {
         void onProjectPlanRequest(ProjectPlanModel projectPlanModel);
+        void onProjectActivityUpdateListItemClick(ProjectActivityUpdateModel projectActivityUpdateModel);
     }
 }
