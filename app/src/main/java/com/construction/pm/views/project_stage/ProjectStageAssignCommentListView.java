@@ -129,7 +129,10 @@ public class ProjectStageAssignCommentListView {
         }
 
         public void setProjectStageAssignCommentModels(final ProjectStageAssignCommentModel[] projectStageAssignCommentModels) {
-            mProjectStageAssignCommentModelList = new ArrayList<ProjectStageAssignCommentModel>(Arrays.asList(projectStageAssignCommentModels));
+            if (projectStageAssignCommentModels != null)
+                mProjectStageAssignCommentModelList = new ArrayList<ProjectStageAssignCommentModel>(Arrays.asList(projectStageAssignCommentModels));
+            else
+                mProjectStageAssignCommentModelList = new ArrayList<ProjectStageAssignCommentModel>();
             notifyDataSetChanged();
         }
 

@@ -149,7 +149,10 @@ public class NotificationListView {
         }
 
         public void setNotificationModels(final NotificationModel[] notificationModels) {
-            mNotificationModelList = new ArrayList<NotificationModel>(Arrays.asList(notificationModels));
+            if (notificationModels != null)
+                mNotificationModelList = new ArrayList<NotificationModel>(Arrays.asList(notificationModels));
+            else
+                mNotificationModelList = new ArrayList<NotificationModel>();
             notifyDataSetChanged();
         }
 
