@@ -49,28 +49,71 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginTop="@dimen/gap"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:baselineAligned="false">
 
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/projectStage"
+        <FrameLayout
+            android:id="@+id/projectStageContainer"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/notification_detail_project_stage"/>
+            android:layout_weight="1">
 
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/managerProjectActivity"
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/projectStage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/notification_detail_project_stage" />
+
+            <ProgressBar
+                android:id="@+id/projectStageProgressBar"
+                style="@android:style/Widget.ProgressBar.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"/>
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/managerProjectActivityContainer"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/notification_detail_manager_project_activity"/>
+            android:layout_weight="1">
 
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/inspectorProjectActivity"
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/managerProjectActivity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/notification_detail_manager_project_activity"/>
+
+            <ProgressBar
+                android:id="@+id/managerProjectActivityProgressBar"
+                style="@android:style/Widget.ProgressBar.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"/>
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/inspectorProjectActivityContainer"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/notification_detail_inspector_project_activity"/>
+            android:layout_weight="1">
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/inspectorProjectActivity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/notification_detail_inspector_project_activity"/>
+
+            <ProgressBar
+                android:id="@+id/inspectorProjectActivityProgressBar"
+                style="@android:style/Widget.ProgressBar.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"/>
+
+        </FrameLayout>
 
     </LinearLayout>
 

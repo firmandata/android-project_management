@@ -6,7 +6,9 @@ import android.support.v7.widget.AppCompatTextView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import com.construction.pm.R;
@@ -22,10 +24,20 @@ public class NotificationDetailView {
     protected RelativeLayout mNotificationDetailView;
     protected AppCompatTextView mTvNotificationDate;
     protected AppCompatTextView mTvNotificationMessage;
+
     protected LinearLayout mButtonContainer;
+
+    protected FrameLayout mBtnProjectStageContainer;
     protected AppCompatButton mBtnProjectStage;
+    protected ProgressBar mBtnProjectStageProgressBar;
+
+    protected FrameLayout mBtnManagerProjectActivityContainer;
     protected AppCompatButton mBtnManagerProjectActivity;
+    protected ProgressBar mBtnManagerProjectActivityProgressBar;
+
+    protected FrameLayout mBtnInspectorProjectActivityContainer;
     protected AppCompatButton mBtnInspectorProjectActivity;
+    protected ProgressBar mBtnInspectorProjectActivityProgressBar;
 
     protected ProjectStageModel mProjectStageModel;
     protected ProjectActivityModel mManagerProjectActivityModel;
@@ -58,9 +70,18 @@ public class NotificationDetailView {
         mTvNotificationMessage = (AppCompatTextView) mNotificationDetailView.findViewById(R.id.notificationMessage);
 
         mButtonContainer = (LinearLayout) mNotificationDetailView.findViewById(R.id.buttonContainer);
-        mBtnProjectStage = (AppCompatButton) mButtonContainer.findViewById(R.id.projectStage);
-        mBtnManagerProjectActivity = (AppCompatButton) mButtonContainer.findViewById(R.id.managerProjectActivity);
-        mBtnInspectorProjectActivity = (AppCompatButton) mButtonContainer.findViewById(R.id.inspectorProjectActivity);
+
+        mBtnProjectStageContainer = (FrameLayout) mButtonContainer.findViewById(R.id.projectStageContainer);
+        mBtnProjectStage = (AppCompatButton) mBtnProjectStageContainer.findViewById(R.id.projectStage);
+        mBtnProjectStageProgressBar = (ProgressBar) mBtnProjectStageContainer.findViewById(R.id.projectStageProgressBar);
+
+        mBtnManagerProjectActivityContainer = (FrameLayout) mButtonContainer.findViewById(R.id.managerProjectActivityContainer);
+        mBtnManagerProjectActivity = (AppCompatButton) mBtnManagerProjectActivityContainer.findViewById(R.id.managerProjectActivity);
+        mBtnManagerProjectActivityProgressBar = (ProgressBar) mBtnManagerProjectActivityContainer.findViewById(R.id.managerProjectActivityProgressBar);
+
+        mBtnInspectorProjectActivityContainer = (FrameLayout) mButtonContainer.findViewById(R.id.inspectorProjectActivityContainer);
+        mBtnInspectorProjectActivity = (AppCompatButton) mBtnInspectorProjectActivityContainer.findViewById(R.id.inspectorProjectActivity);
+        mBtnInspectorProjectActivityProgressBar = (ProgressBar) mBtnInspectorProjectActivityContainer.findViewById(R.id.inspectorProjectActivityProgressBar);
 
         mBtnProjectStage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,10 +130,15 @@ public class NotificationDetailView {
         mTvNotificationMessage.setText(notificationModel.getNotificationMessage());
 
         if (notificationModel.getProjectStageId() == null)
-            mButtonContainer.removeView(mBtnProjectStage);
+            mButtonContainer.removeView(mBtnProjectStageContainer);
+        else
+            mBtnProjectStage.setEnabled(false);
         if (notificationModel.getProjectActivityId() == null) {
-            mButtonContainer.removeView(mBtnManagerProjectActivity);
-            mButtonContainer.removeView(mBtnInspectorProjectActivity);
+            mButtonContainer.removeView(mBtnManagerProjectActivityContainer);
+            mButtonContainer.removeView(mBtnInspectorProjectActivityContainer);
+        } else {
+            mBtnManagerProjectActivity.setEnabled(false);
+            mBtnInspectorProjectActivity.setEnabled(false);
         }
 
         if (mNotificationDetailListener != null) {
@@ -126,19 +152,25 @@ public class NotificationDetailView {
     public void setProjectStageModel(final ProjectStageModel projectStageModel) {
         mProjectStageModel = projectStageModel;
         if (mProjectStageModel == null)
-            mButtonContainer.removeView(mBtnProjectStage);
+            mButtonContainer.removeView(mBtnProjectStageContainer);
+        else
+            mBtnProjectStage.setEnabled(true);
     }
 
     public void setManagerProjectActivityModel(final ProjectActivityModel projectActivityModel) {
         mManagerProjectActivityModel = projectActivityModel;
         if (mManagerProjectActivityModel == null)
-            mButtonContainer.removeView(mBtnManagerProjectActivity);
+            mButtonContainer.removeView(mBtnManagerProjectActivityContainer);
+        else
+            mBtnManagerProjectActivity.setEnabled(true);
     }
 
     public void setInspectorProjectActivityModel(final ProjectActivityModel projectActivityModel) {
         mInspectorProjectActivityModel = projectActivityModel;
         if (mInspectorProjectActivityModel == null)
-            mButtonContainer.removeView(mBtnInspectorProjectActivity);
+            mButtonContainer.removeView(mBtnInspectorProjectActivityContainer);
+        else
+            mBtnInspectorProjectActivity.setEnabled(true);
     }
 
     public void setNotificationDetailListener(final NotificationDetailListener notificationDetailListener) {
