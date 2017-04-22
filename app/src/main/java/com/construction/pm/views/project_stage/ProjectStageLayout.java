@@ -17,17 +17,26 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.construction.pm.R;
+import com.construction.pm.activities.fragmentdialogs.ProjectStageDocumentListDialogFragment;
+import com.construction.pm.models.FileModel;
 import com.construction.pm.models.ProjectStageAssignCommentModel;
 import com.construction.pm.models.ProjectStageAssignmentModel;
+import com.construction.pm.models.ProjectStageDocumentModel;
 import com.construction.pm.models.ProjectStageModel;
 import com.construction.pm.utils.DateTimeUtil;
 import com.construction.pm.views.listeners.ImageRequestClickListener;
 import com.construction.pm.views.listeners.ImageRequestListener;
 
-public class ProjectStageLayout implements ProjectStageAssignCommentListView.ProjectStageAssignCommentListListener {
+public class ProjectStageLayout implements
+        ProjectStageAssignCommentListView.ProjectStageAssignCommentListListener,
+        ProjectStageDocumentListView.ProjectStageDocumentListListener,
+        ProjectStageDocumentListDialogFragment.ProjectStageDocumentListListener {
+
     protected Context mContext;
     protected Handler mFragmentHandler;
     protected FragmentManager mFragmentManager;
+
+    protected static final String FRAGMENT_TAG_PROJECT_STAGE_DOCUMENT_LIST = "FRAGMENT_PROJECT_STAGE_DOCUMENT_LIST";
 
     protected CoordinatorLayout mProjectStageLayout;
     protected AppBarLayout mAppBarLayout;
@@ -35,6 +44,7 @@ public class ProjectStageLayout implements ProjectStageAssignCommentListView.Pro
 
     protected ProjectStageDetailView mProjectStageDetailView;
     protected ProjectStageAssignmentListView mProjectStageAssignmentListView;
+    protected ProjectStageDocumentListView mProjectStageDocumentListView;
     protected ProjectStageAssignCommentListView mProjectStageAssignCommentListView;
 
     protected ProjectStageLayoutListener mProjectStageLayoutListener;
@@ -64,8 +74,26 @@ public class ProjectStageLayout implements ProjectStageAssignCommentListView.Pro
 
         mProjectStageDetailView = new ProjectStageDetailView(mContext, (RelativeLayout) mProjectStageLayout.findViewById(R.id.project_stage_detail_view));
         mProjectStageAssignmentListView = new ProjectStageAssignmentListView(mContext, (RelativeLayout) mProjectStageLayout.findViewById(R.id.project_stage_assignment_list_view));
+        mProjectStageDocumentListView = new ProjectStageDocumentListView(mContext, (RelativeLayout) mProjectStageLayout.findViewById(R.id.project_stage_document_list_view));
+        mProjectStageDocumentListView.setProjectStageDocumentListListener(this);
         mProjectStageAssignCommentListView = new ProjectStageAssignCommentListView(mContext, (RelativeLayout) mProjectStageLayout.findViewById(R.id.project_stage_assign_comment_list_view));
         mProjectStageAssignCommentListView.setProjectStageAssignCommentListListener(this);
+    }
+
+    @Override
+    public void onProjectStageDocumentItemClick(ProjectStageDocumentModel projectStageDocumentModel) {
+        ProjectStageDocumentListDialogFragment projectStageDocumentListDialogFragment = ProjectStageDocumentListDialogFragment.newInstance(projectStageDocumentModel, this);
+        if (mFragmentManager != null)
+            projectStageDocumentListDialogFragment.show(mFragmentManager, FRAGMENT_TAG_PROJECT_STAGE_DOCUMENT_LIST);
+
+        if (mProjectStageLayoutListener != null)
+            mProjectStageLayoutListener.onProjectStageDocumentItemClick(projectStageDocumentModel);
+    }
+
+    @Override
+    public void onProjectStageDocumentItemClick(FileModel fileModel) {
+        if (mProjectStageLayoutListener != null)
+            mProjectStageLayoutListener.onProjectStageDocumentItemClick(fileModel);
     }
 
     @Override
@@ -127,9 +155,10 @@ public class ProjectStageLayout implements ProjectStageAssignCommentListView.Pro
             mProjectStageLayoutListener.onProjectStageRequest(projectStageModel);
     }
 
-    public void setLayoutData(final ProjectStageModel projectStageModel, final ProjectStageAssignmentModel[] projectStageAssignmentModels, final ProjectStageAssignCommentModel[] projectStageAssignCommentModels) {
+    public void setLayoutData(final ProjectStageModel projectStageModel, final ProjectStageAssignmentModel[] projectStageAssignmentModels, final ProjectStageDocumentModel[] projectStageDocumentModels, final ProjectStageAssignCommentModel[] projectStageAssignCommentModels) {
         mProjectStageDetailView.setProjectStageModel(projectStageModel);
         mProjectStageAssignmentListView.setProjectStageAssignmentModels(projectStageAssignmentModels);
+        mProjectStageDocumentListView.setProjectStageDocumentModels(projectStageDocumentModels);
         mProjectStageAssignCommentListView.setProjectStageAssignCommentModels(projectStageAssignCommentModels);
     }
 
@@ -139,6 +168,10 @@ public class ProjectStageLayout implements ProjectStageAssignCommentListView.Pro
 
     public ProjectStageAssignmentModel[] getProjectStageAssignmentModels() {
         return mProjectStageAssignmentListView.getProjectStageAssignmentModels();
+    }
+
+    public ProjectStageDocumentModel[] getProjectStageDocumentModels() {
+        return mProjectStageDocumentListView.getProjectStageDocumentModels();
     }
 
     public ProjectStageAssignCommentModel[] getProjectStageAssignCommentModels() {
@@ -159,6 +192,8 @@ public class ProjectStageLayout implements ProjectStageAssignCommentListView.Pro
 
     public interface ProjectStageLayoutListener {
         void onProjectStageRequest(ProjectStageModel projectStageModel);
+        void onProjectStageDocumentItemClick(ProjectStageDocumentModel projectStageDocumentModel);
+        void onProjectStageDocumentItemClick(FileModel fileModel);
         void onProjectStageAssignCommentAddMenuClick();
         void onProjectStageAssignCommentItemClick(ProjectStageAssignCommentModel projectStageAssignCommentModel);
     }

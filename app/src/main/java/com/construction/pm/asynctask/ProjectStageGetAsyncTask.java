@@ -77,6 +77,7 @@ public class ProjectStageGetAsyncTask extends AsyncTask<ProjectStageGetAsyncTask
             // -- Set result --
             projectStageGetAsyncTaskResult.setProjectStageModel(projectStageResponseModel.getProjectStageModel());
             projectStageGetAsyncTaskResult.setProjectStageAssignmentModels(projectStageResponseModel.getProjectStageAssignmentModels());
+            projectStageGetAsyncTaskResult.setProjectStageDocumentModels(projectStageResponseModel.getProjectStageDocumentModels());
             projectStageGetAsyncTaskResult.setProjectStageAssignCommentModels(projectStageResponseModel.getProjectStageAssignCommentModels());
 
             // -- Get ProjectStageResponseModel progress --

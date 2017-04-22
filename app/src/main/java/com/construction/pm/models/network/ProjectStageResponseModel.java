@@ -2,6 +2,7 @@ package com.construction.pm.models.network;
 
 import com.construction.pm.models.ProjectStageAssignCommentModel;
 import com.construction.pm.models.ProjectStageAssignmentModel;
+import com.construction.pm.models.ProjectStageDocumentModel;
 import com.construction.pm.models.ProjectStageModel;
 
 import org.json.JSONException;
@@ -13,10 +14,12 @@ import java.util.List;
 public class ProjectStageResponseModel {
     protected ProjectStageModel mProjectStageModel;
     protected List<ProjectStageAssignmentModel> mProjectStageAssignmentModelList;
+    protected List<ProjectStageDocumentModel> mProjectStageDocumentModelList;
     protected List<ProjectStageAssignCommentModel> mProjectStageAssignCommentModelList;
 
     public ProjectStageResponseModel() {
         mProjectStageAssignmentModelList = new ArrayList<ProjectStageAssignmentModel>();
+        mProjectStageDocumentModelList = new ArrayList<ProjectStageDocumentModel>();
         mProjectStageAssignCommentModelList = new ArrayList<ProjectStageAssignCommentModel>();
     }
 
@@ -47,6 +50,27 @@ public class ProjectStageResponseModel {
         ProjectStageAssignmentModel[] projectStageAssignmentModels = new ProjectStageAssignmentModel[mProjectStageAssignmentModelList.size()];
         mProjectStageAssignmentModelList.toArray(projectStageAssignmentModels);
         return projectStageAssignmentModels;
+    }
+
+    public void setProjectStageDocumentModels(ProjectStageDocumentModel[] projectStageDocumentModels) {
+        mProjectStageDocumentModelList = new ArrayList<ProjectStageDocumentModel>(Arrays.asList(projectStageDocumentModels));
+    }
+
+    public void addProjectStageDocumentModel(ProjectStageDocumentModel projectStageDocumentModel) {
+        mProjectStageDocumentModelList.add(projectStageDocumentModel);
+    }
+
+    public void removeProjectStageDocumentModel(ProjectStageDocumentModel projectStageDocumentModel) {
+        mProjectStageDocumentModelList.remove(projectStageDocumentModel);
+    }
+
+    public ProjectStageDocumentModel[] getProjectStageDocumentModels() {
+        if (mProjectStageDocumentModelList.size() == 0)
+            return null;
+
+        ProjectStageDocumentModel[] projectStageDocumentModels = new ProjectStageDocumentModel[mProjectStageDocumentModelList.size()];
+        mProjectStageDocumentModelList.toArray(projectStageDocumentModels);
+        return projectStageDocumentModels;
     }
 
     public void setProjectStageAssignCommentModels(ProjectStageAssignCommentModel[] projectStageAssignCommentModels) {
@@ -82,6 +106,13 @@ public class ProjectStageResponseModel {
                 projectStageResponseModel.addProjectStageAssignmentModel(ProjectStageAssignmentModel.build(jsonResultProjectStageAssignment));
             }
         }
+        if (!jsonObject.isNull("projectStageDocument")) {
+            org.json.JSONArray jsonResultProjectStageDocuments = jsonObject.getJSONArray("projectStageDocument");
+            for (int resultProjectStageDocumentIdx = 0; resultProjectStageDocumentIdx < jsonResultProjectStageDocuments.length(); resultProjectStageDocumentIdx++) {
+                org.json.JSONObject jsonResultProjectStageDocument = jsonResultProjectStageDocuments.getJSONObject(resultProjectStageDocumentIdx);
+                projectStageResponseModel.addProjectStageDocumentModel(ProjectStageDocumentModel.build(jsonResultProjectStageDocument));
+            }
+        }
         if (!jsonObject.isNull("projectStageAssignmentComment")) {
             org.json.JSONArray jsonResultProjectStageAssignComments = jsonObject.getJSONArray("projectStageAssignmentComment");
             for (int resultProjectStageAssignCommentIdx = 0; resultProjectStageAssignCommentIdx < jsonResultProjectStageAssignComments.length(); resultProjectStageAssignCommentIdx++) {
@@ -104,6 +135,13 @@ public class ProjectStageResponseModel {
                 jsonArray.put(projectStageAssignmentModel.build());
             }
             jsonObject.put("projectStageAssignment", jsonArray);
+        }
+        if (getProjectStageDocumentModels() != null) {
+            org.json.JSONArray jsonArray = new org.json.JSONArray();
+            for (ProjectStageDocumentModel projectStageDocumentModel : getProjectStageDocumentModels()) {
+                jsonArray.put(projectStageDocumentModel.build());
+            }
+            jsonObject.put("projectStageDocument", jsonArray);
         }
         if (getProjectStageAssignCommentModels() != null) {
             org.json.JSONArray jsonArray = new org.json.JSONArray();

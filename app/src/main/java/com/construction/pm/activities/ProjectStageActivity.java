@@ -19,12 +19,14 @@ import com.construction.pm.models.FileModel;
 import com.construction.pm.models.ProjectMemberModel;
 import com.construction.pm.models.ProjectStageAssignCommentModel;
 import com.construction.pm.models.ProjectStageAssignmentModel;
+import com.construction.pm.models.ProjectStageDocumentModel;
 import com.construction.pm.models.ProjectStageModel;
 import com.construction.pm.models.system.SessionLoginModel;
 import com.construction.pm.models.system.SettingUserModel;
 import com.construction.pm.persistence.SessionPersistent;
 import com.construction.pm.persistence.SettingPersistent;
 import com.construction.pm.utils.ConstantUtil;
+import com.construction.pm.utils.FileUtil;
 import com.construction.pm.utils.ImageUtil;
 import com.construction.pm.views.listeners.ImageRequestListener;
 import com.construction.pm.views.project_stage.ProjectStageLayout;
@@ -121,7 +123,7 @@ public class ProjectStageActivity extends AppCompatActivity implements
                 mAsyncTaskList.remove(this);
 
                 if (projectHandleTaskResult != null) {
-                    onProjectStageRequestSuccess(projectHandleTaskResult.getProjectStageModel(), projectHandleTaskResult.getProjectStageAssignmentModels(), projectHandleTaskResult.getProjectStageAssignCommentModels());
+                    onProjectStageRequestSuccess(projectHandleTaskResult.getProjectStageModel(), projectHandleTaskResult.getProjectStageAssignmentModels(), projectHandleTaskResult.getProjectStageDocumentModels(), projectHandleTaskResult.getProjectStageAssignCommentModels());
                     if (projectHandleTaskResult.getMessage() != null)
                         onProjectStageRequestMessage(projectHandleTaskResult.getMessage());
                 }
@@ -139,6 +141,73 @@ public class ProjectStageActivity extends AppCompatActivity implements
 
         // -- Do ProjectStageGetAsyncTask --
         projectStageGetAsyncTask.execute(new ProjectStageGetAsyncTaskParam(this, settingUserModel, projectStageModel.getProjectStageId(), sessionLoginModel.getProjectMemberModel()));
+    }
+
+    @Override
+    public void onProjectStageDocumentItemClick(ProjectStageDocumentModel projectStageDocumentModel) {
+
+    }
+
+    @Override
+    public void onProjectStageDocumentItemClick(final FileModel fileModel) {
+        // -- Get SettingUserModel from SettingPersistent --
+        SettingPersistent settingPersistent = new SettingPersistent(this);
+        final SettingUserModel settingUserModel = settingPersistent.getSettingUserModel();
+
+        // -- Prepare FileGetNetworkAsyncTask --
+        final FileGetNetworkAsyncTask fileGetNetworkAsyncTask = new FileGetNetworkAsyncTask() {
+            @Override
+            public void onPreExecute() {
+                mAsyncTaskList.add(this);
+            }
+
+            @Override
+            public void onPostExecute(FileGetAsyncTaskResult fileRequestAsyncTaskResult) {
+                mAsyncTaskList.remove(this);
+
+                if (fileRequestAsyncTaskResult != null) {
+                    FileModel fileModel = fileRequestAsyncTaskResult.getFileModel();
+                    if (fileModel != null) {
+                        if (fileModel.getFileData() != null) {
+//                            FileUtil.openFile(ProjectStageActivity.this, file);
+                        }
+                    }
+                }
+            }
+        };
+
+        // -- Prepare FileGetCacheAsyncTask --
+        FileGetCacheAsyncTask fileGetCacheAsyncTask = new FileGetCacheAsyncTask() {
+            @Override
+            public void onPreExecute() {
+                mAsyncTaskList.add(this);
+            }
+
+            @Override
+            public void onPostExecute(FileGetAsyncTaskResult fileRequestAsyncTaskResult) {
+                boolean isFoundInCache = false;
+                FileModel cacheFileModel = null;
+                if (fileRequestAsyncTaskResult != null) {
+                    cacheFileModel = fileRequestAsyncTaskResult.getFileModel();
+                    if (cacheFileModel != null) {
+                        if (cacheFileModel.getFileData() != null) {
+//                            FileUtil.openFile(ProjectStageActivity.this, file);
+                            isFoundInCache = true;
+                        }
+                    }
+                }
+
+                if (!isFoundInCache) {
+                    // -- Do FileGetNetworkAsyncTask --
+                    fileGetNetworkAsyncTask.execute(new FileGetAsyncTaskParam(ProjectStageActivity.this, settingUserModel, fileModel.getFileId(), cacheFileModel));
+                }
+
+                mAsyncTaskList.remove(this);
+            }
+        };
+
+        // -- Do FileGetCacheAsyncTask --
+        fileGetCacheAsyncTask.execute(new FileGetAsyncTaskParam(this, settingUserModel, fileModel.getFileId(), null));
     }
 
     @Override
@@ -277,8 +346,8 @@ public class ProjectStageActivity extends AppCompatActivity implements
 
     }
 
-    protected void onProjectStageRequestSuccess(final ProjectStageModel projectStageModel, final ProjectStageAssignmentModel[] projectStageAssignmentModels, final ProjectStageAssignCommentModel[] projectStageAssignCommentModels) {
-        mProjectStageLayout.setLayoutData(projectStageModel, projectStageAssignmentModels, projectStageAssignCommentModels);
+    protected void onProjectStageRequestSuccess(final ProjectStageModel projectStageModel, final ProjectStageAssignmentModel[] projectStageAssignmentModels, final ProjectStageDocumentModel[] projectStageDocumentModels, final ProjectStageAssignCommentModel[] projectStageAssignCommentModels) {
+        mProjectStageLayout.setLayoutData(projectStageModel, projectStageAssignmentModels, projectStageDocumentModels, projectStageAssignCommentModels);
     }
 
     protected void onProjectStageRequestMessage(final String message) {
