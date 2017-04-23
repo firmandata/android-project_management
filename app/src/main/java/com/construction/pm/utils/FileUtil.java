@@ -4,23 +4,23 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.annotation.Nullable;
+import android.util.Base64;
 import android.webkit.MimeTypeMap;
 
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
 public class FileUtil {
     public static boolean openFile(final Context context, final File file) {
-        String fileName = file.getName();
-        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
-        String mimeType = mimeTypeMap.getMimeTypeFromExtension(fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase());
-
         boolean isOpened = false;
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setDataAndType(Uri.fromFile(file),mimeType);
+        intent.setDataAndType(Uri.fromFile(file), getMimeType(file));
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         try {
             context.startActivity(intent);
@@ -31,7 +31,62 @@ public class FileUtil {
         return isOpened;
     }
 
+    @Nullable
+    public static File saveToFileCache(final Context context, final String fileName, final byte[] fileData) {
+        // -- Save to cache directory --
+        File file = new File(context.getExternalCacheDir(), fileName);
+        OutputStream outputStream = null;
+        try {
+            outputStream = new FileOutputStream(file);
+            outputStream.write(fileData);
+            outputStream.close();
+        } catch (IOException e) {
+
+        } finally {
+            if (outputStream != null) {
+                try {
+                    outputStream.close();
+                } catch (IOException e) {
+                    // Ignore
+                }
+            }
+        }
+
+        if (file.exists())
+            return file;
+
+        return null;
+    }
+
+    @Nullable
+    public static File getFileCache(final Context context, final String fileName) {
+        File file = new File(context.getExternalCacheDir(), fileName);
+
+        if (file.exists())
+            return file;
+
+        return null;
+    }
+
+    @Nullable
+    public static byte[] toByteArray(final String base64Encode) {
+        if (base64Encode == null)
+            return null;
+
+        byte[] fileData = null;
+        try {
+            String base64EncodeBytes = base64Encode.substring(base64Encode.indexOf(",") + 1);
+            fileData = Base64.decode(base64EncodeBytes, Base64.DEFAULT);
+        } catch (Exception ex) {
+        }
+        return fileData;
+    }
+
+    @Nullable
     public static byte[] toByteArray(final File file) {
+        if (file == null)
+            return null;
+
         int size = (int) file.length();
         byte[] bytes = new byte[size];
         try {
@@ -44,5 +99,46 @@ public class FileUtil {
             e.printStackTrace();
         }
         return bytes;
+    }
+
+    @Nullable
+    public static String toBase64Encode(final File file) {
+        return toBase64Encode(file, null);
+    }
+
+    @Nullable
+    public static String toBase64Encode(final File file, final String fileMimeType) {
+        if (file == null)
+            return null;
+
+        if (!file.exists())
+            return null;
+
+        String fileData = null;
+        try {
+            byte[] fileBytes = toByteArray(file);
+            if (fileBytes != null)
+                fileData = Base64.encodeToString(fileBytes, Base64.DEFAULT);
+        } catch (Exception ex) {
+        }
+
+        String mimeType = getMimeType(file);
+        if (fileMimeType != null)
+            mimeType = fileMimeType;
+
+        if (fileData != null)
+            return "data:" + (mimeType != null ? mimeType : "") + ";base64," + fileData;
+
+        return null;
+    }
+
+    @Nullable
+    public static String getMimeType(final File file) {
+        if (file == null)
+            return null;
+
+        String fileName = file.getName();
+        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+        return mimeTypeMap.getMimeTypeFromExtension(fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase());
     }
 }

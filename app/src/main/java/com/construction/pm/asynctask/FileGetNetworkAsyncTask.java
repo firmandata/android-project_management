@@ -53,7 +53,7 @@ public class FileGetNetworkAsyncTask extends AsyncTask<FileGetAsyncTaskParam, In
                         lastUpdateInfo = fileModelInfo.getLastUpdate().getTimeInMillis();
 
                     // -- Compare last update of cache and info --
-                    if (lastUpdateCache != lastUpdateInfo) {
+                    if (lastUpdateCache != lastUpdateInfo || lastUpdateInfo == 0) {
                         // -- Get FileModel file from server --
                         fileModel = fileNetwork.getFile(mFileGetAsyncTaskParam.getFileId());
                     }

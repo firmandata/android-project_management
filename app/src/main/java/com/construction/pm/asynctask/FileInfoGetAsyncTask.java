@@ -51,15 +51,15 @@ public class FileInfoGetAsyncTask extends AsyncTask<FileInfoGetAsyncTaskParam, S
                 if (fileModel != null) {
                     // -- Save to FileCachePersistent --
                     try {
-                        fileCachePersistent.setFileModelInfo(fileModel);
+                        fileCachePersistent.setFileModel(fileModel);
                     } catch (PersistenceError ex) {
                     }
                 }
             } catch (WebApiError webApiError) {
                 if (webApiError.isErrorConnection()) {
-                    // -- Get FileInfo from FileCachePersistent --
+                    // -- Get File from FileCachePersistent --
                     try {
-                        fileCachePersistent.getFileModelInfo(mFileInfoGetAsyncTaskParam.getFileId());
+                        fileCachePersistent.getFileModel(mFileInfoGetAsyncTaskParam.getFileId());
                     } catch (PersistenceError ex) {
                     }
                 } else

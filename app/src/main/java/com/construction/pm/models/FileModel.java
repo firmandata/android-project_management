@@ -1,11 +1,14 @@
 package com.construction.pm.models;
 
+import android.content.Context;
 import android.util.Base64;
 
 import com.construction.pm.utils.DateTimeUtil;
+import com.construction.pm.utils.FileUtil;
 
 import org.json.JSONException;
 
+import java.io.File;
 import java.util.Calendar;
 
 public class FileModel {
@@ -22,7 +25,7 @@ public class FileModel {
     protected Calendar mCreateDate;
     protected Integer mLastUserId;
     protected Calendar mLastUpdate;
-    protected byte[] mFileData;
+    protected File mFile;
 
     public FileModel() {
 
@@ -132,12 +135,27 @@ public class FileModel {
         return mLastUpdate;
     }
 
-    public void setFileData(final byte[] fileData) {
-        mFileData = fileData;
+    public void setFile(final File file) {
+        mFile = file;
     }
 
-    public byte[] getFileData() {
-        return mFileData;
+    public File getFile(final Context context) {
+        if (mFile == null)
+            return getFileCache(context);
+        return mFile;
+    }
+
+    public File saveDataToFileCache(final Context context, final byte[] fileData) {
+        if (fileData == null)
+            return null;
+
+        mFile = FileUtil.saveToFileCache(context, getFileName(), fileData);
+
+        return mFile;
+    }
+
+    protected File getFileCache(final Context context) {
+        return FileUtil.getFileCache(context, getFileName());
     }
 
     public static FileModel build(final org.json.JSONObject jsonObject) throws JSONException {
@@ -169,17 +187,6 @@ public class FileModel {
             fileModel.setLastUserId(jsonObject.getInt("last_user_id"));
         if (!jsonObject.isNull("last_update"))
             fileModel.setLastUpdate(DateTimeUtil.FromDateTimeString(jsonObject.getString("last_update")));
-        if (!jsonObject.isNull("binaryData")) {
-            String base64Encode = jsonObject.getString("binaryData");
-            byte[] fileData = null;
-            try {
-                String base64EncodeBytes = base64Encode.substring(base64Encode.indexOf(",") + 1);
-                fileData = Base64.decode(base64EncodeBytes, Base64.DEFAULT);
-            } catch (Exception ex) {
-            }
-            if (fileData != null)
-                fileModel.setFileData(fileData);
-        }
 
         return fileModel;
     }
@@ -213,15 +220,6 @@ public class FileModel {
             jsonObject.put("last_user_id", getLastUserId());
         if (getLastUpdate() != null)
             jsonObject.put("last_update", DateTimeUtil.ToDateTimeString(getLastUpdate()));
-        if (getFileData() != null) {
-            String fileData = null;
-            try {
-                fileData = Base64.encodeToString(getFileData(), Base64.DEFAULT);
-            } catch (Exception ex) {
-            }
-            if (fileData != null)
-                jsonObject.put("binaryData", "data:" + (getFileType() != null ? getFileType() : "") + ";base64," + fileData);
-        }
 
         return jsonObject;
     }

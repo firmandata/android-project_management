@@ -31,6 +31,7 @@ import com.construction.pm.utils.ImageUtil;
 import com.construction.pm.views.listeners.ImageRequestListener;
 import com.construction.pm.views.project_stage.ProjectStageLayout;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -168,8 +169,9 @@ public class ProjectStageActivity extends AppCompatActivity implements
                 if (fileRequestAsyncTaskResult != null) {
                     FileModel fileModel = fileRequestAsyncTaskResult.getFileModel();
                     if (fileModel != null) {
-                        if (fileModel.getFileData() != null) {
-//                            FileUtil.openFile(ProjectStageActivity.this, file);
+                        File file = fileModel.getFile(ProjectStageActivity.this);
+                        if (file != null) {
+                            FileUtil.openFile(ProjectStageActivity.this, file);
                         }
                     }
                 }
@@ -190,8 +192,9 @@ public class ProjectStageActivity extends AppCompatActivity implements
                 if (fileRequestAsyncTaskResult != null) {
                     cacheFileModel = fileRequestAsyncTaskResult.getFileModel();
                     if (cacheFileModel != null) {
-                        if (cacheFileModel.getFileData() != null) {
-//                            FileUtil.openFile(ProjectStageActivity.this, file);
+                        File file = cacheFileModel.getFile(ProjectStageActivity.this);
+                        if (file != null) {
+                            FileUtil.openFile(ProjectStageActivity.this, file);
                             isFoundInCache = true;
                         }
                     }
@@ -374,8 +377,9 @@ public class ProjectStageActivity extends AppCompatActivity implements
                 if (fileRequestAsyncTaskResult != null) {
                     FileModel fileModel = fileRequestAsyncTaskResult.getFileModel();
                     if (fileModel != null) {
-                        if (fileModel.getFileData() != null)
-                            ImageUtil.setImageThumbnailView(ProjectStageActivity.this, imageView, fileModel.getFileData());
+                        File file = fileModel.getFile(ProjectStageActivity.this);
+                        if (file != null)
+                            ImageUtil.setImageThumbnailView(ProjectStageActivity.this, imageView, file);
                     }
                 }
             }
@@ -394,8 +398,9 @@ public class ProjectStageActivity extends AppCompatActivity implements
                 if (fileRequestAsyncTaskResult != null) {
                     fileModel = fileRequestAsyncTaskResult.getFileModel();
                     if (fileModel != null) {
-                        if (fileModel.getFileData() != null)
-                            ImageUtil.setImageThumbnailView(ProjectStageActivity.this, imageView, fileModel.getFileData());
+                        File file = fileModel.getFile(ProjectStageActivity.this);
+                        if (file != null)
+                            ImageUtil.setImageThumbnailView(ProjectStageActivity.this, imageView, file);
                     }
                 }
 

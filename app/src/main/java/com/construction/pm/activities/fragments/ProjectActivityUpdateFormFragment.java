@@ -30,6 +30,7 @@ import com.construction.pm.views.listeners.ImageRequestClickListener;
 import com.construction.pm.views.listeners.ImageRequestDuplicateListener;
 import com.construction.pm.views.project_activity.ProjectActivityUpdateFormView;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -203,10 +204,11 @@ public class ProjectActivityUpdateFormFragment extends Fragment implements
                 if (fileRequestAsyncTaskResult != null) {
                     FileModel fileModel = fileRequestAsyncTaskResult.getFileModel();
                     if (fileModel != null) {
-                        if (fileModel.getFileData() != null) {
-                            ImageUtil.setImageThumbnailView(getContext(), imageView, fileModel.getFileData());
+                        File file = fileModel.getFile(getContext());
+                        if (file != null) {
+                            ImageUtil.setImageThumbnailView(getContext(), imageView, file);
                             if (duplicateImageView != null)
-                                ImageUtil.setImageThumbnailView(getContext(), duplicateImageView, fileModel.getFileData());
+                                ImageUtil.setImageThumbnailView(getContext(), duplicateImageView, file);
                         }
                     }
                 }
@@ -226,10 +228,11 @@ public class ProjectActivityUpdateFormFragment extends Fragment implements
                 if (fileRequestAsyncTaskResult != null) {
                     fileModel = fileRequestAsyncTaskResult.getFileModel();
                     if (fileModel != null) {
-                        if (fileModel.getFileData() != null) {
-                            ImageUtil.setImageThumbnailView(getContext(), imageView, fileModel.getFileData());
+                        File file = fileModel.getFile(getContext());
+                        if (file != null) {
+                            ImageUtil.setImageThumbnailView(getContext(), imageView, file);
                             if (duplicateImageView != null)
-                                ImageUtil.setImageThumbnailView(getContext(), duplicateImageView, fileModel.getFileData());
+                                ImageUtil.setImageThumbnailView(getContext(), duplicateImageView, file);
                         }
                     }
                 }

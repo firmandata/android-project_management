@@ -17,11 +17,11 @@ import com.construction.pm.models.FileModel;
 import com.construction.pm.models.system.SettingUserModel;
 import com.construction.pm.persistence.SettingPersistent;
 import com.construction.pm.utils.ImageUtil;
-import com.construction.pm.utils.ViewUtil;
 import com.construction.pm.views.file.FilePhotoView;
 import com.construction.pm.views.file.TouchImageView;
 import com.construction.pm.views.listeners.ImageRequestListener;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -109,8 +109,9 @@ public class FilePhotoViewFragment extends Fragment implements ImageRequestListe
                 if (fileRequestAsyncTaskResult != null) {
                     FileModel fileModel = fileRequestAsyncTaskResult.getFileModel();
                     if (fileModel != null) {
-                        if (fileModel.getFileData() != null)
-                            ImageUtil.setImageView(getContext(), touchImageView, fileModel.getFileData());
+                        File file = fileModel.getFile(getContext());
+                        if (file != null)
+                            ImageUtil.setImageView(getContext(), touchImageView, file);
                     }
                 }
             }
@@ -129,8 +130,9 @@ public class FilePhotoViewFragment extends Fragment implements ImageRequestListe
                 if (fileRequestAsyncTaskResult != null) {
                     fileModel = fileRequestAsyncTaskResult.getFileModel();
                     if (fileModel != null) {
-                        if (fileModel.getFileData() != null)
-                            ImageUtil.setImageView(getContext(), touchImageView, fileModel.getFileData());
+                        File file = fileModel.getFile(getContext());
+                        if (file != null)
+                            ImageUtil.setImageView(getContext(), touchImageView, file);
                     }
                 }
 

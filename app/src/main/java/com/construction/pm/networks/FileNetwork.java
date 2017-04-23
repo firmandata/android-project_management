@@ -10,6 +10,7 @@ import com.construction.pm.models.system.SettingUserModel;
 import com.construction.pm.networks.webapi.WebApiError;
 import com.construction.pm.networks.webapi.WebApiParam;
 import com.construction.pm.networks.webapi.WebApiResponse;
+import com.construction.pm.utils.FileUtil;
 import com.construction.pm.utils.ViewUtil;
 
 import org.json.JSONException;
@@ -93,8 +94,17 @@ public class FileNetwork extends AuthenticationNetwork {
         try {
             if (!jsonObject.isNull("result")) {
                 org.json.JSONObject jsonResultObject = jsonObject.getJSONObject("result");
-                if (!jsonResultObject.isNull("file"))
-                    fileModel = FileModel.build(jsonResultObject.getJSONObject("file"));
+                if (!jsonResultObject.isNull("file")) {
+                    org.json.JSONObject jsonResultObjectFile = jsonResultObject.getJSONObject("file");
+                    fileModel = FileModel.build(jsonResultObjectFile);
+
+                    // -- Save data to file cache --
+                    if (!jsonResultObjectFile.isNull("binaryData")) {
+                        byte[] fileData = FileUtil.toByteArray(jsonResultObjectFile.getString("binaryData"));
+                        if (fileData != null)
+                            fileModel.saveDataToFileCache(mContext, fileData);
+                    }
+                }
             }
         } catch (JSONException jsonException) {
             throw new WebApiError(webApiResponse, 0, jsonException.getMessage(), jsonException);
