@@ -1,7 +1,6 @@
 package com.construction.pm.views.project_activity;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.PagerAdapter;
@@ -23,12 +22,12 @@ import com.construction.pm.models.ActivityStatusEnum;
 import com.construction.pm.models.ProjectActivityModel;
 import com.construction.pm.models.ProjectActivityMonitoringModel;
 import com.construction.pm.networks.webapi.WebApiParam;
+import com.construction.pm.utils.FileUtil;
 import com.construction.pm.utils.ImageUtil;
 import com.construction.pm.utils.StringUtil;
 import com.construction.pm.utils.ViewUtil;
 import com.construction.pm.views.adapter.SpinnerActivityStatusAdapter;
 import com.construction.pm.views.listeners.ImageRequestDuplicateListener;
-import com.construction.pm.views.listeners.ImageRequestListener;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -268,18 +267,26 @@ public class ProjectActivityMonitoringFormView {
             ImageUtil.setImageThumbnailView(mContext, imageView, file.getAbsolutePath());
         }
 
-        mViewPagerAdapter.setItemFile(position, file);
+        String fileName = file.getName();
+        String fileCacheName = "MONITORING_PICTURE_" + String.valueOf(position) + "." + fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
+        File fileNew = ImageUtil.copyImageFileToCache(mContext, file, fileCacheName, 500, 500);
+        if (fileNew == null)
+            fileNew = file;
+
+        mViewPagerAdapter.setItemFile(position, fileNew);
     }
 
     public WebApiParam.WebApiParamFile getPhoto(final int position) {
         File file = mViewPagerAdapter.getItemFile(position);
         if (file == null)
             return null;
+        if (!file.exists())
+            return null;
 
         WebApiParam.WebApiParamFile webApiParamFile = new WebApiParam.WebApiParamFile();
         webApiParamFile.setMimeType("image/jpeg");
         webApiParamFile.setFileName(file.getName());
-        webApiParamFile.setFileData(ImageUtil.getImageData(file, Bitmap.CompressFormat.JPEG, 30));
+        webApiParamFile.setFileData(FileUtil.toByteArray(file));
         return webApiParamFile;
     }
 

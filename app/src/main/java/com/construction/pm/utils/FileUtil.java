@@ -15,6 +15,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.channels.FileChannel;
 
 public class FileUtil {
     public static boolean openFile(final Context context, final File file) {
@@ -54,6 +55,41 @@ public class FileUtil {
 
         if (file.exists())
             return file;
+
+        return null;
+    }
+
+    public static File copyToFileCache(final Context context, final File fileSource, final String newFileName) {
+        File fileDestination = new File(context.getExternalCacheDir(), newFileName);
+
+        FileChannel source = null;
+        FileChannel destination = null;
+
+        try {
+            source = new FileInputStream(fileSource).getChannel();
+            destination = new FileOutputStream(fileDestination).getChannel();
+            destination.transferFrom(source, 0, source.size());
+        } catch (FileNotFoundException ex) {
+            // Ignore
+        } catch (IOException ex) {
+            // Ignore
+        } finally {
+            try {
+                if (source != null) {
+                    source.close();
+                }
+                if (destination != null) {
+                    destination.close();
+                }
+            } catch (FileNotFoundException ex) {
+                // Ignore
+            } catch (IOException ex) {
+                // Ignore
+            }
+        }
+
+        if (fileDestination.exists())
+            return fileDestination;
 
         return null;
     }

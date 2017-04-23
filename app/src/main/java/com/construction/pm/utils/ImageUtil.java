@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Environment;
 import android.widget.ImageView;
@@ -241,6 +242,85 @@ public class ImageUtil {
         return null;
     }
 
+    public static Bitmap scaleImage(final String fileLocation, int maxWidth, int maxHeight) {
+        Bitmap bitmap = BitmapFactory.decodeFile(fileLocation);
+        return scaleImage(bitmap, maxWidth, maxHeight);
+    }
+
+    public static Bitmap scaleImage(final Bitmap bitmap, int maxWidth, int maxHeight) {
+        if (bitmap == null)
+            return null;
+
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+
+        if (width > height) {
+            // landscape
+            float ratio = (float) width / maxWidth;
+            width = maxWidth;
+            height = (int)(height / ratio);
+        } else if (height > width) {
+            // portrait
+            float ratio = (float) height / maxHeight;
+            height = maxHeight;
+            width = (int)(width / ratio);
+        } else {
+            // square
+            height = maxHeight;
+            width = maxWidth;
+        }
+
+        return Bitmap.createScaledBitmap(bitmap, width, height, true);
+    }
+
+    public static File copyImageFileToCache(final Context context, final File fileSource, final String fileCacheName, final int maxWidth, final int maxHeight) {
+        File fileNew = null;
+
+        // -- Get scaled image --
+        Bitmap scaledImage = ImageUtil.scaleImage(fileSource.getAbsolutePath(), maxWidth, maxHeight);
+        if (scaledImage != null) {
+            // -- Save to file cache --
+            fileNew = FileUtil.saveToFileCache(context, fileCacheName, getImageData(scaledImage));
+
+            if (fileNew != null) {
+                if (fileNew.exists()) {
+                    // -- Get exif --
+                    ExifInterface exifInterface = null;
+                    try {
+                        exifInterface = new ExifInterface(fileSource.getAbsolutePath());
+                    } catch (IOException ioException) {
+                    }
+
+                    if (exifInterface != null) {
+                        // -- Set exif --
+                        try {
+                            ExifInterface exifInterfaceCache = new ExifInterface(fileNew.getAbsolutePath());
+
+                            String latitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
+                            String latitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);
+                            String longitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
+                            String longitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF);
+
+                            if (latitude != null)
+                                exifInterfaceCache.setAttribute(ExifInterface.TAG_GPS_LATITUDE, latitude);
+                            if (latitudeRef != null)
+                                exifInterfaceCache.setAttribute(ExifInterface.TAG_GPS_LATITUDE_REF, latitudeRef);
+                            if (longitude != null)
+                                exifInterfaceCache.setAttribute(ExifInterface.TAG_GPS_LONGITUDE, longitude);
+                            if (longitudeRef != null)
+                                exifInterfaceCache.setAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF, longitudeRef);
+
+                            exifInterfaceCache.saveAttributes();
+                        } catch (IOException ioException) {
+                        }
+                    }
+                }
+            }
+        }
+
+        return fileNew;
+    }
+
     public static byte[] getImageData(final File file) {
         return getImageData(file.getAbsolutePath());
     }
@@ -250,7 +330,7 @@ public class ImageUtil {
     }
 
     public static byte[] getImageData(final String fileLocation) {
-        return getImageData(fileLocation, Bitmap.CompressFormat.PNG, 100);
+        return getImageData(fileLocation, Bitmap.CompressFormat.JPEG, 100);
     }
 
     public static byte[] getImageData(final String fileLocation, final Bitmap.CompressFormat compressFormat, final int quality) {
@@ -258,7 +338,7 @@ public class ImageUtil {
     }
 
     public static byte[] getImageData(final Bitmap bitmap) {
-        return getImageData(bitmap, Bitmap.CompressFormat.PNG, 100);
+        return getImageData(bitmap, Bitmap.CompressFormat.JPEG, 100);
     }
 
     public static byte[] getImageData(final Bitmap bitmap, final Bitmap.CompressFormat compressFormat, final int quality) {

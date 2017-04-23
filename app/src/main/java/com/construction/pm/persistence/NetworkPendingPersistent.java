@@ -127,11 +127,8 @@ public class NetworkPendingPersistent {
     }
 
     protected boolean setNetworkPendingSent(final SQLiteDatabase sqLiteDatabase, final NetworkPendingModel networkPendingModel) {
-        // -- Update old record --
-        ContentValues contentValues = new ContentValues();
-        contentValues.put("is_sent", networkPendingModel.isSent() ? 1 : 0);
-        contentValues.put("updated_date", DateTimeUtil.ToDateTimeString(Calendar.getInstance()));
-        int affectedRow = sqLiteDatabase.update("network_pending", contentValues, "id = ?",
+        // -- Delete sent record --
+        int affectedRow = sqLiteDatabase.delete("network_pending", "id = ?",
             new String[] {
                 String.valueOf(networkPendingModel.getId())
             }
