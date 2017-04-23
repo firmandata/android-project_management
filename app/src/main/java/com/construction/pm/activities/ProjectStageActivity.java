@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 
+import com.construction.pm.R;
 import com.construction.pm.asynctask.FileGetCacheAsyncTask;
 import com.construction.pm.asynctask.FileGetNetworkAsyncTask;
 import com.construction.pm.asynctask.ProjectStageGetAsyncTask;
@@ -28,6 +29,8 @@ import com.construction.pm.persistence.SettingPersistent;
 import com.construction.pm.utils.ConstantUtil;
 import com.construction.pm.utils.FileUtil;
 import com.construction.pm.utils.ImageUtil;
+import com.construction.pm.utils.StringUtil;
+import com.construction.pm.utils.ViewUtil;
 import com.construction.pm.views.listeners.ImageRequestListener;
 import com.construction.pm.views.project_stage.ProjectStageLayout;
 
@@ -171,8 +174,17 @@ public class ProjectStageActivity extends AppCompatActivity implements
                     if (fileModel != null) {
                         File file = fileModel.getFile(ProjectStageActivity.this);
                         if (file != null) {
-                            FileUtil.openFile(ProjectStageActivity.this, file);
+                            onProjectStageDocumentDownloaded(file);
                         }
+                    }
+                }
+            }
+
+            @Override
+            protected void onProgressUpdate(String... progress) {
+                if (progress != null) {
+                    if (progress.length > 0) {
+                        onProjectStageDocumentDownloadingProgress(progress[0]);
                     }
                 }
             }
@@ -182,6 +194,7 @@ public class ProjectStageActivity extends AppCompatActivity implements
         FileGetCacheAsyncTask fileGetCacheAsyncTask = new FileGetCacheAsyncTask() {
             @Override
             public void onPreExecute() {
+                onProjectStageDocumentDownloadBegin();
                 mAsyncTaskList.add(this);
             }
 
@@ -194,7 +207,7 @@ public class ProjectStageActivity extends AppCompatActivity implements
                     if (cacheFileModel != null) {
                         File file = cacheFileModel.getFile(ProjectStageActivity.this);
                         if (file != null) {
-                            FileUtil.openFile(ProjectStageActivity.this, file);
+                            onProjectStageDocumentDownloaded(file);
                             isFoundInCache = true;
                         }
                     }
@@ -413,6 +426,19 @@ public class ProjectStageActivity extends AppCompatActivity implements
 
         // -- Do FileGetCacheAsyncTask --
         fileGetCacheAsyncTask.execute(new FileGetAsyncTaskParam(this, settingUserModel, fileId, null));
+    }
+
+    protected void onProjectStageDocumentDownloadBegin() {
+        mProjectStageLayout.progressDialogShow(ViewUtil.getResourceString(this, R.string.project_stage_layout_download_begin));
+    }
+
+    protected void onProjectStageDocumentDownloadingProgress(String progress) {
+        mProjectStageLayout.progressDialogShow(ViewUtil.getResourceString(this, R.string.project_stage_layout_download_progress, progress));
+    }
+
+    protected void onProjectStageDocumentDownloaded(final File file) {
+        mProjectStageLayout.progressDialogDismiss();
+        FileUtil.openFile(this, file);
     }
 
     @Override

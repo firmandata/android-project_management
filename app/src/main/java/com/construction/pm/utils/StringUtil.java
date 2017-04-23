@@ -1,6 +1,7 @@
 package com.construction.pm.utils;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -131,6 +132,32 @@ public class StringUtil {
         if (value != null)
             return getDecimalFormat().format(value) + "%";
         return null;
+    }
+
+    public static String numberFileSizeFormat(final long bytes) {
+        double value = bytes;
+        String valueType = "B";
+
+        double kiloBytes = value / 1024;
+        if (kiloBytes >= 1) {
+            value = kiloBytes;
+            valueType = "KB";
+        }
+
+        double megaBytes = kiloBytes / 1024;
+        if (megaBytes >= 1) {
+            value = megaBytes;
+            valueType = "MB";
+        }
+
+        double gigaBytes = megaBytes / 1024;
+        if (gigaBytes >= 1) {
+            value = gigaBytes;
+            valueType = "GB";
+        }
+
+        BigDecimal bigDecimal = new BigDecimal(value).setScale(2, RoundingMode.HALF_UP);
+        return getDecimalFormat().format(bigDecimal.doubleValue()) + valueType;
     }
 
     public static double numberFormat(final String value) {

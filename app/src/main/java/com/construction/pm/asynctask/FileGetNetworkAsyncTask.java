@@ -7,11 +7,15 @@ import com.construction.pm.asynctask.param.FileGetAsyncTaskParam;
 import com.construction.pm.asynctask.result.FileGetAsyncTaskResult;
 import com.construction.pm.models.FileModel;
 import com.construction.pm.networks.FileNetwork;
+import com.construction.pm.networks.webapi.IWebApiProgress;
 import com.construction.pm.networks.webapi.WebApiError;
 import com.construction.pm.persistence.FileCachePersistent;
 import com.construction.pm.persistence.PersistenceError;
+import com.construction.pm.utils.StringUtil;
 
-public class FileGetNetworkAsyncTask extends AsyncTask<FileGetAsyncTaskParam, Integer, FileGetAsyncTaskResult> {
+import java.io.File;
+
+public class FileGetNetworkAsyncTask extends AsyncTask<FileGetAsyncTaskParam, String, FileGetAsyncTaskResult> {
 
     protected FileGetAsyncTaskParam mFileGetAsyncTaskParam;
     protected Context mContext;
@@ -42,25 +46,40 @@ public class FileGetNetworkAsyncTask extends AsyncTask<FileGetAsyncTaskParam, In
             FileModel fileModel = null;
             if (fileModelCache != null) {
                 long lastUpdateCache = 0;
+                File fileCache = fileModelCache.getFile(mContext);
                 if (fileModelCache.getLastUpdate() != null)
                     lastUpdateCache = fileModelCache.getLastUpdate().getTimeInMillis();
 
-                // -- Get FileModel info from server --
-                FileModel fileModelInfo = fileNetwork.getFileInfo(mFileGetAsyncTaskParam.getFileId());
+                // -- Get FileModel from server --
+                FileModel fileModelInfo = fileNetwork.getFile(mFileGetAsyncTaskParam.getFileId());
                 if (fileModelInfo != null) {
                     long lastUpdateInfo = 0;
                     if (fileModelInfo.getLastUpdate() != null)
                         lastUpdateInfo = fileModelInfo.getLastUpdate().getTimeInMillis();
 
                     // -- Compare last update of cache and info --
-                    if (lastUpdateCache != lastUpdateInfo || lastUpdateInfo == 0) {
-                        // -- Get FileModel file from server --
-                        fileModel = fileNetwork.getFile(mFileGetAsyncTaskParam.getFileId());
+                    if (lastUpdateCache != lastUpdateInfo || lastUpdateInfo == 0 || fileCache == null) {
+                        // -- Download file to FileModel from server --
+                        fileModel = fileNetwork.downloadFile(mFileGetAsyncTaskParam.getFileId(), new IWebApiProgress() {
+                            @Override
+                            public void onProgress(final long bytesWritten, final long totalSize) {
+                                if (totalSize > 0) {
+                                    publishProgress(StringUtil.numberPercentFormat((int) (((double) bytesWritten / (double) totalSize) * 100)));
+                                } else {
+                                    publishProgress(StringUtil.numberFileSizeFormat(bytesWritten));
+                                }
+                            }
+                        });
                     }
                 }
             } else {
-                // -- Get FileModel file from server --
-                fileModel = fileNetwork.getFile(mFileGetAsyncTaskParam.getFileId());
+                // -- Download file to FileModel from server --
+                fileModel = fileNetwork.downloadFile(mFileGetAsyncTaskParam.getFileId(), new IWebApiProgress() {
+                    @Override
+                    public void onProgress(long bytesWritten, long totalSize) {
+
+                    }
+                });
             }
 
             fileGetAsyncTaskResult.setFileModel(fileModel);

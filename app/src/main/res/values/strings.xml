@@ -220,6 +220,8 @@
     <string name="project_stage_layout_project_stage_assignment_title">Assignment To :</string>
     <string name="project_stage_layout_project_stage_document_title">Documents :</string>
     <string name="project_stage_layout_project_stage_assign_comment_title">Comments :</string>
+    <string name="project_stage_layout_download_begin">Please wait &#8230;</string>
+    <string name="project_stage_layout_download_progress">Downloading $s1</string>
 
     <string name="project_stage_list_stage_next_label">Next</string>
 

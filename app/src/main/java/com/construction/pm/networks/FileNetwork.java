@@ -7,6 +7,7 @@ import com.construction.pm.models.AccessTokenModel;
 import com.construction.pm.models.FileModel;
 import com.construction.pm.models.system.SessionLoginModel;
 import com.construction.pm.models.system.SettingUserModel;
+import com.construction.pm.networks.webapi.IWebApiProgress;
 import com.construction.pm.networks.webapi.WebApiError;
 import com.construction.pm.networks.webapi.WebApiParam;
 import com.construction.pm.networks.webapi.WebApiResponse;
@@ -20,7 +21,7 @@ public class FileNetwork extends AuthenticationNetwork {
         super(context, settingUserModel);
     }
 
-    public FileModel getFileInfo(final Integer fileId) throws WebApiError {
+    public FileModel getFile(final Integer fileId) throws WebApiError {
         // -- Get SessionLoginModel --
         SessionLoginModel sessionLoginModel = getSessionLoginModel();
         AccessTokenModel accessTokenModel = sessionLoginModel.getAccessTokenModel();
@@ -62,7 +63,7 @@ public class FileNetwork extends AuthenticationNetwork {
         return fileModel;
     }
 
-    public FileModel getFile(final Integer fileId) throws WebApiError {
+    public FileModel downloadFile(final Integer fileId, final IWebApiProgress webApiProgress) throws WebApiError {
         // -- Get SessionLoginModel --
         SessionLoginModel sessionLoginModel = getSessionLoginModel();
         AccessTokenModel accessTokenModel = sessionLoginModel.getAccessTokenModel();
@@ -77,7 +78,7 @@ public class FileNetwork extends AuthenticationNetwork {
         formData.add("file_id", fileId);
 
         // -- Request get FileModel --
-        WebApiResponse webApiResponse = mWebApiRequest.post("/rest/file/getFileWithBinary", headerParam, null, formData);
+        WebApiResponse webApiResponse = mWebApiRequest.post("/rest/file/getFileWithBinary", headerParam, null, formData, webApiProgress);
 
         // -- Throw WebApiError if existing --
         WebApiError webApiError = webApiResponse.getWebApiError();

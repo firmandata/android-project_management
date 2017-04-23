@@ -1,5 +1,6 @@
 package com.construction.pm.views.project_stage;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
@@ -42,6 +43,8 @@ public class ProjectStageLayout implements
     protected AppBarLayout mAppBarLayout;
     protected Toolbar mToolbar;
 
+    protected ProgressDialog mProgressDialog;
+
     protected ProjectStageDetailView mProjectStageDetailView;
     protected ProjectStageAssignmentListView mProjectStageAssignmentListView;
     protected ProjectStageDocumentListView mProjectStageDocumentListView;
@@ -71,6 +74,10 @@ public class ProjectStageLayout implements
         mProjectStageLayout = projectLayout;
         mAppBarLayout = (AppBarLayout) mProjectStageLayout.findViewById(R.id.contentAppBar);
         mToolbar = (Toolbar) mProjectStageLayout.findViewById(R.id.contentToolbar);
+
+        mProgressDialog = new ProgressDialog(mContext);
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.setCanceledOnTouchOutside(false);
 
         mProjectStageDetailView = new ProjectStageDetailView(mContext, (RelativeLayout) mProjectStageLayout.findViewById(R.id.project_stage_detail_view));
         mProjectStageAssignmentListView = new ProjectStageAssignmentListView(mContext, (RelativeLayout) mProjectStageLayout.findViewById(R.id.project_stage_assignment_list_view));
@@ -104,6 +111,26 @@ public class ProjectStageLayout implements
 
     public CoordinatorLayout getLayout() {
         return mProjectStageLayout;
+    }
+
+    public void progressDialogShow(final String progressMessage, final boolean cancelable) {
+        mProgressDialog.setCancelable(cancelable);
+        mProgressDialog.setCanceledOnTouchOutside(cancelable);
+        mProgressDialog.setMessage(progressMessage);
+        if (!mProgressDialog.isShowing())
+            mProgressDialog.show();
+    }
+
+    public void progressDialogShow(final String progressMessage) {
+        progressDialogShow(progressMessage, false);
+    }
+
+    public void progressDialogDismiss() {
+        mProgressDialog.setMessage(null);
+        if (mProgressDialog.isShowing())
+            mProgressDialog.dismiss();
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.setCanceledOnTouchOutside(false);
     }
 
     public void loadLayoutToActivity(final AppCompatActivity activity, final ProjectStageModel projectStageModel) {

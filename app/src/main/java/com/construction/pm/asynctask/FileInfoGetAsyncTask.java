@@ -27,7 +27,7 @@ public class FileInfoGetAsyncTask extends AsyncTask<FileInfoGetAsyncTaskParam, S
         // -- Prepare FileGetAsyncTaskResult --
         FileGetAsyncTaskResult fileGetAsyncTaskResult = new FileGetAsyncTaskResult();
 
-        // -- Get FileModel info progress --
+        // -- Get FileModel progress --
         publishProgress(ViewUtil.getResourceString(mContext, R.string.file_info_handle_task_begin));
 
         // -- Prepare FileCachePersistent --
@@ -46,7 +46,7 @@ public class FileInfoGetAsyncTask extends AsyncTask<FileInfoGetAsyncTaskParam, S
                 // fileNetwork.invalidateLogin(); // Disable for fast response
 
                 // -- Get FileModel file from server --
-                fileModel = fileNetwork.getFileInfo(mFileInfoGetAsyncTaskParam.getFileId());
+                fileModel = fileNetwork.getFile(mFileInfoGetAsyncTaskParam.getFileId());
 
                 if (fileModel != null) {
                     // -- Save to FileCachePersistent --
