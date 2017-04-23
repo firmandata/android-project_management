@@ -171,12 +171,13 @@ public class ProjectStageActivity extends AppCompatActivity implements
 
                 if (fileRequestAsyncTaskResult != null) {
                     FileModel fileModel = fileRequestAsyncTaskResult.getFileModel();
-                    if (fileModel != null) {
-                        File file = fileModel.getFile(ProjectStageActivity.this);
-                        if (file != null) {
-                            onProjectStageDocumentDownloaded(file);
-                        }
-                    }
+                    FileModel fileModelCache = fileRequestAsyncTaskResult.getFileModelCache();
+                    File file = null;
+                    if (fileModel != null)
+                        file = fileModel.getFile(ProjectStageActivity.this);
+                    else if (fileModelCache != null)
+                        file = fileModelCache.getFile(ProjectStageActivity.this);
+                    onProjectStageDocumentDownloaded(file);
                 }
             }
 
@@ -200,23 +201,12 @@ public class ProjectStageActivity extends AppCompatActivity implements
 
             @Override
             public void onPostExecute(FileGetAsyncTaskResult fileRequestAsyncTaskResult) {
-                boolean isFoundInCache = false;
                 FileModel cacheFileModel = null;
-                if (fileRequestAsyncTaskResult != null) {
+                if (fileRequestAsyncTaskResult != null)
                     cacheFileModel = fileRequestAsyncTaskResult.getFileModel();
-                    if (cacheFileModel != null) {
-                        File file = cacheFileModel.getFile(ProjectStageActivity.this);
-                        if (file != null) {
-                            onProjectStageDocumentDownloaded(file);
-                            isFoundInCache = true;
-                        }
-                    }
-                }
 
-                if (!isFoundInCache) {
-                    // -- Do FileGetNetworkAsyncTask --
-                    fileGetNetworkAsyncTask.execute(new FileGetAsyncTaskParam(ProjectStageActivity.this, settingUserModel, fileModel.getFileId(), cacheFileModel));
-                }
+                // -- Do FileGetNetworkAsyncTask --
+                fileGetNetworkAsyncTask.execute(new FileGetAsyncTaskParam(ProjectStageActivity.this, settingUserModel, fileModel.getFileId(), cacheFileModel));
 
                 mAsyncTaskList.remove(this);
             }
@@ -438,7 +428,8 @@ public class ProjectStageActivity extends AppCompatActivity implements
 
     protected void onProjectStageDocumentDownloaded(final File file) {
         mProjectStageLayout.progressDialogDismiss();
-        FileUtil.openFile(this, file);
+        if (file != null)
+            FileUtil.openFile(this, file);
     }
 
     @Override

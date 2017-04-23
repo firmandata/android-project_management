@@ -29,6 +29,7 @@ public class FileGetNetworkAsyncTask extends AsyncTask<FileGetAsyncTaskParam, St
 
         // -- Prepare FileGetAsyncTaskResult --
         FileGetAsyncTaskResult fileGetAsyncTaskResult = new FileGetAsyncTaskResult();
+        fileGetAsyncTaskResult.setFileModelCache(fileModelCache);
 
         // -- Prepare FileCachePersistent --
         FileCachePersistent fileCachePersistent = new FileCachePersistent(mContext);
@@ -42,6 +43,18 @@ public class FileGetNetworkAsyncTask extends AsyncTask<FileGetAsyncTaskParam, St
 
             // -- Invalidate Login --
             // fileNetwork.invalidateLogin(); // Disable for fast response
+
+            // -- Download process --
+            IWebApiProgress webApiProgress = new IWebApiProgress() {
+                @Override
+                public void onProgress(final long bytesWritten, final long totalSize) {
+                    if (totalSize > 0) {
+                        publishProgress(StringUtil.numberPercentFormat((int) (((double) bytesWritten / (double) totalSize) * 100)));
+                    } else {
+                        publishProgress(StringUtil.numberFileSizeFormat(bytesWritten));
+                    }
+                }
+            };
 
             FileModel fileModel = null;
             if (fileModelCache != null) {
@@ -58,28 +71,14 @@ public class FileGetNetworkAsyncTask extends AsyncTask<FileGetAsyncTaskParam, St
                         lastUpdateInfo = fileModelInfo.getLastUpdate().getTimeInMillis();
 
                     // -- Compare last update of cache and info --
-                    if (lastUpdateCache != lastUpdateInfo || lastUpdateInfo == 0 || fileCache == null) {
+                    if (lastUpdateCache != lastUpdateInfo || fileCache == null) {
                         // -- Download file to FileModel from server --
-                        fileModel = fileNetwork.downloadFile(mFileGetAsyncTaskParam.getFileId(), new IWebApiProgress() {
-                            @Override
-                            public void onProgress(final long bytesWritten, final long totalSize) {
-                                if (totalSize > 0) {
-                                    publishProgress(StringUtil.numberPercentFormat((int) (((double) bytesWritten / (double) totalSize) * 100)));
-                                } else {
-                                    publishProgress(StringUtil.numberFileSizeFormat(bytesWritten));
-                                }
-                            }
-                        });
+                        fileModel = fileNetwork.downloadFile(mFileGetAsyncTaskParam.getFileId(), webApiProgress);
                     }
                 }
             } else {
                 // -- Download file to FileModel from server --
-                fileModel = fileNetwork.downloadFile(mFileGetAsyncTaskParam.getFileId(), new IWebApiProgress() {
-                    @Override
-                    public void onProgress(long bytesWritten, long totalSize) {
-
-                    }
-                });
+                fileModel = fileNetwork.downloadFile(mFileGetAsyncTaskParam.getFileId(), webApiProgress);
             }
 
             fileGetAsyncTaskResult.setFileModel(fileModel);
