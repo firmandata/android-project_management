@@ -39,14 +39,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProjectStageActivity extends AppCompatActivity implements
-        ProjectStageLayout.ProjectStageLayoutListener,
-        ImageRequestListener {
+        ProjectStageLayout.ProjectStageLayoutListener {
 
     public static final String INTENT_PARAM_PROJECT_STAGE_MODEL = "PROJECT_STAGE_MODEL";
 
     protected ProjectStageModel mProjectStageModel;
     protected List<AsyncTask> mAsyncTaskList;
-    protected List<AsyncTask> mAsyncTaskPendingList;
 
     protected ProjectStageLayout mProjectStageLayout;
 
@@ -56,7 +54,6 @@ public class ProjectStageActivity extends AppCompatActivity implements
 
         // -- Handle AsyncTask --
         mAsyncTaskList = new ArrayList<AsyncTask>();
-        mAsyncTaskPendingList = new ArrayList<AsyncTask>();
 
         // -- Handle intent request parameters --
         newIntentHandle(getIntent().getExtras());
@@ -64,7 +61,6 @@ public class ProjectStageActivity extends AppCompatActivity implements
         // -- Prepare ProjectStageLayout --
         mProjectStageLayout = ProjectStageLayout.buildProjectStageLayout(this, null);
         mProjectStageLayout.setProjectStageLayoutListener(this);
-        mProjectStageLayout.setImageRequestListener(this);
 
         // -- Load to Activity --
         mProjectStageLayout.loadLayoutToActivity(this, mProjectStageModel);
@@ -91,7 +87,11 @@ public class ProjectStageActivity extends AppCompatActivity implements
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        mProjectStageLayout.createProjectStageAssignCommentAddMenu(menu);
+        if (mProjectStageLayout != null) {
+            ProjectStageAssignmentModel projectStageAssignmentModel = getProjectStageAssignmentModel(mProjectStageLayout.getProjectStageModel(), mProjectStageLayout.getProjectStageAssignmentModels());
+            if (projectStageAssignmentModel != null && mProjectStageLayout.isTabShowProjectStageAssignCommentList())
+                mProjectStageLayout.createProjectStageAssignCommentAddMenu(menu);
+        }
         return true;
     }
 
@@ -103,6 +103,11 @@ public class ProjectStageActivity extends AppCompatActivity implements
                 return true;
         }
         return super.onOptionsItemSelected(menuItem);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -148,76 +153,30 @@ public class ProjectStageActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onProjectStageDocumentItemClick(ProjectStageDocumentModel projectStageDocumentModel) {
-
-    }
-
-    @Override
-    public void onProjectStageDocumentItemClick(final FileModel fileModel) {
-        // -- Get SettingUserModel from SettingPersistent --
-        SettingPersistent settingPersistent = new SettingPersistent(this);
-        final SettingUserModel settingUserModel = settingPersistent.getSettingUserModel();
-
-        // -- Prepare FileGetNetworkAsyncTask --
-        final FileGetNetworkAsyncTask fileGetNetworkAsyncTask = new FileGetNetworkAsyncTask() {
-            @Override
-            public void onPreExecute() {
-                mAsyncTaskList.add(this);
-            }
-
-            @Override
-            public void onPostExecute(FileGetAsyncTaskResult fileRequestAsyncTaskResult) {
-                mAsyncTaskList.remove(this);
-
-                if (fileRequestAsyncTaskResult != null) {
-                    FileModel fileModel = fileRequestAsyncTaskResult.getFileModel();
-                    FileModel fileModelCache = fileRequestAsyncTaskResult.getFileModelCache();
-                    File file = null;
-                    if (fileModel != null)
-                        file = fileModel.getFile(ProjectStageActivity.this);
-                    else if (fileModelCache != null)
-                        file = fileModelCache.getFile(ProjectStageActivity.this);
-                    onProjectStageDocumentDownloaded(file);
-                }
-            }
-
-            @Override
-            protected void onProgressUpdate(String... progress) {
-                if (progress != null) {
-                    if (progress.length > 0) {
-                        onProjectStageDocumentDownloadingProgress(progress[0]);
-                    }
-                }
-            }
-        };
-
-        // -- Prepare FileGetCacheAsyncTask --
-        FileGetCacheAsyncTask fileGetCacheAsyncTask = new FileGetCacheAsyncTask() {
-            @Override
-            public void onPreExecute() {
-                onProjectStageDocumentDownloadBegin();
-                mAsyncTaskList.add(this);
-            }
-
-            @Override
-            public void onPostExecute(FileGetAsyncTaskResult fileRequestAsyncTaskResult) {
-                FileModel cacheFileModel = null;
-                if (fileRequestAsyncTaskResult != null)
-                    cacheFileModel = fileRequestAsyncTaskResult.getFileModel();
-
-                // -- Do FileGetNetworkAsyncTask --
-                fileGetNetworkAsyncTask.execute(new FileGetAsyncTaskParam(ProjectStageActivity.this, settingUserModel, fileModel.getFileId(), cacheFileModel));
-
-                mAsyncTaskList.remove(this);
-            }
-        };
-
-        // -- Do FileGetCacheAsyncTask --
-        fileGetCacheAsyncTask.execute(new FileGetAsyncTaskParam(this, settingUserModel, fileModel.getFileId(), null));
-    }
-
-    @Override
     public void onProjectStageAssignCommentAddMenuClick() {
+        ProjectStageAssignmentModel projectStageAssignmentModel = getProjectStageAssignmentModel(mProjectStageLayout.getProjectStageModel(), mProjectStageLayout.getProjectStageAssignmentModels());
+        if (projectStageAssignmentModel != null)
+            mProjectStageLayout.showProjectStageAssignCommentForm(projectStageAssignmentModel);
+    }
+
+    @Override
+    public void onProjectStageTabChanged(int position) {
+        supportInvalidateOptionsMenu();
+    }
+
+    protected void onProjectStageRequestProgress(final String progressMessage) {
+
+    }
+
+    protected void onProjectStageRequestSuccess(final ProjectStageModel projectStageModel, final ProjectStageAssignmentModel[] projectStageAssignmentModels, final ProjectStageDocumentModel[] projectStageDocumentModels, final ProjectStageAssignCommentModel[] projectStageAssignCommentModels) {
+        mProjectStageLayout.setLayoutData(projectStageModel, projectStageAssignmentModels, projectStageDocumentModels, projectStageAssignCommentModels);
+    }
+
+    protected void onProjectStageRequestMessage(final String message) {
+
+    }
+
+    protected ProjectStageAssignmentModel getProjectStageAssignmentModel(final ProjectStageModel projectStageModel, final ProjectStageAssignmentModel[] projectStageAssignmentModels) {
         int projectMemberId = 0;
         int projectStageId = 0;
 
@@ -231,7 +190,6 @@ public class ProjectStageActivity extends AppCompatActivity implements
         }
 
         // -- Get ProjectStageModel --
-        ProjectStageModel projectStageModel = mProjectStageLayout.getProjectStageModel();
         if (projectStageModel != null) {
             if (projectStageModel.getProjectStageId() != null)
                 projectStageId = projectStageModel.getProjectStageId();
@@ -239,7 +197,6 @@ public class ProjectStageActivity extends AppCompatActivity implements
 
         // -- Get ProjectStageAssignmentModel --
         ProjectStageAssignmentModel projectStageAssignmentModel = null;
-        ProjectStageAssignmentModel[] projectStageAssignmentModels = mProjectStageLayout.getProjectStageAssignmentModels();
         if (projectStageAssignmentModels != null) {
             for (ProjectStageAssignmentModel existProjectStageAssignmentModel : projectStageAssignmentModels) {
                 int existProjectMemberId = 0;
@@ -256,199 +213,16 @@ public class ProjectStageActivity extends AppCompatActivity implements
             }
         }
 
-        if (projectStageAssignmentModel == null)
-            return;
-
-        // -- Redirect to ProjectStageAssignCommentFormActivity --
-        Intent intent = new Intent(this, ProjectStageAssignCommentFormActivity.class);
-
-        try {
-            org.json.JSONObject projectStageAssignmentModelJsonObject = projectStageAssignmentModel.build();
-            String projectStageAssignmentModelJson = projectStageAssignmentModelJsonObject.toString(0);
-            intent.putExtra(ProjectStageAssignCommentFormActivity.INTENT_PARAM_PROJECT_STAGE_ASSIGNMENT_MODEL, projectStageAssignmentModelJson);
-        } catch (org.json.JSONException ex) {
-        }
-
-        startActivityForResult(intent, ConstantUtil.INTENT_REQUEST_PROJECT_STAGE_ASSIGN_COMMENT_FORM);
-    }
-
-    @Override
-    public void onProjectStageAssignCommentItemClick(ProjectStageAssignCommentModel projectStageAssignCommentModel) {
-        // -- Redirect to ProjectStageAssignCommentFormActivity --
-        Intent intent = new Intent(this, ProjectStageAssignCommentDetailActivity.class);
-
-        try {
-            org.json.JSONObject projectStageAssignCommentModelJsonObject = projectStageAssignCommentModel.build();
-            String projectStageAssignCommentModelJson = projectStageAssignCommentModelJsonObject.toString(0);
-            intent.putExtra(ProjectStageAssignCommentDetailActivity.INTENT_PARAM_PROJECT_STAGE_ASSIGN_COMMENT_MODEL, projectStageAssignCommentModelJson);
-        } catch (org.json.JSONException ex) {
-        }
-
-        startActivityForResult(intent, ConstantUtil.INTENT_REQUEST_PROJECT_STAGE_ASSIGN_COMMENT_DETAIL);
-    }
-
-    protected void showProjectStageAssignCommentForm(ProjectStageAssignCommentModel projectStageAssignCommentModel) {
-        // -- Redirect to ProjectStageAssignCommentFormActivity --
-        Intent intent = new Intent(this, ProjectStageAssignCommentFormActivity.class);
-
-        try {
-            org.json.JSONObject projectStageAssignCommentModelJsonObject = projectStageAssignCommentModel.build();
-            String projectStageAssignCommentModelJson = projectStageAssignCommentModelJsonObject.toString(0);
-            intent.putExtra(ProjectStageAssignCommentFormActivity.INTENT_PARAM_PROJECT_STAGE_ASSIGN_COMMENT_MODEL, projectStageAssignCommentModelJson);
-        } catch (org.json.JSONException ex) {
-        }
-
-        startActivityForResult(intent, ConstantUtil.INTENT_REQUEST_PROJECT_STAGE_ASSIGN_COMMENT_FORM);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        Bundle bundle = null;
-        if (data != null)
-            bundle = data.getExtras();
-
-        if (requestCode == ConstantUtil.INTENT_REQUEST_PROJECT_STAGE_ASSIGN_COMMENT_FORM) {
-            if (resultCode == ConstantUtil.INTENT_REQUEST_PROJECT_STAGE_ASSIGN_COMMENT_FORM_RESULT_SAVED) {
-                if (bundle != null) {
-                    if (bundle.containsKey(ConstantUtil.INTENT_RESULT_PROJECT_STAGE_ASSIGN_COMMENT_MODEL)) {
-                        String projectStageAssignCommentModelJson = bundle.getString(ConstantUtil.INTENT_RESULT_PROJECT_STAGE_ASSIGN_COMMENT_MODEL);
-                        if (projectStageAssignCommentModelJson != null) {
-                            ProjectStageAssignCommentModel projectStageAssignCommentModel = null;
-                            try {
-                                org.json.JSONObject jsonObject = new org.json.JSONObject(projectStageAssignCommentModelJson);
-                                projectStageAssignCommentModel = ProjectStageAssignCommentModel.build(jsonObject);
-                            } catch (org.json.JSONException ex) {
-                            }
-                            if (projectStageAssignCommentModel != null)
-                                mProjectStageLayout.addProjectStageAssignCommentModel(projectStageAssignCommentModel);
-                        }
-                    }
-                }
-            }
-        } else if (requestCode == ConstantUtil.INTENT_REQUEST_PROJECT_STAGE_ASSIGN_COMMENT_DETAIL) {
-            if (resultCode == ConstantUtil.INTENT_REQUEST_PROJECT_STAGE_ASSIGN_COMMENT_DETAIL_RESULT_EDIT) {
-                if (bundle != null) {
-                    if (bundle.containsKey(ConstantUtil.INTENT_RESULT_PROJECT_STAGE_ASSIGN_COMMENT_MODEL)) {
-                        String projectStageAssignCommentModelJson = bundle.getString(ConstantUtil.INTENT_RESULT_PROJECT_STAGE_ASSIGN_COMMENT_MODEL);
-                        if (projectStageAssignCommentModelJson != null) {
-                            ProjectStageAssignCommentModel projectStageAssignCommentModel = null;
-                            try {
-                                org.json.JSONObject jsonObject = new org.json.JSONObject(projectStageAssignCommentModelJson);
-                                projectStageAssignCommentModel = ProjectStageAssignCommentModel.build(jsonObject);
-                            } catch (org.json.JSONException ex) {
-                            }
-                            if (projectStageAssignCommentModel != null)
-                                showProjectStageAssignCommentForm(projectStageAssignCommentModel);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    protected void onProjectStageRequestProgress(final String progressMessage) {
-
-    }
-
-    protected void onProjectStageRequestSuccess(final ProjectStageModel projectStageModel, final ProjectStageAssignmentModel[] projectStageAssignmentModels, final ProjectStageDocumentModel[] projectStageDocumentModels, final ProjectStageAssignCommentModel[] projectStageAssignCommentModels) {
-        mProjectStageLayout.setLayoutData(projectStageModel, projectStageAssignmentModels, projectStageDocumentModels, projectStageAssignCommentModels);
-    }
-
-    protected void onProjectStageRequestMessage(final String message) {
-
-    }
-
-    @Override
-    public void onImageRequest(final ImageView imageView, final Integer fileId) {
-        // -- Get SettingUserModel from SettingPersistent --
-        SettingPersistent settingPersistent = new SettingPersistent(this);
-        final SettingUserModel settingUserModel = settingPersistent.getSettingUserModel();
-
-        // -- Prepare FileGetNetworkAsyncTask --
-        final FileGetNetworkAsyncTask fileGetNetworkAsyncTask = new FileGetNetworkAsyncTask() {
-            @Override
-            public void onPreExecute() {
-                mAsyncTaskList.add(this);
-            }
-
-            @Override
-            public void onPostExecute(FileGetAsyncTaskResult fileRequestAsyncTaskResult) {
-                mAsyncTaskList.remove(this);
-
-                if (fileRequestAsyncTaskResult != null) {
-                    FileModel fileModel = fileRequestAsyncTaskResult.getFileModel();
-                    if (fileModel != null) {
-                        File file = fileModel.getFile(ProjectStageActivity.this);
-                        if (file != null)
-                            ImageUtil.setImageThumbnailView(ProjectStageActivity.this, imageView, file);
-                    }
-                }
-            }
-        };
-
-        // -- Prepare FileGetCacheAsyncTask --
-        FileGetCacheAsyncTask fileGetCacheAsyncTask = new FileGetCacheAsyncTask() {
-            @Override
-            public void onPreExecute() {
-                mAsyncTaskList.add(this);
-            }
-
-            @Override
-            public void onPostExecute(FileGetAsyncTaskResult fileRequestAsyncTaskResult) {
-                FileModel fileModel = null;
-                if (fileRequestAsyncTaskResult != null) {
-                    fileModel = fileRequestAsyncTaskResult.getFileModel();
-                    if (fileModel != null) {
-                        File file = fileModel.getFile(ProjectStageActivity.this);
-                        if (file != null)
-                            ImageUtil.setImageThumbnailView(ProjectStageActivity.this, imageView, file);
-                    }
-                }
-
-                // -- Do FileGetNetworkAsyncTask --
-                fileGetNetworkAsyncTask.execute(new FileGetAsyncTaskParam(ProjectStageActivity.this, settingUserModel, fileId, fileModel));
-
-                mAsyncTaskList.remove(this);
-            }
-        };
-
-        // -- Do FileGetCacheAsyncTask --
-        fileGetCacheAsyncTask.execute(new FileGetAsyncTaskParam(this, settingUserModel, fileId, null));
-    }
-
-    protected void onProjectStageDocumentDownloadBegin() {
-        mProjectStageLayout.progressDialogShow(ViewUtil.getResourceString(this, R.string.project_stage_layout_download_begin));
-    }
-
-    protected void onProjectStageDocumentDownloadingProgress(String progress) {
-        mProjectStageLayout.progressDialogShow(ViewUtil.getResourceString(this, R.string.project_stage_layout_download_progress, progress));
-    }
-
-    protected void onProjectStageDocumentDownloaded(final File file) {
-        mProjectStageLayout.progressDialogDismiss();
-        if (file != null)
-            FileUtil.openFile(this, file);
+        return projectStageAssignmentModel;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
-        for (AsyncTask asyncTask : mAsyncTaskPendingList) {
-
-        }
-        mAsyncTaskPendingList.clear();
     }
 
     @Override
     protected void onPause() {
-        for (AsyncTask asyncTask : mAsyncTaskPendingList) {
-            if (asyncTask.getStatus() != AsyncTask.Status.FINISHED)
-                asyncTask.cancel(true);
-        }
-
         super.onPause();
     }
 
@@ -457,7 +231,6 @@ public class ProjectStageActivity extends AppCompatActivity implements
         for (AsyncTask asyncTask : mAsyncTaskList) {
             if (asyncTask.getStatus() != AsyncTask.Status.FINISHED) {
                 asyncTask.cancel(true);
-                mAsyncTaskPendingList.add(asyncTask);
             }
         }
 

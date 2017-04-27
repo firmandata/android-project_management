@@ -51,8 +51,8 @@ public class NotificationDetailFragment extends Fragment implements Notification
         if (notificationModel != null) {
             try {
                 org.json.JSONObject notificationModelJsonObject = notificationModel.build();
-                String projectModelJson = notificationModelJsonObject.toString(0);
-                bundle.putString(PARAM_NOTIFICATION_MODEL, projectModelJson);
+                String notificationModelJson = notificationModelJsonObject.toString(0);
+                bundle.putString(PARAM_NOTIFICATION_MODEL, notificationModelJson);
             } catch (org.json.JSONException ex) {
             }
         }
@@ -76,10 +76,10 @@ public class NotificationDetailFragment extends Fragment implements Notification
         Bundle bundle = getArguments();
         if (bundle != null) {
             // -- Get NotificationModel parameter --
-            String contractModelJson = bundle.getString(PARAM_NOTIFICATION_MODEL);
-            if (contractModelJson != null) {
+            String notificationModelJson = bundle.getString(PARAM_NOTIFICATION_MODEL);
+            if (notificationModelJson != null) {
                 try {
-                    org.json.JSONObject jsonObject = new org.json.JSONObject(contractModelJson);
+                    org.json.JSONObject jsonObject = new org.json.JSONObject(notificationModelJson);
                     notificationModel = NotificationModel.build(jsonObject);
                 } catch (org.json.JSONException ex) {
                 }

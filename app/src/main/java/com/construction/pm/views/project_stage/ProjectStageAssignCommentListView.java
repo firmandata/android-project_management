@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 import com.construction.pm.R;
 import com.construction.pm.libraries.widgets.RecyclerItemTouchListener;
 import com.construction.pm.models.ProjectStageAssignCommentModel;
+import com.construction.pm.models.ProjectStageModel;
 import com.construction.pm.utils.DateTimeUtil;
 import com.construction.pm.views.listeners.ImageRequestClickListener;
 import com.construction.pm.views.listeners.ImageRequestListener;
@@ -31,6 +32,8 @@ public class ProjectStageAssignCommentListView {
 
     protected RecyclerView mProjectStageAssignCommentList;
     protected ProjectStageAssignCommentListAdapter mProjectStageAssignCommentListAdapter;
+
+    protected ProjectStageModel mProjectStageModel;
 
     protected ProjectStageAssignCommentListListener mProjectStageAssignCommentListListener;
 
@@ -57,7 +60,6 @@ public class ProjectStageAssignCommentListView {
 
         mProjectStageAssignCommentList = (RecyclerView) mProjectStageAssignCommentListView.findViewById(R.id.projectStageAssignCommentList);
         mProjectStageAssignCommentList.setItemAnimator(new DefaultItemAnimator());
-        mProjectStageAssignCommentList.setNestedScrollingEnabled(false);
         mProjectStageAssignCommentList.setHasFixedSize(true);
         mProjectStageAssignCommentList.addOnItemTouchListener(new RecyclerItemTouchListener(mContext, mProjectStageAssignCommentList, new RecyclerItemTouchListener.ItemClickListener() {
             @Override
@@ -83,6 +85,13 @@ public class ProjectStageAssignCommentListView {
 
         mProjectStageAssignCommentListAdapter = new ProjectStageAssignCommentListAdapter();
         mProjectStageAssignCommentList.setAdapter(mProjectStageAssignCommentListAdapter);
+
+        if (mProjectStageAssignCommentListListener != null)
+            mProjectStageAssignCommentListListener.onProjectStageAssignCommentListRequest(mProjectStageModel);
+    }
+
+    public void setProjectStageModel(final ProjectStageModel projectStageModel) {
+        mProjectStageModel = projectStageModel;
     }
 
     public void setProjectStageAssignCommentModels(final ProjectStageAssignCommentModel[] projectStageAssignCommentModels) {
@@ -110,6 +119,7 @@ public class ProjectStageAssignCommentListView {
     }
 
     public interface ProjectStageAssignCommentListListener {
+        void onProjectStageAssignCommentListRequest(ProjectStageModel projectStageModel);
         void onProjectStageAssignCommentItemClick(ProjectStageAssignCommentModel projectStageAssignCommentModel);
     }
 

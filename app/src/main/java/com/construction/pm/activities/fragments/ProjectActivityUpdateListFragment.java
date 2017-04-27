@@ -124,11 +124,11 @@ public class ProjectActivityUpdateListFragment extends Fragment implements
                 mAsyncTaskList.remove(this);
 
                 if (managerProjectActivityUpdateListAsyncTask != null) {
-                    onProjectListRequestSuccess(managerProjectActivityUpdateListAsyncTask.getProjectActivityUpdateModels());
+                    onProjectActivityUpdateListRequestSuccess(managerProjectActivityUpdateListAsyncTask.getProjectActivityUpdateModels());
                     if (managerProjectActivityUpdateListAsyncTask.getMessage() != null)
-                        onProjectListRequestMessage(managerProjectActivityUpdateListAsyncTask.getMessage());
+                        onProjectActivityUpdateListRequestMessage(managerProjectActivityUpdateListAsyncTask.getMessage());
                 } else {
-                    onProjectListRequestMessage(null);
+                    onProjectActivityUpdateListRequestMessage(null);
                 }
             }
 
@@ -136,7 +136,7 @@ public class ProjectActivityUpdateListFragment extends Fragment implements
             protected void onProgressUpdate(String... messages) {
                 if (messages != null) {
                     if (messages.length > 0) {
-                        onProjectListRequestProgress(messages[0]);
+                        onProjectActivityUpdateListRequestProgress(messages[0]);
                     }
                 }
             }
@@ -152,15 +152,15 @@ public class ProjectActivityUpdateListFragment extends Fragment implements
             mProjectActivityUpdateListFragmentListener.onProjectActivityUpdateListItemClick(projectActivityUpdateModel);
     }
 
-    protected void onProjectListRequestProgress(final String progressMessage) {
+    protected void onProjectActivityUpdateListRequestProgress(final String progressMessage) {
 
     }
 
-    protected void onProjectListRequestSuccess(final ProjectActivityUpdateModel[] projectActivityUpdateModels) {
+    protected void onProjectActivityUpdateListRequestSuccess(final ProjectActivityUpdateModel[] projectActivityUpdateModels) {
         mProjectActivityUpdateListView.setProjectActivityUpdateModels(projectActivityUpdateModels);
     }
 
-    protected void onProjectListRequestMessage(final String message) {
+    protected void onProjectActivityUpdateListRequestMessage(final String message) {
 
     }
 

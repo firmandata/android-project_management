@@ -217,9 +217,10 @@
 
     <string name="project_stage_layout_title">Project Stage</string>
     <string name="project_stage_layout_menu_comment_add">Add Comment</string>
+    <string name="project_stage_layout_tab_project_stage_title">Project Stage</string>
+    <string name="project_stage_layout_tab_comment_list_title">Comments</string>
     <string name="project_stage_layout_project_stage_assignment_title">Assignment To :</string>
     <string name="project_stage_layout_project_stage_document_title">Documents :</string>
-    <string name="project_stage_layout_project_stage_assign_comment_title">Comments :</string>
     <string name="project_stage_layout_download_begin">Please wait &#8230;</string>
     <string name="project_stage_layout_download_progress">Downloading $s1</string>
 
