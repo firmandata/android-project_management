@@ -4,6 +4,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.util.Base64;
 import android.webkit.MimeTypeMap;
@@ -32,10 +33,34 @@ public class FileUtil {
         return isOpened;
     }
 
+    protected static File getCacheDir(final Context context) {
+        boolean mExternalStorageAvailable = false;
+        boolean mExternalStorageWritable = false;
+        String state = Environment.getExternalStorageState();
+
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            // We can read and write the media
+            mExternalStorageAvailable = mExternalStorageWritable = true;
+        } else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+            // We can only read the media
+            mExternalStorageAvailable = true;
+            mExternalStorageWritable = false;
+        } else {
+            // Something else is wrong. It may be one of many other states, but all we need
+            //  to know is we can neither read nor write
+            mExternalStorageAvailable = mExternalStorageWritable = false;
+        }
+
+        if (mExternalStorageAvailable && mExternalStorageWritable)
+            return context.getExternalCacheDir();
+        else
+            return context.getCacheDir();
+    }
+
     @Nullable
     public static File saveToFileCache(final Context context, final String fileName, final byte[] fileData) {
         // -- Save to cache directory --
-        File file = new File(context.getExternalCacheDir(), fileName);
+        File file = new File(getCacheDir(context), fileName);
         OutputStream outputStream = null;
         try {
             outputStream = new FileOutputStream(file);
@@ -60,7 +85,7 @@ public class FileUtil {
     }
 
     public static File copyToFileCache(final Context context, final File fileSource, final String newFileName) {
-        File fileDestination = new File(context.getExternalCacheDir(), newFileName);
+        File fileDestination = new File(getCacheDir(context), newFileName);
 
         FileChannel source = null;
         FileChannel destination = null;
@@ -96,7 +121,7 @@ public class FileUtil {
 
     @Nullable
     public static File getFileCache(final Context context, final String fileName) {
-        File file = new File(context.getExternalCacheDir(), fileName);
+        File file = new File(getCacheDir(context), fileName);
 
         if (file.exists())
             return file;
