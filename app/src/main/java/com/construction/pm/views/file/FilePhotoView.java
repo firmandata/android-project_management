@@ -14,7 +14,7 @@ public class FilePhotoView {
 
     protected RelativeLayout mFilePhotoView;
 
-    protected TouchImageView mPhoto;
+    protected FilePhotoItemTouchView mPhoto;
 
     protected ImageRequestListener mImageRequestListener;
 
@@ -39,7 +39,7 @@ public class FilePhotoView {
     protected void initializeView(final RelativeLayout filePhotoView) {
         mFilePhotoView = filePhotoView;
 
-        mPhoto = (TouchImageView) mFilePhotoView.findViewById(R.id.photoId);
+        mPhoto = new FilePhotoItemTouchView(mContext, (RelativeLayout) mFilePhotoView.findViewById(R.id.file_photo_item_touch_view));
     }
 
     public void setImageRequestListener(final ImageRequestListener imageRequestListener) {

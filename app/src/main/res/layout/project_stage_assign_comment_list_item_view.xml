@@ -9,20 +9,20 @@
     android:background="?android:attr/selectableItemBackground"
     android:padding="@dimen/gap">
 
-    <android.support.v7.widget.AppCompatImageView
-        android:id="@+id/photoId"
+    <include
+        android:id="@+id/file_photo_item_view"
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:layout_marginRight="@dimen/gap_half"
         android:layout_marginEnd="@dimen/gap_half"
-        app:srcCompat="@drawable/ic_image_dark_24" />
+        layout="@layout/file_photo_item_view" />
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/commentDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/photoId"
-        android:layout_toEndOf="@+id/photoId"
+        android:layout_toRightOf="@+id/file_photo_item_view"
+        android:layout_toEndOf="@+id/file_photo_item_view"
         android:ellipsize="end"
         android:singleLine="true"
         android:text="" />

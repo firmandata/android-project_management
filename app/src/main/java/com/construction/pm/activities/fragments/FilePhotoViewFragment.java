@@ -17,6 +17,7 @@ import com.construction.pm.models.FileModel;
 import com.construction.pm.models.system.SettingUserModel;
 import com.construction.pm.persistence.SettingPersistent;
 import com.construction.pm.utils.ImageUtil;
+import com.construction.pm.views.file.FilePhotoItemView;
 import com.construction.pm.views.file.FilePhotoView;
 import com.construction.pm.views.file.TouchImageView;
 import com.construction.pm.views.listeners.ImageRequestListener;
@@ -88,9 +89,7 @@ public class FilePhotoViewFragment extends Fragment implements ImageRequestListe
     }
 
     @Override
-    public void onImageRequest(final ImageView imageView, final Integer fileId) {
-        final TouchImageView touchImageView = (TouchImageView) imageView;
-
+    public void onImageRequest(final FilePhotoItemView filePhotoItemView, final Integer fileId) {
         // -- Get SettingUserModel from SettingPersistent --
         SettingPersistent settingPersistent = new SettingPersistent(getContext());
         final SettingUserModel settingUserModel = settingPersistent.getSettingUserModel();
@@ -111,7 +110,7 @@ public class FilePhotoViewFragment extends Fragment implements ImageRequestListe
                     if (fileModel != null) {
                         File file = fileModel.getFile(getContext());
                         if (file != null)
-                            ImageUtil.setImageView(getContext(), touchImageView, file);
+                            filePhotoItemView.setFilePhoto(file);
                     }
                 }
             }
@@ -132,7 +131,7 @@ public class FilePhotoViewFragment extends Fragment implements ImageRequestListe
                     if (fileModel != null) {
                         File file = fileModel.getFile(getContext());
                         if (file != null)
-                            ImageUtil.setImageView(getContext(), touchImageView, file);
+                            filePhotoItemView.setFilePhoto(file);
                     }
                 }
 

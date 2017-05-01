@@ -1,16 +1,15 @@
 package com.construction.pm.views.project_activity;
 
 import android.content.Context;
-import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.construction.pm.R;
@@ -19,6 +18,7 @@ import com.construction.pm.models.ProjectActivityModel;
 import com.construction.pm.models.ProjectActivityMonitoringModel;
 import com.construction.pm.utils.DateTimeUtil;
 import com.construction.pm.utils.StringUtil;
+import com.construction.pm.views.file.FilePhotoItemView;
 import com.construction.pm.views.listeners.ImageRequestListener;
 
 import java.util.ArrayList;
@@ -104,6 +104,10 @@ public class ProjectActivityMonitoringListView {
         mProjectActivityMonitoringListAdapter.addProjectActivityMonitoringModels(new ProjectActivityMonitoringModel[] { projectActivityMonitoringModel });
     }
 
+    public FilePhotoItemView getFilePhotoItemView(final Integer fileId) {
+        return mProjectActivityMonitoringListAdapter.getFilePhotoItemView(fileId);
+    }
+
     public void setImageRequestListener(final ImageRequestListener imageRequestListener) {
         mProjectActivityMonitoringListAdapter.setImageRequestListener(imageRequestListener);
     }
@@ -124,11 +128,13 @@ public class ProjectActivityMonitoringListView {
     protected class ProjectActivityMonitoringListAdapter extends RecyclerView.Adapter<ProjectActivityMonitoringListViewHolder> {
 
         protected List<ProjectActivityMonitoringModel> mProjectActivityMonitoringModelList;
+        protected SparseArray<ProjectActivityMonitoringListViewHolder> mViewHolderList;
 
         protected ImageRequestListener mImageRequestListener;
 
         public ProjectActivityMonitoringListAdapter() {
             mProjectActivityMonitoringModelList = new ArrayList<ProjectActivityMonitoringModel>();
+            mViewHolderList = new SparseArray<ProjectActivityMonitoringListViewHolder>();
         }
 
         public ProjectActivityMonitoringListAdapter(final ProjectActivityMonitoringModel[] projectActivityMonitoringModels) {
@@ -175,6 +181,12 @@ public class ProjectActivityMonitoringListView {
                 return null;
 
             return mProjectActivityMonitoringModelList.get(position);
+        }
+
+        public FilePhotoItemView getFilePhotoItemView(final Integer fileId) {
+            if (mViewHolderList.get(fileId, null) != null)
+                return mViewHolderList.get(fileId).getFilePhotoItemView();
+            return null;
         }
 
         public int getPosition(final ProjectActivityMonitoringModel projectActivityMonitoringModel) {
@@ -236,6 +248,9 @@ public class ProjectActivityMonitoringListView {
             ProjectActivityMonitoringModel projectActivityMonitoringModel = mProjectActivityMonitoringModelList.get(position);
             holder.setImageRequestListener(mImageRequestListener);
             holder.setProjectActivityMonitoringModel(projectActivityMonitoringModel);
+
+            if (projectActivityMonitoringModel.getPhotoId() != null)
+                mViewHolderList.put(projectActivityMonitoringModel.getPhotoId(), holder);
         }
 
         @Override
@@ -250,7 +265,7 @@ public class ProjectActivityMonitoringListView {
 
     protected class ProjectActivityMonitoringListViewHolder extends RecyclerView.ViewHolder {
 
-        protected AppCompatImageView mPhotoId;
+        protected FilePhotoItemView mFilePhotoItemView;
         protected AppCompatTextView mMonitoringDate;
         protected AppCompatTextView mActualStartDate;
         protected AppCompatTextView mActualEndDate;
@@ -263,7 +278,7 @@ public class ProjectActivityMonitoringListView {
         public ProjectActivityMonitoringListViewHolder(View view) {
             super(view);
 
-            mPhotoId = (AppCompatImageView) view.findViewById(R.id.photoId);
+            mFilePhotoItemView = new FilePhotoItemView(view.getContext(), (RelativeLayout) view.findViewById(R.id.file_photo_item_view));
             mMonitoringDate = (AppCompatTextView) view.findViewById(R.id.monitoringDate);
             mActualStartDate = (AppCompatTextView) view.findViewById(R.id.actualStartDate);
             mActualEndDate = (AppCompatTextView) view.findViewById(R.id.actualEndDate);
@@ -274,10 +289,12 @@ public class ProjectActivityMonitoringListView {
 
         public void setProjectActivityMonitoringModel(final ProjectActivityMonitoringModel projectActivityMonitoringModel) {
             if (projectActivityMonitoringModel.getPhotoId() != null) {
+                mFilePhotoItemView.setFileId(projectActivityMonitoringModel.getPhotoId());
                 if (mImageRequestListener != null)
-                    mImageRequestListener.onImageRequest(mPhotoId, projectActivityMonitoringModel.getPhotoId());
+                    mImageRequestListener.onImageRequest(mFilePhotoItemView, projectActivityMonitoringModel.getPhotoId());
             } else {
-                mPhotoId.setImageResource(R.drawable.ic_image_dark_24);
+                mFilePhotoItemView.setFilePhotoDefault();
+                mFilePhotoItemView.stopProgress();
             }
             mMonitoringDate.setText(DateTimeUtil.ToDateTimeDisplayString(projectActivityMonitoringModel.getMonitoringDate()));
             mActualStartDate.setText(DateTimeUtil.ToDateDisplayString(projectActivityMonitoringModel.getActualStartDate()));
@@ -285,6 +302,10 @@ public class ProjectActivityMonitoringListView {
             mActivityStatus.setText(projectActivityMonitoringModel.getActivityStatus());
             mPercentComplete.setText(StringUtil.numberPercentFormat(projectActivityMonitoringModel.getPercentComplete()));
             mComment.setText(projectActivityMonitoringModel.getComment());
+        }
+
+        public FilePhotoItemView getFilePhotoItemView() {
+            return mFilePhotoItemView;
         }
 
         public void setImageRequestListener(final ImageRequestListener imageRequestListener) {

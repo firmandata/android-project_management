@@ -245,7 +245,7 @@ public class FilePhotoListView {
 
     protected class FilePhotoListViewHolder extends RecyclerView.ViewHolder {
 
-        protected AppCompatImageView mPhotoId;
+        protected FilePhotoItemView mFilePhotoItemView;
 
         protected ImageRequestListener mImageRequestListener;
         protected ImageRequestClickListener mImageRequestClickListener;
@@ -253,17 +253,17 @@ public class FilePhotoListView {
         public FilePhotoListViewHolder(View view) {
             super(view);
 
-            mPhotoId = (AppCompatImageView) view.findViewById(R.id.photoId);
+            mFilePhotoItemView = new FilePhotoItemView(view.getContext(), (RelativeLayout) view.findViewById(R.id.file_photo_item_view));
         }
 
         public void setFileId(final Integer fileId) {
             if (fileId != null) {
                 if (mImageRequestListener != null)
-                    mImageRequestListener.onImageRequest(mPhotoId, fileId);
+                    mImageRequestListener.onImageRequest(mFilePhotoItemView, fileId);
                 if (mImageRequestClickListener != null) {
-                    mPhotoId.setOnClickListener(new View.OnClickListener() {
+                    mFilePhotoItemView.setFilePhotoItemViewClickListener(new FilePhotoItemView.FilePhotoItemViewClickListener() {
                         @Override
-                        public void onClick(View view) {
+                        public void onFilePhotoItemClick() {
                             mImageRequestClickListener.onImageRequestClick(fileId);
                         }
                     });

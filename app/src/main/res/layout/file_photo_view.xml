@@ -4,10 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.construction.pm.views.file.TouchImageView
-        android:id="@+id/photoId"
+    <include
+        android:id="@+id/file_photo_item_touch_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="fitCenter" />
+        layout="@layout/file_photo_item_touch_view" />
 
 </RelativeLayout>

@@ -1,12 +1,12 @@
 package com.construction.pm.views.project_stage;
 
 import android.content.Context;
-import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,9 +17,8 @@ import com.construction.pm.libraries.widgets.RecyclerItemTouchListener;
 import com.construction.pm.models.ProjectStageAssignCommentModel;
 import com.construction.pm.models.ProjectStageModel;
 import com.construction.pm.utils.DateTimeUtil;
-import com.construction.pm.views.listeners.ImageRequestClickListener;
+import com.construction.pm.views.file.FilePhotoItemView;
 import com.construction.pm.views.listeners.ImageRequestListener;
-import com.construction.pm.views.file.FilePhotoListView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -106,6 +105,10 @@ public class ProjectStageAssignCommentListView {
         return mProjectStageAssignCommentListAdapter.getProjectStageAssignCommentModels();
     }
 
+    public FilePhotoItemView getFilePhotoItemView(final Integer fileId) {
+        return mProjectStageAssignCommentListAdapter.getFilePhotoItemView(fileId);
+    }
+
     public void setImageRequestListener(final ImageRequestListener imageRequestListener) {
         mProjectStageAssignCommentListAdapter.setImageRequestListener(imageRequestListener);
     }
@@ -126,11 +129,13 @@ public class ProjectStageAssignCommentListView {
     protected class ProjectStageAssignCommentListAdapter extends RecyclerView.Adapter<ProjectStageAssignCommentListViewHolder> {
 
         protected List<ProjectStageAssignCommentModel> mProjectStageAssignCommentModelList;
+        protected SparseArray<ProjectStageAssignCommentListViewHolder> mViewHolderList;
 
         protected ImageRequestListener mImageRequestListener;
 
         public ProjectStageAssignCommentListAdapter() {
             mProjectStageAssignCommentModelList = new ArrayList<ProjectStageAssignCommentModel>();
+            mViewHolderList = new SparseArray<ProjectStageAssignCommentListViewHolder>();
         }
 
         public ProjectStageAssignCommentListAdapter(final ProjectStageAssignCommentModel[] projectStageAssignCommentModels) {
@@ -183,6 +188,12 @@ public class ProjectStageAssignCommentListView {
                 return null;
 
             return mProjectStageAssignCommentModelList.get(position);
+        }
+
+        public FilePhotoItemView getFilePhotoItemView(final Integer fileId) {
+            if (mViewHolderList.get(fileId, null) != null)
+                return mViewHolderList.get(fileId).getFilePhotoItemView();
+            return null;
         }
 
         public int getPosition(final ProjectStageAssignCommentModel projectStageAssignCommentModel) {
@@ -244,6 +255,9 @@ public class ProjectStageAssignCommentListView {
             ProjectStageAssignCommentModel projectStageAssignCommentModel = mProjectStageAssignCommentModelList.get(position);
             holder.setImageRequestListener(mImageRequestListener);
             holder.setProjectStageAssignCommentModel(projectStageAssignCommentModel);
+
+            if (projectStageAssignCommentModel.getPhotoId() != null)
+                mViewHolderList.put(projectStageAssignCommentModel.getPhotoId(), holder);
         }
 
         @Override
@@ -260,7 +274,7 @@ public class ProjectStageAssignCommentListView {
 
         protected AppCompatTextView mCommentDate;
         protected AppCompatTextView mComment;
-        protected AppCompatImageView mPhotoId;
+        protected FilePhotoItemView mFilePhotoItemView;
 
         protected ImageRequestListener mImageRequestListener;
 
@@ -269,18 +283,24 @@ public class ProjectStageAssignCommentListView {
 
             mCommentDate = (AppCompatTextView) view.findViewById(R.id.commentDate);
             mComment = (AppCompatTextView) view.findViewById(R.id.comment);
-            mPhotoId = (AppCompatImageView) view.findViewById(R.id.photoId);
+            mFilePhotoItemView = new FilePhotoItemView(view.getContext(), (RelativeLayout) view.findViewById(R.id.file_photo_item_view));
         }
 
         public void setProjectStageAssignCommentModel(final ProjectStageAssignCommentModel projectStageAssignCommentModel) {
             mCommentDate.setText(DateTimeUtil.ToDateTimeDisplayString(projectStageAssignCommentModel.getCommentDate()));
             mComment.setText(projectStageAssignCommentModel.getComment());
             if (projectStageAssignCommentModel.getPhotoId() != null) {
+                mFilePhotoItemView.setFileId(projectStageAssignCommentModel.getPhotoId());
                 if (mImageRequestListener != null)
-                    mImageRequestListener.onImageRequest(mPhotoId, projectStageAssignCommentModel.getPhotoId());
+                    mImageRequestListener.onImageRequest(mFilePhotoItemView, projectStageAssignCommentModel.getPhotoId());
             } else {
-                mPhotoId.setImageResource(R.drawable.ic_image_dark_24);
+                mFilePhotoItemView.setFilePhotoDefault();
+                mFilePhotoItemView.stopProgress();
             }
+        }
+
+        public FilePhotoItemView getFilePhotoItemView() {
+            return mFilePhotoItemView;
         }
 
         public void setImageRequestListener(final ImageRequestListener imageRequestListener) {

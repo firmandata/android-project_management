@@ -1,26 +1,24 @@
 package com.construction.pm.activities.fragments;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.os.Messenger;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.construction.pm.activities.ProjectStageAssignCommentDetailActivity;
 import com.construction.pm.activities.ProjectStageAssignCommentFormActivity;
-import com.construction.pm.asynctask.FileGetCacheAsyncTask;
-import com.construction.pm.asynctask.FileGetNetworkAsyncTask;
 import com.construction.pm.asynctask.ProjectStageGetAsyncTask;
-import com.construction.pm.asynctask.param.FileGetAsyncTaskParam;
 import com.construction.pm.asynctask.param.ProjectStageGetAsyncTaskParam;
-import com.construction.pm.asynctask.result.FileGetAsyncTaskResult;
 import com.construction.pm.asynctask.result.ProjectStageGetAsyncTaskResult;
 import com.construction.pm.models.FileModel;
-import com.construction.pm.models.ProjectMemberModel;
 import com.construction.pm.models.ProjectStageAssignCommentModel;
 import com.construction.pm.models.ProjectStageAssignmentModel;
 import com.construction.pm.models.ProjectStageModel;
@@ -28,8 +26,10 @@ import com.construction.pm.models.system.SessionLoginModel;
 import com.construction.pm.models.system.SettingUserModel;
 import com.construction.pm.persistence.SessionPersistent;
 import com.construction.pm.persistence.SettingPersistent;
+import com.construction.pm.services.NetworkFileMessageHandler;
+import com.construction.pm.services.NetworkFileService;
 import com.construction.pm.utils.ConstantUtil;
-import com.construction.pm.utils.ImageUtil;
+import com.construction.pm.views.file.FilePhotoItemView;
 import com.construction.pm.views.listeners.ImageRequestListener;
 import com.construction.pm.views.project_stage.ProjectStageAssignCommentListView;
 
@@ -39,7 +39,8 @@ import java.util.List;
 
 public class ProjectStageAssignCommentListFragment extends Fragment implements
         ProjectStageAssignCommentListView.ProjectStageAssignCommentListListener,
-        ImageRequestListener {
+        ImageRequestListener,
+        NetworkFileMessageHandler.NetworkFileMessageHandlerProgressListener {
 
     public static final String PARAM_PROJECT_STAGE_MODEL = "PROJECT_STAGE_MODEL";
     public static final String PARAM_PROJECT_STAGE_ASSIGN_COMMENT_MODELS = "PROJECT_STAGE_ASSIGN_COMMENT_MODELS";
@@ -146,6 +147,20 @@ public class ProjectStageAssignCommentListFragment extends Fragment implements
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        bindNetworkFileService();
+    }
+
+    @Override
+    public void onPause() {
+        unbindNetworkFileService();
+
+        super.onPause();
     }
 
     @Override
@@ -286,61 +301,16 @@ public class ProjectStageAssignCommentListFragment extends Fragment implements
     }
 
     @Override
-    public void onImageRequest(final ImageView imageView, final Integer fileId) {
-        // -- Get SettingUserModel from SettingPersistent --
-        SettingPersistent settingPersistent = new SettingPersistent(getContext());
-        final SettingUserModel settingUserModel = settingPersistent.getSettingUserModel();
+    public void onImageRequest(final FilePhotoItemView filePhotoItemView, final Integer fileId) {
+        if (fileId == null)
+            return;
 
-        // -- Prepare FileGetNetworkAsyncTask --
-        final FileGetNetworkAsyncTask fileGetNetworkAsyncTask = new FileGetNetworkAsyncTask() {
-            @Override
-            public void onPreExecute() {
-                mAsyncTaskList.add(this);
-            }
-
-            @Override
-            public void onPostExecute(FileGetAsyncTaskResult fileRequestAsyncTaskResult) {
-                mAsyncTaskList.remove(this);
-
-                if (fileRequestAsyncTaskResult != null) {
-                    FileModel fileModel = fileRequestAsyncTaskResult.getFileModel();
-                    if (fileModel != null) {
-                        File file = fileModel.getFile(getContext());
-                        if (file != null)
-                            ImageUtil.setImageThumbnailView(getContext(), imageView, file);
-                    }
-                }
-            }
-        };
-
-        // -- Prepare FileGetCacheAsyncTask --
-        FileGetCacheAsyncTask fileGetCacheAsyncTask = new FileGetCacheAsyncTask() {
-            @Override
-            public void onPreExecute() {
-                mAsyncTaskList.add(this);
-            }
-
-            @Override
-            public void onPostExecute(FileGetAsyncTaskResult fileRequestAsyncTaskResult) {
-                FileModel fileModel = null;
-                if (fileRequestAsyncTaskResult != null) {
-                    fileModel = fileRequestAsyncTaskResult.getFileModel();
-                    if (fileModel != null) {
-                        File file = fileModel.getFile(getContext());
-                        if (file != null)
-                            ImageUtil.setImageThumbnailView(getContext(), imageView, file);
-                    }
-                }
-
-                // -- Do FileGetNetworkAsyncTask --
-                fileGetNetworkAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new FileGetAsyncTaskParam(getContext(), settingUserModel, fileId, fileModel));
-
-                mAsyncTaskList.remove(this);
-            }
-        };
-
-        // -- Do FileGetCacheAsyncTask --
-        fileGetCacheAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new FileGetAsyncTaskParam(getContext(), settingUserModel, fileId, null));
+        if (mNetworkFileServiceMessengerSender != null) {
+            NetworkFileMessageHandler.requestFile(mNetworkFileServiceMessengerSender, fileId);
+        } else {
+            // -- Pooling until (execute when NetworkFileService bond) --
+            mNetworkFileServicePendingRequestFileIdList.add(fileId);
+        }
     }
 
     protected void onProjectStageAssignCommentListRequestProgress(final String progressMessage) {
@@ -369,6 +339,118 @@ public class ProjectStageAssignCommentListFragment extends Fragment implements
             return mProjectStageAssignCommentListView.getProjectStageAssignCommentModels();
         return null;
     }
+
+    // --------------------------------
+    // -- NetworkFileService Handler --
+    // --------------------------------
+
+    protected ServiceConnection mNetworkFileServiceConnection;
+    protected List<Integer> mNetworkFileServicePendingRequestFileIdList = new ArrayList<Integer>();
+    protected Messenger mNetworkFileServiceMessengerSender;
+    protected Messenger mNetworkFileServiceMessengerReceiver;
+
+    protected void bindNetworkFileService() {
+        // -- Prepare message receiver --
+        NetworkFileMessageHandler notificationMessageHandler = new NetworkFileMessageHandler(getContext());
+        notificationMessageHandler.setNetworkFileMessageHandlerProgressListener(this);
+        mNetworkFileServiceMessengerReceiver = new Messenger(notificationMessageHandler);
+
+        // -- Prepare NetworkFileServiceConnection --
+        mNetworkFileServiceConnection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+                mNetworkFileServiceMessengerSender = new Messenger(iBinder);
+                NetworkFileMessageHandler.sendRegister(mNetworkFileServiceMessengerSender, mNetworkFileServiceMessengerReceiver);
+
+                for (Integer fileId : mNetworkFileServicePendingRequestFileIdList) {
+                    onImageRequest(null, fileId);
+                }
+                mNetworkFileServicePendingRequestFileIdList.clear();
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName componentName) {
+                mNetworkFileServiceMessengerSender = null;
+            }
+        };
+
+        // -- Bind NetworkFileService --
+        Intent intent = new Intent(getContext(), NetworkFileService.class);
+        getActivity().bindService(intent, mNetworkFileServiceConnection, Context.BIND_AUTO_CREATE);
+    }
+
+    @Override
+    public void onNetworkFileStart(Integer fileId) {
+        if (mProjectStageAssignCommentListView != null) {
+            FilePhotoItemView filePhotoItemView = mProjectStageAssignCommentListView.getFilePhotoItemView(fileId);
+            if (filePhotoItemView != null)
+                filePhotoItemView.startProgress();
+        }
+    }
+
+    @Override
+    public void onNetworkFileCacheProgress(Integer fileId, String progress) {
+
+    }
+
+    @Override
+    public void onNetworkFileCacheFinish(FileModel fileModel) {
+        if (fileModel != null) {
+            if (mProjectStageAssignCommentListView != null) {
+                FilePhotoItemView filePhotoItemView = mProjectStageAssignCommentListView.getFilePhotoItemView(fileModel.getFileId());
+                if (filePhotoItemView != null) {
+                    File file = fileModel.getFile(getContext());
+                    if (file != null)
+                        filePhotoItemView.setFilePhotoThumbnail(file);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onNetworkFileDownloadStart(Integer fileId) {
+
+    }
+
+    @Override
+    public void onNetworkFileDownloadProgress(Integer fileId, String progress) {
+        if (mProjectStageAssignCommentListView != null) {
+            FilePhotoItemView filePhotoItemView = mProjectStageAssignCommentListView.getFilePhotoItemView(fileId);
+            if (filePhotoItemView != null)
+                filePhotoItemView.setProgressText(progress);
+        }
+    }
+
+    @Override
+    public void onNetworkFileDownloadFinish(FileModel fileModel, FileModel fileModelCache) {
+        FileModel existFileModel = null;
+        if (fileModel != null)
+            existFileModel = fileModel;
+        if (fileModelCache != null)
+            existFileModel = fileModelCache;
+
+        if (existFileModel != null) {
+            if (mProjectStageAssignCommentListView != null) {
+                FilePhotoItemView filePhotoItemView = mProjectStageAssignCommentListView.getFilePhotoItemView(existFileModel.getFileId());
+                if (filePhotoItemView != null) {
+                    if (fileModel != null) {
+                        File file = fileModel.getFile(getContext());
+                        if (file != null)
+                            filePhotoItemView.setFilePhotoThumbnail(file);
+                    }
+                    filePhotoItemView.stopProgress();
+                }
+            }
+        }
+    }
+
+    protected void unbindNetworkFileService() {
+        if (mNetworkFileServiceMessengerSender != null)
+            NetworkFileMessageHandler.sendUnregister(mNetworkFileServiceMessengerSender, mNetworkFileServiceMessengerReceiver);
+        if (mNetworkFileServiceConnection != null)
+            getActivity().unbindService(mNetworkFileServiceConnection);
+    }
+
 
     @Override
     public void onDetach() {

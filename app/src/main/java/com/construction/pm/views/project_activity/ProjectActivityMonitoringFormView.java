@@ -27,7 +27,8 @@ import com.construction.pm.utils.ImageUtil;
 import com.construction.pm.utils.StringUtil;
 import com.construction.pm.utils.ViewUtil;
 import com.construction.pm.views.adapter.SpinnerActivityStatusAdapter;
-import com.construction.pm.views.listeners.ImageRequestDuplicateListener;
+import com.construction.pm.views.file.FilePhotoItemView;
+import com.construction.pm.views.listeners.ImageRequestListener;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -53,7 +54,7 @@ public class ProjectActivityMonitoringFormView {
     protected int mPercentCompleteBeforeActivityStatusComplete;
 
     protected ProjectActivityMonitoringFormListener mProjectActivityMonitoringFormListener;
-    protected ImageRequestDuplicateListener mImageRequestDuplicateListener;
+    protected ImageRequestListener mImageRequestListener;
 
     protected ProjectActivityMonitoringModel mProjectActivityMonitoringModel;
 
@@ -85,18 +86,21 @@ public class ProjectActivityMonitoringFormView {
         mViewPagerAdapter = new ViewPagerAdapter(mContext);
         mViewPager.setAdapter(mViewPagerAdapter);
 
+        int photoSize = ViewUtil.getPxFromDp(mContext, 48);
+
         mTabLayout.setupWithViewPager(mViewPager);
         for (int photoIdx = 0; photoIdx < 6; photoIdx++) {
-            int photoSize = ViewUtil.getPxFromDp(mContext, 48);
-
-            AppCompatImageView photoImage = new AppCompatImageView(mContext);
-            photoImage.setImageResource(R.drawable.ic_image_dark_24);
-            photoImage.setLayoutParams(new ViewGroup.LayoutParams(photoSize, photoSize));
-
             if (mTabLayout != null) {
                 TabLayout.Tab tab = mTabLayout.getTabAt(photoIdx);
-                if (tab != null)
-                    tab.setCustomView(photoImage);
+                if (tab != null) {
+                    FilePhotoItemView filePhotoItemView = FilePhotoItemView.buildFilePhotoItemView(mContext, null);
+
+                    RelativeLayout filePhotoItemViewLayout = filePhotoItemView.getView();
+                    filePhotoItemViewLayout.setLayoutParams(new ViewGroup.LayoutParams(photoSize, photoSize));
+
+                    tab.setTag(filePhotoItemView);
+                    tab.setCustomView(filePhotoItemViewLayout);
+                }
             }
         }
 
@@ -204,17 +208,17 @@ public class ProjectActivityMonitoringFormView {
             mPercentComplete.setProgress(percentComplete.intValue());
         }
         if (mProjectActivityMonitoringModel.getPhotoId() != null)
-            requestImagePosition(0, mProjectActivityMonitoringModel.getPhotoId());
+            setPhotoPosition(0, mProjectActivityMonitoringModel.getPhotoId());
         if (mProjectActivityMonitoringModel.getPhotoAdditional1Id() != null)
-            requestImagePosition(1, mProjectActivityMonitoringModel.getPhotoAdditional1Id());
+            setPhotoPosition(1, mProjectActivityMonitoringModel.getPhotoAdditional1Id());
         if (mProjectActivityMonitoringModel.getPhotoAdditional2Id() != null)
-            requestImagePosition(2, mProjectActivityMonitoringModel.getPhotoAdditional2Id());
+            setPhotoPosition(2, mProjectActivityMonitoringModel.getPhotoAdditional2Id());
         if (mProjectActivityMonitoringModel.getPhotoAdditional3Id() != null)
-            requestImagePosition(3, mProjectActivityMonitoringModel.getPhotoAdditional3Id());
+            setPhotoPosition(3, mProjectActivityMonitoringModel.getPhotoAdditional3Id());
         if (mProjectActivityMonitoringModel.getPhotoAdditional4Id() != null)
-            requestImagePosition(4, mProjectActivityMonitoringModel.getPhotoAdditional4Id());
+            setPhotoPosition(4, mProjectActivityMonitoringModel.getPhotoAdditional4Id());
         if (mProjectActivityMonitoringModel.getPhotoAdditional5Id() != null)
-            requestImagePosition(5, mProjectActivityMonitoringModel.getPhotoAdditional5Id());
+            setPhotoPosition(5, mProjectActivityMonitoringModel.getPhotoAdditional5Id());
         mComment.setText(projectActivityMonitoringModel.getComment());
 
         mPercentCompleteBeforeActivityStatusComplete = mPercentComplete.getProgress();
@@ -238,17 +242,30 @@ public class ProjectActivityMonitoringFormView {
         return mProjectActivityMonitoringModel;
     }
 
-    protected void requestImagePosition(final int position, final Integer fileId) {
-        if (mImageRequestDuplicateListener != null) {
-            AppCompatImageView contentImageView = mViewPagerAdapter.getItem(position);
+    protected void setPhotoPosition(final int position, final Integer fileId) {
+        mViewPagerAdapter.setItemFileId(position, fileId);
 
-            AppCompatImageView tabImageView = null;
+        if (mImageRequestListener != null) {
+            FilePhotoItemView filePhotoItemView = mViewPagerAdapter.getItem(position);
+            mImageRequestListener.onImageRequest(filePhotoItemView, fileId);
+        }
+    }
+
+    public FilePhotoItemView getFilePhotoItemView(final Integer fileId) {
+        int position = mViewPagerAdapter.getPositionByFileId(fileId);
+        if (position >= 0)
+            return mViewPagerAdapter.getItem(position);
+        return null;
+    }
+
+    public FilePhotoItemView getFilePhotoItemTabView(final Integer fileId) {
+        int position = mViewPagerAdapter.getPositionByFileId(fileId);
+        if (position >= 0) {
             TabLayout.Tab tab = mTabLayout.getTabAt(position);
             if (tab != null)
-                tabImageView = (AppCompatImageView) tab.getCustomView();
-
-            mImageRequestDuplicateListener.onImageRequestDuplicate(contentImageView, tabImageView, fileId);
+                return (FilePhotoItemView) tab.getTag();
         }
+        return null;
     }
 
     protected void updatePercentCompleteLabel() {
@@ -259,12 +276,13 @@ public class ProjectActivityMonitoringFormView {
     public void setPhotoId(final File file) {
         int position = mViewPager.getCurrentItem();
 
-        ImageUtil.setImageThumbnailView(mContext, mViewPagerAdapter.getItem(position), file.getAbsolutePath());
+        mViewPagerAdapter.getItem(position).setFilePhotoThumbnail(file);
 
         TabLayout.Tab tab = mTabLayout.getTabAt(position);
         if (tab != null) {
-            AppCompatImageView imageView = (AppCompatImageView) tab.getCustomView();
-            ImageUtil.setImageThumbnailView(mContext, imageView, file.getAbsolutePath());
+            FilePhotoItemView tabFilePhotoItemView = (FilePhotoItemView) tab.getTag();
+            if (tabFilePhotoItemView != null)
+                tabFilePhotoItemView.setFilePhotoThumbnail(file);
         }
 
         String fileName = file.getName();
@@ -290,8 +308,8 @@ public class ProjectActivityMonitoringFormView {
         return webApiParamFile;
     }
 
-    public void setImageRequestDuplicateListener(final ImageRequestDuplicateListener imageRequestDuplicateListener) {
-        mImageRequestDuplicateListener = imageRequestDuplicateListener;
+    public void setImageRequestListener(final ImageRequestListener imageRequestListener) {
+        mImageRequestListener = imageRequestListener;
     }
 
     public void setProjectActivityMonitoringFormListener(final ProjectActivityMonitoringFormListener projectActivityMonitoringFormListener) {
@@ -305,37 +323,42 @@ public class ProjectActivityMonitoringFormView {
 
     public class ViewPagerAdapter extends PagerAdapter {
         protected Context mContext;
-        protected List<AppCompatImageView> mImageViewList;
+        protected List<Integer> mFileIdList;
+        protected List<FilePhotoItemView> mFilePhotoItemViewList;
         protected List<File> mFileList;
 
         public ViewPagerAdapter(final Context context) {
             super();
             mContext = context;
 
-            mImageViewList = new ArrayList<AppCompatImageView>();
-            mImageViewList.add(generateImageView());
-            mImageViewList.add(generateImageView());
-            mImageViewList.add(generateImageView());
-            mImageViewList.add(generateImageView());
-            mImageViewList.add(generateImageView());
-            mImageViewList.add(generateImageView());
+            mFilePhotoItemViewList = new ArrayList<FilePhotoItemView>();
+            mFilePhotoItemViewList.add(generateFilePhotoItemView());
+            mFilePhotoItemViewList.add(generateFilePhotoItemView());
+            mFilePhotoItemViewList.add(generateFilePhotoItemView());
+            mFilePhotoItemViewList.add(generateFilePhotoItemView());
+            mFilePhotoItemViewList.add(generateFilePhotoItemView());
+            mFilePhotoItemViewList.add(generateFilePhotoItemView());
 
+            mFileIdList = new ArrayList<Integer>();
             mFileList = new ArrayList<File>();
-            for (int imageIdx = 0; imageIdx < mImageViewList.size(); imageIdx++) {
+            for (int imageIdx = 0; imageIdx < mFilePhotoItemViewList.size(); imageIdx++) {
+                mFileIdList.add(null);
                 mFileList.add(null);
             }
         }
 
-        protected AppCompatImageView generateImageView() {
-            AppCompatImageView imageView = new AppCompatImageView(mContext);
-            imageView.setScaleType(AppCompatImageView.ScaleType.CENTER);
-            imageView.setImageResource(R.drawable.ic_gallery_dark_24);
-            imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-            return imageView;
+        protected FilePhotoItemView generateFilePhotoItemView() {
+            FilePhotoItemView filePhotoItemView = FilePhotoItemView.buildFilePhotoItemView(mContext, null);
+            filePhotoItemView.setFilePhotoScaleType(AppCompatImageView.ScaleType.CENTER);
+
+            RelativeLayout filePhotoItemViewLayout = filePhotoItemView.getView();
+            filePhotoItemViewLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+            return filePhotoItemView;
         }
 
         public void setItemFile(final int position, final File file) {
-            if ((position + 1) > mImageViewList.size())
+            if ((position + 1) > mFileList.size())
                 return;
 
             mFileList.set(position, file);
@@ -348,11 +371,37 @@ public class ProjectActivityMonitoringFormView {
             return mFileList.get(position);
         }
 
-        public AppCompatImageView getItem(final int position) {
-            if ((position + 1) > mImageViewList.size())
+        public void setItemFileId(final int position, final Integer fileId) {
+            if ((position + 1) > mFileIdList.size())
+                return;
+
+            mFileIdList.set(position, fileId);
+        }
+
+        public Integer getItemFileId(final int position) {
+            if ((position + 1) > mFileIdList.size())
                 return null;
 
-            return mImageViewList.get(position);
+            return mFileIdList.get(position);
+        }
+
+        public FilePhotoItemView getItem(final int position) {
+            if ((position + 1) > mFilePhotoItemViewList.size())
+                return null;
+
+            return mFilePhotoItemViewList.get(position);
+        }
+
+        public int getPositionByFileId(final Integer fileId) {
+            for (int position = 0; position < mFileIdList.size(); position++) {
+                Integer existFileId = mFileIdList.get(position);
+                if (existFileId != null) {
+                    if (existFileId.equals(fileId)) {
+                        return position;
+                    }
+                }
+            }
+            return -1;
         }
 
         @Override
@@ -362,14 +411,14 @@ public class ProjectActivityMonitoringFormView {
 
         @Override
         public Object instantiateItem(ViewGroup collection, int position) {
-            collection.addView(mImageViewList.get(position));
+            collection.addView(mFilePhotoItemViewList.get(position).getView());
 
-            return mImageViewList.get(position);
+            return mFilePhotoItemViewList.get(position).getView();
         }
 
         @Override
         public int getCount() {
-            return mImageViewList.size();
+            return mFilePhotoItemViewList.size();
         }
 
         @Override
@@ -379,7 +428,7 @@ public class ProjectActivityMonitoringFormView {
 
         @Override
         public void destroyItem(ViewGroup collection, int position, Object view) {
-            collection.removeView(mImageViewList.get(position));
+            collection.removeView(mFilePhotoItemViewList.get(position).getView());
         }
     }
 }

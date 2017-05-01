@@ -1,7 +1,7 @@
 package com.construction.pm.views.listeners;
 
-import android.widget.ImageView;
+import com.construction.pm.views.file.FilePhotoItemView;
 
 public interface ImageRequestDuplicateListener {
-    void onImageRequestDuplicate(ImageView imageView, ImageView duplicateImageView, Integer fileId);
+    void onImageRequestDuplicate(FilePhotoItemView filePhotoItemView, FilePhotoItemView duplicateFilePhotoItemView, Integer fileId);
 }

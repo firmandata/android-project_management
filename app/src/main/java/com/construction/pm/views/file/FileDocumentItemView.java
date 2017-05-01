@@ -72,7 +72,7 @@ public class FileDocumentItemView implements IFileDownloadItemView {
 
     @Override
     public void setFileId(final Integer fileId) {
-        String tag = "FILE_ID_" + String.valueOf(fileId);
+        String tag = "DOCUMENT_ID_" + String.valueOf(fileId);
         mFileDocumentItemView.setTag(tag);
     }
 

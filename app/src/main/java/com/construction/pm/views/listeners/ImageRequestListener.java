@@ -1,7 +1,7 @@
 package com.construction.pm.views.listeners;
 
-import android.widget.ImageView;
+import com.construction.pm.views.file.FilePhotoItemView;
 
 public interface ImageRequestListener {
-    void onImageRequest(ImageView imageView, Integer fileId);
+    void onImageRequest(FilePhotoItemView filePhotoItemView, Integer fileId);
 }

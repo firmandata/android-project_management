@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.construction.pm.views.file.TouchImageView
+            android:id="@+id/photo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitCenter" />
+
+        <RelativeLayout
+            android:id="@+id/downloadProgressContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="@color/baseColorBackgroundTransparentInactive"
+            android:visibility="invisible">
+
+            <ProgressBar
+                android:id="@+id/downloadProgressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                style="@style/Widget.AppCompat.ProgressBar" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/downloadProgressBarText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:gravity="center"
+                android:text="" />
+
+        </RelativeLayout>
+
+    </FrameLayout>
+
+</RelativeLayout>

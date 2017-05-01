@@ -266,6 +266,9 @@
     <string name="file_document_item_view_start">Please wait &#8230;</string>
     <string name="file_document_item_view_finish">Done</string>
 
+    <string name="file_photo_item_view_start">Wait &#8230;</string>
+    <string name="file_photo_item_view_finish">Done</string>
+
     <string name="request_permission_confirmation">This app needs permission to access hardware.</string>
     <string name="request_permission_not_granted">This app cannot running very well without hardware permission.</string>
     <string name="request_permission_request_error">Error on requesting hardware permission.</string>
