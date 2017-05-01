@@ -137,7 +137,7 @@ public class InspectorFragment extends Fragment implements InspectorLayout.Inspe
         };
 
         // -- Do InspectorProjectActivityListAsyncTask --
-        inspectorProjectActivityListAsyncTask.execute(new InspectorProjectActivityListAsyncTaskParam(getContext(), settingUserModel, sessionLoginModel.getProjectMemberModel()));
+        inspectorProjectActivityListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new InspectorProjectActivityListAsyncTaskParam(getContext(), settingUserModel, sessionLoginModel.getProjectMemberModel()));
     }
 
     @Override

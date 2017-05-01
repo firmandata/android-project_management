@@ -27,6 +27,8 @@
     <color name="baseColorBackgroundWarning">@color/baseColorWarning</color>
     <color name="baseColorBackgroundDanger">@color/baseColorDanger</color>
 
+    <color name="baseColorBackgroundTransparentInactive">#E0E0E0E0</color>
+
     <color name="baseColorText">@color/baseColor</color>
     <color name="baseColorTextActive">@color/baseColorActive</color>
     <color name="baseColorTextInactive">@color/baseColorInActive</color>

@@ -46,10 +46,10 @@ public abstract class MessageHandler extends Handler {
     protected int sendMessage(final int what, final int arg1, final int arg2, final Bundle bundle) {
         int sentCount = 0;
         for (int i = mClients.size() - 1; i >= 0; i--) {
+            Message message = Message.obtain(null, what, arg1, arg2);
+            if (bundle != null)
+                message.setData(bundle);
             try {
-                Message message = Message.obtain(null, what, arg1, arg2);
-                if (bundle != null)
-                    message.setData(bundle);
                 mClients.get(i).send(message);
                 sentCount++;
             } catch (RemoteException ex) {
@@ -57,6 +57,21 @@ public abstract class MessageHandler extends Handler {
             }
         }
         return sentCount;
+    }
+
+    protected boolean sendMessage(final Messenger messenger, final int what, final int arg1, final int arg2, final Bundle bundle) {
+        Message message = Message.obtain(null, what, arg1, arg2);
+        if (bundle != null)
+            message.setData(bundle);
+
+        boolean isSent = false;
+        try {
+            messenger.send(message);
+            isSent = true;
+        } catch (RemoteException ex) {
+        }
+
+        return isSent;
     }
 
     protected void onReceiveRegister(final Messenger messenger) {
@@ -85,9 +100,10 @@ public abstract class MessageHandler extends Handler {
     public static boolean sendRegister(final Messenger messengerSender, final Messenger messengerReceiver) {
         boolean isSent = false;
 
+        Message message = Message.obtain(null, MSG_CLIENT_REGISTER);
+        message.replyTo = messengerReceiver;
+
         try {
-            Message message = Message.obtain(null, MSG_CLIENT_REGISTER);
-            message.replyTo = messengerReceiver;
             messengerSender.send(message);
             isSent = true;
         } catch (RemoteException ex) {
@@ -99,9 +115,10 @@ public abstract class MessageHandler extends Handler {
     public static boolean sendUnregister(final Messenger messengerSender, final Messenger messengerReceiver) {
         boolean isSent = false;
 
+        Message message = Message.obtain(null, MSG_CLIENT_UNREGISTER);
+        message.replyTo = messengerReceiver;
+
         try {
-            Message message = Message.obtain(null, MSG_CLIENT_UNREGISTER);
-            message.replyTo = messengerReceiver;
             messengerSender.send(message);
             isSent = true;
         } catch (RemoteException ex) {

@@ -90,7 +90,7 @@ public class UserChangePasswordFragment extends Fragment implements UserChangePa
         };
 
         // -- Do UserChangePasswordAsyncTask --
-        userChangePasswordAsyncTask.execute(new UserChangePasswordAsyncTaskParam(getContext(), settingUserModel, passwordOld, passwordNew));
+        userChangePasswordAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new UserChangePasswordAsyncTaskParam(getContext(), settingUserModel, passwordOld, passwordNew));
     }
 
     protected void onUserChangePasswordRequestProgress(final String progressMessage) {

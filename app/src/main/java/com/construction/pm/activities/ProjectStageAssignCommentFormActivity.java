@@ -153,7 +153,7 @@ public class ProjectStageAssignCommentFormActivity extends AppCompatActivity imp
             projectStageAssignCommentSaveAsyncTaskParam.setPhotoAdditional3(mProjectStageAssignCommentFormLayout.getPhoto(3));
             projectStageAssignCommentSaveAsyncTaskParam.setPhotoAdditional4(mProjectStageAssignCommentFormLayout.getPhoto(4));
             projectStageAssignCommentSaveAsyncTaskParam.setPhotoAdditional5(mProjectStageAssignCommentFormLayout.getPhoto(5));
-            projectStageAssignCommentSaveAsyncTask.execute(projectStageAssignCommentSaveAsyncTaskParam);
+            projectStageAssignCommentSaveAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, projectStageAssignCommentSaveAsyncTaskParam);
         }
     }
 

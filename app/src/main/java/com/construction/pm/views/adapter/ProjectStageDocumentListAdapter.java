@@ -1,16 +1,16 @@
 package com.construction.pm.views.adapter;
 
-import android.support.v7.widget.AppCompatTextView;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.RelativeLayout;
 
 import com.construction.pm.R;
 import com.construction.pm.models.FileModel;
 import com.construction.pm.models.ProjectStageDocumentModel;
-import com.construction.pm.utils.DateTimeUtil;
+import com.construction.pm.views.file.FileDocumentItemView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -20,10 +20,12 @@ public class ProjectStageDocumentListAdapter extends BaseAdapter {
 
     protected final List<Integer> mFileIdList;
     protected final SparseArray<FileModel> mFileModelList;
+    protected final SparseArray<ProjectStageDocumentListAdapter.ViewHolder> mViewHolderList;
     protected ProjectStageDocumentListAdapterListener mProjectStageDocumentListAdapterListener;
 
     public ProjectStageDocumentListAdapter(final ProjectStageDocumentModel projectStageDocumentModel) {
         mFileModelList = new SparseArray<FileModel>();
+        mViewHolderList = new SparseArray<ProjectStageDocumentListAdapter.ViewHolder>();
 
         mFileIdList = new ArrayList<Integer>();
         if (projectStageDocumentModel.getFileId() != null)
@@ -78,6 +80,7 @@ public class ProjectStageDocumentListAdapter extends BaseAdapter {
         final FileModel fileModel = getItem(position);
         if (fileModel != null) {
             if (holder.getFileModel() == null) {
+                mViewHolderList.put(fileModel.getFileId(), holder);
                 holder.setFileModel(fileModel);
                 if (mProjectStageDocumentListAdapterListener != null) {
                     view.setOnClickListener(new View.OnClickListener() {
@@ -98,6 +101,13 @@ public class ProjectStageDocumentListAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    public FileDocumentItemView getFileDocumentItemView(final Integer fileId) {
+        ProjectStageDocumentListAdapter.ViewHolder holder = mViewHolderList.get(fileId);
+        if (holder != null)
+            return holder.getFileDocumentItemView();
+        return null;
+    }
+
     public void setProjectStageDocumentListAdapterListener(final ProjectStageDocumentListAdapterListener projectStageDocumentListAdapterListener) {
         mProjectStageDocumentListAdapterListener = projectStageDocumentListAdapterListener;
     }
@@ -106,16 +116,15 @@ public class ProjectStageDocumentListAdapter extends BaseAdapter {
         protected Integer mFileId;
         protected FileModel mFileModel;
 
-        protected AppCompatTextView mFileDocumentDate;
-        protected AppCompatTextView mFileDocumentName;
+        protected FileDocumentItemView mFileDocumentItemView;
 
         public ViewHolder(View view) {
-            mFileDocumentDate = (AppCompatTextView) view.findViewById(R.id.documentDate);
-            mFileDocumentName = (AppCompatTextView) view.findViewById(R.id.documentName);
+            mFileDocumentItemView = new FileDocumentItemView(view.getContext(), (RelativeLayout) view.findViewById(R.id.file_document_item_view));
         }
 
         public void setFileId(final Integer fileId) {
             mFileId = fileId;
+            mFileDocumentItemView.setFileId(mFileId);
         }
 
         public Integer getFileId() {
@@ -131,13 +140,18 @@ public class ProjectStageDocumentListAdapter extends BaseAdapter {
             else if (mFileModel.getLastUpdate() != null)
                 documentDate = mFileModel.getLastUpdate();
             if (documentDate != null)
-                mFileDocumentDate.setText(DateTimeUtil.ToDateTimeDisplayString(documentDate));
+                mFileDocumentItemView.setDocumentFileDatetime(documentDate);
 
-            mFileDocumentName.setText(mFileModel.getOriginalFileName());
+            mFileDocumentItemView.setDocumentFileName(mFileModel.getOriginalFileName());
+            mFileDocumentItemView.stopProgress();
         }
 
         public FileModel getFileModel() {
             return mFileModel;
+        }
+
+        public FileDocumentItemView getFileDocumentItemView() {
+            return mFileDocumentItemView;
         }
     }
 

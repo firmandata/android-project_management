@@ -133,7 +133,7 @@ public class NotificationActivity extends AppCompatActivity implements Notificat
             };
 
             // -- Do NotificationReadAsyncTask --
-            notificationReadAsyncTask.execute(new NotificationReadAsyncTaskParam(this, settingUserModel, notificationModel, sessionLoginModel.getProjectMemberModel()));
+            notificationReadAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new NotificationReadAsyncTaskParam(this, settingUserModel, notificationModel, sessionLoginModel.getProjectMemberModel()));
         }
     }
 

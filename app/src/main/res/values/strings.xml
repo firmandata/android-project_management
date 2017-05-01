@@ -67,6 +67,9 @@
     <string name="project_stage_handle_task_begin">Getting project stage &#8230;</string>
     <string name="project_stage_handle_task_success">Getting project stage finished.</string>
 
+    <string name="project_stage_assign_comment_handle_task_begin">Getting project stage assign comments &#8230;</string>
+    <string name="project_stage_assign_comment_handle_task_success">Getting project stage assign comments finished.</string>
+
     <string name="project_plan_handle_task_begin">Getting project plan &#8230;</string>
     <string name="project_plan_handle_task_success">Getting project plan finished.</string>
 
@@ -102,6 +105,9 @@
 
     <string name="manager_activity_update_list_handle_task_begin">Getting update activities &#8230;</string>
     <string name="manager_activity_update_list_handle_task_success">Getting update activities finished.</string>
+
+    <string name="file_handle_task_progress_size">$s1</string>
+    <string name="file_handle_task_progress_percent_size">$s1 ($s2)</string>
 
     <string name="file_info_handle_task_begin">Getting file info &#8230;</string>
     <string name="file_info_handle_task_success">Getting file info finished.</string>
@@ -256,6 +262,9 @@
 
     <string name="file_layout_title">File</string>
     <string name="file_photo_detail_title">Photo</string>
+
+    <string name="file_document_item_view_start">Please wait &#8230;</string>
+    <string name="file_document_item_view_finish">Done</string>
 
     <string name="request_permission_confirmation">This app needs permission to access hardware.</string>
     <string name="request_permission_not_granted">This app cannot running very well without hardware permission.</string>

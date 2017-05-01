@@ -152,7 +152,7 @@ public class ProjectActivityMonitoringFormActivity extends AppCompatActivity imp
             inspectorProjectActivityMonitoringSaveAsyncTaskParam.setPhotoAdditional3(mProjectActivityMonitoringFormLayout.getPhoto(3));
             inspectorProjectActivityMonitoringSaveAsyncTaskParam.setPhotoAdditional4(mProjectActivityMonitoringFormLayout.getPhoto(4));
             inspectorProjectActivityMonitoringSaveAsyncTaskParam.setPhotoAdditional5(mProjectActivityMonitoringFormLayout.getPhoto(5));
-            inspectorProjectActivityMonitoringSaveAsyncTask.execute(inspectorProjectActivityMonitoringSaveAsyncTaskParam);
+            inspectorProjectActivityMonitoringSaveAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, inspectorProjectActivityMonitoringSaveAsyncTaskParam);
         }
     }
 

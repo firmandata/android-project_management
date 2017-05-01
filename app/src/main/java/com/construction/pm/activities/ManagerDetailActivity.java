@@ -262,7 +262,7 @@ public class ManagerDetailActivity extends AppCompatActivity implements
         };
 
         // -- Do ManagerProjectActivityGetAsyncTask --
-        managerProjectActivityGetAsyncTask.execute(new ManagerProjectActivityGetAsyncTaskParam(this, settingUserModel, sessionLoginModel.getProjectMemberModel(), projectActivityModel.getProjectActivityId()));
+        managerProjectActivityGetAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new ManagerProjectActivityGetAsyncTaskParam(this, settingUserModel, sessionLoginModel.getProjectMemberModel(), projectActivityModel.getProjectActivityId()));
     }
 
     public void onProjectActivityGetReloadProgress(final ProjectActivityModel projectActivityModel, final String progressMessage) {

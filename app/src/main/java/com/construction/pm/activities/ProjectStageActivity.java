@@ -149,7 +149,7 @@ public class ProjectStageActivity extends AppCompatActivity implements
         };
 
         // -- Do ProjectStageGetAsyncTask --
-        projectStageGetAsyncTask.execute(new ProjectStageGetAsyncTaskParam(this, settingUserModel, projectStageModel.getProjectStageId(), sessionLoginModel.getProjectMemberModel()));
+        projectStageGetAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new ProjectStageGetAsyncTaskParam(this, settingUserModel, projectStageModel.getProjectStageId(), sessionLoginModel.getProjectMemberModel()));
     }
 
     @Override

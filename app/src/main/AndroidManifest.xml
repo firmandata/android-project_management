@@ -25,6 +25,10 @@
             android:exported="false" />
 
         <service
+            android:name=".services.NetworkFileService"
+            android:exported="false" />
+
+        <service
             android:name=".services.NetworkPendingService"
             android:exported="false" />
 

@@ -97,7 +97,7 @@ public class AuthenticationLoginFragment extends Fragment implements
         };
 
         // -- Do LoginAsyncTask --
-        loginAsyncTask.execute(new LoginAsyncTaskParam(getContext(), settingUserModel, login, password));
+        loginAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new LoginAsyncTaskParam(getContext(), settingUserModel, login, password));
     }
 
     @Override

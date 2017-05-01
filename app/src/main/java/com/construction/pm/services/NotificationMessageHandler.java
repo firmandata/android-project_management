@@ -90,7 +90,7 @@ public class NotificationMessageHandler extends MessageHandler {
 
         Bundle bundle = new Bundle();
         bundle.putString("SessionLoginModel", sessionLoginModelJson);
-        return sendMessage(MSG_REQUEST_LOGIN, 0, 0, null);
+        return sendMessage(MSG_REQUEST_LOGIN, 0, 0, bundle);
     }
 
     public int sendStop() {

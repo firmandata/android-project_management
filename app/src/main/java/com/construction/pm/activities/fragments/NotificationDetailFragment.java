@@ -144,7 +144,7 @@ public class NotificationDetailFragment extends Fragment implements Notification
         };
 
         // -- Do ProjectStageGetAsyncTask --
-        projectStageGetAsyncTask.execute(new ProjectStageGetAsyncTaskParam(getContext(), settingUserModel, projectStageId, sessionLoginModel.getProjectMemberModel()));
+        projectStageGetAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new ProjectStageGetAsyncTaskParam(getContext(), settingUserModel, projectStageId, sessionLoginModel.getProjectMemberModel()));
     }
 
     @Override
@@ -182,7 +182,7 @@ public class NotificationDetailFragment extends Fragment implements Notification
         };
 
         // -- Do ManagerProjectActivityGetAsyncTask --
-        managerProjectActivityGetAsyncTask.execute(new ManagerProjectActivityGetAsyncTaskParam(getContext(), settingUserModel, sessionLoginModel.getProjectMemberModel(), projectActivityId));
+        managerProjectActivityGetAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new ManagerProjectActivityGetAsyncTaskParam(getContext(), settingUserModel, sessionLoginModel.getProjectMemberModel(), projectActivityId));
 
         // -- Prepare InspectorProjectActivityGetAsyncTask --
         InspectorProjectActivityGetAsyncTask inspectorProjectActivityGetAsyncTask = new InspectorProjectActivityGetAsyncTask() {
@@ -209,7 +209,7 @@ public class NotificationDetailFragment extends Fragment implements Notification
         };
 
         // -- Do InspectorProjectActivityGetAsyncTask --
-        inspectorProjectActivityGetAsyncTask.execute(new InspectorProjectActivityGetAsyncTaskParam(getContext(), settingUserModel, sessionLoginModel.getProjectMemberModel(), projectActivityId));
+        inspectorProjectActivityGetAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new InspectorProjectActivityGetAsyncTaskParam(getContext(), settingUserModel, sessionLoginModel.getProjectMemberModel(), projectActivityId));
     }
 
     @Override

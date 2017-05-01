@@ -8,13 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.construction.pm.R;
-import com.construction.pm.asynctask.FileGetCacheAsyncTask;
-import com.construction.pm.asynctask.FileGetNetworkAsyncTask;
 import com.construction.pm.asynctask.ProjectStageGetAsyncTask;
-import com.construction.pm.asynctask.param.FileGetAsyncTaskParam;
 import com.construction.pm.asynctask.param.ProjectStageGetAsyncTaskParam;
-import com.construction.pm.asynctask.result.FileGetAsyncTaskResult;
 import com.construction.pm.asynctask.result.ProjectStageGetAsyncTaskResult;
 import com.construction.pm.models.FileModel;
 import com.construction.pm.models.ProjectStageAssignmentModel;
@@ -24,15 +19,14 @@ import com.construction.pm.models.system.SessionLoginModel;
 import com.construction.pm.models.system.SettingUserModel;
 import com.construction.pm.persistence.SessionPersistent;
 import com.construction.pm.persistence.SettingPersistent;
-import com.construction.pm.utils.FileUtil;
-import com.construction.pm.utils.ViewUtil;
 import com.construction.pm.views.project_stage.ProjectStageView;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProjectStageFragment extends Fragment implements ProjectStageView.ProjectStageViewListener {
+public class ProjectStageFragment extends Fragment implements
+        ProjectStageView.ProjectStageViewListener {
+
     public static final String PARAM_PROJECT_STAGE_MODEL = "PROJECT_STAGE_MODEL";
     public static final String PARAM_PROJECT_STAGE_ASSIGNMENT_MODELS = "PROJECT_STAGE_ASSIGNMENT_MODELS";
     public static final String PARAM_PROJECT_STAGE_DOCUMENT_MODELS = "PROJECT_STAGE_DOCUMENT_MODELS";
@@ -205,7 +199,7 @@ public class ProjectStageFragment extends Fragment implements ProjectStageView.P
         };
 
         // -- Do ProjectStageGetAsyncTask --
-        projectStageGetAsyncTask.execute(new ProjectStageGetAsyncTaskParam(getContext(), settingUserModel, projectStageModel.getProjectStageId(), sessionLoginModel.getProjectMemberModel()));
+        projectStageGetAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new ProjectStageGetAsyncTaskParam(getContext(), settingUserModel, projectStageModel.getProjectStageId(), sessionLoginModel.getProjectMemberModel()));
     }
 
     @Override
@@ -215,66 +209,7 @@ public class ProjectStageFragment extends Fragment implements ProjectStageView.P
 
     @Override
     public void onProjectStageDocumentItemClick(final FileModel fileModel) {
-        // -- Get SettingUserModel from SettingPersistent --
-        SettingPersistent settingPersistent = new SettingPersistent(getContext());
-        final SettingUserModel settingUserModel = settingPersistent.getSettingUserModel();
 
-        // -- Prepare FileGetNetworkAsyncTask --
-        final FileGetNetworkAsyncTask fileGetNetworkAsyncTask = new FileGetNetworkAsyncTask() {
-            @Override
-            public void onPreExecute() {
-                mAsyncTaskList.add(this);
-            }
-
-            @Override
-            public void onPostExecute(FileGetAsyncTaskResult fileRequestAsyncTaskResult) {
-                mAsyncTaskList.remove(this);
-
-                if (fileRequestAsyncTaskResult != null) {
-                    FileModel fileModel = fileRequestAsyncTaskResult.getFileModel();
-                    FileModel fileModelCache = fileRequestAsyncTaskResult.getFileModelCache();
-                    File file = null;
-                    if (fileModel != null)
-                        file = fileModel.getFile(getContext());
-                    else if (fileModelCache != null)
-                        file = fileModelCache.getFile(getContext());
-                    onProjectStageDocumentDownloaded(file);
-                }
-            }
-
-            @Override
-            protected void onProgressUpdate(String... progress) {
-                if (progress != null) {
-                    if (progress.length > 0) {
-                        onProjectStageDocumentDownloadingProgress(progress[0]);
-                    }
-                }
-            }
-        };
-
-        // -- Prepare FileGetCacheAsyncTask --
-        FileGetCacheAsyncTask fileGetCacheAsyncTask = new FileGetCacheAsyncTask() {
-            @Override
-            public void onPreExecute() {
-                onProjectStageDocumentDownloadBegin();
-                mAsyncTaskList.add(this);
-            }
-
-            @Override
-            public void onPostExecute(FileGetAsyncTaskResult fileRequestAsyncTaskResult) {
-                FileModel cacheFileModel = null;
-                if (fileRequestAsyncTaskResult != null)
-                    cacheFileModel = fileRequestAsyncTaskResult.getFileModel();
-
-                // -- Do FileGetNetworkAsyncTask --
-                fileGetNetworkAsyncTask.execute(new FileGetAsyncTaskParam(getContext(), settingUserModel, fileModel.getFileId(), cacheFileModel));
-
-                mAsyncTaskList.remove(this);
-            }
-        };
-
-        // -- Do FileGetCacheAsyncTask --
-        fileGetCacheAsyncTask.execute(new FileGetAsyncTaskParam(getContext(), settingUserModel, fileModel.getFileId(), null));
     }
 
     protected void onProjectStageRequestProgress(final String progressMessage) {
@@ -287,20 +222,6 @@ public class ProjectStageFragment extends Fragment implements ProjectStageView.P
 
     protected void onProjectStageRequestMessage(final String message) {
 
-    }
-
-    protected void onProjectStageDocumentDownloadBegin() {
-        mProjectStageView.progressDialogShow(ViewUtil.getResourceString(getContext(), R.string.project_stage_layout_download_begin));
-    }
-
-    protected void onProjectStageDocumentDownloadingProgress(final String progress) {
-        mProjectStageView.progressDialogShow(ViewUtil.getResourceString(getContext(), R.string.project_stage_layout_download_progress, progress));
-    }
-
-    protected void onProjectStageDocumentDownloaded(final File file) {
-        mProjectStageView.progressDialogDismiss();
-        if (file != null)
-            FileUtil.openFile(getContext(), file);
     }
 
     public ProjectStageModel getProjectStageModel() {

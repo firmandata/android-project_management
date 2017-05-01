@@ -137,14 +137,14 @@ public class FilePhotoViewFragment extends Fragment implements ImageRequestListe
                 }
 
                 // -- Do FileGetNetworkAsyncTask --
-                fileGetNetworkAsyncTask.execute(new FileGetAsyncTaskParam(getContext(), settingUserModel, fileId, fileModel));
+                fileGetNetworkAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new FileGetAsyncTaskParam(getContext(), settingUserModel, fileId, fileModel));
 
                 mAsyncTaskList.remove(this);
             }
         };
 
         // -- Do FileGetCacheAsyncTask --
-        fileGetCacheAsyncTask.execute(new FileGetAsyncTaskParam(getContext(), settingUserModel, fileId, null));
+        fileGetCacheAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new FileGetAsyncTaskParam(getContext(), settingUserModel, fileId, null));
     }
 
     @Override

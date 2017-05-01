@@ -143,7 +143,7 @@ public class ProjectActivityUpdateListFragment extends Fragment implements
         };
 
         // -- Do ManagerProjectActivityUpdateListAsyncTask --
-        managerProjectActivityUpdateListAsyncTask.execute(new ManagerProjectActivityUpdateListAsyncTaskParam(getContext(), settingUserModel, projectActivityModel, sessionLoginModel.getProjectMemberModel()));
+        managerProjectActivityUpdateListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new ManagerProjectActivityUpdateListAsyncTaskParam(getContext(), settingUserModel, projectActivityModel, sessionLoginModel.getProjectMemberModel()));
     }
 
     @Override

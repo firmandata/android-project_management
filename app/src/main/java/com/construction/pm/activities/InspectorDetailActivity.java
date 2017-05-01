@@ -177,7 +177,7 @@ public class InspectorDetailActivity extends AppCompatActivity implements
         };
 
         // -- Do InspectorProjectActivityGetAsyncTask --
-        inspectorProjectActivityGetAsyncTask.execute(new InspectorProjectActivityGetAsyncTaskParam(this, settingUserModel, sessionLoginModel.getProjectMemberModel(), projectActivityModel.getProjectActivityId()));
+        inspectorProjectActivityGetAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new InspectorProjectActivityGetAsyncTaskParam(this, settingUserModel, sessionLoginModel.getProjectMemberModel(), projectActivityModel.getProjectActivityId()));
     }
 
     public void onProjectActivityGetReloadProgress(final ProjectActivityModel projectActivityModel, final String progressMessage) {

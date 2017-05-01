@@ -107,7 +107,7 @@ public class ProjectListFragment extends Fragment implements ProjectListView.Pro
         };
 
         // -- Do ProjectListAsyncTask --
-        projectListAsyncTask.execute(new ProjectListAsyncTaskParam(getContext(), settingUserModel, sessionLoginModel.getProjectMemberModel()));
+        projectListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new ProjectListAsyncTaskParam(getContext(), settingUserModel, sessionLoginModel.getProjectMemberModel()));
     }
 
     @Override

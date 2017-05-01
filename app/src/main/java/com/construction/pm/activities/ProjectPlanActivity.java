@@ -117,7 +117,7 @@ public class ProjectPlanActivity extends AppCompatActivity implements ProjectPla
         };
 
         // -- Do ProjectPlanGetAsyncTask --
-        projectPlanGetAsyncTask.execute(new ProjectPlanGetAsyncTaskParam(this, settingUserModel, projectPlanModel, sessionLoginModel.getProjectMemberModel()));
+        projectPlanGetAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new ProjectPlanGetAsyncTaskParam(this, settingUserModel, projectPlanModel, sessionLoginModel.getProjectMemberModel()));
     }
 
     @Override
@@ -200,7 +200,7 @@ public class ProjectPlanActivity extends AppCompatActivity implements ProjectPla
         };
 
         // -- Do ProjectPlanGetAsyncTask --
-        projectPlanGetAsyncTask.execute(new ProjectPlanGetAsyncTaskParam(this, settingUserModel, projectPlanModel, sessionLoginModel.getProjectMemberModel()));
+        projectPlanGetAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new ProjectPlanGetAsyncTaskParam(this, settingUserModel, projectPlanModel, sessionLoginModel.getProjectMemberModel()));
     }
 
     @Override

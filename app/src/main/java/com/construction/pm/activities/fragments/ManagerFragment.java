@@ -137,7 +137,7 @@ public class ManagerFragment extends Fragment implements ManagerLayout.ManagerLa
         };
 
         // -- Do ManagerProjectActivityListAsyncTask --
-        managerProjectActivityListAsyncTask.execute(new ManagerProjectActivityListAsyncTaskParam(getContext(), settingUserModel, sessionLoginModel.getProjectMemberModel()));
+        managerProjectActivityListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new ManagerProjectActivityListAsyncTaskParam(getContext(), settingUserModel, sessionLoginModel.getProjectMemberModel()));
     }
 
     @Override

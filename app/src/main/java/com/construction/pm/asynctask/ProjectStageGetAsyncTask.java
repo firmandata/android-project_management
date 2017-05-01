@@ -49,7 +49,7 @@ public class ProjectStageGetAsyncTask extends AsyncTask<ProjectStageGetAsyncTask
                     // -- Invalidate Login --
                     projectNetwork.invalidateLogin();
 
-                    // -- Get project from server --
+                    // -- Get ProjectStage from server --
                     projectStageResponseModel = projectNetwork.getProjectStage(projectStageId);
 
                     // -- Save to ProjectCachePersistent --

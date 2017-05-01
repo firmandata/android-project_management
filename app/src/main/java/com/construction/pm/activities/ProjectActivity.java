@@ -117,7 +117,7 @@ public class ProjectActivity extends AppCompatActivity implements ProjectLayout.
         };
 
         // -- Do ProjectGetAsyncTask --
-        projectGetAsyncTask.execute(new ProjectGetAsyncTaskParam(this, settingUserModel, projectModel, sessionLoginModel.getProjectMemberModel()));
+        projectGetAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new ProjectGetAsyncTaskParam(this, settingUserModel, projectModel, sessionLoginModel.getProjectMemberModel()));
     }
 
     protected void onProjectRequestProgress(final String progressMessage) {

@@ -168,7 +168,7 @@ public class ProjectActivityListFragment extends Fragment implements ProjectActi
         };
 
         // -- Do InspectorProjectActivityListAsyncTask --
-        inspectorProjectActivityListAsyncTask.execute(new InspectorProjectActivityListAsyncTaskParam(getContext(), settingUserModel, sessionLoginModel.getProjectMemberModel(), statusTaskEnum));
+        inspectorProjectActivityListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new InspectorProjectActivityListAsyncTaskParam(getContext(), settingUserModel, sessionLoginModel.getProjectMemberModel(), statusTaskEnum));
     }
 
     protected void onProjectActivityListRequestProgress(final String progressMessage) {

@@ -1,7 +1,6 @@
 package com.construction.pm.views.project_stage;
 
 import android.content.Context;
-import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,7 +13,7 @@ import android.widget.RelativeLayout;
 import com.construction.pm.R;
 import com.construction.pm.libraries.widgets.RecyclerItemTouchListener;
 import com.construction.pm.models.ProjectStageDocumentModel;
-import com.construction.pm.utils.DateTimeUtil;
+import com.construction.pm.views.file.FileDocumentItemView;
 
 public class ProjectStageDocumentListView {
 
@@ -158,19 +157,19 @@ public class ProjectStageDocumentListView {
 
     protected class ProjectStageDocumentListViewHolder extends RecyclerView.ViewHolder {
 
-        protected AppCompatTextView mDocumentDate;
-        protected AppCompatTextView mDocumentName;
+        protected FileDocumentItemView mFileDocumentItemView;
 
         public ProjectStageDocumentListViewHolder(View view) {
             super(view);
 
-            mDocumentDate = (AppCompatTextView) view.findViewById(R.id.documentDate);
-            mDocumentName = (AppCompatTextView) view.findViewById(R.id.documentName);
+            mFileDocumentItemView = new FileDocumentItemView(view.getContext(), (RelativeLayout) view.findViewById(R.id.file_document_item_view));
         }
 
         public void setProjectStageDocumentModel(final ProjectStageDocumentModel projectStageDocumentModel) {
-            mDocumentDate.setText(DateTimeUtil.ToDateTimeDisplayString(projectStageDocumentModel.getDocumentDate()));
-            mDocumentName.setText(projectStageDocumentModel.getDocumentName());
+            mFileDocumentItemView.setFileId(projectStageDocumentModel.getFileId());
+            mFileDocumentItemView.setDocumentFileDatetime(projectStageDocumentModel.getDocumentDate());
+            mFileDocumentItemView.setDocumentFileName(projectStageDocumentModel.getDocumentName());
+            mFileDocumentItemView.stopProgress();
         }
     }
 }

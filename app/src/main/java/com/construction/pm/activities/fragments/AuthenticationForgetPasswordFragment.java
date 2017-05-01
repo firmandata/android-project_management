@@ -95,7 +95,7 @@ public class AuthenticationForgetPasswordFragment extends Fragment implements Au
         };
 
         // -- Do ForgetPasswordAsyncTask --
-        forgetPasswordAsyncTask.execute(new ForgetPasswordAsyncTaskParam(getContext(), settingUserModel, login));
+        forgetPasswordAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new ForgetPasswordAsyncTaskParam(getContext(), settingUserModel, login));
     }
 
     protected void onForgetPasswordRequestProgress(final String progressMessage) {

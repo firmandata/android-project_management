@@ -108,7 +108,7 @@ public class UserChangeProfileFragment extends Fragment implements UserChangePro
         };
 
         // -- Do UserChangeProfileAsyncTask --
-        userChangeProfileAsyncTask.execute(new UserChangeProfileAsyncTaskParam(getContext(), settingUserModel, projectMemberModel));
+        userChangeProfileAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new UserChangeProfileAsyncTaskParam(getContext(), settingUserModel, projectMemberModel));
     }
 
     protected void onUserChangeProfileRequestProgress(final String progressMessage) {

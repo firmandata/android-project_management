@@ -145,7 +145,7 @@ public class ProjectActivityUpdateFormActivity extends AppCompatActivity impleme
             };
 
             // -- Do ManagerProjectActivityUpdateSaveAsyncTask --
-            managerProjectActivityUpdateSaveAsyncTask.execute(new ManagerProjectActivityUpdateSaveAsyncTaskParam(this, settingUserModel, projectActivityUpdateModel, sessionLoginModel.getProjectMemberModel()));
+            managerProjectActivityUpdateSaveAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new ManagerProjectActivityUpdateSaveAsyncTaskParam(this, settingUserModel, projectActivityUpdateModel, sessionLoginModel.getProjectMemberModel()));
         }
     }
 

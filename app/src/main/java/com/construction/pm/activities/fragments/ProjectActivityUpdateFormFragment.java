@@ -169,7 +169,7 @@ public class ProjectActivityUpdateFormFragment extends Fragment implements
         };
 
         // -- Do InspectorProjectActivityMonitoringDetailAsyncTask --
-        inspectorProjectActivityMonitoringDetailAsyncTask.execute(new InspectorProjectActivityMonitoringDetailAsyncTaskParam(getContext(), settingUserModel, projectActivityMonitoringId, projectActivityId, sessionLoginModel.getProjectMemberModel()));
+        inspectorProjectActivityMonitoringDetailAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new InspectorProjectActivityMonitoringDetailAsyncTaskParam(getContext(), settingUserModel, projectActivityMonitoringId, projectActivityId, sessionLoginModel.getProjectMemberModel()));
     }
 
     protected void onProjectActivityMonitoringDetailRequestProgress(final String progressMessage) {
@@ -238,14 +238,14 @@ public class ProjectActivityUpdateFormFragment extends Fragment implements
                 }
 
                 // -- Do FileGetNetworkAsyncTask --
-                fileGetNetworkAsyncTask.execute(new FileGetAsyncTaskParam(getContext(), settingUserModel, fileId, fileModel));
+                fileGetNetworkAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new FileGetAsyncTaskParam(getContext(), settingUserModel, fileId, fileModel));
 
                 mAsyncTaskList.remove(this);
             }
         };
 
         // -- Do FileGetCacheAsyncTask --
-        fileGetCacheAsyncTask.execute(new FileGetAsyncTaskParam(getContext(), settingUserModel, fileId, null));
+        fileGetCacheAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new FileGetAsyncTaskParam(getContext(), settingUserModel, fileId, null));
     }
 
     @Override

@@ -267,7 +267,7 @@ public class ProjectStageAssignCommentListFragment extends Fragment implements
         };
 
         // -- Do ProjectStageGetAsyncTask --
-        projectStageGetAsyncTask.execute(new ProjectStageGetAsyncTaskParam(getContext(), settingUserModel, projectStageModel.getProjectStageId(), sessionLoginModel.getProjectMemberModel()));
+        projectStageGetAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new ProjectStageGetAsyncTaskParam(getContext(), settingUserModel, projectStageModel.getProjectStageId(), sessionLoginModel.getProjectMemberModel()));
     }
     
     @Override
@@ -333,14 +333,14 @@ public class ProjectStageAssignCommentListFragment extends Fragment implements
                 }
 
                 // -- Do FileGetNetworkAsyncTask --
-                fileGetNetworkAsyncTask.execute(new FileGetAsyncTaskParam(getContext(), settingUserModel, fileId, fileModel));
+                fileGetNetworkAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new FileGetAsyncTaskParam(getContext(), settingUserModel, fileId, fileModel));
 
                 mAsyncTaskList.remove(this);
             }
         };
 
         // -- Do FileGetCacheAsyncTask --
-        fileGetCacheAsyncTask.execute(new FileGetAsyncTaskParam(getContext(), settingUserModel, fileId, null));
+        fileGetCacheAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new FileGetAsyncTaskParam(getContext(), settingUserModel, fileId, null));
     }
 
     protected void onProjectStageAssignCommentListRequestProgress(final String progressMessage) {

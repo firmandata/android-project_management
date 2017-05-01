@@ -5,6 +5,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.construction.pm.models.ProjectModel;
+import com.construction.pm.models.ProjectStageAssignCommentModel;
 import com.construction.pm.models.network.ProjectPlanResponseModel;
 import com.construction.pm.models.network.ProjectResponseModel;
 import com.construction.pm.models.network.ProjectStageResponseModel;
@@ -211,6 +212,82 @@ public class ProjectCachePersistent extends NetworkCachePersistent {
         }
 
         return projectStageResponseModel;
+    }
+
+    public long setProjectStageAssignCommentModels(final Integer projectStageId, final ProjectStageAssignCommentModel[] projectStageAssignCommentModels, final Integer projectMemberId) throws PersistenceError {
+        long networkCacheId = 0;
+
+        String contentKey = null;
+        String content = null;
+
+        // -- Get contentKey --
+        if (projectMemberId != null && projectStageId != null)
+            contentKey = String.valueOf(projectMemberId) + "_" + String.valueOf(projectStageId);
+
+        // -- Get ProjectStageAssignCommentModels content --
+        try {
+            org.json.JSONArray jsonArray = new org.json.JSONArray();
+            for (ProjectStageAssignCommentModel projectStageAssignCommentModel : projectStageAssignCommentModels) {
+                org.json.JSONObject jsonObject = projectStageAssignCommentModel.build();
+                jsonArray.put(jsonObject);
+            }
+            content = jsonArray.toString(0);
+        } catch (org.json.JSONException ex) {
+        } catch (Exception ex) {
+        }
+
+        if (content != null) {
+            try {
+                SQLiteDatabase sqLiteDatabase = mSQLitePersistent.getWritableDatabase();
+
+                // -- Save content to cache --
+                networkCacheId = saveNetworkCacheContent(sqLiteDatabase, NetworkCachePersistentType.PROJECT_STAGE_ASSIGN_COMMENT_LIST, contentKey, content, projectMemberId);
+            } catch (SQLException ex) {
+                throw new PersistenceError(0, ex.getMessage(), ex);
+            } catch (Exception ex) {
+                throw new PersistenceError(0, ex.getMessage(), ex);
+            }
+        }
+
+        return networkCacheId;
+    }
+
+    public ProjectStageAssignCommentModel[] getProjectStageAssignCommentModels(final Integer projectStageId, final Integer projectMemberId) throws PersistenceError {
+        List<ProjectStageAssignCommentModel> projectStageAssignCommentModelList = new ArrayList<ProjectStageAssignCommentModel>();
+
+        String contentKey = null;
+        String content = null;
+
+        if (projectMemberId != null && projectStageId != null)
+            contentKey = String.valueOf(projectMemberId) + "_" + String.valueOf(projectStageId);
+
+        try {
+            SQLiteDatabase sqLiteDatabase = mSQLitePersistent.getReadableDatabase();
+
+            // -- Get content from cache --
+            content = getNetworkCacheContent(sqLiteDatabase, NetworkCachePersistentType.PROJECT_STAGE_ASSIGN_COMMENT_LIST, contentKey, projectMemberId);
+        } catch (SQLException ex) {
+            throw new PersistenceError(0, ex.getMessage(), ex);
+        } catch (Exception ex) {
+            throw new PersistenceError(0, ex.getMessage(), ex);
+        }
+
+        // -- Generate ProjectStageAssignCommentModels from content
+        if (content != null) {
+            try {
+                org.json.JSONArray jsonArray = new org.json.JSONArray(content);
+                for (int jsonArrayIdx = 0; jsonArrayIdx < jsonArray.length(); jsonArrayIdx++) {
+                    org.json.JSONObject jsonObject = jsonArray.getJSONObject(jsonArrayIdx);
+                    projectStageAssignCommentModelList.add(ProjectStageAssignCommentModel.build(jsonObject));
+                }
+            } catch (org.json.JSONException ex) {
+            } catch (Exception ex) {
+            }
+        }
+
+        ProjectStageAssignCommentModel[] projectStageAssignCommentModels = new ProjectStageAssignCommentModel[projectStageAssignCommentModelList.size()];
+        projectStageAssignCommentModelList.toArray(projectStageAssignCommentModels);
+        return projectStageAssignCommentModels;
     }
 
     public long setProjectPlanResponseModel(final ProjectPlanResponseModel projectPlanResponseModel, final Integer projectMemberId) throws PersistenceError {

@@ -3,6 +3,7 @@ package com.construction.pm.asynctask;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import com.construction.pm.R;
 import com.construction.pm.asynctask.param.FileGetAsyncTaskParam;
 import com.construction.pm.asynctask.result.FileGetAsyncTaskResult;
 import com.construction.pm.models.FileModel;
@@ -12,6 +13,7 @@ import com.construction.pm.networks.webapi.WebApiError;
 import com.construction.pm.persistence.FileCachePersistent;
 import com.construction.pm.persistence.PersistenceError;
 import com.construction.pm.utils.StringUtil;
+import com.construction.pm.utils.ViewUtil;
 
 import java.io.File;
 
@@ -48,10 +50,12 @@ public class FileGetNetworkAsyncTask extends AsyncTask<FileGetAsyncTaskParam, St
             IWebApiProgress webApiProgress = new IWebApiProgress() {
                 @Override
                 public void onProgress(final long bytesWritten, final long totalSize) {
+                    String size = StringUtil.numberFileSizeFormat(bytesWritten);
                     if (totalSize > 0) {
-                        publishProgress(StringUtil.numberPercentFormat((int) (((double) bytesWritten / (double) totalSize) * 100)));
+                        String percent = StringUtil.numberPercentFormat((int) (((double) bytesWritten / (double) totalSize) * 100));
+                        publishProgress(ViewUtil.getResourceString(mContext, R.string.file_handle_task_progress_percent_size, percent, size));
                     } else {
-                        publishProgress(StringUtil.numberFileSizeFormat(bytesWritten));
+                        publishProgress(ViewUtil.getResourceString(mContext, R.string.file_handle_task_progress_size, size));
                     }
                 }
             };

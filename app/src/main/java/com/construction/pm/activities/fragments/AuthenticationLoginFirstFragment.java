@@ -90,7 +90,7 @@ public class AuthenticationLoginFirstFragment extends Fragment implements Authen
         };
 
         // -- Do LoginFirstAsyncTask --
-        loginFirstAsyncTask.execute(new LoginFirstAsyncTaskParam(getContext(), settingUserModel, passwordNew));
+        loginFirstAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new LoginFirstAsyncTaskParam(getContext(), settingUserModel, passwordNew));
     }
 
     protected void onFirstPasswordRequestProgress(final String progressMessage) {

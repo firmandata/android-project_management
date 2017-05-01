@@ -105,7 +105,7 @@ public class NotificationListFragment extends Fragment implements NotificationLi
         };
 
         // -- Do NotificationListAsyncTask --
-        notificationListAsyncTask.execute(new NotificationListAsyncTaskParam(getContext(), settingUserModel, sessionLoginModel.getProjectMemberModel()));
+        notificationListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new NotificationListAsyncTaskParam(getContext(), settingUserModel, sessionLoginModel.getProjectMemberModel()));
     }
 
     @Override

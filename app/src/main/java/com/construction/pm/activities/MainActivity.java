@@ -28,6 +28,7 @@ import com.construction.pm.persistence.NotificationPersistent;
 import com.construction.pm.persistence.PersistenceError;
 import com.construction.pm.persistence.SessionPersistent;
 import com.construction.pm.persistence.SettingPersistent;
+import com.construction.pm.services.NetworkFileService;
 import com.construction.pm.services.NetworkPendingService;
 import com.construction.pm.services.NotificationMessageHandler;
 import com.construction.pm.services.NotificationService;
@@ -92,6 +93,10 @@ public class MainActivity extends AppCompatActivity implements
         // -- Start NotificationService --
         Intent notificationServiceStart = new Intent(this, NotificationService.class);
         startService(notificationServiceStart);
+
+        // -- Start NetworkFileService --
+        Intent networkFileService = new Intent(this, NetworkFileService.class);
+        startService(networkFileService);
 
         if (bundle != null) {
 
@@ -359,7 +364,7 @@ public class MainActivity extends AppCompatActivity implements
         };
 
         // -- Do LogoutAsyncTask --
-        logoutAsyncTask.execute(new LogoutAsyncTaskParam(this, settingUserModel));
+        logoutAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new LogoutAsyncTaskParam(this, settingUserModel));
     }
 
     protected void onLogoutHandleFinish(final boolean isLoggedOut) {

@@ -75,7 +75,7 @@ public class BootstrapActivity extends AppCompatActivity {
         mSplashLayout.showProgressBar();
 
         // -- Do SessionCheckAsyncTask --
-        sessionCheckAsyncTask.execute(new SessionCheckAsyncTaskParam(this, settingUserModel));
+        sessionCheckAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new SessionCheckAsyncTaskParam(this, settingUserModel));
     }
 
     @Override
