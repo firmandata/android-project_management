@@ -254,10 +254,14 @@ public class NetworkFileMessageHandler extends MessageHandler {
     }
 
     public int downloadFinish(final FileModel fileModel, final FileModel fileModelCache) {
-        if (fileModel != null) {
-            if (fileModel.getFileId() != null)
-                mFileIdProgressList.delete(fileModel.getFileId());
-        }
+        Integer fileId = null;
+        if (fileModel != null)
+            fileId = fileModel.getFileId();
+        else if (fileModelCache != null)
+            fileId = fileModelCache.getFileId();
+
+        if (fileId != null)
+            mFileIdProgressList.delete(fileId);
 
         String fileModelJson = null;
         if (fileModel != null) {
