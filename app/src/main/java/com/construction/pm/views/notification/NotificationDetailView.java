@@ -129,6 +129,14 @@ public class NotificationDetailView {
         mTvNotificationDate.setText(DateTimeUtil.ToDateTimeDisplayString(notificationModel.getNotificationDate()));
         mTvNotificationMessage.setText(notificationModel.getNotificationMessage());
 
+        boolean isMonitoring = false;
+        if (notificationModel.getIsMonitoring() != null)
+            isMonitoring = notificationModel.getIsMonitoring();
+
+        boolean isUpdateTask = false;
+        if (notificationModel.getIsUpdateTask() != null)
+            isUpdateTask = notificationModel.getIsUpdateTask();
+
         if (notificationModel.getProjectStageId() == null)
             mButtonContainer.removeView(mBtnProjectStageContainer);
         else
@@ -137,14 +145,20 @@ public class NotificationDetailView {
             mButtonContainer.removeView(mBtnManagerProjectActivityContainer);
             mButtonContainer.removeView(mBtnInspectorProjectActivityContainer);
         } else {
-            mBtnManagerProjectActivity.setEnabled(false);
-            mBtnInspectorProjectActivity.setEnabled(false);
+            if (!isMonitoring)
+                mButtonContainer.removeView(mBtnInspectorProjectActivityContainer);
+            else
+                mBtnManagerProjectActivity.setEnabled(false);
+            if (!isUpdateTask)
+                mButtonContainer.removeView(mBtnManagerProjectActivityContainer);
+            else
+                mBtnInspectorProjectActivity.setEnabled(false);
         }
 
         if (mNotificationDetailListener != null) {
             if (notificationModel.getProjectStageId() != null)
                 mNotificationDetailListener.onRequestProjectStage(notificationModel.getProjectStageId());
-            if (notificationModel.getProjectActivityId() != null)
+            if (notificationModel.getProjectActivityId() != null && (isUpdateTask || isMonitoring))
                 mNotificationDetailListener.onRequestProjectActivity(notificationModel.getProjectActivityId());
         }
     }

@@ -20,6 +20,8 @@ public class NotificationModel {
     protected Calendar mNotificationDate;
     protected String mNotificationMessage;
     protected String mNotificationStatus;
+    protected Boolean mIsMonitoring;
+    protected Boolean mIsUpdateTask;
 
     protected Integer mCreatorId;
     protected Calendar mCreateDate;
@@ -94,6 +96,22 @@ public class NotificationModel {
         return mNotificationStatus;
     }
 
+    public void setIsMonitoring(final Boolean isMonitoring) {
+        mIsMonitoring = isMonitoring;
+    }
+
+    public Boolean getIsMonitoring() {
+        return mIsMonitoring;
+    }
+
+    public void setIsUpdateTask(final Boolean isUpdateTask) {
+        mIsUpdateTask = isUpdateTask;
+    }
+
+    public Boolean getIsUpdateTask() {
+        return mIsUpdateTask;
+    }
+
     public void setCreatorId(final Integer creatorId) {
         mCreatorId = creatorId;
     }
@@ -152,6 +170,10 @@ public class NotificationModel {
             notificationModel.setNotificationMessage(jsonObject.getString("notification_message"));
         if (!jsonObject.isNull("notification_status"))
             notificationModel.setNotificationStatus(jsonObject.getString("notification_status"));
+        if (!jsonObject.isNull("is_monitoring"))
+            notificationModel.setIsMonitoring(jsonObject.getInt("is_monitoring") > 0);
+        if (!jsonObject.isNull("is_update_task"))
+            notificationModel.setIsUpdateTask(jsonObject.getInt("is_update_task") > 0);
         if (!jsonObject.isNull("creator_id"))
             notificationModel.setCreatorId(jsonObject.getInt("creator_id"));
         if (!jsonObject.isNull("create_date"))
@@ -183,6 +205,10 @@ public class NotificationModel {
             jsonObject.put("notification_message", getNotificationMessage());
         if (getNotificationStatus() != null)
             jsonObject.put("notification_status", getNotificationStatus());
+        if (getIsMonitoring() != null)
+            jsonObject.put("is_monitoring", getIsMonitoring() ? 1 : 0);
+        if (getIsUpdateTask() != null)
+            jsonObject.put("is_update_task", getIsUpdateTask() ? 1 : 0);
         if (getCreatorId() != null)
             jsonObject.put("creator_id", getCreatorId());
         if (getCreateDate() != null)
