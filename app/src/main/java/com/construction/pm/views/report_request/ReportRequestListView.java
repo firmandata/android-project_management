@@ -120,8 +120,8 @@ public class ReportRequestListView implements
         mReportRequestAdapter.setReportRequestModels(reportRequestModels);
     }
 
-    public void addReportRequestModel(final ReportRequestModel reportRequestModel) {
-        mReportRequestAdapter.addReportRequestModels(new ReportRequestModel[] { reportRequestModel });
+    public void addReportRequestModels(final ReportRequestModel[] reportRequestModels) {
+        mReportRequestAdapter.addReportRequestModels(reportRequestModels);
     }
 
     public ReportRequestModel[] getReportRequestModels() {
@@ -184,13 +184,13 @@ public class ReportRequestListView implements
     }
 
     @Override
-    public void onReportRequestFormSent(ReportRequestModel reportRequestModel, String message) {
+    public void onReportRequestFormSent(ReportRequestModel[] reportRequestModels, String message) {
         // -- Hide progress dialog --
         progressDialogDismiss();
 
-        if (reportRequestModel != null) {
-            // -- Update ReportRequestModel list --
-            addReportRequestModel(reportRequestModel);
+        if (reportRequestModels != null) {
+            // -- Update ReportRequestModels list --
+            setReportRequestModels(reportRequestModels);
 
             // -- Close fragment dialog --
             mReportRequestFormDialogFragment.dismiss();
@@ -215,13 +215,13 @@ public class ReportRequestListView implements
     }
 
     @Override
-    public void onReportRequestDetailResent(ReportRequestModel reportRequestModel, String message) {
+    public void onReportRequestDetailResent(ReportRequestModel[] reportRequestModels, String message) {
         // -- Hide progress dialog --
         progressDialogDismiss();
 
-        if (reportRequestModel != null) {
-            // -- Update ReportRequestModel list --
-            addReportRequestModel(reportRequestModel);
+        if (reportRequestModels != null) {
+            // -- Update ReportRequestModels list --
+            setReportRequestModels(reportRequestModels);
 
             // -- Close fragment dialog --
             mReportRequestDetailDialogFragment.dismiss();

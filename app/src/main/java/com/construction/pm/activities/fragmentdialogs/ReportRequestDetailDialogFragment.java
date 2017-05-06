@@ -107,7 +107,7 @@ public class ReportRequestDetailDialogFragment extends DialogFragment implements
                 public void onPostExecute(ReportRequestResendAsyncTaskResult reportRequestResendAsyncTaskResult) {
                     if (reportRequestResendAsyncTaskResult != null) {
                         if (mReportRequestDetailListener != null)
-                            mReportRequestDetailListener.onReportRequestDetailResent(reportRequestResendAsyncTaskResult.getReportRequestModel(), reportRequestResendAsyncTaskResult.getMessage());
+                            mReportRequestDetailListener.onReportRequestDetailResent(reportRequestResendAsyncTaskResult.getReportRequestModels(), reportRequestResendAsyncTaskResult.getMessage());
                     }
                 }
 
@@ -148,6 +148,6 @@ public class ReportRequestDetailDialogFragment extends DialogFragment implements
 
     public interface ReportRequestDetailListener {
         void onReportRequestDetailResendProgress(String progressMessage);
-        void onReportRequestDetailResent(ReportRequestModel reportRequestModel, String message);
+        void onReportRequestDetailResent(ReportRequestModel[] reportRequestModels, String message);
     }
 }

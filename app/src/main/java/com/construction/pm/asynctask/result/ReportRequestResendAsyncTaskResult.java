@@ -3,19 +3,19 @@ package com.construction.pm.asynctask.result;
 import com.construction.pm.models.ReportRequestModel;
 
 public class ReportRequestResendAsyncTaskResult {
-    protected ReportRequestModel mReportRequestModel;
+    protected ReportRequestModel[] mReportRequestModels;
     protected String mMessage;
 
     public ReportRequestResendAsyncTaskResult() {
 
     }
 
-    public void setReportRequestModel(final ReportRequestModel reportRequestModel) {
-        mReportRequestModel = reportRequestModel;
+    public void setReportRequestModels(final ReportRequestModel[] reportRequestModels) {
+        mReportRequestModels = reportRequestModels;
     }
 
-    public ReportRequestModel getReportRequestModel() {
-        return mReportRequestModel;
+    public ReportRequestModel[] getReportRequestModels() {
+        return mReportRequestModels;
     }
 
     public void setMessage(final String message) {

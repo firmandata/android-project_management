@@ -162,7 +162,7 @@ public class ReportRequestFormDialogFragment extends DialogFragment implements R
                 public void onPostExecute(ReportRequestSendAsyncTaskResult reportRequestSendAsyncTaskResult) {
                     if (reportRequestSendAsyncTaskResult != null) {
                         if (mReportRequestFormListener != null)
-                            mReportRequestFormListener.onReportRequestFormSent(reportRequestSendAsyncTaskResult.getReportRequestModel(), reportRequestSendAsyncTaskResult.getMessage());
+                            mReportRequestFormListener.onReportRequestFormSent(reportRequestSendAsyncTaskResult.getReportRequestModels(), reportRequestSendAsyncTaskResult.getMessage());
                     }
                 }
 
@@ -206,6 +206,6 @@ public class ReportRequestFormDialogFragment extends DialogFragment implements R
         void onReportRequestFormProjectListFinish(String errorMessage);
         void onReportRequestFormSendInvalid(String invalidMessage);
         void onReportRequestFormSendProgress(String progressMessage);
-        void onReportRequestFormSent(ReportRequestModel reportRequestModel, String message);
+        void onReportRequestFormSent(ReportRequestModel[] reportRequestModels, String message);
     }
 }

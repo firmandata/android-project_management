@@ -14,6 +14,7 @@ import com.construction.pm.networks.ReportNetwork;
 import com.construction.pm.networks.webapi.WebApiError;
 import com.construction.pm.persistence.NetworkPendingPersistent;
 import com.construction.pm.persistence.PersistenceError;
+import com.construction.pm.persistence.ReportCachePersistent;
 import com.construction.pm.utils.DateTimeUtil;
 import com.construction.pm.utils.ViewUtil;
 
@@ -45,7 +46,7 @@ public class ReportRequestSendAsyncTask extends AsyncTask<ReportRequestSendAsync
             // -- Save ReportRequestModel to server --
             try {
                 ReportRequestResponseModel reportRequestResponseModel = reportNetwork.sendRequestReport(reportRequestModel, projectMemberModel.getUserId());
-                reportRequestSendAsyncTaskResult.setReportRequestModel(reportRequestResponseModel.getReportRequestModel());
+                reportRequestSendAsyncTaskResult.setReportRequestModels(reportRequestResponseModel.getReportRequestModels());
 
                 // -- Set ReportRequestSendAsyncTaskResult message --
                 reportRequestSendAsyncTaskResult.setMessage(ViewUtil.getResourceString(mContext, R.string.report_request_send_handle_task_success));
@@ -64,8 +65,12 @@ public class ReportRequestSendAsyncTask extends AsyncTask<ReportRequestSendAsync
                         // -- Save NetworkPendingModel to NetworkPendingPersistent
                         networkPendingPersistent.createNetworkPending(networkPendingModel);
 
+                        // -- Get ReportRequestModels from ReportCachePersistent --
+                        ReportCachePersistent reportCachePersistent = new ReportCachePersistent(mContext);
+                        ReportRequestModel[] reportRequestModels = reportCachePersistent.getReportRequestModels(projectMemberModel.getProjectMemberId());
+
                         // -- Set ReportRequestSendAsyncTaskResult of ReportRequestModel --
-                        reportRequestSendAsyncTaskResult.setReportRequestModel(reportRequestModel);
+                        reportRequestSendAsyncTaskResult.setReportRequestModels(reportRequestModels);
 
                         // -- Set ReportRequestSendAsyncTaskResult message --
                         reportRequestSendAsyncTaskResult.setMessage(ViewUtil.getResourceString(mContext, R.string.report_request_send_handle_task_success_pending));

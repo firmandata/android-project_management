@@ -4,24 +4,35 @@ import com.construction.pm.models.ReportRequestModel;
 
 import org.json.JSONException;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class ReportRequestResponseModel extends SimpleResponseModel {
-    protected ReportRequestModel mReportRequestModel;
+    protected List<ReportRequestModel> mReportRequestModelList;
 
     public ReportRequestResponseModel() {
         super();
+        mReportRequestModelList = new ArrayList<ReportRequestModel>();
     }
 
-    public ReportRequestResponseModel(final Integer code, final String message, final ReportRequestModel reportRequestModel) {
+    public ReportRequestResponseModel(final Integer code, final String message, final ReportRequestModel[] reportRequestModels) {
         super(code, message);
-        mReportRequestModel = reportRequestModel;
+        mReportRequestModelList = new ArrayList<ReportRequestModel>(Arrays.asList(reportRequestModels));
     }
 
-    public void setReportRequestModel(final ReportRequestModel reportRequestModel) {
-        mReportRequestModel = reportRequestModel;
+    public void setReportRequestModels(final ReportRequestModel[] reportRequestModels) {
+        mReportRequestModelList = new ArrayList<ReportRequestModel>(Arrays.asList(reportRequestModels));
     }
 
-    public ReportRequestModel getReportRequestModel() {
-        return mReportRequestModel;
+    public void addReportRequestModel(final ReportRequestModel reportRequestModel) {
+        mReportRequestModelList.add(reportRequestModel);
+    }
+
+    public ReportRequestModel[] getReportRequestModels() {
+        ReportRequestModel[] reportRequestModels = new ReportRequestModel[mReportRequestModelList.size()];
+        mReportRequestModelList.toArray(reportRequestModels);
+        return reportRequestModels;
     }
 
     public static ReportRequestResponseModel build(org.json.JSONObject jsonObject) throws JSONException {
@@ -37,7 +48,7 @@ public class ReportRequestResponseModel extends SimpleResponseModel {
                 org.json.JSONArray jsonReportRequestModels = jsonResultObject.getJSONArray("reportRequest");
                 for (int reportRequestIdx = 0; reportRequestIdx < jsonReportRequestModels.length(); reportRequestIdx++) {
                     ReportRequestModel reportRequestModel = ReportRequestModel.build(jsonReportRequestModels.getJSONObject(reportRequestIdx));
-                    reportRequestResponseModel.setReportRequestModel(reportRequestModel);
+                    reportRequestResponseModel.addReportRequestModel(reportRequestModel);
                 }
             }
         }
@@ -53,9 +64,12 @@ public class ReportRequestResponseModel extends SimpleResponseModel {
             jsonObject.put("responseCode", getCode());
         if (getMessage() != null)
             jsonObject.put("responseMessage", getMessage());
-        if (getReportRequestModel() != null) {
+        if (getReportRequestModels() != null) {
             org.json.JSONArray jsonReportRequestModels = new org.json.JSONArray();
-            jsonReportRequestModels.put(getReportRequestModel().build());
+            ReportRequestModel[] reportRequestModels = getReportRequestModels();
+            for (ReportRequestModel reportRequestModel : reportRequestModels) {
+                jsonReportRequestModels.put(reportRequestModel.build());
+            }
 
             org.json.JSONObject jsonResultObject = new org.json.JSONObject();
             jsonResultObject.put("reportRequest", jsonReportRequestModels);
