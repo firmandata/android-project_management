@@ -37,6 +37,9 @@ public class ReportRequestSendAsyncTask extends AsyncTask<ReportRequestSendAsync
         // -- Get ReportRequestModel save progress --
         publishProgress(ViewUtil.getResourceString(mContext, R.string.report_request_send_handle_task_begin));
 
+        // -- Prepare ReportCachePersistent --
+        ReportCachePersistent reportCachePersistent = new ReportCachePersistent(mContext);
+
         // -- Prepare ReportNetwork --
         ReportNetwork reportNetwork = new ReportNetwork(mContext, mReportRequestSendAsyncTaskParam.getSettingUserModel());
 
@@ -50,6 +53,12 @@ public class ReportRequestSendAsyncTask extends AsyncTask<ReportRequestSendAsync
 
                 // -- Set ReportRequestSendAsyncTaskResult message --
                 reportRequestSendAsyncTaskResult.setMessage(ViewUtil.getResourceString(mContext, R.string.report_request_send_handle_task_success));
+
+                // -- Save to ReportCachePersistent --
+                try {
+                    reportCachePersistent.setReportRequestModels(reportRequestSendAsyncTaskResult.getReportRequestModels(), projectMemberModel.getProjectMemberId());
+                } catch (PersistenceError ex) {
+                }
             } catch (WebApiError webApiError) {
                 if (webApiError.isErrorConnection()) {
                     // -- Prepare NetworkPendingPersistent --
@@ -66,7 +75,6 @@ public class ReportRequestSendAsyncTask extends AsyncTask<ReportRequestSendAsync
                         networkPendingPersistent.createNetworkPending(networkPendingModel);
 
                         // -- Get ReportRequestModels from ReportCachePersistent --
-                        ReportCachePersistent reportCachePersistent = new ReportCachePersistent(mContext);
                         ReportRequestModel[] reportRequestModels = reportCachePersistent.getReportRequestModels(projectMemberModel.getProjectMemberId());
 
                         // -- Set ReportRequestSendAsyncTaskResult of ReportRequestModel --
