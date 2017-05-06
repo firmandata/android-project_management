@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/gap">
+
+    <android.support.v7.widget.AppCompatSpinner
+        android:id="@+id/projectList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/commentLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/projectList"
+        android:layout_alignLeft="@+id/projectList"
+        android:layout_alignStart="@+id/projectList"
+        android:layout_alignRight="@+id/projectList"
+        android:layout_alignEnd="@+id/projectList"
+        android:layout_marginTop="@dimen/gap">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/comment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/report_request_form_view_comment"
+            android:singleLine="false" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/sendButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/commentLayout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/gap"
+        android:text="@string/report_request_form_view_send"/>
+
+</RelativeLayout>

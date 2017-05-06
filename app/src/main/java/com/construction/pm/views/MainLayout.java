@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,9 +26,11 @@ import com.construction.pm.activities.fragments.InspectorFragment;
 import com.construction.pm.activities.fragments.ManagerFragment;
 import com.construction.pm.activities.fragments.NotificationListFragment;
 import com.construction.pm.activities.fragments.ProjectListFragment;
+import com.construction.pm.activities.fragments.ReportRequestListFragment;
 import com.construction.pm.activities.fragments.UserChangePasswordFragment;
 import com.construction.pm.activities.fragments.UserChangeProfileFragment;
 import com.construction.pm.models.NotificationModel;
+import com.construction.pm.models.ReportRequestModel;
 import com.construction.pm.utils.StringUtil;
 import com.construction.pm.utils.ViewUtil;
 
@@ -46,6 +49,8 @@ public class MainLayout implements NavigationView.OnNavigationItemSelectedListen
     protected static final String FRAGMENT_TAG_REQUEST_REPORT = "FRAGMENT_REQUEST_REPORT";
     protected static final String FRAGMENT_TAG_USER_CHANGE_PROFILE = "FRAGMENT_USER_CHANGE_PROFILE";
     protected static final String FRAGMENT_TAG_USER_CHANGE_PASSWORD = "FRAGMENT_USER_CHANGE_PASSWORD";
+
+    protected ReportRequestListFragment mReportRequestListFragment;
     protected NotificationListFragment mNotificationListFragment;
 
     protected DrawerLayout mMainLayout;
@@ -161,6 +166,22 @@ public class MainLayout implements NavigationView.OnNavigationItemSelectedListen
         mActivityHandler = new Handler();
     }
 
+    public void createReportRequestMenu(final Menu menu) {
+        MenuItem menuItemUpdateActivity = menu.add(R.string.main_layout_request_report_menu_add);
+        menuItemUpdateActivity.setIcon(R.drawable.ic_create_new_light_24);
+        if (Build.VERSION.SDK_INT > 10) {
+            menuItemUpdateActivity.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        }
+        menuItemUpdateActivity.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                if (mMainLayoutListener != null)
+                    mMainLayoutListener.onMenuReportRequestAdd();
+                return true;
+            }
+        });
+    }
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()) {
@@ -185,6 +206,8 @@ public class MainLayout implements NavigationView.OnNavigationItemSelectedListen
                     mMainLayoutListener.onMenuManagerSelected();
                 break;
             case R.id.navigator_menu_request_report:
+                if (mMainLayoutListener != null)
+                    mMainLayoutListener.onMenuReportRequestSelected();
                 break;
             case R.id.navigator_menu_profile:
                 if (mMainLayoutListener != null)
@@ -249,6 +272,12 @@ public class MainLayout implements NavigationView.OnNavigationItemSelectedListen
     public boolean isNotificationListFragmentShow() {
         if (mFragmentTagSelected != null)
             return mFragmentTagSelected.equals(FRAGMENT_TAG_NOTIFICATION_LIST);
+        return false;
+    }
+
+    public boolean isReportRequestListFragmentShow() {
+        if (mFragmentTagSelected != null)
+            return mFragmentTagSelected.equals(FRAGMENT_TAG_REQUEST_REPORT);
         return false;
     }
 
@@ -332,6 +361,21 @@ public class MainLayout implements NavigationView.OnNavigationItemSelectedListen
         return managerFragment;
     }
 
+    public ReportRequestListFragment showReportRequestListFragment() {
+        ReportRequestListFragment reportRequestListFragment = ReportRequestListFragment.newInstance();
+
+        loadFragment(reportRequestListFragment, ViewUtil.getResourceString(mContext, R.string.menu_request_report_title), FRAGMENT_TAG_REQUEST_REPORT);
+
+        mReportRequestListFragment = reportRequestListFragment;
+
+        return reportRequestListFragment;
+    }
+
+    public void addReportRequestListFragment() {
+        if (mReportRequestListFragment != null)
+            mReportRequestListFragment.addReportRequest();
+    }
+
     public UserChangeProfileFragment showUserChangeProfileFragment(final UserChangeProfileFragment.UserChangeProfileFragmentListener userChangeProfileFragmentListener) {
         UserChangeProfileFragment userChangeProfileFragment = UserChangeProfileFragment.newInstance();
         userChangeProfileFragment.setUserChangeProfileFragmentListener(userChangeProfileFragmentListener);
@@ -360,6 +404,8 @@ public class MainLayout implements NavigationView.OnNavigationItemSelectedListen
         void onMenuInspectorSelected();
         void onMenuManagerSelected();
         void onMenuNotificationListSelected();
+        void onMenuReportRequestSelected();
+        void onMenuReportRequestAdd();
         void onMenuUserChangeProfileSelected();
         void onMenuUserChangePasswordSelected();
         void onMenuLogoutClick();

@@ -7,7 +7,7 @@
     android:padding="@dimen/gap">
 
     <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/activityStatusText"
+        android:id="@+id/projectName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"

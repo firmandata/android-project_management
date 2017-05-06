@@ -20,7 +20,7 @@ public class SpinnerActivityStatusAdapter extends BaseAdapter {
     protected Context mContext;
     protected List<ActivityStatusEnum> mActivityStatusList;
 
-    public SpinnerActivityStatusAdapter(Context context) {
+    public SpinnerActivityStatusAdapter(final Context context) {
         super();
 
         mContext = context;
@@ -32,7 +32,7 @@ public class SpinnerActivityStatusAdapter extends BaseAdapter {
         mActivityStatusList.add(ActivityStatusEnum.ADDENDUM);
     }
 
-    public int getPositionByItem(ActivityStatusEnum activityStatusEnum) {
+    public int getPositionByItem(final ActivityStatusEnum activityStatusEnum) {
         int position = -1;
         if (activityStatusEnum != null) {
             for (int itemPosition = 0; itemPosition < getCount(); itemPosition++) {
@@ -100,7 +100,7 @@ public class SpinnerActivityStatusAdapter extends BaseAdapter {
             mViewItem = itemView;
 
             mActivityStatusText = (AppCompatTextView) mViewItem.findViewById(R.id.activityStatusText);
-            mActivityStatusText.setText(ViewUtil.getResourceString(mContext, R.string.project_activity_activity_status_blank));
+            mActivityStatusText.setText(ViewUtil.getResourceString(mContext, R.string.spinner_project_activity_status_blank));
         }
 
         public void setActivityStatus(final ActivityStatusEnum activityStatusEnum) {

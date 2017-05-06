@@ -21,6 +21,7 @@ import com.construction.pm.asynctask.LogoutAsyncTask;
 import com.construction.pm.asynctask.param.LogoutAsyncTaskParam;
 import com.construction.pm.models.NotificationModel;
 import com.construction.pm.models.ProjectMemberModel;
+import com.construction.pm.models.ReportRequestModel;
 import com.construction.pm.models.network.SimpleResponseModel;
 import com.construction.pm.models.system.SessionLoginModel;
 import com.construction.pm.models.system.SettingUserModel;
@@ -140,7 +141,11 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        return super.onCreateOptionsMenu(menu);
+        if (mMainLayout != null) {
+            if (mMainLayout.isReportRequestListFragmentShow())
+                mMainLayout.createReportRequestMenu(menu);
+        }
+        return true;
     }
 
     @Override
@@ -176,6 +181,7 @@ public class MainActivity extends AppCompatActivity implements
 
         if (!mMainLayout.isHomeFragmentShow()) {
             mMainLayout.showHomeFragment();
+            supportInvalidateOptionsMenu();
             return;
         }
 
@@ -200,31 +206,48 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onMenuHomeSelected() {
         mMainLayout.showHomeFragment();
+        supportInvalidateOptionsMenu();
     }
 
     @Override
     public void onMenuProjectListSelected() {
         mMainLayout.showProjectListFragment();
+        supportInvalidateOptionsMenu();
     }
 
     @Override
     public void onMenuInspectorSelected() {
         mMainLayout.showInspectorFragment();
+        supportInvalidateOptionsMenu();
     }
 
     @Override
     public void onMenuManagerSelected() {
         mMainLayout.showManagerFragment();
+        supportInvalidateOptionsMenu();
     }
 
     @Override
     public void onMenuNotificationListSelected() {
         mMainLayout.showNotificationListFragment(this);
+        supportInvalidateOptionsMenu();
+    }
+
+    @Override
+    public void onMenuReportRequestSelected() {
+        mMainLayout.showReportRequestListFragment();
+        supportInvalidateOptionsMenu();
+    }
+
+    @Override
+    public void onMenuReportRequestAdd() {
+        mMainLayout.addReportRequestListFragment();
     }
 
     @Override
     public void onMenuUserChangeProfileSelected() {
         mMainLayout.showUserChangeProfileFragment(this);
+        supportInvalidateOptionsMenu();
     }
 
     @Override
@@ -235,12 +258,14 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onMenuUserChangePasswordSelected() {
         mMainLayout.showUserChangePasswordFragment(this);
+        supportInvalidateOptionsMenu();
     }
 
     @Override
     public void onUserChangePasswordSuccess(SimpleResponseModel simpleResponseModel) {
         // -- Show home --
         mMainLayout.showHomeFragment();
+        supportInvalidateOptionsMenu();
     }
 
     @Override

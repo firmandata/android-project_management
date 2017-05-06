@@ -125,6 +125,10 @@ public class NetworkPendingWorker extends Thread {
                 webApiResponse = webApiRequest.post(webApiResponseRequest.getApiUrl(), webApiResponseRequest.getHeaderParam(), null, webApiResponseRequest.getFormData());
             } else if (networkPendingModel.getType() == NetworkPendingModel.ECommandType.INSPECTOR_PROJECT_ACTIVITY_MONITORING_SAVE) {
                 webApiResponse = webApiRequest.post(webApiResponseRequest.getApiUrl(), webApiResponseRequest.getHeaderParam(), null, webApiResponseRequest.getFormData());
+            } else if (networkPendingModel.getType() == NetworkPendingModel.ECommandType.REPORT_REQUEST_SEND) {
+                webApiResponse = webApiRequest.post(webApiResponseRequest.getApiUrl(), webApiResponseRequest.getHeaderParam(), null, webApiResponseRequest.getFormData());
+            } else if (networkPendingModel.getType() == NetworkPendingModel.ECommandType.REPORT_REQUEST_RESEND) {
+                webApiResponse = webApiRequest.post(webApiResponseRequest.getApiUrl(), webApiResponseRequest.getHeaderParam(), null, webApiResponseRequest.getFormData());
             }
 
             if (webApiResponse != null) {

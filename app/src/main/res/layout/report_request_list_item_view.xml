@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="?android:attr/selectableItemBackground"
+    android:padding="@dimen/gap">
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/requestDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_toLeftOf="@+id/requestStatus"
+        android:layout_toStartOf="@+id/requestStatus"
+        android:textStyle="normal|bold"
+        android:singleLine="true"
+        android:ellipsize="end" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/projectName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/requestDate"
+        android:layout_alignLeft="@+id/requestDate"
+        android:layout_alignStart="@+id/requestDate"
+        android:layout_alignRight="@+id/requestStatus"
+        android:layout_alignEnd="@+id/requestStatus"
+        android:layout_marginTop="@dimen/gap_half"
+        android:ellipsize="end"
+        android:singleLine="true" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/requestStatus"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignBottom="@+id/requestDate"
+        android:gravity="center"
+        android:layout_marginStart="@dimen/gap"
+        android:layout_marginLeft="@dimen/gap"
+        android:ellipsize="end"
+        android:singleLine="true" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/comment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/projectName"
+        android:layout_alignLeft="@+id/projectName"
+        android:layout_alignStart="@+id/projectName"
+        android:layout_alignRight="@+id/projectName"
+        android:layout_alignEnd="@+id/projectName"
+        android:layout_marginTop="@dimen/gap_half" />
+
+</RelativeLayout>

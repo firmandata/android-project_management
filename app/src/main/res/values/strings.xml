@@ -31,6 +31,8 @@
     <string name="menu_change_password_title">Change Password</string>
     <string name="menu_logout_title">Logout</string>
 
+    <string name="main_layout_request_report_menu_add">Add Request Report</string>
+
     <string name="network_unknown_response_expected">Unknown response expected.</string>
 
     <string name="main_drawer_open">open_drawer</string>
@@ -112,6 +114,9 @@
     <string name="file_info_handle_task_begin">Getting file info &#8230;</string>
     <string name="file_info_handle_task_success">Getting file info finished.</string>
 
+    <string name="report_request_list_handle_task_begin">Getting report requests &#8230;</string>
+    <string name="report_request_list_handle_task_success">Getting report requests finished.</string>
+
     <string name="manager_activity_update_save_handle_task_begin">Saving update &#8230;</string>
     <string name="manager_activity_update_save_handle_task_success">Update saved.</string>
     <string name="manager_activity_update_save_handle_task_success_pending">Update saved as pending.</string>
@@ -129,6 +134,18 @@
     <string name="inspector_project_activity_monitoring_save_handle_task_success_pending">Comment saved as pending.</string>
     <string name="inspector_project_activity_monitoring_save_handle_task_failed">Comment save failed. $s1</string>
     <string name="inspector_project_activity_monitoring_save_handle_task_finish">Comment saved.</string>
+
+    <string name="report_request_send_handle_task_begin">Send request &#8230;</string>
+    <string name="report_request_send_handle_task_success">Request sent.</string>
+    <string name="report_request_send_handle_task_success_pending">Send request saved as pending.</string>
+    <string name="report_request_send_handle_task_failed">Send request failed. $s1</string>
+    <string name="report_request_send_handle_task_finish">Request sent.</string>
+
+    <string name="report_request_resend_handle_task_begin">Resend request &#8230;</string>
+    <string name="report_request_resend_handle_task_success">Request resent.</string>
+    <string name="report_request_resend_handle_task_success_pending">Resend request saved as pending.</string>
+    <string name="report_request_resend_handle_task_failed">Resend request failed. $s1</string>
+    <string name="report_request_resend_handle_task_finish">Request resent.</string>
 
     <string name="image_shadow_description">Shadow</string>
     <string name="image_logo_description">Application Logo</string>
@@ -344,7 +361,7 @@
     <string name="project_activity_monitoring_detail_actual_duration_start_date">Start</string>
     <string name="project_activity_monitoring_detail_actual_duration_end_date">To</string>
 
-    <string name="project_activity_activity_status_blank">-- Activity Status --</string>
+    <string name="spinner_project_activity_status_blank">-- Activity Status --</string>
 
     <string name="project_activity_update_list_actual_start_date">Start</string>
     <string name="project_activity_update_list_actual_duration_date_separator">To</string>
@@ -388,6 +405,22 @@
     <string name="project_stage_assign_comment_form_comment">Comment</string>
     <string name="project_stage_assign_comment_form_error_empty_data">No comment data save!</string>
     <string name="project_stage_assign_comment_form_error_require">Please fill the $s1!</string>
+
+    <string name="report_request_list_view_alert_button">OK</string>
+    <string name="report_request_list_view_alert_title_error">Failed</string>
+
+    <string name="report_request_detail_view_request_date">Request Date</string>
+    <string name="report_request_detail_view_project_name">Project Name</string>
+    <string name="report_request_detail_view_last_report_sent_to_email_date">Last Sent</string>
+    <string name="report_request_detail_view_resend">Resend</string>
+
+    <string name="report_request_form_view_project_name">Project</string>
+    <string name="report_request_form_view_comment">Comment</string>
+    <string name="report_request_form_view_send">Send</string>
+    <string name="report_request_form_view_error_empty_data">No data send!</string>
+    <string name="report_request_form_view_error_require">Please fill the $s1!</string>
+
+    <string name="spinner_project_list_blank">-- Project --</string>
 
     <string name="service_notification_title">Project Management</string>
     <string name="service_notification_subtitle">$s1 new notifications</string>
