@@ -205,6 +205,11 @@ public class ProjectPlanListView {
                 ProjectPlanModelView projectPlanModelView = null;
 
                 Integer parentProjectPlanId = projectPlanModel.getParentProjectPlanId();
+                if (parentProjectPlanId != null) {
+                    if (parentProjectPlanId == 0 || parentProjectPlanId.equals(0))
+                        parentProjectPlanId = null;
+                }
+
                 if (projectPlanIdParentRef == null && parentProjectPlanId == null) {
                     projectPlanModelView = new ProjectPlanModelView(projectPlanModel);
                 } else if (projectPlanIdParentRef != null && parentProjectPlanId != null) {
