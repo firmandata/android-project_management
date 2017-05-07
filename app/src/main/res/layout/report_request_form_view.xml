@@ -40,6 +40,9 @@
         android:layout_below="@+id/commentLayout"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/gap"
+        android:drawablePadding="@dimen/gap_half"
+        android:drawableRight="@drawable/ic_send_light_24"
+        android:drawableEnd="@drawable/ic_send_light_24"
         android:text="@string/report_request_form_view_send"/>
 
 </RelativeLayout>

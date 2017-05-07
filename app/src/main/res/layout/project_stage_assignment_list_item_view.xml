@@ -14,7 +14,7 @@
         android:layout_alignParentStart="true"
         android:layout_marginRight="@dimen/gap_half"
         android:layout_marginEnd="@dimen/gap_half"
-        app:srcCompat="@drawable/ic_account_dark_24dp" />
+        app:srcCompat="@drawable/ic_account_dark_24" />
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/memberCode"

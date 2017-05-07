@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import com.construction.pm.R;
 import com.construction.pm.models.ProjectModel;
 import com.construction.pm.models.ReportRequestModel;
+import com.construction.pm.utils.ButtonUtil;
 import com.construction.pm.utils.ViewUtil;
 import com.construction.pm.views.adapter.SpinnerProjectListAdapter;
 
@@ -78,6 +79,8 @@ public class ReportRequestFormView {
                     mReportRequestFormListener.onReportRequestFormSend(reportRequestModel);
             }
         });
+
+        ButtonUtil.setButtonPrimary(mContext, mSendButton);
     }
 
     public RelativeLayout getView() {

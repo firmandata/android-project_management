@@ -10,6 +10,7 @@ import android.widget.RelativeLayout;
 
 import com.construction.pm.R;
 import com.construction.pm.models.ReportRequestModel;
+import com.construction.pm.utils.ButtonUtil;
 import com.construction.pm.utils.DateTimeUtil;
 
 public class ReportRequestDetailView {
@@ -62,6 +63,8 @@ public class ReportRequestDetailView {
                     mReportRequestDetailListener.onReportRequestDetailResend(mReportRequestModel);
             }
         });
+
+        ButtonUtil.setButtonPrimary(mContext, mResendButton);
     }
 
     public RelativeLayout getView() {

@@ -2,7 +2,6 @@ package com.construction.pm.libraries.widgets;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.InputType;
@@ -73,7 +72,7 @@ public class DatePickerView extends RelativeLayout {
         mEditText.setHint(mDisplayDateFormat);
 
         mButton = new AppCompatButton(mContext);
-        mButton.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.ic_today_light_24dp));
+        mButton.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.ic_today_light_24));
         mButton.setId(ViewUtil.generateViewId());
         ButtonUtil.setButtonInfo(mContext, mButton);
 
