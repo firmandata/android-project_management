@@ -3,9 +3,11 @@ package com.construction.pm.networks;
 import android.content.Context;
 
 import com.construction.pm.R;
+import com.construction.pm.models.ProjectActivityDashboardModel;
 import com.construction.pm.models.ProjectModel;
 import com.construction.pm.models.AccessTokenModel;
 import com.construction.pm.models.ProjectStageAssignCommentModel;
+import com.construction.pm.models.network.ProjectActivityDashboardResponseModel;
 import com.construction.pm.models.network.ProjectPlanResponseModel;
 import com.construction.pm.models.network.ProjectResponseModel;
 import com.construction.pm.models.network.ProjectStageAssignCommentResponseModel;
@@ -300,5 +302,46 @@ public class ProjectNetwork extends AuthenticationNetwork {
         }
 
         return projectStageAssignCommentResponseModel;
+    }
+
+    public ProjectActivityDashboardResponseModel getProjectActivityDashboard(final Integer projectMemberId) throws WebApiError {
+        // -- Get SessionLoginModel --
+        SessionLoginModel sessionLoginModel = getSessionLoginModel();
+        AccessTokenModel accessTokenModel = sessionLoginModel.getAccessTokenModel();
+
+        // -- Prepare WebApiParam headerParam parameters --
+        WebApiParam headerParam = new WebApiParam();
+        if (accessTokenModel != null)
+            headerParam.add("Authorization", "Bearer " + accessTokenModel.getAccessToken());
+
+        // -- Prepare WebApiParam formData parameters --
+        WebApiParam formData = new WebApiParam();
+        formData.add("project_member_id", projectMemberId);
+
+        // -- Request get ProjectActivityDashboardModels --
+        WebApiResponse webApiResponse = mWebApiRequest.post("/rest/project/getListProjectActivityDashboard", headerParam, null, formData);
+
+        // -- Throw WebApiError if existing --
+        WebApiError webApiError = webApiResponse.getWebApiError();
+        if (webApiError != null)
+            throw webApiError;
+
+        // -- Get request result --
+        org.json.JSONObject jsonObject = webApiResponse.getSuccessJsonObject();
+        if (jsonObject == null)
+            throw new WebApiError(webApiResponse, 0, ViewUtil.getResourceString(mContext, R.string.network_unknown_response_expected));
+
+        // -- Fetch result --
+        ProjectActivityDashboardResponseModel projectActivityDashboardResponseModel = null;
+        try {
+            if (!jsonObject.isNull("result")) {
+                org.json.JSONObject jsonResult = jsonObject.getJSONObject("result");
+                projectActivityDashboardResponseModel = ProjectActivityDashboardResponseModel.build(jsonResult);
+            }
+        } catch (JSONException jsonException) {
+            throw new WebApiError(webApiResponse, 0, jsonException.getMessage(), jsonException);
+        }
+
+        return projectActivityDashboardResponseModel;
     }
 }

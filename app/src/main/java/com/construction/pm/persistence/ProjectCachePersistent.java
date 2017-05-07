@@ -4,8 +4,10 @@ import android.content.Context;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.construction.pm.models.ProjectActivityDashboardModel;
 import com.construction.pm.models.ProjectModel;
 import com.construction.pm.models.ProjectStageAssignCommentModel;
+import com.construction.pm.models.network.ProjectActivityDashboardResponseModel;
 import com.construction.pm.models.network.ProjectPlanResponseModel;
 import com.construction.pm.models.network.ProjectResponseModel;
 import com.construction.pm.models.network.ProjectStageResponseModel;
@@ -351,5 +353,64 @@ public class ProjectCachePersistent extends NetworkCachePersistent {
         }
 
         return projectPlanResponseModel;
+    }
+
+    public long setProjectActivityDashboardResponseModel(final ProjectActivityDashboardResponseModel projectActivityDashboardResponseModel, final Integer projectMemberId) throws PersistenceError {
+        long networkCacheId = 0;
+
+        String contentKey = String.valueOf(projectMemberId);
+        String content = null;
+
+        // -- Get ProjectActivityDashboardResponseModel content --
+        try {
+            org.json.JSONObject jsonObject = projectActivityDashboardResponseModel.build();
+            content = jsonObject.toString(0);
+        } catch (org.json.JSONException ex) {
+        } catch (Exception ex) {
+        }
+
+        if (content != null) {
+            try {
+                SQLiteDatabase sqLiteDatabase = mSQLitePersistent.getWritableDatabase();
+
+                // -- Save content to cache --
+                networkCacheId = saveNetworkCacheContent(sqLiteDatabase, NetworkCachePersistentType.PROJECT_ACTIVITY_DASHBOARD, contentKey, content, projectMemberId);
+            } catch (SQLException ex) {
+                throw new PersistenceError(0, ex.getMessage(), ex);
+            } catch (Exception ex) {
+                throw new PersistenceError(0, ex.getMessage(), ex);
+            }
+        }
+
+        return networkCacheId;
+    }
+
+    public ProjectActivityDashboardResponseModel getProjectActivityDashboardResponseModel(final Integer projectMemberId) throws PersistenceError {
+        String contentKey = String.valueOf(projectMemberId);
+        String content = null;
+
+        try {
+            SQLiteDatabase sqLiteDatabase = mSQLitePersistent.getReadableDatabase();
+
+            // -- Get content from cache --
+            content = getNetworkCacheContent(sqLiteDatabase, NetworkCachePersistentType.PROJECT_ACTIVITY_DASHBOARD, contentKey, projectMemberId);
+        } catch (SQLException ex) {
+            throw new PersistenceError(0, ex.getMessage(), ex);
+        } catch (Exception ex) {
+            throw new PersistenceError(0, ex.getMessage(), ex);
+        }
+
+        // -- Generate ProjectActivityDashboardResponseModel from content --
+        ProjectActivityDashboardResponseModel projectActivityDashboardResponseModel = null;
+        if (content != null) {
+            try {
+                org.json.JSONObject jsonObject = new org.json.JSONObject(content);
+                projectActivityDashboardResponseModel = ProjectActivityDashboardResponseModel.build(jsonObject);
+            } catch (org.json.JSONException ex) {
+            } catch (Exception ex) {
+            }
+        }
+
+        return projectActivityDashboardResponseModel;
     }
 }

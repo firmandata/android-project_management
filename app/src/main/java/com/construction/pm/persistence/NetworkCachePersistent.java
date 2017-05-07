@@ -26,7 +26,8 @@ public abstract class NetworkCachePersistent {
         MANAGER_PROJECT_ACTIVITY_LIST(7), MANAGER_PROJECT_ACTIVITY_DETAIL(10),
         MANAGER_PROJECT_ACTIVITY_MONITORING_LIST(8), MANAGER_PROJECT_ACTIVITY_UPDATE_LIST(9),
         FILE(5),
-        REPORT_REQUEST_LIST(14);
+        REPORT_REQUEST_LIST(14),
+        PROJECT_ACTIVITY_DASHBOARD(15);
 
         private final int mNetworkCachePersistentType;
 

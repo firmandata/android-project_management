@@ -183,6 +183,24 @@ public class ManagerLayout implements ProjectActivityListFragment.ProjectActivit
         }
     }
 
+    public void showTab(final StatusTaskEnum statusTaskEnum) {
+        for (int position = 0; position < mViewPagerAdapter.getCount(); position++) {
+            ProjectActivityListFragment projectActivityListFragment = (ProjectActivityListFragment) mViewPagerAdapter.getItem(position);
+            StatusTaskEnum fragmentStatusTask = projectActivityListFragment.getStatusTask();
+            if (fragmentStatusTask != null && statusTaskEnum != null) {
+                if (statusTaskEnum.equals(fragmentStatusTask)) {
+                    mViewPager.setCurrentItem(position);
+                    break;
+                }
+            } else {
+                if (statusTaskEnum == null) {
+                    mViewPager.setCurrentItem(position);
+                    break;
+                }
+            }
+        }
+    }
+
     @Override
     public void onProjectActivityClick(ProjectActivityModel projectActivityModel) {
         if (mManagerLayoutListener != null)

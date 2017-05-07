@@ -108,6 +108,9 @@
     <string name="manager_activity_update_list_handle_task_begin">Getting update activities &#8230;</string>
     <string name="manager_activity_update_list_handle_task_success">Getting update activities finished.</string>
 
+    <string name="project_activity_dashboard_list_handle_task_begin">Getting project activity dashboard &#8230;</string>
+    <string name="project_activity_dashboard_list_handle_task_success">Getting project activity dashboard finished.</string>
+
     <string name="file_handle_task_progress_size">$s1</string>
     <string name="file_handle_task_progress_percent_size">$s1 ($s2)</string>
 
@@ -202,6 +205,9 @@
     <string name="user_change_profile_view_alert_button">OK</string>
     <string name="user_change_profile_view_alert_title_error">Update Profile Failed</string>
     <string name="user_change_profile_view_alert_title_success">Update Profile Success</string>
+
+    <string name="project_activity_dashboard_list_title_inspector">Project Activity Monitoring</string>
+    <string name="project_activity_dashboard_list_title_manager">Project Activity</string>
 
     <string name="contract_detail_contract_no">Contract No</string>
     <string name="contract_detail_contract_no_parent">Parent Contract No</string>

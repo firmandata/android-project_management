@@ -14,6 +14,7 @@ import com.construction.pm.asynctask.InspectorProjectActivityListAsyncTask;
 import com.construction.pm.asynctask.param.InspectorProjectActivityListAsyncTaskParam;
 import com.construction.pm.asynctask.result.InspectorProjectActivityListAsyncTaskResult;
 import com.construction.pm.models.ProjectActivityModel;
+import com.construction.pm.models.StatusTaskEnum;
 import com.construction.pm.models.system.SessionLoginModel;
 import com.construction.pm.models.system.SettingUserModel;
 import com.construction.pm.persistence.SessionPersistent;
@@ -26,17 +27,40 @@ import java.util.List;
 
 public class InspectorFragment extends Fragment implements InspectorLayout.InspectorLayoutListener {
 
+    public static final String PARAM_STATUS_TASK_ENUM = "STATUS_TASK_ENUM";
+
     protected List<AsyncTask> mAsyncTaskList;
 
     protected InspectorLayout mInspectorLayout;
 
+    protected StatusTaskEnum mStatusTaskEnum;
+
+    public static InspectorFragment newInstance(final StatusTaskEnum statusTaskEnum) {
+        // -- Set parameters --
+        Bundle bundle = new Bundle();
+        if (statusTaskEnum != null)
+            bundle.putString(PARAM_STATUS_TASK_ENUM, statusTaskEnum.getValue());
+
+        InspectorFragment inspectorFragment = new InspectorFragment();
+        inspectorFragment.setArguments(bundle);
+        return inspectorFragment;
+    }
+
     public static InspectorFragment newInstance() {
-        return new InspectorFragment();
+        return newInstance(null);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // -- Get parameters --
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            String statusTaskEnumValue = bundle.getString(PARAM_STATUS_TASK_ENUM);
+            if (statusTaskEnumValue != null)
+                mStatusTaskEnum = StatusTaskEnum.fromString(statusTaskEnumValue);
+        }
 
         // -- Handle AsyncTask --
         mAsyncTaskList = new ArrayList<AsyncTask>();
@@ -163,6 +187,9 @@ public class InspectorFragment extends Fragment implements InspectorLayout.Inspe
 
     protected void onProjectActivityListRequestSuccess(final ProjectActivityModel[] projectActivityModels) {
         mInspectorLayout.setLayoutData(projectActivityModels);
+
+        // -- Show default tab --
+        mInspectorLayout.showTab(mStatusTaskEnum);
     }
 
     protected void onProjectActivityListRequestFailed(final String errorMessage) {

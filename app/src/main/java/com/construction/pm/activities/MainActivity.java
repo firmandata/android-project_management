@@ -217,13 +217,13 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onMenuInspectorSelected() {
-        mMainLayout.showInspectorFragment();
+        mMainLayout.showInspectorFragment(null);
         supportInvalidateOptionsMenu();
     }
 
     @Override
     public void onMenuManagerSelected() {
-        mMainLayout.showManagerFragment();
+        mMainLayout.showManagerFragment(null);
         supportInvalidateOptionsMenu();
     }
 

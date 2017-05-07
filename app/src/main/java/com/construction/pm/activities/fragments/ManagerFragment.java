@@ -14,6 +14,7 @@ import com.construction.pm.asynctask.ManagerProjectActivityListAsyncTask;
 import com.construction.pm.asynctask.param.ManagerProjectActivityListAsyncTaskParam;
 import com.construction.pm.asynctask.result.ManagerProjectActivityListAsyncTaskResult;
 import com.construction.pm.models.ProjectActivityModel;
+import com.construction.pm.models.StatusTaskEnum;
 import com.construction.pm.models.system.SessionLoginModel;
 import com.construction.pm.models.system.SettingUserModel;
 import com.construction.pm.persistence.SessionPersistent;
@@ -26,17 +27,40 @@ import java.util.List;
 
 public class ManagerFragment extends Fragment implements ManagerLayout.ManagerLayoutListener {
 
+    public static final String PARAM_STATUS_TASK_ENUM = "STATUS_TASK_ENUM";
+
     protected List<AsyncTask> mAsyncTaskList;
 
     protected ManagerLayout mManagerLayout;
 
+    protected StatusTaskEnum mStatusTaskEnum;
+
+    public static ManagerFragment newInstance(final StatusTaskEnum statusTaskEnum) {
+        // -- Set parameters --
+        Bundle bundle = new Bundle();
+        if (statusTaskEnum != null)
+            bundle.putString(PARAM_STATUS_TASK_ENUM, statusTaskEnum.getValue());
+
+        ManagerFragment managerFragment = new ManagerFragment();
+        managerFragment.setArguments(bundle);
+        return managerFragment;
+    }
+
     public static ManagerFragment newInstance() {
-        return new ManagerFragment();
+        return newInstance(null);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // -- Get parameters --
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            String statusTaskEnumValue = bundle.getString(PARAM_STATUS_TASK_ENUM);
+            if (statusTaskEnumValue != null)
+                mStatusTaskEnum = StatusTaskEnum.fromString(statusTaskEnumValue);
+        }
 
         // -- Handle AsyncTask --
         mAsyncTaskList = new ArrayList<AsyncTask>();
@@ -163,6 +187,9 @@ public class ManagerFragment extends Fragment implements ManagerLayout.ManagerLa
 
     protected void onProjectActivityListRequestSuccess(final ProjectActivityModel[] projectActivityModels) {
         mManagerLayout.setLayoutData(projectActivityModels);
+
+        // -- Show default tab --
+        mManagerLayout.showTab(mStatusTaskEnum);
     }
 
     protected void onProjectActivityListRequestFailed(final String errorMessage) {

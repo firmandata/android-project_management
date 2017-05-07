@@ -31,6 +31,7 @@ import com.construction.pm.activities.fragments.UserChangePasswordFragment;
 import com.construction.pm.activities.fragments.UserChangeProfileFragment;
 import com.construction.pm.models.NotificationModel;
 import com.construction.pm.models.ReportRequestModel;
+import com.construction.pm.models.StatusTaskEnum;
 import com.construction.pm.utils.StringUtil;
 import com.construction.pm.utils.ViewUtil;
 
@@ -319,7 +320,17 @@ public class MainLayout implements NavigationView.OnNavigationItemSelectedListen
     }
 
     public HomeFragment showHomeFragment() {
-        HomeFragment homeFragment = HomeFragment.newInstance();
+        HomeFragment homeFragment = HomeFragment.newInstance(new HomeFragment.HomeFragmentListener() {
+            @Override
+            public void onHomeRequestInspectorFragment(StatusTaskEnum statusTaskEnum) {
+                showInspectorFragment(statusTaskEnum);
+            }
+
+            @Override
+            public void onHomeRequestManagerFragment(StatusTaskEnum statusTaskEnum) {
+                showManagerFragment(statusTaskEnum);
+            }
+        });
 
         loadFragment(homeFragment, ViewUtil.getResourceString(mContext, R.string.menu_home_title), FRAGMENT_TAG_HOME);
 
@@ -345,16 +356,16 @@ public class MainLayout implements NavigationView.OnNavigationItemSelectedListen
         return notificationListFragment;
     }
 
-    public InspectorFragment showInspectorFragment() {
-        InspectorFragment inspectorFragment = InspectorFragment.newInstance();
+    public InspectorFragment showInspectorFragment(StatusTaskEnum statusTaskEnum) {
+        InspectorFragment inspectorFragment = InspectorFragment.newInstance(statusTaskEnum);
 
         loadFragment(inspectorFragment, ViewUtil.getResourceString(mContext, R.string.menu_inspector_title), FRAGMENT_TAG_INSPECTOR);
 
         return inspectorFragment;
     }
 
-    public ManagerFragment showManagerFragment() {
-        ManagerFragment managerFragment = ManagerFragment.newInstance();
+    public ManagerFragment showManagerFragment(StatusTaskEnum statusTaskEnum) {
+        ManagerFragment managerFragment = ManagerFragment.newInstance(statusTaskEnum);
 
         loadFragment(managerFragment, ViewUtil.getResourceString(mContext, R.string.menu_manager_title), FRAGMENT_TAG_MANAGER);
 
