@@ -82,7 +82,7 @@ public class ManagerNetwork extends AuthenticationNetwork {
         return projectActivityModels;
     }
 
-    public ProjectActivityMonitoringModel[] getProjectActivityMonitoring(final Integer projectActivityId, final Integer projectMemberId) throws WebApiError {
+    public ProjectActivityMonitoringModel[] getProjectActivityMonitoring(final Integer projectActivityId) throws WebApiError {
         // -- Get SessionLoginModel --
         SessionLoginModel sessionLoginModel = getSessionLoginModel();
         AccessTokenModel accessTokenModel = sessionLoginModel.getAccessTokenModel();
@@ -95,7 +95,6 @@ public class ManagerNetwork extends AuthenticationNetwork {
         // -- Prepare WebApiParam formData parameters --
         WebApiParam formData = new WebApiParam();
         formData.add("project_activity_id", projectActivityId);
-        formData.add("project_member_id", projectMemberId);
 
         // -- Request get ProjectActivityMonitoringModels --
         WebApiResponse webApiResponse = mWebApiRequest.post("/rest/project/getListProjectActivityMonitoringByActivity", headerParam, null, formData);

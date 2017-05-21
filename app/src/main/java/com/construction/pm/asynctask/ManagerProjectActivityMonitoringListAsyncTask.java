@@ -51,7 +51,7 @@ public class ManagerProjectActivityMonitoringListAsyncTask extends AsyncTask<Man
                     managerNetwork.invalidateLogin();
 
                     // -- Get ProjectActivityMonitoringModels from server --
-                    projectActivityMonitoringModels = managerNetwork.getProjectActivityMonitoring(projectActivityModel.getProjectActivityId(), projectMemberModel.getProjectMemberId());
+                    projectActivityMonitoringModels = managerNetwork.getProjectActivityMonitoring(projectActivityModel.getProjectActivityId());
 
                     // -- Save to ManagerCachePersistent --
                     try {

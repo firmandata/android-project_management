@@ -13,8 +13,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.construction.pm.R;
-import com.construction.pm.activities.fragments.ProjectActivityMonitoringListFragment;
 import com.construction.pm.activities.fragments.ProjectActivityUpdateListFragment;
+import com.construction.pm.activities.fragments.ProjectActivityUpdateMonitoringListFragment;
 import com.construction.pm.models.ProjectActivityModel;
 import com.construction.pm.models.ProjectActivityMonitoringModel;
 import com.construction.pm.models.ProjectActivityUpdateModel;
@@ -25,7 +25,7 @@ import java.util.List;
 
 public class ManagerDetailView implements
         ProjectActivityUpdateListFragment.ProjectActivityUpdateListFragmentListener,
-        ProjectActivityMonitoringListFragment.ProjectActivityMonitoringListFragmentListener {
+        ProjectActivityUpdateMonitoringListFragment.ProjectActivityMonitoringListFragmentListener {
 
     protected Context mContext;
 
@@ -104,7 +104,7 @@ public class ManagerDetailView implements
     public void setLayoutData(final ProjectActivityModel projectActivityModel) {
         mViewPagerAdapter.clearFragments();
         mViewPagerAdapter.addFragment(ProjectActivityUpdateListFragment.newInstance(projectActivityModel, this), ViewUtil.getResourceString(mContext, R.string.manager_detail_layout_tab_update));
-        mViewPagerAdapter.addFragment(ProjectActivityMonitoringListFragment.newInstance(projectActivityModel, this), ViewUtil.getResourceString(mContext, R.string.manager_detail_layout_tab_monitoring));
+        mViewPagerAdapter.addFragment(ProjectActivityUpdateMonitoringListFragment.newInstance(projectActivityModel, this), ViewUtil.getResourceString(mContext, R.string.manager_detail_layout_tab_monitoring));
         mViewPagerAdapter.notifyDataSetChanged();
     }
 
@@ -130,14 +130,14 @@ public class ManagerDetailView implements
         projectActivityUpdateListFragment.addProjectActivityUpdateModel(projectActivityUpdateModel);
     }
 
-    public void reloadProjectActivityMonitoringList(final ProjectActivityModel projectActivityModel) {
-        ProjectActivityMonitoringListFragment projectActivityMonitoringListFragment = (ProjectActivityMonitoringListFragment) mViewPagerAdapter.getItem(1);
-        projectActivityMonitoringListFragment.reloadProjectActivityMonitoringListRequest(projectActivityModel);
+    public void reloadProjectActivityUpdateMonitoringList(final ProjectActivityModel projectActivityModel) {
+        ProjectActivityUpdateMonitoringListFragment projectActivityUpdateMonitoringListFragment = (ProjectActivityUpdateMonitoringListFragment) mViewPagerAdapter.getItem(1);
+        projectActivityUpdateMonitoringListFragment.reloadProjectActivityMonitoringListRequest(projectActivityModel);
     }
 
-    public void addProjectActivityMonitoringModel(final ProjectActivityMonitoringModel projectActivityMonitoringModel) {
-        ProjectActivityMonitoringListFragment projectActivityMonitoringListFragment = (ProjectActivityMonitoringListFragment) mViewPagerAdapter.getItem(1);
-        projectActivityMonitoringListFragment.addProjectActivityMonitoringModel(projectActivityMonitoringModel);
+    public void addProjectActivityUpdateMonitoringModel(final ProjectActivityMonitoringModel projectActivityMonitoringModel) {
+        ProjectActivityUpdateMonitoringListFragment projectActivityUpdateMonitoringListFragment = (ProjectActivityUpdateMonitoringListFragment) mViewPagerAdapter.getItem(1);
+        projectActivityUpdateMonitoringListFragment.addProjectActivityMonitoringModel(projectActivityMonitoringModel);
     }
 
     protected class ViewPagerAdapter extends FragmentPagerAdapter {

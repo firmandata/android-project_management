@@ -119,11 +119,11 @@ public class ManagerDetailFragment extends Fragment implements ManagerDetailView
     }
 
     public void reloadProjectActivityMonitoringList(final ProjectActivityModel projectActivityModel) {
-        mManagerDetailView.reloadProjectActivityMonitoringList(projectActivityModel);
+        mManagerDetailView.reloadProjectActivityUpdateMonitoringList(projectActivityModel);
     }
 
     public void addProjectActivityMonitoringModel(final ProjectActivityMonitoringModel projectActivityMonitoringModel) {
-        mManagerDetailView.addProjectActivityMonitoringModel(projectActivityMonitoringModel);
+        mManagerDetailView.addProjectActivityUpdateMonitoringModel(projectActivityMonitoringModel);
     }
 
     @Override
