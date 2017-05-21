@@ -14,6 +14,7 @@ import com.construction.pm.models.FileModel;
 import com.construction.pm.models.ProjectStageAssignmentModel;
 import com.construction.pm.models.ProjectStageDocumentModel;
 import com.construction.pm.models.ProjectStageModel;
+import com.construction.pm.utils.ViewUtil;
 
 public class ProjectStageView implements
         ProjectStageDocumentListView.ProjectStageDocumentListListener,
@@ -67,12 +68,22 @@ public class ProjectStageView implements
 
     @Override
     public void onProjectStageDocumentItemClick(ProjectStageDocumentModel projectStageDocumentModel) {
-        ProjectStageDocumentListDialogFragment projectStageDocumentListDialogFragment = ProjectStageDocumentListDialogFragment.newInstance(projectStageDocumentModel, this);
-        if (mFragmentManager != null)
-            projectStageDocumentListDialogFragment.show(mFragmentManager, FRAGMENT_TAG_PROJECT_STAGE_DOCUMENT_LIST);
+        if (!(     projectStageDocumentModel.getFileId() == null
+                && projectStageDocumentModel.getFileAdditional1Id() == null
+                && projectStageDocumentModel.getFileAdditional2Id() == null
+                && projectStageDocumentModel.getFileAdditional3Id() == null
+                && projectStageDocumentModel.getFileAdditional4Id() == null
+                && projectStageDocumentModel.getFileAdditional5Id() == null)) {
+            ProjectStageDocumentListDialogFragment projectStageDocumentListDialogFragment = ProjectStageDocumentListDialogFragment.newInstance(projectStageDocumentModel, this);
+            if (mFragmentManager != null)
+                projectStageDocumentListDialogFragment.show(mFragmentManager, FRAGMENT_TAG_PROJECT_STAGE_DOCUMENT_LIST);
 
-        if (mProjectStageViewListener != null)
-            mProjectStageViewListener.onProjectStageDocumentItemClick(projectStageDocumentModel);
+            if (mProjectStageViewListener != null)
+                mProjectStageViewListener.onProjectStageDocumentItemClick(projectStageDocumentModel);
+        } else {
+            if (mProjectStageViewListener != null)
+                mProjectStageViewListener.onProjectStageDocumentItemClick(ViewUtil.getResourceString(mContext, R.string.project_stage_document_file_not_exist));
+        }
     }
 
     @Override
@@ -133,5 +144,6 @@ public class ProjectStageView implements
         void onProjectStageRequest(ProjectStageModel projectStageModel);
         void onProjectStageDocumentItemClick(ProjectStageDocumentModel projectStageDocumentModel);
         void onProjectStageDocumentItemClick(FileModel fileModel);
+        void onProjectStageDocumentItemClick(String errorMessage);
     }
 }

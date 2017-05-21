@@ -244,6 +244,8 @@
     <string name="project_detail_stage_code">Stage Code</string>
     <string name="project_detail_project_status">Project Status</string>
 
+    <string name="project_stage_document_file_not_exist">Sorry, no document file exist.</string>
+
     <string name="project_stage_layout_title">Project Stage</string>
     <string name="project_stage_layout_menu_comment_add">Add Comment</string>
     <string name="project_stage_layout_tab_project_stage_title">Project Stage</string>

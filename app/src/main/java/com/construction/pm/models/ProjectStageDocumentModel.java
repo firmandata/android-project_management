@@ -150,18 +150,36 @@ public class ProjectStageDocumentModel {
             projectStageDocumentModel.setDocumentDate(DateTimeUtil.FromDateTimeString(jsonObject.getString("document_date")));
         if (!jsonObject.isNull("document_name"))
             projectStageDocumentModel.setDocumentName(jsonObject.getString("document_name"));
-        if (!jsonObject.isNull("file_id"))
-            projectStageDocumentModel.setFileId(jsonObject.getInt("file_id"));
-        if (!jsonObject.isNull("file_additional1_id"))
-            projectStageDocumentModel.setFileAdditional1Id(jsonObject.getInt("file_additional1_id"));
-        if (!jsonObject.isNull("file_additional2_id"))
-            projectStageDocumentModel.setFileAdditional2Id(jsonObject.getInt("file_additional2_id"));
-        if (!jsonObject.isNull("file_additional3_id"))
-            projectStageDocumentModel.setFileAdditional3Id(jsonObject.getInt("file_additional3_id"));
-        if (!jsonObject.isNull("file_additional4_id"))
-            projectStageDocumentModel.setFileAdditional4Id(jsonObject.getInt("file_additional4_id"));
-        if (!jsonObject.isNull("file_additional5_id"))
-            projectStageDocumentModel.setFileAdditional5Id(jsonObject.getInt("file_additional5_id"));
+        if (!jsonObject.isNull("file_id")) {
+            Integer fileId = jsonObject.getInt("file_id");
+            if (fileId != 0)
+                projectStageDocumentModel.setFileId(fileId);
+        }
+        if (!jsonObject.isNull("file_additional1_id")) {
+            Integer fileAdditional1Id = jsonObject.getInt("file_additional1_id");
+            if (fileAdditional1Id != 0)
+                projectStageDocumentModel.setFileAdditional1Id(fileAdditional1Id);
+        }
+        if (!jsonObject.isNull("file_additional2_id")) {
+            Integer fileAdditional2Id = jsonObject.getInt("file_additional2_id");
+            if (fileAdditional2Id != 0)
+                projectStageDocumentModel.setFileAdditional2Id(fileAdditional2Id);
+        }
+        if (!jsonObject.isNull("file_additional3_id")) {
+            Integer fileAdditional3Id = jsonObject.getInt("file_additional3_id");
+            if (fileAdditional3Id != 0)
+                projectStageDocumentModel.setFileAdditional3Id(fileAdditional3Id);
+        }
+        if (!jsonObject.isNull("file_additional4_id")) {
+            Integer fileAdditional4Id = jsonObject.getInt("file_additional4_id");
+            if (fileAdditional4Id != 0)
+                projectStageDocumentModel.setFileAdditional4Id(fileAdditional4Id);
+        }
+        if (!jsonObject.isNull("file_additional5_id")) {
+            Integer fileAdditional5Id = jsonObject.getInt("file_additional5_id");
+            if (fileAdditional5Id != 0)
+                projectStageDocumentModel.setFileAdditional5Id(fileAdditional5Id);
+        }
         if (!jsonObject.isNull("creator_id"))
             projectStageDocumentModel.setCreatorId(jsonObject.getInt("creator_id"));
         if (!jsonObject.isNull("create_date"))

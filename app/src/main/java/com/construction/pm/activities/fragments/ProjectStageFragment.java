@@ -204,12 +204,20 @@ public class ProjectStageFragment extends Fragment implements
 
     @Override
     public void onProjectStageDocumentItemClick(ProjectStageDocumentModel projectStageDocumentModel) {
-
+        if (mProjectStageFragmentListener != null)
+            mProjectStageFragmentListener.onProjectStageDocumentItemClick(projectStageDocumentModel);
     }
 
     @Override
     public void onProjectStageDocumentItemClick(final FileModel fileModel) {
+        if (mProjectStageFragmentListener != null)
+            mProjectStageFragmentListener.onProjectStageDocumentItemClick(fileModel);
+    }
 
+    @Override
+    public void onProjectStageDocumentItemClick(String errorMessage) {
+        if (mProjectStageFragmentListener != null)
+            mProjectStageFragmentListener.onProjectStageDocumentItemClick(errorMessage);
     }
 
     protected void onProjectStageRequestProgress(final String progressMessage) {
@@ -266,5 +274,6 @@ public class ProjectStageFragment extends Fragment implements
         void onProjectStageRequest(ProjectStageModel projectStageModel);
         void onProjectStageDocumentItemClick(ProjectStageDocumentModel projectStageDocumentModel);
         void onProjectStageDocumentItemClick(FileModel fileModel);
+        void onProjectStageDocumentItemClick(String errorMessage);
     }
 }

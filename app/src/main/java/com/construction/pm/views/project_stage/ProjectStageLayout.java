@@ -2,6 +2,7 @@ package com.construction.pm.views.project_stage;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Build;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -11,6 +12,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -225,6 +227,11 @@ public class ProjectStageLayout implements
 
     }
 
+    @Override
+    public void onProjectStageDocumentItemClick(String errorMessage) {
+        alertDialogErrorShow(errorMessage);
+    }
+
     public ProjectStageModel getProjectStageModel() {
         if (mProjectStageFragment != null)
             return mProjectStageFragment.getProjectStageModel();
@@ -300,6 +307,19 @@ public class ProjectStageLayout implements
         public int getCount() {
             return mFragmentList.size();
         }
+    }
+
+    public void alertDialogShow(final String alertTitle, final String alertMessage, final int iconId, final DialogInterface.OnClickListener onClickListener) {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
+        alertDialog.setIcon(iconId);
+        alertDialog.setTitle(alertTitle);
+        alertDialog.setMessage(alertMessage);
+        alertDialog.setPositiveButton(ViewUtil.getResourceString(mContext, R.string.project_activity_monitoring_form_layout_alert_button), onClickListener);
+        alertDialog.show();
+    }
+
+    public void alertDialogErrorShow(final String errorMessage) {
+        alertDialogShow(ViewUtil.getResourceString(mContext, R.string.project_activity_monitoring_form_layout_alert_title_error), errorMessage, R.drawable.ic_error_dark_24, null);
     }
 
     public void setProjectStageLayoutListener(final ProjectStageLayoutListener projectStageLayoutListener) {
