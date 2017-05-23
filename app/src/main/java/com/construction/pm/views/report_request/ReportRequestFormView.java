@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.construction.pm.R;
+import com.construction.pm.libraries.widgets.AppDrawableCompatButton;
 import com.construction.pm.models.ProjectModel;
 import com.construction.pm.models.ReportRequestModel;
 import com.construction.pm.utils.ButtonUtil;
@@ -23,7 +24,7 @@ public class ReportRequestFormView {
     protected AppCompatSpinner mSpinnerProjectList;
     protected SpinnerProjectListAdapter mSpinnerProjectListAdapter;
     protected TextInputEditText mComment;
-    protected AppCompatButton mSendButton;
+    protected AppDrawableCompatButton mSendButton;
 
     protected ReportRequestFormListener mReportRequestFormListener;
 
@@ -54,7 +55,7 @@ public class ReportRequestFormView {
 
         mComment = (TextInputEditText) mReportRequestFormView.findViewById(R.id.comment);
 
-        mSendButton = (AppCompatButton) mReportRequestFormView.findViewById(R.id.sendButton);
+        mSendButton = (AppDrawableCompatButton) mReportRequestFormView.findViewById(R.id.sendButton);
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

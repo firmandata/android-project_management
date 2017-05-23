@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.construction.pm.R;
+import com.construction.pm.libraries.widgets.AppDrawableCompatButton;
 import com.construction.pm.models.ProjectMemberModel;
 import com.construction.pm.utils.ButtonUtil;
 import com.construction.pm.utils.ViewUtil;
@@ -57,7 +58,7 @@ public class UserChangeProfileView {
         mEtPhoneNumber = (TextInputEditText) mUserChangeProfileView.findViewById(R.id.phoneNumber);
         mEtDescription = (TextInputEditText) mUserChangeProfileView.findViewById(R.id.description);
 
-        AppCompatButton btnChangeProfile = (AppCompatButton) mUserChangeProfileView.findViewById(R.id.changeProfileButton);
+        AppDrawableCompatButton btnChangeProfile = (AppDrawableCompatButton) mUserChangeProfileView.findViewById(R.id.changeProfileButton);
         btnChangeProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

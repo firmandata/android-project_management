@@ -101,7 +101,7 @@
 
     </android.support.v4.widget.NestedScrollView>
 
-    <android.support.v7.widget.AppCompatButton
+    <com.construction.pm.libraries.widgets.AppDrawableCompatButton
         android:id="@+id/changeProfileButton"
         android:layout_height="wrap_content"
         android:layout_width="150dp"
@@ -109,8 +109,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginTop="@dimen/form_element_vertical_gap"
         android:layout_marginBottom="@dimen/vertical_gap"
-        android:drawableLeft="@drawable/ic_checkmark_light_24"
-        android:drawableStart="@drawable/ic_checkmark_light_24"
+        app:drawableLeftCompat="@drawable/ic_checkmark_light_24"
         android:text="@string/user_change_profile_view_ok" />
 
 </RelativeLayout>

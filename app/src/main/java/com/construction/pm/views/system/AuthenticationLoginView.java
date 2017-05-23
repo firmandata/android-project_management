@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.construction.pm.R;
+import com.construction.pm.libraries.widgets.AppDrawableCompatButton;
 import com.construction.pm.utils.ButtonUtil;
 import com.construction.pm.utils.ViewUtil;
 
@@ -54,7 +55,7 @@ public class AuthenticationLoginView {
         mEtLogin = (TextInputEditText) mAuthenticationLoginView.findViewById(R.id.login);
         mEtPassword = (TextInputEditText) mAuthenticationLoginView.findViewById(R.id.password);
 
-        AppCompatButton btnLogin = (AppCompatButton) mAuthenticationLoginView.findViewById(R.id.loginButton);
+        AppDrawableCompatButton btnLogin = (AppDrawableCompatButton) mAuthenticationLoginView.findViewById(R.id.loginButton);
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

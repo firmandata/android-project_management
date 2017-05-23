@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.construction.pm.R;
+import com.construction.pm.libraries.widgets.AppDrawableCompatButton;
 import com.construction.pm.models.ReportRequestModel;
 import com.construction.pm.utils.ButtonUtil;
 import com.construction.pm.utils.DateTimeUtil;
@@ -22,7 +23,7 @@ public class ReportRequestDetailView {
     protected AppCompatTextView mProjectName;
     protected AppCompatTextView mComment;
     protected AppCompatTextView mLastReportSentToEmailDate;
-    protected AppCompatButton mResendButton;
+    protected AppDrawableCompatButton mResendButton;
 
     protected ReportRequestModel mReportRequestModel;
 
@@ -55,7 +56,7 @@ public class ReportRequestDetailView {
         mComment = (AppCompatTextView) mReportRequestDetailView.findViewById(R.id.comment);
         mLastReportSentToEmailDate = (AppCompatTextView) mReportRequestDetailView.findViewById(R.id.lastReportSentToEmailDate);
 
-        mResendButton = (AppCompatButton) mReportRequestDetailView.findViewById(R.id.resendButton);
+        mResendButton = (AppDrawableCompatButton) mReportRequestDetailView.findViewById(R.id.resendButton);
         mResendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

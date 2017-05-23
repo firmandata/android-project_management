@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.construction.pm.R;
+import com.construction.pm.libraries.widgets.AppDrawableCompatButton;
 import com.construction.pm.utils.ButtonUtil;
 import com.construction.pm.utils.ViewUtil;
 
@@ -53,7 +54,7 @@ public class UserChangePasswordView {
         mEtPasswordNew = (TextInputEditText) mUserChangePasswordView.findViewById(R.id.passwordNew);
         mEtPasswordNewConfirm = (TextInputEditText) mUserChangePasswordView.findViewById(R.id.passwordNewConfirm);
 
-        AppCompatButton btnChangePassword = (AppCompatButton) mUserChangePasswordView.findViewById(R.id.changePasswordButton);
+        AppDrawableCompatButton btnChangePassword = (AppDrawableCompatButton) mUserChangePasswordView.findViewById(R.id.changePasswordButton);
         btnChangePassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

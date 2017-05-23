@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.construction.pm.R;
+import com.construction.pm.libraries.widgets.AppDrawableCompatButton;
 import com.construction.pm.utils.ButtonUtil;
 import com.construction.pm.utils.ViewUtil;
 
@@ -50,7 +51,7 @@ public class AuthenticationForgetPasswordView {
 
         mEtLogin = (TextInputEditText) mAuthenticationForgetPasswordView.findViewById(R.id.login);
 
-        AppCompatButton btnReset = (AppCompatButton) mAuthenticationForgetPasswordView.findViewById(R.id.resetButton);
+        AppDrawableCompatButton btnReset = (AppDrawableCompatButton) mAuthenticationForgetPasswordView.findViewById(R.id.resetButton);
         btnReset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
