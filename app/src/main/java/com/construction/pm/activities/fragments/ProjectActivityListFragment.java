@@ -9,8 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.construction.pm.asynctask.InspectorProjectActivityListAsyncTask;
+import com.construction.pm.asynctask.ManagerProjectActivityListAsyncTask;
 import com.construction.pm.asynctask.param.InspectorProjectActivityListAsyncTaskParam;
+import com.construction.pm.asynctask.param.ManagerProjectActivityListAsyncTaskParam;
 import com.construction.pm.asynctask.result.InspectorProjectActivityListAsyncTaskResult;
+import com.construction.pm.asynctask.result.ManagerProjectActivityListAsyncTaskResult;
+import com.construction.pm.models.ProjectActivityListTypeEnum;
 import com.construction.pm.models.ProjectActivityModel;
 import com.construction.pm.models.StatusTaskEnum;
 import com.construction.pm.models.system.SessionLoginModel;
@@ -25,6 +29,7 @@ import java.util.List;
 public class ProjectActivityListFragment extends Fragment implements ProjectActivityListView.ProjectActivityListListener {
     public static final String PARAM_PROJECT_ACTIVITY_MODELS = "ProjectActivityModels";
     public static final String PARAM_STATUS_TASK_ENUM = "StatusTaskEnum";
+    public static final String PARAM_PROJECT_ACTIVITY_LIST_TYPE_ENUM = "ProjectActivityListTypeEnum";
 
     protected List<AsyncTask> mAsyncTaskList;
 
@@ -32,25 +37,29 @@ public class ProjectActivityListFragment extends Fragment implements ProjectActi
 
     protected ProjectActivityListFragmentListener mProjectActivityListFragmentListener;
 
-    public static ProjectActivityListFragment newInstance() {
-        return newInstance(null, null);
+    public static ProjectActivityListFragment newInstance(final ProjectActivityListTypeEnum projectActivityListTypeEnum) {
+        return newInstance(projectActivityListTypeEnum, null, null);
     }
 
-    public static ProjectActivityListFragment newInstance(final ProjectActivityModel[] projectActivityModels) {
-        return newInstance(projectActivityModels, null);
+    public static ProjectActivityListFragment newInstance(final ProjectActivityListTypeEnum projectActivityListTypeEnum, final ProjectActivityModel[] projectActivityModels) {
+        return newInstance(projectActivityListTypeEnum, null, projectActivityModels);
     }
 
-    public static ProjectActivityListFragment newInstance(final StatusTaskEnum statusTaskEnum) {
-        return newInstance(null, statusTaskEnum);
+    public static ProjectActivityListFragment newInstance(final ProjectActivityListTypeEnum projectActivityListTypeEnum, final StatusTaskEnum statusTaskEnum) {
+        return newInstance(projectActivityListTypeEnum, statusTaskEnum, null);
     }
 
-    public static ProjectActivityListFragment newInstance(final ProjectActivityModel[] projectActivityModels, final StatusTaskEnum statusTaskEnum) {
-        return newInstance(projectActivityModels, statusTaskEnum, null);
+    public static ProjectActivityListFragment newInstance(final ProjectActivityListTypeEnum projectActivityListTypeEnum, final StatusTaskEnum statusTaskEnum, final ProjectActivityModel[] projectActivityModels) {
+        return newInstance(projectActivityListTypeEnum, statusTaskEnum, projectActivityModels, null);
     }
 
-    public static ProjectActivityListFragment newInstance(final ProjectActivityModel[] projectActivityModels, final StatusTaskEnum statusTaskEnum, final ProjectActivityListFragmentListener projectActivityListFragmentListener) {
+    public static ProjectActivityListFragment newInstance(final ProjectActivityListTypeEnum projectActivityListTypeEnum, final StatusTaskEnum statusTaskEnum, final ProjectActivityModel[] projectActivityModels, final ProjectActivityListFragmentListener projectActivityListFragmentListener) {
         // -- Set parameters --
         Bundle bundle = new Bundle();
+        if (projectActivityListTypeEnum != null)
+            bundle.putString(PARAM_PROJECT_ACTIVITY_LIST_TYPE_ENUM, projectActivityListTypeEnum.getValue());
+        if (statusTaskEnum != null)
+            bundle.putString(PARAM_STATUS_TASK_ENUM, statusTaskEnum.getValue());
         if (projectActivityModels != null) {
             try {
                 org.json.JSONArray projectActivityModelsJsonArray = new org.json.JSONArray();
@@ -62,8 +71,6 @@ public class ProjectActivityListFragment extends Fragment implements ProjectActi
             } catch (org.json.JSONException ex) {
             }
         }
-        if (statusTaskEnum != null)
-            bundle.putString(PARAM_STATUS_TASK_ENUM, statusTaskEnum.getValue());
 
         // -- Create ProjectActivityListFragment --
         ProjectActivityListFragment projectActivityListFragment = new ProjectActivityListFragment();
@@ -79,12 +86,23 @@ public class ProjectActivityListFragment extends Fragment implements ProjectActi
         // -- Handle AsyncTask --
         mAsyncTaskList = new ArrayList<AsyncTask>();
 
+        ProjectActivityListTypeEnum projectActivityListType = null;
+        StatusTaskEnum statusTask = null;
         ProjectActivityModel[] projectActivityModels = null;
-        StatusTaskEnum statusTaskEnum = null;
 
         // -- Get parameters --
         Bundle bundle = getArguments();
         if (bundle != null) {
+            // -- Get ProjectActivityListTypeEnum parameter --
+            String projectActivityListTypeEnumValue = bundle.getString(PARAM_PROJECT_ACTIVITY_LIST_TYPE_ENUM);
+            if (projectActivityListTypeEnumValue != null)
+                projectActivityListType = ProjectActivityListTypeEnum.fromString(projectActivityListTypeEnumValue);
+
+            // -- Get StatusTaskEnum parameter --
+            String statusTaskEnumValue = bundle.getString(PARAM_STATUS_TASK_ENUM);
+            if (statusTaskEnumValue != null)
+                statusTask = StatusTaskEnum.fromString(statusTaskEnumValue);
+
             // -- Get ProjectActivityModels parameter --
             String projectActivityModelsJson = bundle.getString(PARAM_PROJECT_ACTIVITY_MODELS);
             if (projectActivityModelsJson != null) {
@@ -102,17 +120,13 @@ public class ProjectActivityListFragment extends Fragment implements ProjectActi
                 } catch (org.json.JSONException ex) {
                 }
             }
-
-            // -- Get StatusTaskEnum parameter --
-            String statusTaskEnumValue = bundle.getString(PARAM_STATUS_TASK_ENUM);
-            if (statusTaskEnumValue != null)
-                statusTaskEnum = StatusTaskEnum.fromString(statusTaskEnumValue);
         }
 
         // -- Prepare ProjectActivityListView --
         mProjectActivityListView = ProjectActivityListView.buildProjectActivityListView(getContext(), null);
         mProjectActivityListView.setProjectActivityListListener(this);
-        mProjectActivityListView.setStatusTaskEnum(statusTaskEnum);
+        mProjectActivityListView.setProjectActivityListType(projectActivityListType);
+        mProjectActivityListView.setStatusTask(statusTask);
         mProjectActivityListView.setProjectActivityModels(projectActivityModels);
     }
 
@@ -128,7 +142,10 @@ public class ProjectActivityListFragment extends Fragment implements ProjectActi
     }
 
     @Override
-    public void onProjectActivityListRequest(StatusTaskEnum statusTaskEnum) {
+    public void onProjectActivityListRequest(ProjectActivityListTypeEnum projectActivityListType, StatusTaskEnum statusTask) {
+        if (projectActivityListType == null)
+            return;
+
         // -- Get SettingUserModel from SettingPersistent --
         SettingPersistent settingPersistent = new SettingPersistent(getContext());
         SettingUserModel settingUserModel = settingPersistent.getSettingUserModel();
@@ -137,38 +154,73 @@ public class ProjectActivityListFragment extends Fragment implements ProjectActi
         SessionPersistent sessionPersistent = new SessionPersistent(getContext());
         SessionLoginModel sessionLoginModel = sessionPersistent.getSessionLoginModel();
 
-        // -- Prepare InspectorProjectActivityListAsyncTask --
-        InspectorProjectActivityListAsyncTask inspectorProjectActivityListAsyncTask = new InspectorProjectActivityListAsyncTask() {
-            @Override
-            public void onPreExecute() {
-                mAsyncTaskList.add(this);
-            }
-
-            @Override
-            public void onPostExecute(InspectorProjectActivityListAsyncTaskResult inspectorProjectActivityListAsyncTaskResult) {
-                mAsyncTaskList.remove(this);
-
-                if (inspectorProjectActivityListAsyncTaskResult != null) {
-                    ProjectActivityModel[] projectActivityModels = inspectorProjectActivityListAsyncTaskResult.getProjectActivityModels();
-                    if (projectActivityModels != null)
-                        onProjectActivityListRequestSuccess(projectActivityModels);
-                    else
-                        onProjectActivityListRequestFailed(inspectorProjectActivityListAsyncTaskResult.getMessage());
+        if (projectActivityListType == ProjectActivityListTypeEnum.INSPECTOR) {
+            // -- Prepare InspectorProjectActivityListAsyncTask --
+            InspectorProjectActivityListAsyncTask inspectorProjectActivityListAsyncTask = new InspectorProjectActivityListAsyncTask() {
+                @Override
+                public void onPreExecute() {
+                    mAsyncTaskList.add(this);
                 }
-            }
 
-            @Override
-            protected void onProgressUpdate(String... messages) {
-                if (messages != null) {
-                    if (messages.length > 0) {
-                        onProjectActivityListRequestProgress(messages[0]);
+                @Override
+                public void onPostExecute(InspectorProjectActivityListAsyncTaskResult inspectorProjectActivityListAsyncTaskResult) {
+                    mAsyncTaskList.remove(this);
+
+                    if (inspectorProjectActivityListAsyncTaskResult != null) {
+                        ProjectActivityModel[] projectActivityModels = inspectorProjectActivityListAsyncTaskResult.getProjectActivityModels();
+                        if (projectActivityModels != null)
+                            onProjectActivityListRequestSuccess(projectActivityModels);
+                        else
+                            onProjectActivityListRequestFailed(inspectorProjectActivityListAsyncTaskResult.getMessage());
                     }
                 }
-            }
-        };
 
-        // -- Do InspectorProjectActivityListAsyncTask --
-        inspectorProjectActivityListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new InspectorProjectActivityListAsyncTaskParam(getContext(), settingUserModel, sessionLoginModel.getProjectMemberModel(), statusTaskEnum));
+                @Override
+                protected void onProgressUpdate(String... messages) {
+                    if (messages != null) {
+                        if (messages.length > 0) {
+                            onProjectActivityListRequestProgress(messages[0]);
+                        }
+                    }
+                }
+            };
+
+            // -- Do InspectorProjectActivityListAsyncTask --
+            inspectorProjectActivityListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new InspectorProjectActivityListAsyncTaskParam(getContext(), settingUserModel, sessionLoginModel.getProjectMemberModel(), statusTask));
+        } else if (projectActivityListType == ProjectActivityListTypeEnum.MANAGER) {
+            // -- Prepare ManagerProjectActivityListAsyncTask --
+            ManagerProjectActivityListAsyncTask managerProjectActivityListAsyncTask = new ManagerProjectActivityListAsyncTask() {
+                @Override
+                public void onPreExecute() {
+                    mAsyncTaskList.add(this);
+                }
+
+                @Override
+                public void onPostExecute(ManagerProjectActivityListAsyncTaskResult managerProjectActivityListAsyncTaskResult) {
+                    mAsyncTaskList.remove(this);
+
+                    if (managerProjectActivityListAsyncTaskResult != null) {
+                        ProjectActivityModel[] projectActivityModels = managerProjectActivityListAsyncTaskResult.getProjectActivityModels();
+                        if (projectActivityModels != null)
+                            onProjectActivityListRequestSuccess(projectActivityModels);
+                        else
+                            onProjectActivityListRequestFailed(managerProjectActivityListAsyncTaskResult.getMessage());
+                    }
+                }
+
+                @Override
+                protected void onProgressUpdate(String... messages) {
+                    if (messages != null) {
+                        if (messages.length > 0) {
+                            onProjectActivityListRequestProgress(messages[0]);
+                        }
+                    }
+                }
+            };
+
+            // -- Do ManagerProjectActivityListAsyncTask --
+            managerProjectActivityListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new ManagerProjectActivityListAsyncTaskParam(getContext(), settingUserModel, sessionLoginModel.getProjectMemberModel(), statusTask));
+        }
     }
 
     protected void onProjectActivityListRequestProgress(final String progressMessage) {

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,6 +13,7 @@ import android.widget.RelativeLayout;
 
 import com.construction.pm.R;
 import com.construction.pm.libraries.widgets.RecyclerItemTouchListener;
+import com.construction.pm.models.ProjectActivityListTypeEnum;
 import com.construction.pm.models.ProjectActivityModel;
 import com.construction.pm.models.StatusTaskEnum;
 import com.construction.pm.utils.DateTimeUtil;
@@ -32,7 +32,8 @@ public class ProjectActivityListView {
     protected RecyclerView mRvProjectActivityList;
     protected ProjectActivityListAdapter mProjectActivityListAdapter;
 
-    protected StatusTaskEnum mStatusTaskEnum;
+    protected ProjectActivityListTypeEnum mProjectActivityListType;
+    protected StatusTaskEnum mStatusTask;
 
     protected ProjectActivityListListener mProjectActivityListListener;
 
@@ -62,7 +63,7 @@ public class ProjectActivityListView {
             @Override
             public void onRefresh() {
                 if (mProjectActivityListListener != null)
-                    mProjectActivityListListener.onProjectActivityListRequest(mStatusTaskEnum);
+                    mProjectActivityListListener.onProjectActivityListRequest(mProjectActivityListType, mStatusTask);
             }
         });
 
@@ -108,12 +109,20 @@ public class ProjectActivityListView {
         return mProjectActivityListAdapter.getProjectActivityModels();
     }
 
-    public void setStatusTaskEnum(final StatusTaskEnum statusTaskEnum) {
-        mStatusTaskEnum = statusTaskEnum;
+    public void setProjectActivityListType(final ProjectActivityListTypeEnum projectActivityListType) {
+        mProjectActivityListType = projectActivityListType;
+    }
+
+    public ProjectActivityListTypeEnum getProjectActivityListType() {
+        return mProjectActivityListType;
+    }
+
+    public void setStatusTask(final StatusTaskEnum statusTask) {
+        mStatusTask = statusTask;
     }
 
     public StatusTaskEnum getStatusTask() {
-        return mStatusTaskEnum;
+        return mStatusTask;
     }
 
     public void startRefreshAnimation() {
@@ -137,7 +146,7 @@ public class ProjectActivityListView {
     }
 
     public interface ProjectActivityListListener {
-        void onProjectActivityListRequest(StatusTaskEnum statusTaskEnum);
+        void onProjectActivityListRequest(ProjectActivityListTypeEnum projectActivityListType, StatusTaskEnum statusTask);
         void onProjectActivityItemClick(ProjectActivityModel projectActivityModel);
     }
 
